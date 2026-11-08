@@ -23974,6 +23974,24 @@ const mentorAvatarCache = {};
         function aiOwnKey() { try { return localStorage.getItem('lunarise_ai_key') || LR_AI_KEY || ''; } catch (e) { return LR_AI_KEY || ''; } }
         function aiKey() { return aiOwnKey() || (LR_AI_PROXY ? 'proxy' : ''); }
         function lrB64(blob) { return new Promise((res, rej) => { const fr = new FileReader(); fr.onload = () => res(String(fr.result).split(',')[1] || ''); fr.onerror = rej; fr.readAsDataURL(blob); }); }
+        /* many people at once: at most 3 AI calls from one device at a time; a busy or failed server is tried again
+           after 0.7 s, 1.6 s and 3.5 s (with a little randomness so thousands of phones do not retry at the same moment) */
+        const lrQ = { n: 0, w: [] };
+        async function lrBusyFetch(url, init, tries) {
+            tries = tries == null ? 3 : tries;
+            if (lrQ.n >= 3) await new Promise(r => lrQ.w.push(r));
+            lrQ.n++;
+            try {
+                for (let i = 0; ; i++) {
+                    let r = null, err = null;
+                    try { r = await fetch(url, init); } catch (e) { err = e; if (init && init.signal && init.signal.aborted) throw e; }
+                    const busy = err || (r && (r.status === 429 || r.status >= 500));
+                    if (!busy || i >= tries) { if (err) throw err; return r; }
+                    await new Promise(res => setTimeout(res, (700 * Math.pow(2.2, i)) * (0.75 + Math.random() * 0.5)));
+                }
+            } finally { lrQ.n--; const nx = lrQ.w.shift(); if (nx) nx(); }
+        }
+        window.lrBusyFetch = lrBusyFetch;
         async function lrAIFetch(url, o) {
             o = o || {};
             if (aiOwnKey() || !LR_AI_PROXY) return fetch(url, o);
@@ -23982,7 +24000,7 @@ const mentorAvatarCache = {};
                 const f = o.body.get('file'), fl = {}; o.body.forEach((v, n) => { if (n !== 'file') fl[n] = String(v); });
                 p.fields = fl; p.mime = (f && f.type) || 'audio/webm'; p.fname = (f && f.name) || 'speech.webm'; p.audio = f ? await lrB64(f) : '';
             } else { try { p.body = JSON.parse(o.body || '{}'); } catch (e) { p.body = {}; } }
-            const r = await fetch(LR_AI_PROXY, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(p), signal: o.signal });
+            const r = await lrBusyFetch(LR_AI_PROXY, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(p), signal: o.signal });
             let j; try { j = await r.json(); } catch (e) { j = { ok: false, error: 'upstream' }; }
             if (!j || !j.ok) { const e = (j && j.error) || 'upstream', st = e === 'key' ? 401 : (e === 'limit' || e === 'quota') ? 429 : e === 'model' ? 404 : 502; return new Response(JSON.stringify({ error: { code: e, message: e } }), { status: st, headers: { 'Content-Type': 'application/json' } }); }
             if (j.b64) { const s = atob(j.b64), u = new Uint8Array(s.length); for (let i = 0; i < s.length; i++) u[i] = s.charCodeAt(i); return new Response(u, { status: 200, headers: { 'Content-Type': j.mime || 'audio/mpeg' } }); }
@@ -24011,8 +24029,9 @@ const mentorAvatarCache = {};
         async function aiCall(mode, messages) {
             const ctx = aiCtx(); messages = aiTail(mode, messages, ctx);
             if (LR_AI_PROXY) {
+                if (window.LR_LIMITS && !LR_LIMITS.take()) throw { code: 'limit' };
                 const lr = aiLangRule(mode, ctx), pm = lr && mode !== 'writing' ? [{ role: 'system', content: lr.trim() }].concat(messages) : messages;
-                const r = await fetch(LR_AI_PROXY, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ mode, messages: pm, ctx, device: promoDevice() }) });
+                const r = await lrBusyFetch(LR_AI_PROXY, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ mode, messages: pm, ctx, device: promoDevice() }) });
                 const j = await r.json(); if (!j.ok) throw { code: j.error || 'upstream' }; return j.text || '';
             }
             const key = aiKey(); if (!key) throw { code: 'noai' };
@@ -24025,7 +24044,7 @@ const mentorAvatarCache = {};
             const j = await r.json(); return (j.choices && j.choices[0] && j.choices[0].message.content) || '';
         }
         function aiErrText(e) {
-            const c = e && e.code; return c === 'noai' ? 'AI is not connected yet. Tap ⚙ and add your key.' : c === 'key' ? 'The API key was rejected. Check it in ⚙ settings.' : c === 'quota' ? 'AI limit or quota reached. Try again later.' : c === 'limit' ? 'Daily AI limit reached on this device. Come back tomorrow!' : 'Could not reach the AI. Check your internet and try again.';
+            const c = e && e.code; if (c === 'limit') return 'You used today’s AI requests. They come back at midnight, or choose a PRO plan for more.'; return c === 'noai' ? 'AI is not connected yet. Tap ⚙ and add your key.' : c === 'key' ? 'The API key was rejected. Check it in ⚙ settings.' : c === 'quota' ? 'AI limit or quota reached. Try again later.' : c === 'limit' ? 'Daily AI limit reached on this device. Come back tomorrow!' : 'Could not reach the AI. Check your internet and try again.';
         }
         function aiMdHtml(t) {
             const code = []; t = String(t).replace(/```[\w+-]*\n?([\s\S]*?)```/g, (m, c) => { code.push(c.replace(/\n$/, '')); return '\n\u0000' + (code.length - 1) + '\u0000\n'; });
@@ -43632,6 +43651,114 @@ Reply with JSON only: {"words":[{"w":"","pos":"","ipa":"","def":"","ex":""}],"gr
   .pr-title h3{font-size:22px}
   .pr-price>b{font-size:40px}
 }
+
+/* v74: sale */
+.pr-sale{display:flex;align-items:center;gap:12px;margin:0 0 14px;padding:14px 16px;border-radius:20px;background:linear-gradient(135deg,rgba(239,68,68,.22),rgba(245,158,11,.16));border:1px solid rgba(251,146,60,.45);color:#fff}
+.pr-sale>div{flex:1;min-width:0}
+.pr-sale b{display:block;font-size:15.5px;font-weight:800}
+.pr-sale small{display:block;margin-top:2px;font-size:12.5px;color:#fed7aa}
+.pr-fire{font-size:26px;line-height:1}
+.pr-cd{flex:none;display:flex;flex-direction:column;align-items:center;padding:6px 12px;border-radius:14px;background:rgba(0,0,0,.35)}
+.pr-cd small{font-size:10.5px;color:#fdba74;text-transform:uppercase;letter-spacing:.06em}
+.pr-cd b{font-size:17px;font-weight:800;font-variant-numeric:tabular-nums;color:#fff}
+.pr-was{align-self:flex-start;margin-top:4px;font-size:22px;font-weight:700;color:rgba(255,255,255,.5);text-decoration:line-through;text-decoration-color:#ef4444;text-decoration-thickness:3px}
+.pr-save{display:flex;align-items:center;gap:8px;margin:-2px 0 0;font-size:13px;font-weight:700;color:#86efac}
+.pr-off{padding:3px 8px;border-radius:8px;background:#ef4444;color:#fff;font-size:12px;font-weight:900}
+.pr-lim b.unl{color:#fde68a}
+.pr-why{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:14px 0 4px}
+.pr-why>div{display:flex;flex-direction:column;gap:3px;padding:12px 14px;border-radius:16px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08)}
+.pr-why i{color:#fbbf24;font-size:17px;margin-bottom:3px}
+.pr-why b{font-size:13.5px;color:#fff}
+.pr-why span{font-size:12px;color:#c8c3e8;line-height:1.4}
+.pr-price{flex-wrap:wrap;row-gap:4px}.pr-price span{white-space:nowrap}
+@media (max-width:640px){.pr-why{grid-template-columns:1fr}.pr-sale{flex-wrap:wrap}.pr-sale>div{flex:1 1 calc(100% - 50px)}.pr-cd{flex:1 1 100%;flex-direction:row;justify-content:center;gap:10px}}
+
+/* ===== PRO screen v2 ===== */
+.pr2{--ink:#f4f2ff;--ink2:#c9c4ea;--ink3:#8f8ab8;--line:rgba(196,186,255,.13);--gold:#f6c56f;--card:#131126}
+.pr2-top{display:flex;align-items:flex-start;gap:14px;margin-bottom:18px}
+.pr2-hero{flex:1;display:flex;gap:16px;align-items:center}
+.pr2-crown{flex:none;width:60px;height:60px;border-radius:20px;display:grid;place-items:center;font-size:25px;color:#3a2600;background:linear-gradient(145deg,#fff3c4,#f6c56f 40%,#b8822b 75%,#f9dc8a);box-shadow:inset 0 2px 1px rgba(255,255,255,.7),0 16px 34px -12px rgba(246,197,111,.7)}
+.pr2-hero h3{margin:0;font-size:clamp(24px,3.2vw,34px);line-height:1.1;font-weight:800;letter-spacing:-.025em;color:#fff;text-wrap:balance}
+.pr2-hero p{margin:6px 0 0;max-width:640px;font-size:15px;line-height:1.5;color:var(--ink2)}
+.pr2-sale{display:flex;align-items:center;flex-wrap:wrap;gap:10px 16px;margin-bottom:14px;padding:12px 14px 12px 12px;border-radius:20px;background:linear-gradient(100deg,rgba(239,68,68,.22),rgba(245,158,11,.14) 60%,rgba(245,158,11,.06));border:1px solid rgba(251,146,60,.4)}
+.pr2-badge{padding:6px 12px;border-radius:999px;background:#ef4444;color:#fff;font-size:12.5px;font-weight:900;letter-spacing:.02em}
+.pr2-sale>b{flex:1;min-width:180px;font-size:16px;font-weight:800;color:#fff}
+.pr2-cd{display:flex;align-items:center;gap:10px;padding:6px 12px;border-radius:14px;background:rgba(0,0,0,.35)}
+.pr2-cd small{font-size:11.5px;color:#fdba74;font-weight:700}
+.pr2-cd b{font-size:18px;font-weight:800;font-variant-numeric:tabular-nums;color:#fff}
+.pr2-now{display:flex;flex-wrap:wrap;gap:10px 20px;justify-content:space-between;align-items:center;margin-bottom:18px;padding:12px 16px;border-radius:18px;background:rgba(255,255,255,.035);border:1px solid var(--line);color:var(--ink2);font-size:14px}
+.pr2-now i.fa-solid{margin-right:8px;color:var(--gold)}
+.pr2-now b{color:#fff}
+.pr2-use{position:relative;display:flex;align-items:center;padding-bottom:9px;min-width:230px}
+.pr2-use>i{position:absolute;left:0;right:0;bottom:0;height:4px;border-radius:4px;background:rgba(255,255,255,.1);overflow:hidden}
+.pr2-use>i::after{content:'';position:absolute;inset:0;width:var(--w);background:linear-gradient(90deg,#5fe0a8,var(--gold));border-radius:4px}
+.pr2-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;align-items:stretch}
+.pr2-card{--m1:#d9dde4;--m2:#8e96a3;--m3:#f6f7f9;--glow:rgba(200,206,216,.3);position:relative;display:flex;flex-direction:column;padding:22px 18px 18px;border-radius:26px;background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.015) 40%),var(--card);border:1px solid var(--line);box-shadow:0 30px 60px -36px rgba(0,0,0,.9);isolation:isolate;overflow:hidden}
+.pr2-card::after{content:'';position:absolute;left:-20%;right:-20%;top:-90px;height:200px;background:radial-gradient(closest-side,var(--glow),transparent);z-index:-1;pointer-events:none}
+.pr2-card.pr-silver{--m1:#e9edf2;--m2:#7d8694;--m3:#fff;--glow:rgba(205,212,224,.22)}
+.pr2-card.pr-emerald{--m1:#4be3a4;--m2:#0b7a52;--m3:#b9ffe0;--glow:rgba(40,220,150,.24)}
+.pr2-card.pr-amethyst{--m1:#c3a8ff;--m2:#6b3fd6;--m3:#f0e6ff;--glow:rgba(160,120,255,.34);border-color:rgba(195,168,255,.45)}
+.pr2-card.pr-gold{--m1:#ffd98f;--m2:#b07a24;--m3:#fff6d6;--glow:rgba(246,197,111,.4)}
+.pr2-card.hero{border:1.5px solid rgba(246,197,111,.75);background:linear-gradient(180deg,rgba(246,197,111,.13),rgba(246,197,111,.02) 45%),var(--card);box-shadow:0 0 0 4px rgba(246,197,111,.08),0 34px 70px -34px rgba(246,197,111,.55)}
+.pr2-card.mine{box-shadow:0 0 0 2px var(--m1),0 30px 60px -36px rgba(0,0,0,.9)}
+.pr2-tag{align-self:flex-start;margin:-6px 0 12px;padding:5px 10px;border-radius:999px;font-size:11.5px;font-weight:800;color:#1a1530;background:linear-gradient(135deg,var(--m3),var(--m1) 60%,var(--m2))}
+.pr2-tag.none{visibility:hidden}
+.pr2-card header{display:flex;align-items:center;gap:12px}
+.pr2-emb{flex:none;width:46px;height:46px;border-radius:15px;display:grid;place-items:center;font-size:19px;color:#1a1530;background:linear-gradient(145deg,var(--m3),var(--m1) 35%,var(--m2) 72%,var(--m1));box-shadow:inset 0 2px 1px rgba(255,255,255,.6)}
+.pr2-card h4{margin:0;font-size:21px;font-weight:800;letter-spacing:-.01em;color:#fff}
+.pr2-card header p{margin:1px 0 0;font-size:13px;font-weight:700;color:var(--m1)}
+.pr2-pitch{margin:12px 0 14px;min-height:2.7em;font-size:14px;line-height:1.35;color:var(--ink2)}
+.pr2-price{display:flex;align-items:flex-end;flex-wrap:wrap;gap:4px 10px}
+.pr2-price s{align-self:flex-start;margin-top:5px;font-size:21px;font-weight:700;color:rgba(255,255,255,.45);text-decoration-color:#ef4444;text-decoration-thickness:3px}
+.pr2-price>b{font-size:50px;line-height:.9;font-weight:800;letter-spacing:-.045em;color:#fff}
+.pr2-price span{display:flex;flex-direction:column;padding-bottom:3px;font-size:13px;font-weight:600;color:var(--ink2);white-space:nowrap}
+.pr2-price em{font-style:normal;color:#5fe0a8;font-weight:700}
+.pr2-save{display:flex;align-items:center;gap:8px;min-height:24px;margin:10px 0 14px;font-size:13px;font-weight:800;color:#86efac}
+.pr2-save span{padding:3px 8px;border-radius:8px;background:#ef4444;color:#fff;font-size:12px;font-weight:900}
+.pr2-go{display:flex;align-items:center;justify-content:center;gap:8px;min-height:52px;border:0;border-radius:16px;font-family:inherit;font-size:16px;font-weight:800;line-height:1;color:#1a1530;cursor:pointer;background:linear-gradient(145deg,var(--m3),var(--m1) 40%,var(--m2) 90%);box-shadow:inset 0 2px 1px rgba(255,255,255,.55),inset 0 -3px 6px rgba(0,0,0,.2),0 16px 30px -14px var(--glow);transition:filter .2s,transform .15s}
+.pr2-go:hover{filter:brightness(1.07)}.pr2-go:active{transform:scale(.98)}
+.pr2-go:focus-visible,.pr2-all:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+.pr2-inc{margin:18px 0 8px;font-size:12.5px;font-weight:800;color:var(--ink3);text-transform:uppercase;letter-spacing:.06em}
+.pr2-list{list-style:none;margin:0;padding:0;display:grid;gap:9px;flex:1}
+.pr2-list li{display:flex;gap:10px;align-items:flex-start;font-size:14px;line-height:1.38;color:#ebe8ff}
+.pr2-list li>i{flex:none;position:relative;margin-top:2px;width:18px;height:18px;border-radius:50%;background:var(--m1)}.pr2-list li>i::after{border-color:#1a1530;width:30%;height:55%;border-width:0 2px 2px 0}
+.pr2-list b{color:var(--m3);font-weight:800;white-space:nowrap}
+.pr2-all{margin-top:16px;font-size:13.5px;font-weight:700;color:var(--m1);text-decoration:none}
+.pr2-all:hover{text-decoration:underline}
+.pr2-why{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:22px 0 6px}
+.pr2-why>div{display:flex;flex-direction:column;gap:4px;padding:16px;border-radius:18px;background:rgba(255,255,255,.035);border:1px solid var(--line)}
+.pr2-why i{font-size:19px;color:var(--gold);margin-bottom:4px}
+.pr2-why b{font-size:14.5px;color:#fff}
+.pr2-why span{font-size:13px;line-height:1.45;color:var(--ink2)}
+.pr2-cmp{margin-top:28px;scroll-margin-top:16px}
+.pr2-cmp h3,.pr2-faq h3{margin:0;font-size:22px;font-weight:800;letter-spacing:-.015em;color:#fff}
+.pr2-cmp>p{margin:4px 0 14px;font-size:14px;color:var(--ink2)}
+.pr2-tw{overflow-x:auto;border-radius:20px;border:1px solid var(--line);background:rgba(255,255,255,.02)}
+.pr2-tw table{width:100%;min-width:760px;border-collapse:collapse;font-size:13.5px}
+.pr2-tw th,.pr2-tw td{padding:12px 12px;text-align:center;border-bottom:1px solid rgba(196,186,255,.08);vertical-align:middle}
+.pr2-tw thead th{position:sticky;top:0;z-index:2;background:#17142e;font-size:14px;font-weight:800;color:#fff}
+.pr2-tw thead th small{display:block;margin-top:2px;font-size:11.5px;font-weight:600;color:var(--ink3)}
+.pr2-tw th[scope="row"],.pr2-tw thead th:first-child{position:sticky;left:0;z-index:1;text-align:left;background:#141128;font-weight:600;color:#ebe8ff;min-width:220px}
+.pr2-tw thead th:first-child{z-index:3}
+.pr2-tw th[scope="row"] small{display:block;margin-top:2px;font-size:12px;font-weight:500;color:var(--ink3)}
+.pr2-cat th{padding:14px 12px 8px;text-align:left;background:rgba(246,197,111,.06);font-size:12.5px;font-weight:800;color:var(--gold);text-transform:uppercase;letter-spacing:.06em}
+.pr2-cat th i{margin-right:8px}
+.pr2-tw td b{font-weight:700;color:#fff;white-space:nowrap}
+.pr2-tw td b.unl{color:var(--gold)}
+.pr2-tw .c-gold{background:rgba(246,197,111,.05)}
+.pr2-y{display:inline-block;width:20px;height:20px;border-radius:50%;background:rgba(95,224,168,.16);position:relative;vertical-align:middle}.pr2-y::after,.pr2-list li>i::after{content:'';position:absolute;left:50%;top:45%;width:35%;height:62%;border:solid #5fe0a8;border-width:0 2.5px 2.5px 0;transform:translate(-50%,-50%) rotate(45deg)}
+.pr2-n{font-style:normal;color:rgba(255,255,255,.22)}
+.pr2-faq{margin-top:28px;display:grid;gap:8px}
+.pr2-faq h3{margin-bottom:6px}
+.pr2-faq details{border-radius:16px;background:rgba(255,255,255,.035);border:1px solid var(--line)}
+.pr2-faq summary{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:15px 16px;font-size:15px;font-weight:700;color:#fff;cursor:pointer;list-style:none}
+.pr2-faq summary::-webkit-details-marker{display:none}
+.pr2-faq summary i{color:var(--ink3);transition:transform .2s}
+.pr2-faq details[open] summary i{transform:rotate(45deg)}
+.pr2-faq p{margin:0;padding:0 16px 16px;font-size:14px;line-height:1.55;color:var(--ink2)}
+@media (max-width:1100px){.pr2-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:640px){.pr2-tag.none{display:none}.pr2-grid{grid-template-columns:1fr}.pr2-why{grid-template-columns:1fr}.pr2-hero{align-items:flex-start}.pr2-crown{width:48px;height:48px;font-size:20px;border-radius:16px}.pr2-cd{flex:1 1 100%;justify-content:center}.pr2-pitch{min-height:0}}
+@media (prefers-reduced-motion:reduce){.pr2-go,.pr2-faq summary i{transition:none}}
 @media (prefers-reduced-motion:reduce){.pr-card,.pr-sheen,.pr-go{transition:none!important}.pr-card:hover .pr-sheen{transform:translateX(-120%)}}
 </style>
 <!--pr:js--><script id="pr-js">
@@ -43646,58 +43773,138 @@ Reply with JSON only: {"words":[{"w":"","pos":"","ipa":"","def":"","ex":""}],"gr
     const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
     const U = () => { try { return state.user || {}; } catch (e) { return {}; } };
     const day = () => { const d = new Date(); return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate(); };
-    const FREE = { ai: 30, chk: 3, mock: 1, cls: 0 };
+    /* the sale: ends on SALE_END (change the date here); after it the cards show the normal price */
+    const SALE_END = Date.parse('2026-11-30T23:59:59+05:00'), SALE_NAME = 'Launch sale';
+    const onSale = () => Date.now() < SALE_END;
+    const UNL = 100000;   // "Unlimited" (fair use)
+    const FREE = { ai: 25, wr: 2, sp: 2, mock: 1, cls: 0 };
     const PLANS = [
-        { id: '1 Month Plan', key: 'silver', name: 'Silver', dur: '1 month', price: 5, per: '$5.00 / month', uzs: '≈ 63,000 UZS', ai: 150, chk: 10, mock: 3, cls: 1, ic: 'fa-moon',
-            f: [['fa-robot', 'AI Tutor in 12 languages'], ['fa-layer-group', 'Daily words + camera exam'], ['fa-spell-check', 'All 120+ grammar topics'], ['fa-headphones', 'Note-taking & Shadowing']] },
-        { id: '3 Months Plan', key: 'emerald', name: 'Emerald', dur: '3 months', price: 25, per: '≈ $8.33 / month', uzs: '≈ 315,000 UZS', ai: 250, chk: 20, mock: 8, cls: 3, ic: 'fa-gem',
-            f: [['fa-check', 'Everything in Silver'], ['fa-microphone-lines', 'IELTS Speaking & Writing checks'], ['fa-book-open-reader', 'Reading Lab + Book Maker'], ['fa-chalkboard-user', 'Classroom: 3 classes as a teacher']] },
-        { id: '6 Months Plan', key: 'amethyst', name: 'Amethyst', dur: '6 months', price: 40, per: '≈ $6.67 / month', uzs: '≈ 504,000 UZS', ai: 400, chk: 35, mock: 15, cls: 10, ic: 'fa-wand-magic-sparkles', tag: 'Most popular',
-            f: [['fa-check', 'Everything in Emerald'], ['fa-stopwatch', 'FullMock with band score'], ['fa-user-graduate', 'Luna Coach: plan every day'], ['fa-chalkboard-user', 'Classroom: 10 classes']] },
-        { id: '1 Year VIP Plan', key: 'gold', name: 'Gold VIP', dur: '1 year', price: 60, per: '≈ $5.00 / month', uzs: '≈ 756,000 UZS', ai: 800, chk: 60, mock: 80, cls: 99, ic: 'fa-crown', tag: 'Best value',
-            f: [['fa-check', 'Everything in Amethyst'], ['fa-stopwatch', 'All 80 FullMock tests'], ['fa-tag', 'Lowest price: $5 a month'], ['fa-chalkboard-user', 'Unlimited classes']] }
+        { id: '1 Month Plan', key: 'silver', name: 'Silver', dur: '1 month', was: 10, price: 5, months: 1, ai: 150, wr: 10, sp: 10, mock: 3, cls: 1, ic: 'fa-moon',
+            pitch: 'Try everything for a month',
+            f: [['fa-robot', 'AI Tutor in 12 languages'], ['fa-layer-group', 'Daily words with Luna'], ['fa-spell-check', 'All 190 grammar topics'], ['fa-headphones', 'Listening, shadowing & note-taking']] },
+        { id: '3 Months Plan', key: 'emerald', name: 'Emerald', dur: '3 months', was: 30, price: 15, months: 3, ai: 300, wr: 25, sp: 25, mock: 10, cls: 3, ic: 'fa-gem',
+            pitch: 'Enough time to move up a level',
+            f: [['fa-check', 'Everything in Silver'], ['fa-microphone-lines', 'More IELTS Speaking & Writing checks'], ['fa-book-open-reader', 'Reading Lab + Book Maker'], ['fa-chalkboard-user', 'Classroom: 3 classes as a teacher']] },
+        { id: '6 Months Plan', key: 'amethyst', name: 'Amethyst', dur: '6 months', was: 60, price: 30, months: 6, ai: 600, wr: 50, sp: 50, mock: 25, cls: 10, ic: 'fa-wand-magic-sparkles', tag: 'Most popular',
+            pitch: 'The full IELTS preparation season',
+            f: [['fa-check', 'Everything in Emerald'], ['fa-stopwatch', 'FullMock with a band score'], ['fa-user-graduate', 'Luna Coach plans every day'], ['fa-chalkboard-user', 'Classroom: 10 classes']] },
+        { id: '1 Year VIP Plan', key: 'gold', name: 'Gold VIP', dur: '1 year', was: 100, price: 60, months: 12, ai: UNL, wr: UNL, sp: UNL, mock: 80, cls: 99, ic: 'fa-crown', tag: 'Best value · no limits',
+            pitch: 'Use everything, as much as you want',
+            f: [['fa-infinity', 'Unlimited AI, checks and Luna'], ['fa-stopwatch', 'All 80 FullMock tests'], ['fa-bolt', 'First to get every new feature'], ['fa-chalkboard-user', 'Unlimited classes']] }
     ];
-    const MAX = { ai: 800, chk: 60, mock: 80 };
+    const UZS = 12600, uzs = (usd) => '≈ ' + Math.round(usd * UZS / 1000).toLocaleString('en-US') + ',000 UZS';
+    const priceOf = (p) => onSale() ? p.price : p.was;
+    const MAX = { ai: 600, wr: 50, sp: 50, mock: 80 };
     /* the AI request counter (blocking only when LR_LIMITS.on) */
     function planOf(u) { u = u || U(); if (!u.isPro) return null; const p = String(u.proPlan || ''); return PLANS.find(x => x.id === p) || (/year|promo|gift/i.test(p) ? PLANS[3] : /6/.test(p) ? PLANS[2] : /3/.test(p) ? PLANS[1] : PLANS[0]); }
-    function limits() { const p = planOf(); return p ? { ai: p.ai, chk: p.chk, mock: p.mock } : FREE; }
+    function limits() { const p = planOf(); return p ? { ai: p.ai, wr: p.wr, sp: p.sp, mock: p.mock } : FREE; }
     function used() { try { const x = JSON.parse(localStorage.getItem('lr_ai_use') || 'null'); return x && x.d === day() ? x : { d: day(), n: 0 }; } catch (e) { return { d: day(), n: 0 }; } }
     function bump() { const x = used(); x.n++; try { localStorage.setItem('lr_ai_use', JSON.stringify(x)); } catch (e) { } return x.n; }
-    window.LR_LIMITS = { on: false, limits, used: () => used().n, plan: planOf };
+    window.LR_LIMITS = { on: true, limits, used: () => used().n, plan: planOf, bump,
+        /* true when one more AI request is allowed today (counts it); shows a friendly message when it is not */
+        take() { const cap = limits().ai; if (this.on && cap < UNL && used().n >= cap) { try { showToast('You used today’s ' + cap + ' AI requests. They come back at midnight, or go PRO for more.'); } catch (e) { } try { setTimeout(() => window.openSubscriptionModal && openSubscriptionModal(), 900); } catch (e) { } return false; } bump(); return true; } };
     function wrap() {
         const f = window.lrAIFetch; if (typeof f !== 'function' || f.__lim) return;
         const w = function (url, o) {
             if (/chat\/completions/.test(String(url))) {
-                const n = used().n, cap = limits().ai;
-                if (window.LR_LIMITS.on && n >= cap) { try { showToast('Today’s AI limit (' + cap + ') is used. It resets tomorrow, or upgrade your plan.'); } catch (e) { } return Promise.resolve(new Response(JSON.stringify({ error: 'limit' }), { status: 429 })); }
-                bump();
+                /* counted where the learner asks Luna (aiCall); background work (translations, lesson plans) is not counted */
             }
             return f.apply(this, arguments);
         };
         w.__lim = 1; window.lrAIFetch = w;
     }
     /* ---------- the plans screen ---------- */
-    const bar = (v, max) => '<i style="--w:' + Math.max(6, Math.min(100, v / max * 100)).toFixed(0) + '%"></i>';
-    function card(p, mine) {
-        const lim = [['fa-robot', 'AI requests', p.ai + ' / day', p.ai, MAX.ai], ['fa-pen-nib', 'AI checks', p.chk + ' / day', p.chk, MAX.chk], ['fa-stopwatch', 'FullMock', p.mock === 80 ? 'all 80' : p.mock + ' / month', p.mock, MAX.mock]];
-        return '<article class="pr-card pr-' + p.key + (mine ? ' mine' : '') + '">' + (p.tag ? '<span class="pr-tag">' + esc(p.tag) + '</span>' : '<span class="pr-tag ghost" aria-hidden="true">·</span>') +
-            '<div class="pr-sheen" aria-hidden="true"></div><header class="pr-h"><span class="pr-emb"><i class="fa-solid ' + p.ic + '"></i></span><div><b>' + esc(p.name) + '</b><small>' + esc(p.dur) + '</small></div></header>' +
-            '<div class="pr-price"><b>$' + p.price + '</b><span>' + esc(p.per) + '<em>' + esc(p.uzs) + '</em></span></div>' +
-            '<ul class="pr-lim">' + lim.map(l => '<li><span><i class="fa-solid ' + l[0] + '"></i>' + l[1] + '</span><b>' + l[2] + '</b><span class="pr-m">' + bar(l[3], l[4]) + '</span></li>').join('') + '</ul>' +
-            '<ul class="pr-f">' + p.f.map(x => '<li><i class="fa-solid ' + x[0] + '"></i>' + esc(x[1]) + '</li>').join('') + '</ul>' +
-            '<button type="button" class="pr-go" onclick="activatePro(\'' + p.id + '\')">' + (mine ? '<i class="fa-solid fa-circle-check"></i>Your plan · extend' : 'Choose ' + esc(p.name)) + '</button></article>';
+    const bar = (v, max) => '<i style="--w:' + (v >= UNL ? 100 : Math.max(6, Math.min(100, v / max * 100))).toFixed(0) + '%"></i>';
+    const num = (v, per) => v >= UNL ? 'Unlimited' : v + per;
+    /* every feature of LunaRise, and what each plan gets: true = included, false = not included, text = a limit */
+    const K = ['free', 'silver', 'emerald', 'amethyst', 'gold'];
+    const FEAT = [
+        ['AI teacher & speaking', 'fa-robot', [
+            ['AI Tutor: ask anything, fix sentences, photo of homework', 'In 12 languages, day or night', ['25 / day', '150 / day', '300 / day', '600 / day', 'Unlimited'], 1],
+            ['IELTS Writing check with a band score', 'Task 1 & 2, every mistake explained', ['2 / day', '10 / day', '25 / day', '50 / day', 'Unlimited'], 1],
+            ['IELTS Speaking check with a band score', 'Fluency, vocabulary, grammar, pronunciation', ['2 / day', '10 / day', '25 / day', '50 / day', 'Unlimited'], 1],
+            ['Daily words with Luna, the 3D teacher', 'Learn, practise, check, then say them to her', [true, true, true, true, true], 1],
+            ['Speaking Studio: real exam simulator', 'An examiner asks, live speech recognition', ['1 / day', true, true, true, true], 0],
+            ['Luna Coach: your plan for every day', 'Built from your level test and your mistakes', [false, false, true, true, true], 1],
+            ['Level test with an AI report', 'Your CEFR level and what to learn next', [true, true, true, true, true], 0]]],
+        ['Exams', 'fa-graduation-cap', [
+            ['FullMock: full IELTS Academic tests', 'Listening, Reading, Writing, Speaking in exam order', ['1 test', '3 / month', '10 / month', '25 / month', 'All 80'], 1],
+            ['Band score report and what to fix', 'After every mock and every check', [false, true, true, true, true], 0],
+            ['IELTS, CEFR, TOEFL and SAT practice', 'All four skills', [true, true, true, true, true], 0],
+            ['Mock Studio: Listening & Reading mocks', '80 mocks for IELTS and CEFR', ['5 mocks', 'All 80', 'All 80', 'All 80', 'All 80'], 0]]],
+        ['Learning', 'fa-book-open', [
+            ['Grammar: 190 topics, A1 to C2', 'Explained in Uzbek, Russian and 12 more languages', [true, true, true, true, true], 0],
+            ['Grammar tests, 20 examples and 20 mistakes per rule', 'Tests that never repeat', ['Basic', true, true, true, true], 1],
+            ['Dictionary in 14 languages + My words', 'Hear every word, save it', [true, true, true, true, true], 0],
+            ['Flashcards', 'Spaced repetition of your words', ['50 words', 'Unlimited', 'Unlimited', 'Unlimited', 'Unlimited'], 0],
+            ['Reading Lab: texts with exam questions', 'Ready texts, or AI makes one on any topic', ['Ready texts', 'AI on any topic', 'AI on any topic', 'AI on any topic', 'AI on any topic'], 1],
+            ['Book Maker: illustrated books on any topic', 'Read a whole book made for your level', [false, false, true, true, true], 1],
+            ['Note-taking & Shadowing', '50 recordings, natural voices', ['5 recordings', 'All 50', 'All 50', 'All 50', 'All 50'], 0]]],
+        ['Community & fun', 'fa-users', [
+            ['Speaking Club: partners, friends and chats', 'Practise with learners like you', [true, true, true, true, true], 0],
+            ['Voice messages and calls in Speaking Club', '', [false, true, true, true, true], 1],
+            ['Classroom: teach your own classes', 'Set homework, Luna helps every student', [false, '1 class', '3 classes', '10 classes', 'Unlimited'], 0],
+            ['Games: Word Voyage, Galaxy Rush, Chess and more', 'Learn while you play', [true, true, true, true, true], 0],
+            ['Free full movies, cartoons and anime', 'From official channels', [true, true, true, true, true], 0],
+            ['Live teachers on YouTube and Telegram', 'An alert when they go live', [true, true, true, true, true], 0]]],
+        ['Extras', 'fa-star', [
+            ['No ads, ever', '', [true, true, true, true, true], 0],
+            ['Priority support', 'Your messages answered first', [false, false, false, true, true], 0],
+            ['Early access to new features', '', [false, false, false, false, true], 1]]]
+    ];
+    const cell = (v) => v === true ? '<i class="pr2-y" role="img" aria-label="Included"></i>' : v === false ? '<i class="pr2-n" aria-label="Not included">—</i>' : '<b' + (v === 'Unlimited' || v === 'All 80' ? ' class="unl"' : '') + '>' + esc(v) + '</b>';
+    function includes(ix) {
+        const out = [];
+        FEAT.forEach(([cat, ic, rows]) => rows.forEach(r => { const v = r[2][ix]; if (v === false) return; if (r[3] || ix === 4) out.push([r[0], v]); }));
+        return out;
     }
+    function card(p, mine) {
+        const ix = K.indexOf(p.key), sale = onSale(), cur = priceOf(p), off = Math.round((1 - p.price / p.was) * 100), pm = cur / p.months;
+        const prev = ix > 1 ? PLANS[ix - 2].name : '';
+        const L = includes(ix).filter(x => ix < 4 || x[1] === 'Unlimited' || x[1] === 'All 80' || x[1] === true).slice(0, ix === 4 ? 10 : 9);
+        return '<article class="pr2-card pr-' + p.key + (mine ? ' mine' : '') + (p.key === 'gold' ? ' hero' : '') + '">' +
+            '<span class="pr2-tag' + (p.tag ? '' : ' none') + '"' + (p.tag ? '' : ' aria-hidden="true"') + '>' + esc(p.tag || '·') + '</span>' +
+            '<header><span class="pr2-emb"><i class="fa-solid ' + p.ic + '"></i></span><div><h4>' + esc(p.name) + '</h4><p>' + esc(p.dur) + '</p></div></header>' +
+            '<p class="pr2-pitch">' + esc(p.pitch) + '</p>' +
+            '<div class="pr2-price">' + (sale ? '<s>$' + p.was + '</s>' : '') + '<b>$' + cur + '</b><span>' + (p.months > 1 ? 'for ' + p.months + ' months' : 'for one month') + '<em>' + uzs(cur) + '</em></span></div>' +
+            (sale ? '<p class="pr2-save"><span>−' + off + '%</span>You save $' + (p.was - p.price) + '</p>' : '<p class="pr2-save"></p>') +
+            '<button type="button" class="pr2-go" onclick="activatePro(\'' + p.id + '\')">' + (mine ? '<i class="fa-solid fa-circle-check"></i>Your plan · extend' : 'Get ' + esc(p.name)) + '</button>' +
+            '<p class="pr2-inc">' + (p.key === 'gold' ? 'Everything, without limits:' : prev ? 'Everything in ' + esc(prev) + ', plus:' : 'What you get:') + '</p>' +
+            '<ul class="pr2-list">' + L.map(x => '<li><i aria-hidden="true"></i><span>' + esc(x[0].split(':')[0]) + (x[1] === true ? '' : ' <b>' + esc(x[1]) + '</b>') + '</span></li>').join('') + '</ul>' +
+            '<a class="pr2-all" href="#pr2-cmp">See every feature</a></article>';
+    }
+    function table() {
+        const head = '<tr><th scope="col">Feature</th><th scope="col">Free</th>' + PLANS.map(p => '<th scope="col" class="c-' + p.key + '">' + esc(p.name) + '<small>$' + priceOf(p) + ' · ' + esc(p.dur) + '</small></th>').join('') + '</tr>';
+        return '<section class="pr2-cmp" id="pr2-cmp" aria-labelledby="pr2-cmph"><h3 id="pr2-cmph">Compare every feature</h3><p>Everything LunaRise can do, and what each plan includes.</p><div class="pr2-tw"><table><thead>' + head + '</thead>' +
+            FEAT.map(([cat, ic, rows]) => '<tbody><tr class="pr2-cat"><th colspan="6" scope="colgroup"><i class="fa-solid ' + ic + '"></i>' + esc(cat) + '</th></tr>' +
+                rows.map(r => '<tr><th scope="row">' + esc(r[0]) + (r[1] ? '<small>' + esc(r[1]) + '</small>' : '') + '</th>' + r[2].map((v, i) => '<td class="c-' + K[i] + '">' + cell(v) + '</td>').join('') + '</tr>').join('') + '</tbody>').join('') +
+            '</table></div></section>';
+    }
+    const FAQ = [
+        ['Is it a subscription?', 'No. You pay once for 1, 3, 6 or 12 months. Nothing renews by itself.'],
+        ['What happens when my plan ends?', 'You go back to Free. Your words, scores and progress stay with you.'],
+        ['When do the daily limits reset?', 'Every day at midnight. Gold VIP has no limits, for fair everyday use by one person.'],
+        ['Can I use it on my phone and computer?', 'Yes. Sign in with the same account and your plan works on every device.'],
+        ['I have a promo code', 'Enter it at the bottom of this page. A code gives PRO at once.']
+    ];
     function html() {
-        const u = U(), mine = planOf(u), n = used().n, lim = limits();
-        return '<div class="pr-wrap"><div class="pr-top"><div class="pr-title"><span class="pr-crown"><i class="fa-solid fa-crown"></i></span><div><h3>LunaRise PRO</h3><p>More AI, more mock tests, every feature.</p></div></div>' +
+        const u = U(), mine = planOf(u), n = used().n, lim = limits(), sale = onSale();
+        return '<div class="pr-wrap pr2"><div class="pr2-top"><div class="pr2-hero"><span class="pr2-crown"><i class="fa-solid fa-crown"></i></span><div><h3>Speak English with confidence</h3><p>LunaRise PRO: a personal AI teacher, real exam practice and every feature, for less than one lesson with a tutor.</p></div></div>' +
             '<button type="button" class="pr-x" onclick="closeModal(\'modal-subscription\')" aria-label="Close"><i class="fa-solid fa-xmark"></i></button></div>' +
-            '<div class="pr-now"><span><i class="fa-solid fa-signal"></i>' + (mine ? 'Your plan: <b>' + esc(mine.name) + '</b>' + (u.proUntil ? ' until ' + new Date(u.proUntil).toLocaleDateString('en-GB') : '') : 'You are on <b>Free</b>') + '</span>' +
-            '<span class="pr-use"><b>' + n + '</b> of ' + lim.ai + ' AI requests used today<i style="--w:' + Math.min(100, n / lim.ai * 100).toFixed(0) + '%"></i></span></div>' +
-            '<div class="pr-grid">' + PLANS.map(p => card(p, mine && mine.id === p.id)).join('') + '</div>' +
-            '<div class="pr-free"><b>Free</b><span><i class="fa-solid fa-robot"></i>' + FREE.ai + ' AI requests / day</span><span><i class="fa-solid fa-pen-nib"></i>' + FREE.chk + ' AI checks / day</span><span><i class="fa-solid fa-stopwatch"></i>' + FREE.mock + ' FullMock test</span><span><i class="fa-solid fa-book"></i>Dictionary, games, movies</span></div>' +
-            '<p class="pr-note"><i class="fa-solid fa-circle-info"></i>AI request: one answer from Luna (tutor, coach, homework). AI check: Luna marks a writing or speaking task. Limits reset every day at midnight.</p>' +
+            (sale ? '<div class="pr2-sale" role="note"><span class="pr2-badge">🔥 ' + SALE_NAME + '</span><b>Up to 50% off every plan</b><span class="pr2-cd"><small>Price goes up in</small><b id="pr-cd">' + left() + '</b></span></div>' : '') +
+            '<div class="pr2-now"><span>' + (mine ? '<i class="fa-solid fa-gem"></i>Your plan: <b>' + esc(mine.name) + '</b>' + (u.proUntil ? ' · until ' + new Date(u.proUntil).toLocaleDateString('en-GB') : '') : '<i class="fa-solid fa-seedling"></i>You are on <b>Free</b>') + '</span>' +
+            '<span class="pr2-use"><b>' + n + '</b>&nbsp;of ' + (lim.ai >= UNL ? 'unlimited' : lim.ai) + ' AI requests today<i style="--w:' + (lim.ai >= UNL ? 4 : Math.min(100, n / lim.ai * 100)).toFixed(0) + '%"></i></span></div>' +
+            '<div class="pr2-grid">' + PLANS.map(p => card(p, mine && mine.id === p.id)).join('') + '</div>' +
+            '<div class="pr2-why"><div><i class="fa-solid fa-mug-hot"></i><b>Less than a coffee a week</b><span>Gold VIP is $1.15 a week on sale.</span></div><div><i class="fa-solid fa-user-tie"></i><b>A tutor costs $10 an hour</b><span>Luna is there 24/7 and checks every answer.</span></div><div><i class="fa-solid fa-chart-line"></i><b>See your band score go up</b><span>Every check tells you your band and what to fix.</span></div></div>' +
+            table() +
+            '<section class="pr2-faq" aria-labelledby="pr2-faqh"><h3 id="pr2-faqh">Questions</h3>' + FAQ.map(q => '<details><summary>' + esc(q[0]) + '<i class="fa-solid fa-plus"></i></summary><p>' + esc(q[1]) + '</p></details>').join('') + '</section>' +
+            '<p class="pr-note"><i class="fa-solid fa-circle-info"></i>AI request: one answer from Luna (AI Tutor, Coach, homework help). Writing and speaking checks count as AI requests too. Limits reset every day at midnight.</p>' +
             '<div id="pr-promo"></div></div>';
     }
+    D.addEventListener('click', (e) => { const a = e.target.closest && e.target.closest('.pr2-all'); if (!a) return; e.preventDefault(); const t = D.getElementById('pr2-cmp'); if (t) t.scrollIntoView({ behavior: 'smooth', block: 'start' }); });
+    function left() { const s = Math.max(0, Math.floor((SALE_END - Date.now()) / 1000)), d = Math.floor(s / 86400), h = Math.floor(s % 86400 / 3600), m = Math.floor(s % 3600 / 60), x = s % 60; return (d ? d + 'd ' : '') + String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0') + ':' + String(x).padStart(2, '0'); }
+    let cdT = 0;
+    function tick() { const e = $('pr-cd'); if (!e) { clearInterval(cdT); cdT = 0; return; } e.textContent = left(); if (!onSale()) { clearInterval(cdT); cdT = 0; build(); } }
     function build() {
         const m = $('modal-subscription'); if (!m) return;
         const box = m.firstElementChild; if (!box) return;
@@ -43705,6 +43912,7 @@ Reply with JSON only: {"words":[{"w":"","pos":"","ipa":"","def":"","ex":""}],"gr
         box.className = 'pr-box'; box.innerHTML = html();
         if (promo) { $('pr-promo').appendChild(promo); promo.classList.add('pr-promo'); }
         m.classList.add('pr-modal');
+        if (onSale() && !cdT) cdT = setInterval(tick, 1000);
     }
     function boot() {
         wrap(); build();
