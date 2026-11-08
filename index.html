@@ -6233,6 +6233,167 @@ html.ax-lock,html.ax-lock body{overflow:hidden}
 .mv-eps img{flex:none;width:96px;aspect-ratio:16/9;border-radius:8px;object-fit:cover}
 .mv-eps b{display:block;font-size:13.5px}.mv-eps small{font-size:12px;color:rgba(199,210,254,.7)}
 @media (max-width:640px){.mv-fc,.mv-sk.w{width:72vw;max-width:280px}}
+/* ===== Help & feedback (Profile) and the support chat ===== */
+.hs{position:relative;margin-top:8px;padding:22px 18px 18px;border-radius:28px;background:radial-gradient(120% 90% at 0% 0%,rgba(129,140,248,.22),transparent 60%),radial-gradient(90% 80% at 100% 100%,rgba(251,191,36,.12),transparent 60%),rgba(15,18,45,.72);border:1px solid rgba(165,180,252,.18);box-shadow:0 24px 60px -30px rgba(0,0,0,.8);overflow:hidden}
+.hs-head{display:flex;gap:14px;align-items:flex-start;margin-bottom:16px}
+.hs-badge{flex:none;display:grid;place-items:center;width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,#818cf8,#a78bfa 55%,#fbbf24);color:#fff;font-size:20px;box-shadow:0 10px 24px -8px rgba(129,140,248,.7)}
+.hs-head h3{margin:0;font:800 19px/1.25 'Plus Jakarta Sans',system-ui,sans-serif;color:#fff}
+.hs-head p{margin:5px 0 0;font-size:13.5px;line-height:1.5;color:rgba(199,210,254,.75)}
+.hs-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+@media (min-width:860px){.hs-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.hs-tile{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:4px;min-height:118px;padding:14px;border-radius:20px;border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.045);color:#f1f5f9;text-align:left;cursor:pointer;transition:transform .18s,background .18s,border-color .18s}
+.hs-tile:hover{background:rgba(255,255,255,.08);border-color:rgba(165,180,252,.35)}
+.hs-tile:active{transform:scale(.97)}
+.hs-tile:focus-visible{outline:2px solid #a5b4fc;outline-offset:2px}
+.hs-ic{display:grid;place-items:center;width:40px;height:40px;margin-bottom:6px;border-radius:13px;font-size:21px;background:rgba(255,255,255,.08)}
+.hs-bug .hs-ic{background:linear-gradient(135deg,rgba(248,113,113,.35),rgba(251,146,60,.25))}
+.hs-idea .hs-ic{background:linear-gradient(135deg,rgba(251,191,36,.4),rgba(250,204,21,.18))}
+.hs-sup .hs-ic{background:linear-gradient(135deg,rgba(52,211,153,.38),rgba(34,211,238,.22))}
+.hs-love .hs-ic{background:linear-gradient(135deg,rgba(244,114,182,.4),rgba(167,139,250,.25))}
+.hs-tile b{font-size:14.5px;font-weight:800;line-height:1.25}
+.hs-tile small{font-size:12px;line-height:1.35;color:rgba(199,210,254,.65)}
+.hs-dot{position:absolute;top:12px;right:12px;padding:3px 8px;border-radius:999px;background:#22c55e;color:#04210f;font:800 11px/1.2 system-ui,sans-serif;font-style:normal;animation:hsPulse 1.8s ease-in-out infinite}
+@keyframes hsPulse{50%{box-shadow:0 0 0 6px rgba(34,197,94,.18)}}
+.hs-hist{margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,255,255,.07)}
+.hs-hist h4{margin:0 0 8px;font-size:13px;font-weight:800;color:rgba(226,232,255,.8)}
+.hs-hi{display:grid;grid-template-columns:24px 1fr;gap:2px 10px;padding:8px 0}
+.hs-hi span{grid-row:span 2;font-size:17px}
+.hs-hi p{margin:0;font-size:13.5px;color:#e2e8f0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hs-hi small{font-size:11.5px;color:rgba(165,180,252,.6)}
+.hs-foot{margin:14px 0 0;font-size:12px;color:rgba(165,180,252,.55)}
+/* the sheet */
+html.hs-lock{overflow:hidden}
+.hs-sh{position:fixed;inset:0;z-index:9500;display:flex;align-items:flex-end;justify-content:center}
+.hs-bd{position:absolute;inset:0;background:rgba(5,7,20,.6);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);opacity:0;transition:opacity .3s}
+.hs-card{position:relative;width:100%;max-width:560px;max-height:92vh;max-height:92dvh;display:flex;flex-direction:column;padding:10px 18px calc(18px + env(safe-area-inset-bottom));border-radius:28px 28px 0 0;background:linear-gradient(180deg,#1a1f4a,#11142f);border:1px solid rgba(165,180,252,.2);border-bottom:0;box-shadow:0 -20px 60px -20px rgba(0,0,0,.8);transform:translateY(105%);transition:transform .38s cubic-bezier(.2,.9,.25,1);outline:none;overflow:auto;color:#f1f5f9}
+.hs-sh.in .hs-bd{opacity:1}.hs-sh.in .hs-card{transform:none}
+@media (min-width:700px){.hs-sh{align-items:center}.hs-card{border-radius:28px;border-bottom:1px solid rgba(165,180,252,.2);transform:translateY(24px) scale(.97);opacity:0;transition:transform .32s,opacity .25s}.hs-sh.in .hs-card{opacity:1}}
+.hs-grab{align-self:center;width:40px;height:5px;margin:0 0 10px;border-radius:3px;background:rgba(255,255,255,.18)}
+.hs-sh-h{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.hs-sh-h h3{margin:0;font:800 18px/1.25 'Plus Jakarta Sans',system-ui,sans-serif}
+.hs-sh-h p{margin:3px 0 0;font-size:13px;color:rgba(199,210,254,.7);display:flex;align-items:center;gap:6px}
+.hs-sh-h>div{flex:1;min-width:0}
+.hs-ic.big{width:48px;height:48px;font-size:25px;margin:0;flex:none}
+.hs-x{flex:none;width:38px;height:38px;border-radius:50%;border:0;background:rgba(255,255,255,.08);color:#e2e8f0;font-size:15px;cursor:pointer}
+.hs-form{display:flex;flex-direction:column;gap:8px}
+.hs-l{margin-top:6px;font-size:13.5px;font-weight:700;color:#e0e7ff}
+.hs-ta{width:100%;padding:12px 14px;border-radius:16px;border:1px solid rgba(165,180,252,.22);background:rgba(255,255,255,.05);color:#fff;font:500 15px/1.5 'Plus Jakarta Sans',system-ui,sans-serif;resize:vertical;outline:none;transition:border-color .2s,background .2s}
+.hs-ta:focus{border-color:#818cf8;background:rgba(255,255,255,.08)}
+.hs-ta::placeholder{color:rgba(199,210,254,.4)}
+.hs-chips{display:flex;flex-wrap:wrap;gap:6px}
+.hs-chips button{padding:7px 12px;border-radius:999px;border:1px solid rgba(165,180,252,.22);background:rgba(255,255,255,.04);color:#e0e7ff;font:600 13px/1.2 system-ui,sans-serif;cursor:pointer}
+.hs-chips button.on{background:#6366f1;border-color:#6366f1;color:#fff}
+.hs-rate{display:flex;justify-content:space-between;gap:6px;padding:4px 0 6px}
+.hs-rate button{flex:1;height:54px;border-radius:16px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);font-size:26px;cursor:pointer;filter:grayscale(.8);opacity:.6;transition:transform .15s,filter .15s,opacity .15s}
+.hs-rate button.on{filter:none;opacity:1;transform:scale(1.06);background:rgba(244,114,182,.15);border-color:rgba(244,114,182,.5)}
+.hs-auto{margin:4px 0 2px;font-size:12px;color:rgba(165,180,252,.6)}
+.hs-send{display:flex;align-items:center;justify-content:center;gap:9px;height:54px;margin-top:6px;border:0;border-radius:18px;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;font:800 16px/1 'Plus Jakarta Sans',system-ui,sans-serif;cursor:pointer;box-shadow:0 12px 26px -10px rgba(99,102,241,.8);transition:opacity .2s,transform .15s}
+.hs-send:disabled{opacity:.45;cursor:default;box-shadow:none}
+.hs-send:not(:disabled):active{transform:scale(.98)}
+.hs-spin{width:17px;height:17px;border-radius:50%;border:2.5px solid rgba(255,255,255,.35);border-top-color:#fff;animation:hsSp .8s linear infinite}
+@keyframes hsSp{to{transform:rotate(360deg)}}
+.hs-done{display:flex;flex-direction:column;align-items:center;text-align:center;padding:26px 6px 6px}
+.hs-done h3{margin:14px 0 6px;font:800 22px/1.2 'Plus Jakarta Sans',system-ui,sans-serif}
+.hs-done p{margin:0 0 16px;font-size:14.5px;line-height:1.55;color:rgba(199,210,254,.8);max-width:340px}
+.hs-done .hs-send{align-self:stretch}
+.hs-burst{display:grid;place-items:center;width:84px;height:84px;border-radius:50%;font-size:40px;background:radial-gradient(circle,rgba(129,140,248,.35),rgba(129,140,248,.05) 70%);animation:hsPop .6s cubic-bezier(.2,1.6,.4,1)}
+@keyframes hsPop{from{transform:scale(.3);opacity:0}}
+/* chat */
+.hs-sh.chat .hs-card{height:88vh;height:88dvh;overflow:hidden;padding-bottom:calc(10px + env(safe-area-inset-bottom))}
+.hs-sh-h.chat{padding-bottom:12px;margin-bottom:0;border-bottom:1px solid rgba(255,255,255,.07)}
+.hs-ava{flex:none;display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#6366f1,#a78bfa);font-size:15px}
+.hs-ava.big{width:46px;height:46px;font-size:22px}
+.hs-on{display:inline-block;width:8px;height:8px;border-radius:50%;background:#22c55e;box-shadow:0 0 0 3px rgba(34,197,94,.2)}
+.hs-msgs{flex:1;min-height:0;overflow-y:auto;padding:14px 2px;display:flex;flex-direction:column;gap:8px;overscroll-behavior:contain}
+.hs-day{align-self:center;margin:6px 0 2px;padding:3px 10px;border-radius:999px;background:rgba(255,255,255,.06);font-size:11.5px;color:rgba(199,210,254,.6)}
+.hs-msg{display:flex;align-items:flex-end;gap:8px;max-width:86%}
+.hs-msg>div{padding:9px 13px 6px;border-radius:18px}
+.hs-msg p{margin:0;font-size:15px;line-height:1.45;white-space:pre-wrap;word-wrap:break-word}
+.hs-msg small{display:block;margin-top:3px;font-size:10.5px;opacity:.65;text-align:right}
+.hs-msg.mine{align-self:flex-end}
+.hs-msg.mine>div{background:linear-gradient(135deg,#6366f1,#7c3aed);color:#fff;border-bottom-right-radius:6px}
+.hs-msg.them>div{background:rgba(255,255,255,.08);color:#f1f5f9;border-bottom-left-radius:6px}
+.hs-msg.pending{opacity:.6}
+.hs-empty{margin:auto 0;display:flex;flex-direction:column;align-items:center;text-align:center;padding:10px}
+.hs-empty h4{margin:12px 0 4px;font:800 18px/1.25 'Plus Jakarta Sans',system-ui,sans-serif}
+.hs-empty p{margin:0 0 14px;font-size:14px;color:rgba(199,210,254,.7);max-width:320px}
+.hs-empty .hs-chips{justify-content:center}
+.hs-bar{display:flex;align-items:flex-end;gap:8px;padding-top:10px;border-top:1px solid rgba(255,255,255,.07)}
+.hs-in{flex:1;min-height:46px;max-height:120px;padding:12px 16px;border-radius:23px;border:1px solid rgba(165,180,252,.22);background:rgba(255,255,255,.06);color:#fff;font:500 15px/1.4 'Plus Jakarta Sans',system-ui,sans-serif;resize:none;outline:none}
+.hs-in:focus{border-color:#818cf8}
+.hs-go{flex:none;display:grid;place-items:center;width:46px;height:46px;border-radius:50%;border:0;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;cursor:pointer;transition:opacity .2s,transform .15s}
+.hs-go svg{width:20px;height:20px;fill:currentColor}
+.hs-go:disabled{opacity:.4}
+.hs-go:not(:disabled):active{transform:scale(.92)}
+@media (prefers-reduced-motion:reduce){.hs-card,.hs-bd{transition:none}.hs-dot,.hs-burst{animation:none}}
+/* ===== Admin panel: Inbox ===== */
+.adm-tabs [data-tab="inbox"]{position:relative}
+.ib-tb{display:inline-grid;place-items:center;min-width:18px;height:18px;margin-left:6px;padding:0 5px;border-radius:9px;background:#ef4444;color:#fff;font:800 11px/1 system-ui,sans-serif;font-style:normal;vertical-align:1px}
+.ib-alert{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:14px 16px;margin-bottom:14px;border-radius:20px;background:linear-gradient(135deg,rgba(255,180,77,.14),rgba(255,180,77,.04));border:1px solid rgba(255,180,77,.3)}
+.ib-alert.on{background:linear-gradient(135deg,rgba(34,197,94,.14),rgba(34,197,94,.04));border-color:rgba(34,197,94,.35)}
+.ib-alert>div{flex:1;min-width:180px}
+.ib-alert b{display:block;font-size:14.5px}
+.ib-alert small{display:block;margin-top:2px;color:var(--t2,#cbd5e1);font-size:12.5px;line-height:1.4}
+.ib-alert .adm-btn.pri{margin-left:0}
+.ib-bell{flex:none;display:grid;place-items:center;width:40px;height:40px;border-radius:12px;background:rgba(255,180,77,.18);color:var(--gold,#ffb44d)}
+.ib-alert.on .ib-bell{background:rgba(34,197,94,.18);color:#4ade80}
+.ib-bell svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linejoin:round}
+.ib-seg{display:flex;gap:4px;padding:4px;margin-bottom:12px;border-radius:16px;background:var(--s1,rgba(255,255,255,.05));border:1px solid var(--ln,rgba(255,255,255,.08))}
+.ib-seg button{flex:1;min-height:42px;border:0;border-radius:12px;background:none;color:var(--t2,#cbd5e1);font:700 14px 'Outfit',system-ui,sans-serif;cursor:pointer}
+.ib-seg button.on{background:rgba(255,255,255,.1);color:#fff}
+.ib-seg em{display:inline-grid;place-items:center;min-width:20px;height:20px;margin-left:4px;padding:0 6px;border-radius:10px;background:#ef4444;color:#fff;font-size:11.5px;font-style:normal}
+.ib-chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-bottom:10px;scrollbar-width:none}
+.ib-chips::-webkit-scrollbar{display:none}
+.ib-chips button{flex:none;padding:7px 12px;border-radius:999px;border:1px solid var(--ln,rgba(255,255,255,.1));background:none;color:var(--t2,#cbd5e1);font:600 13px system-ui,sans-serif;cursor:pointer}
+.ib-chips button.on{background:#fff;color:#111;border-color:#fff}
+.ib-chips small{opacity:.6;margin-left:2px}
+.ib-list{display:flex;flex-direction:column;gap:10px}
+.ib-item{padding:14px;border-radius:20px;background:var(--s1,rgba(255,255,255,.05));border:1px solid var(--ln,rgba(255,255,255,.08));border-left:4px solid rgba(255,255,255,.12)}
+.ib-item[data-k="bug"]{border-left-color:#f87171}.ib-item[data-k="idea"]{border-left-color:#fbbf24}.ib-item[data-k="love"]{border-left-color:#f472b6}.ib-item[data-k="other"]{border-left-color:#818cf8}
+.ib-item.new{box-shadow:0 0 0 1px rgba(255,180,77,.25),0 14px 30px -20px rgba(255,180,77,.6)}
+.ib-item.done{opacity:.62}
+.ib-item header{display:flex;align-items:center;gap:10px}
+.ib-av{flex:none;display:grid;place-items:center;width:38px;height:38px;border-radius:50%;background:hsl(var(--h) 60% 45%);color:#fff;font:800 16px 'Outfit',system-ui,sans-serif}
+.ib-who{flex:1;min-width:0}
+.ib-who b{display:block;font-size:14.5px}
+.ib-who time{display:block;font-size:12px;color:var(--t3,#94a3b8)}
+.ib-kind{flex:none;padding:4px 10px;border-radius:999px;background:rgba(255,255,255,.07);font-size:12px;font-weight:700}
+.ib-text{margin:10px 0 0;font-size:15px;line-height:1.55;white-space:pre-wrap;word-wrap:break-word}
+.ib-rate{margin:8px 0 0;color:#fbbf24;letter-spacing:2px}.ib-rate span{color:rgba(255,255,255,.18)}
+.ib-what{margin-top:10px;padding:10px 12px;border-radius:14px;background:rgba(255,255,255,.05)}
+.ib-what small{font-size:11.5px;font-weight:700;color:var(--t3,#94a3b8)}
+.ib-what p{margin:3px 0 0;font-size:14px;line-height:1.5}
+.ib-meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.ib-meta span{padding:3px 9px;border-radius:999px;background:rgba(255,255,255,.05);font-size:11.5px;color:var(--t2,#cbd5e1)}
+.ib-item footer{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+.ib-b{min-height:36px;padding:0 14px;border-radius:999px;border:1px solid var(--ln,rgba(255,255,255,.12));background:none;color:var(--t1,#fff);font:600 13px system-ui,sans-serif;cursor:pointer}
+.ib-b.ok{background:rgba(34,197,94,.16);border-color:rgba(34,197,94,.4);color:#86efac}
+.ib-b.del{margin-left:auto;color:#fca5a5}
+.ib-b.del.armed{background:#ef4444;border-color:#ef4444;color:#fff}
+.ib-empty{padding:30px 16px;text-align:center;color:var(--t3,#94a3b8);font-size:14px;line-height:1.5}
+.ib-err{color:#fca5a5}
+.ib-threads{display:flex;flex-direction:column;gap:6px}
+.ib-th{display:flex;align-items:center;gap:12px;width:100%;padding:12px;border-radius:18px;border:1px solid var(--ln,rgba(255,255,255,.08));background:var(--s1,rgba(255,255,255,.05));color:inherit;text-align:left;cursor:pointer}
+.ib-th>div{flex:1;min-width:0}
+.ib-th b{font-size:14.5px}
+.ib-th p{margin:2px 0;font-size:13.5px;color:var(--t2,#cbd5e1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ib-th p i{color:var(--t3,#94a3b8);font-style:normal}
+.ib-th small{font-size:11.5px;color:var(--t3,#94a3b8)}
+.ib-th em{flex:none;display:grid;place-items:center;min-width:22px;height:22px;padding:0 6px;border-radius:11px;background:#22c55e;color:#04210f;font:800 12px system-ui,sans-serif;font-style:normal}
+.ib-th.un b{color:#fff}.ib-th.un p{color:#fff;font-weight:600}
+.ib-thh{display:flex;align-items:center;gap:10px}
+.ib-thh b{display:block;font-size:16px}.ib-thh small{font-size:12px;color:var(--t3,#94a3b8)}
+.ib-thread{display:flex;flex-direction:column;gap:6px;max-height:52vh;overflow-y:auto;margin:12px 0;padding:12px;border-radius:18px;background:rgba(0,0,0,.18)}
+.ib-day{align-self:center;margin:6px 0;font-size:11.5px;color:var(--t3,#94a3b8)}
+.ib-m{max-width:82%;padding:8px 12px 5px;border-radius:16px}
+.ib-m p{margin:0;font-size:14.5px;line-height:1.45;white-space:pre-wrap;word-wrap:break-word}
+.ib-m time{display:block;margin-top:2px;font-size:10.5px;opacity:.6;text-align:right}
+.ib-m.them{align-self:flex-start;background:rgba(255,255,255,.08);border-bottom-left-radius:5px}
+.ib-m.me{align-self:flex-end;background:linear-gradient(135deg,#ffe2a8,#ffb44d);color:#2a1700;border-bottom-right-radius:5px}
+.ib-reply{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:end;margin-bottom:10px}
+.ib-reply textarea{width:100%;box-sizing:border-box;min-height:48px;padding:12px 14px;border-radius:16px;border:1px solid var(--ln,rgba(255,255,255,.12));background:rgba(255,255,255,.05);color:#fff;font:500 14.5px/1.4 system-ui,sans-serif;resize:vertical;outline:none}
+.ib-reply textarea:focus{border-color:var(--gold,#ffb44d)}
+.ib-reply .adm-btn.pri{margin-left:0;width:auto;min-width:88px}
 </style><style id="mv-art-css" data-th-skip>
 /* Movies: the big pictures stay cinematic (dark shade, white writing) in every theme and in Light mode */
 .mv-hero{position:relative;min-height:420px;border-radius:26px;overflow:hidden;display:flex;align-items:flex-end;background:#0b0d1a var(--bd) center 20%/cover no-repeat;box-shadow:0 30px 60px -30px rgba(0,0,0,.9);isolation:isolate}
@@ -8787,7 +8948,7 @@ void main(){
                 </div>
             </div>
 
-            
+            <div id="hs-root"></div>
         </section>
         <div id="pf-fc" class="pf-fc">
             <div class="w-full max-w-sm space-y-4">
@@ -39595,10 +39756,11 @@ ${p.p}`;
     let A = null, timer = 0, data = null, made = [], tab = LS.get('lr_adm_tab') || 'overview', people = null, peopleAt = 0, pf = { q: '', f: 'all', open: '' }, cf = { q: '', f: 'all' }, reach = null, armed = '', armT = 0;
     async function token() { const a = await fbAuth(); const u = a.currentUser; if (!isAdminUser(u)) throw new Error('not admin'); return u.getIdToken(); }
     async function adm(op, extra, ms) { const tk = await token(); return call(Object.assign({ op, idToken: tk }, extra || {}), ms || 40000, tk); }
-    const TABS = [['overview', 'Overview'], ['people', 'Visitors'], ['accounts', 'Accounts'], ['teachers', 'Teachers'], ['promo', 'Promo'], ['broadcast', 'Broadcast'], ['settings', 'Settings']];
+    const TABS = [['overview', 'Overview'], ['inbox', 'Inbox'], ['people', 'Visitors'], ['accounts', 'Accounts'], ['teachers', 'Teachers'], ['promo', 'Promo'], ['broadcast', 'Broadcast'], ['settings', 'Settings']];
     function open() {
         if (A) return;
         if (window.LRADM2) LRADM2.bind({ adm, render, toast, esc, copy, ago, fmt, dShort, ICON, go: (t) => { tab = t; LS.set('lr_adm_tab', t); armed = ''; render(); } });
+        if (window.LRINBOX) { LRINBOX.bind({ adm, render, toast, esc, copy, ago, fmt, dShort, ICON }); LRINBOX.load(); }
         A = document.createElement('div'); A.id = 'adm'; A.className = 'adm'; A.setAttribute('role', 'dialog'); A.setAttribute('aria-modal', 'true'); A.setAttribute('aria-label', 'Admin panel');
         A.innerHTML = `<div class="adm-shell">
             <header class="adm-top"><button type="button" class="adm-ib" data-x="close" aria-label="Close">${ICON.x}</button>
@@ -39646,9 +39808,10 @@ ${p.p}`;
         const body = $('adm-body'); if (!body || !data) return;
         const keep = body.dataset.cur === tab ? body.scrollTop : 0;
         body.dataset.cur = tab;
-        body.innerHTML = (tab === 'accounts' || tab === 'teachers') ? (window.LRADM2 ? LRADM2.html(tab) : '') : tab === 'people' ? peopleHTML() : tab === 'promo' ? promoHTML() : tab === 'broadcast' ? castHTML() : tab === 'settings' ? setHTML() : overHTML();
+        body.innerHTML = tab === 'inbox' ? (window.LRINBOX ? LRINBOX.html() : '') : (tab === 'accounts' || tab === 'teachers') ? (window.LRADM2 ? LRADM2.html(tab) : '') : tab === 'people' ? peopleHTML() : tab === 'promo' ? promoHTML() : tab === 'broadcast' ? castHTML() : tab === 'settings' ? setHTML() : overHTML();
         body.scrollTop = keep;
         if (tab === 'overview') bindChart();
+        if (window.LRINBOX) LRINBOX.after();
         if (tab === 'broadcast') { castPreview(); if (reach == null) loadReach(); }
         paintTabs();
     }
@@ -39856,7 +40019,7 @@ ${p.p}`;
         const k = x.dataset.x, i = $('adm-n');
         switch (k) {
             case 'close': return close();
-            case 'ref': people = null; reach = null; if (window.LRADM2) LRADM2.refresh(); return load();
+            case 'ref': people = null; reach = null; if (window.LRADM2) LRADM2.refresh(); if (window.LRINBOX) LRINBOX.load(true); return load();
             case 'minus': if (i) i.value = Math.max(1, (+i.value || 1) - 1); return;
             case 'plus': if (i) i.value = Math.min(100, (+i.value || 0) + 1); return;
             case 'make': return make();
@@ -39904,6 +40067,7 @@ ${p.p}`;
             try { const j = await adm('adm_flags', { flags: { [k]: on } }); data.flags = j.flags; toast(on ? 'Switched on' : 'Switched off'); applyFlags(j.flags); } catch (er) { fl.setAttribute('aria-checked', !on); fl.classList.toggle('on', !on); toast('⚠ Could not change it'); }
             return;
         }
+        if (window.LRINBOX && LRINBOX.click(e)) return;
         if (window.LRADM2 && LRADM2.click(e)) return;
         const x = e.target.closest('[data-x]'); if (x) return act(x);
     }
@@ -39921,6 +40085,341 @@ ${p.p}`;
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', startStats); else startStats();
 })();
 </script><!--/adm:js-->
+<!--hs:js--><script id="hs-js">
+/* ===== Help & feedback (bottom of Profile): report a bug, suggest a feature, say something nice, chat with support =====
+   Everything goes to the LunaRise server, which keeps it where only the owner can read it (admin panel → Inbox)
+   and alerts the owner's phone at once. Messages that cannot be sent (offline) wait on this device and go later. */
+(function () {
+    'use strict';
+    if (window.LRHS) return;
+    const $ = (id) => document.getElementById(id);
+    const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const toast = (m) => { try { showToast(m); } catch (e) { } };
+    const U = () => { try { return state.user || {}; } catch (e) { return {}; } };
+    const LS = { get: (k, d) => { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } }, set: (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { } } };
+    const DB = String((window.LR_FB || {}).databaseURL || '').replace(/\/$/, '');
+    const VER = 'web74';
+    const KINDS = {
+        bug: { ic: '🐞', t: 'Report a bug', s: 'Something broken, slow or wrong', h: 'Report a bug', q: 'What went wrong?', ph: 'For example: the Listen button in Reading does nothing on my phone.', q2: 'What did you expect to happen? (optional)', ph2: 'It should read the text aloud.' },
+        idea: { ic: '💡', t: 'Suggest a feature', s: 'What would make you happy?', h: 'Suggest a feature', q: 'What feature would make you happy?', ph: 'For example: a Speaking game with friends.', q2: 'What should it do?', ph2: 'Two people get the same question, speak for 1 minute, and the AI gives both a score.' },
+        love: { ic: '❤️', t: 'Say something nice', s: 'Tell us what you love', h: 'Say something nice', q: 'What do you like about LunaRise?', ph: 'For example: the Daily words with Luna help me every morning.', rate: 1 },
+        sup: { ic: '🛟', t: 'Chat with support', s: 'Ask us anything, we reply here' }
+    };
+    const PAGES = [['dashboard', 'Hub'], ['certificates', 'Exams'], ['reading', 'Reading'], ['dictionary', 'Dictionary'], ['grammar', 'Grammar'], ['games', 'Games'], ['ai-chat', 'AI Tutor'], ['movies', 'Movies'], ['club', 'Speaking Club'], ['profile', 'Profile'], ['other', 'Other']];
+    const TOPICS = ["I can't sign in", 'PRO and payments', 'My progress is gone', 'The app is slow', 'Something else'];
+    let lastView = 'dashboard';
+    try { const nv = window.navigateTo; if (typeof nv === 'function') window.navigateTo = function (v) { if (v && v !== 'profile') lastView = v; return nv.apply(this, arguments); }; } catch (e) { }
+
+    /* ---------- the server ---------- */
+    let srvP = null;
+    const server = () => srvP || (srvP = fetch(DB + '/club/cfg/push/server.json').then(r => r.ok ? r.json() : null).then(s => typeof s === 'string' && /^https:\/\//.test(s) ? s : null).catch(() => null).then(s => { if (!s) srvP = null; return s; }));
+    async function call(body, ms) {
+        const url = await server(); if (!url) throw new Error('nosrv');
+        const ctl = new AbortController(), to = setTimeout(() => ctl.abort(), ms || 25000);
+        let r; try { r = await fetch(url, { method: 'POST', body: JSON.stringify(body), signal: ctl.signal }); } catch (e) { throw new Error('net'); } finally { clearTimeout(to); }
+        const j = await r.json().catch(() => null); if (!j) throw new Error('html');
+        if (!j.ok) throw new Error(j.error || 'fail');
+        return j;
+    }
+    function me() {
+        const u = U(), g = u.google || {};
+        let z = ''; try { z = Intl.DateTimeFormat().resolvedOptions().timeZone || ''; } catch (e) { }
+        let d = ''; try { d = promoDevice(); } catch (e) { }
+        const n = String(u.name || u.first || '').trim();
+        return { name: /^(guest|learner)$/i.test(n) ? '' : n.slice(0, 60), email: g.email || '', device: d, zone: z, ua: navigator.userAgent.slice(0, 160), ver: VER };
+    }
+    function supKey() {
+        const u = U(); let k = u.supK || LS.get('lr_sup_k', '');
+        if (!/^[A-Za-z0-9_-]{16,64}$/.test(k || '')) { const a = new Uint8Array(18); crypto.getRandomValues(a); k = Array.from(a, b => 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_'[b % 64]).join(''); }
+        if (u.supK !== k) { u.supK = k; try { pfSave(); } catch (e) { } }
+        LS.set('lr_sup_k', k); return k;
+    }
+
+    /* ---------- messages that wait for the internet ---------- */
+    async function flush() {
+        const q = LS.get('lr_hs_q', []); if (!q.length || !navigator.onLine) return;
+        const left = [];
+        for (const it of q) { try { await call(it.body); markSent(it.lid); } catch (e) { if (/net|nosrv|html/.test(e.message)) left.push(it); } }
+        LS.set('lr_hs_q', left); paint();
+    }
+    addEventListener('online', () => setTimeout(flush, 1500));
+    function markSent(lid) { const h = LS.get('lr_hs_hist', []), x = h.find(y => y.lid === lid); if (x) { x.sent = 1; LS.set('lr_hs_hist', h); } }
+
+    /* ---------- the Profile section ---------- */
+    const ago = (t) => { const s = Math.max(0, (Date.now() - t) / 1000); return s < 60 ? 'just now' : s < 3600 ? Math.floor(s / 60) + ' min ago' : s < 86400 ? Math.floor(s / 3600) + ' h ago' : Math.floor(s / 86400) + ' d ago'; };
+    const when = (t) => new Date(t).toLocaleString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+    let unread = LS.get('lr_sup_ur', 0);
+    function paint() {
+        const host = $('hs-root'); if (!host) return;
+        const hist = LS.get('lr_hs_hist', []).slice(0, 4);
+        host.innerHTML = `<section class="hs" aria-labelledby="hs-h">
+            <div class="hs-head"><span class="hs-badge" aria-hidden="true">✦</span><div><h3 id="hs-h">Help us make LunaRise better</h3><p>Found a bug? Dream of a new feature? Need help? Every message goes straight to the LunaRise team.</p></div></div>
+            <div class="hs-grid">
+                ${['bug', 'idea', 'sup', 'love'].map(k => `<button type="button" class="hs-tile hs-${k}" data-hs="${k}"><span class="hs-ic" aria-hidden="true">${KINDS[k].ic}</span><b>${KINDS[k].t}</b><small>${KINDS[k].s}</small>${k === 'sup' && unread ? `<em class="hs-dot">${unread} new</em>` : ''}</button>`).join('')}
+            </div>
+            ${hist.length ? `<div class="hs-hist"><h4>Your messages</h4>${hist.map(h => `<div class="hs-hi"><span>${KINDS[h.k] ? KINDS[h.k].ic : '💬'}</span><p>${esc(h.x)}</p><small>${h.sent ? 'Sent ✓' : 'Waiting for internet…'} · ${ago(h.t)}</small></div>`).join('')}</div>` : ''}
+            <p class="hs-foot">We read everything. Replies to support chats appear right here in Profile.</p></section>`;
+    }
+    document.addEventListener('click', (e) => { const b = e.target.closest('[data-hs]'); if (!b) return; const k = b.dataset.hs; if (k === 'sup') openChat(); else openForm(k); });
+
+    /* ---------- the form (bug · idea · praise) ---------- */
+    let sheet = null;
+    function shell(inner, cls) {
+        closeSheet(true);
+        sheet = document.createElement('div'); sheet.id = 'hs-sheet'; sheet.className = 'hs-sh ' + (cls || ''); sheet.setAttribute('role', 'dialog'); sheet.setAttribute('aria-modal', 'true');
+        sheet.innerHTML = `<div class="hs-bd" data-hx="close"></div><div class="hs-card" tabindex="-1"><i class="hs-grab" aria-hidden="true"></i>${inner}</div>`;
+        document.body.appendChild(sheet); document.documentElement.classList.add('hs-lock');
+        requestAnimationFrame(() => requestAnimationFrame(() => sheet && sheet.classList.add('in')));
+        try { history.pushState({ hs: 1 }, ''); } catch (e) { }
+        return sheet;
+    }
+    function closeSheet(quiet) {
+        clearInterval(pollT); pollT = 0;
+        if (!sheet) return; const s = sheet; sheet = null; s.classList.remove('in'); document.documentElement.classList.remove('hs-lock');
+        setTimeout(() => s.remove(), 320);
+        if (!quiet && history.state && history.state.hs) try { history.back(); } catch (e) { }
+    }
+    addEventListener('popstate', () => { if (sheet) closeSheet(true); });
+    addEventListener('keydown', (e) => { if (e.key === 'Escape' && sheet) closeSheet(); });
+    function openForm(k) {
+        const K = KINDS[k], pg = PAGES.find(p => p[0] === lastView) ? lastView : 'other';
+        const s = shell(`<header class="hs-sh-h"><span class="hs-ic big" aria-hidden="true">${K.ic}</span><div><h3>${K.h}</h3><p>${k === 'bug' ? 'Tell us what happened. We fix bugs fast.' : k === 'idea' ? 'The best ideas from learners go into LunaRise.' : 'It makes our day!'}</p></div><button type="button" class="hs-x" data-hx="close" aria-label="Close">✕</button></header>
+            <form class="hs-form" novalidate>
+                ${K.rate ? `<div class="hs-rate" role="radiogroup" aria-label="Your rating">${['😕', '🙂', '😊', '😍', '🤩'].map((f, i) => `<button type="button" role="radio" aria-checked="${i === 4}" class="${i === 4 ? 'on' : ''}" data-rate="${i + 1}" aria-label="${i + 1} of 5">${f}</button>`).join('')}</div>` : ''}
+                ${k === 'bug' ? `<label class="hs-l">Where?</label><div class="hs-chips" role="radiogroup">${PAGES.map(p => `<button type="button" role="radio" aria-checked="${p[0] === pg}" class="${p[0] === pg ? 'on' : ''}" data-pg="${p[0]}">${p[1]}</button>`).join('')}</div>` : ''}
+                <label class="hs-l" for="hs-t">${K.q}</label>
+                <textarea id="hs-t" class="hs-ta lq-raw" rows="4" maxlength="2000" placeholder="${esc(K.ph)}"></textarea>
+                ${K.q2 ? `<label class="hs-l" for="hs-w">${K.q2}</label><textarea id="hs-w" class="hs-ta lq-raw" rows="3" maxlength="1000" placeholder="${esc(K.ph2)}"></textarea>` : ''}
+                <p class="hs-auto">🔒 Only the LunaRise team sees this.${k === 'bug' ? ' We add your device and browser so we can find the bug.' : ''}</p>
+                <button type="submit" class="hs-send" disabled><span>Send</span></button>
+            </form>`);
+        const t = s.querySelector('#hs-t'), b = s.querySelector('.hs-send'), w = s.querySelector('#hs-w');
+        let rate = 5, page = pg;
+        t.addEventListener('input', () => { b.disabled = t.value.trim().length < 3; });
+        s.addEventListener('click', (e) => {
+            const x = e.target.closest('[data-hx]'); if (x) return closeSheet();
+            const r = e.target.closest('[data-rate]'); if (r) { rate = +r.dataset.rate; s.querySelectorAll('[data-rate]').forEach(y => { y.classList.toggle('on', y === r); y.setAttribute('aria-checked', y === r); }); }
+            const p = e.target.closest('[data-pg]'); if (p) { page = p.dataset.pg; s.querySelectorAll('[data-pg]').forEach(y => { y.classList.toggle('on', y === p); y.setAttribute('aria-checked', y === p); }); }
+        });
+        s.querySelector('form').addEventListener('submit', async (e) => {
+            e.preventDefault(); const text = t.value.trim(); if (text.length < 3) return;
+            const body = Object.assign({ op: 'fb_send', kind: k, text, what: w ? w.value.trim() : '', rate: K.rate ? rate : 0, page: k === 'bug' ? page : '' }, me());
+            const lid = Date.now().toString(36), h = LS.get('lr_hs_hist', []); h.unshift({ lid, k, x: text.slice(0, 120), t: Date.now(), sent: 0 }); LS.set('lr_hs_hist', h.slice(0, 20));
+            b.disabled = true; b.classList.add('busy'); b.innerHTML = '<i class="hs-spin"></i><span>Sending…</span>';
+            let ok = false, wait = false;
+            try { await call(body); ok = true; markSent(lid); }
+            catch (er) { if (/net|nosrv|html/.test(er.message)) { wait = true; const q = LS.get('lr_hs_q', []); q.push({ lid, body }); LS.set('lr_hs_q', q.slice(-20)); } else if (/too many/.test(er.message)) toast('Too many messages. Try again in an hour.'); else toast('Could not send. Try again.'); }
+            if (!ok && !wait) { b.disabled = false; b.classList.remove('busy'); b.innerHTML = '<span>Send</span>'; return; }
+            s.querySelector('.hs-card').innerHTML = `<div class="hs-done"><div class="hs-burst" aria-hidden="true">${K.ic}</div><h3>${ok ? 'Thank you!' : 'Saved'}</h3><p>${ok ? (k === 'bug' ? 'We got your report and will fix it as soon as we can.' : k === 'idea' ? 'Great idea! We read every one, and the best go into LunaRise.' : 'This made our day. Thank you for learning with us 💜') : 'You are offline. It will be sent automatically when the internet is back.'}</p><button type="button" class="hs-send" data-hx="close"><span>Done</span></button></div>`;
+            paint(); try { triggerConfetti(); } catch (x) { }
+        });
+        setTimeout(() => { try { t.focus({ preventScroll: true }); } catch (e) { } }, 380);
+    }
+
+    /* ---------- support chat ---------- */
+    let msgs = LS.get('lr_sup_m', []), pollT = 0, busy = false;
+    function bubbles() {
+        if (!msgs.length) return `<div class="hs-empty"><div class="hs-ava big" aria-hidden="true">🌙</div><h4>Hi! How can we help?</h4><p>Write your question and the LunaRise team will answer here. Pick a topic to start:</p><div class="hs-chips">${TOPICS.map(t => `<button type="button" data-topic="${esc(t)}">${esc(t)}</button>`).join('')}</div></div>`;
+        let last = '';
+        return msgs.map(m => {
+            const d = new Date(m.t).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' }), sep = d !== last ? `<p class="hs-day">${d}</p>` : ''; last = d;
+            return sep + `<div class="hs-msg ${m.f === 'a' ? 'them' : 'mine'}${m.p ? ' pending' : ''}">${m.f === 'a' ? '<span class="hs-ava" aria-hidden="true">🌙</span>' : ''}<div><p>${esc(m.x).replace(/\n/g, '<br>')}</p><small>${new Date(m.t).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}${m.f === 'u' ? (m.p ? ' · sending' : ' · ✓') : ''}</small></div></div>`;
+        }).join('');
+    }
+    function paintChat(stick) {
+        const box = sheet && sheet.querySelector('.hs-msgs'); if (!box) return;
+        const near = box.scrollHeight - box.scrollTop - box.clientHeight < 80;
+        box.innerHTML = bubbles();
+        if (stick || near) box.scrollTop = box.scrollHeight;
+    }
+    async function pull(read) {
+        if (busy) return; busy = true;
+        try {
+            const j = await call({ op: 'sup_get', sk: supKey(), read: read ? 1 : 0 }, 20000);
+            const pend = msgs.filter(m => m.p);
+            msgs = (j.msgs || []).concat(pend); LS.set('lr_sup_m', msgs.slice(-200));
+            unread = read ? 0 : (j.unread || 0); LS.set('lr_sup_ur', unread);
+            paintChat(); paint();
+        } catch (e) { }
+        busy = false;
+    }
+    function openChat() {
+        const s = shell(`<header class="hs-sh-h chat"><span class="hs-ava big" aria-hidden="true">🌙</span><div><h3>LunaRise Support</h3><p><i class="hs-on"></i>We usually reply within a few hours</p></div><button type="button" class="hs-x" data-hx="close" aria-label="Close">✕</button></header>
+            <div class="hs-msgs" aria-live="polite">${bubbles()}</div>
+            <form class="hs-bar"><textarea class="hs-in lq-raw" rows="1" maxlength="2000" placeholder="Write a message…" aria-label="Message"></textarea><button type="submit" class="hs-go" aria-label="Send" disabled><svg viewBox="0 0 24 24"><path d="M4 12l16-8-6 16-2.5-6.5z"/></svg></button></form>`, 'chat');
+        const inp = s.querySelector('.hs-in'), go = s.querySelector('.hs-go');
+        const fit = () => { inp.style.height = 'auto'; inp.style.height = Math.min(120, inp.scrollHeight) + 'px'; go.disabled = !inp.value.trim(); };
+        inp.addEventListener('input', fit);
+        inp.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.shiftKey && matchMedia('(pointer:fine)').matches) { e.preventDefault(); s.querySelector('.hs-bar').requestSubmit(); } });
+        s.addEventListener('click', (e) => {
+            if (e.target.closest('[data-hx]')) return closeSheet();
+            const tp = e.target.closest('[data-topic]'); if (tp) { inp.value = tp.dataset.topic + ': '; fit(); inp.focus(); }
+        });
+        s.querySelector('.hs-bar').addEventListener('submit', async (e) => {
+            e.preventDefault(); const text = inp.value.trim(); if (!text) return;
+            const m = { f: 'u', x: text, t: Date.now(), p: 1 }; msgs.push(m); inp.value = ''; fit(); paintChat(true);
+            try { const j = await call(Object.assign({ op: 'sup_send', sk: supKey(), text }, me())); m.p = 0; m.id = j.id; m.t = j.t || m.t; LS.set('lr_sup_m', msgs.slice(-200)); }
+            catch (er) { msgs = msgs.filter(x => x !== m); inp.value = text; fit(); toast(/too many/.test(er.message) ? 'Too many messages. Try again later.' : 'Could not send. Check your internet.'); }
+            paintChat(true);
+        });
+        setTimeout(() => { paintChat(true); }, 50);
+        pull(true); pollT = setInterval(() => { if (!document.hidden) pull(true); }, 10000);
+    }
+
+    /* replies from support: checked when Profile opens (at most once a minute) */
+    let lastPull = 0;
+    function check() { if (!LS.get('lr_sup_m', []).length || Date.now() - lastPull < 60000 || sheet) return; lastPull = Date.now(); pull(false); }
+    if (typeof window.renderProfile === 'function') { const rp = window.renderProfile; window.renderProfile = function () { const r = rp.apply(this, arguments); try { paint(); check(); flush(); } catch (e) { } return r; }; }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', paint); else paint();
+    window.LRHS = { open: openForm, chat: openChat, _call: call };
+})();
+</script><script id="ib-js2">
+/* ===== Admin panel, part 3: Inbox — bug reports, ideas, praise and support chats from learners =====
+   Shows who wrote, when (date and time) and from which device and country; support chats can be answered here.
+   "Alert me on this device" sends a notification to the owner's phone the moment a new message arrives. ===== */
+(function () {
+    'use strict';
+    if (window.LRINBOX) return;
+    let H = null;
+    const ST = { data: null, at: 0, busy: false, view: 'fb', f: 'all', th: '', thd: null, armed: '', armT: 0, al: '' };
+    const e = (s) => H.esc(s);
+    const KIND = { bug: ['🐞', 'Bug'], idea: ['💡', 'Idea'], love: ['❤️', 'Praise'], other: ['💬', 'Note'] };
+    const PAGE = { dashboard: 'Hub', certificates: 'Exams', reading: 'Reading', dictionary: 'Dictionary', grammar: 'Grammar', games: 'Games', 'ai-chat': 'AI Tutor', movies: 'Movies', club: 'Speaking Club', profile: 'Profile', other: 'Other' };
+    const FLAG = { 'Asia/Tashkent': '🇺🇿', 'Asia/Samarkand': '🇺🇿', 'Europe/Moscow': '🇷🇺', 'Asia/Almaty': '🇰🇿', 'Asia/Bishkek': '🇰🇬', 'Asia/Dushanbe': '🇹🇯', 'Europe/Istanbul': '🇹🇷', 'Europe/London': '🇬🇧', 'America/New_York': '🇺🇸' };
+    const full = (t) => t ? new Date(t).toLocaleString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : '–';
+    const devName = (ua) => { ua = String(ua || ''); const os = /iPhone/.test(ua) ? 'iPhone' : /iPad/.test(ua) ? 'iPad' : /Android/.test(ua) ? 'Android' : /Windows/.test(ua) ? 'Windows' : /Mac OS/.test(ua) ? 'Mac' : /Linux/.test(ua) ? 'Linux' : 'Device'; const br = /Telegram/.test(ua) ? 'Telegram' : /SamsungBrowser/.test(ua) ? 'Samsung Internet' : /Edg\//.test(ua) ? 'Edge' : /OPR\//.test(ua) ? 'Opera' : /YaBrowser/.test(ua) ? 'Yandex' : /CriOS|Chrome\//.test(ua) ? 'Chrome' : /Firefox|FxiOS/.test(ua) ? 'Firefox' : /Safari/.test(ua) ? 'Safari' : ''; return os + (br ? ' · ' + br : ''); };
+    const who = (x) => { const n = x.n || (x.e ? x.e.split('@')[0] : '') || 'Guest'; return n; };
+    const hue = (s) => { let h = 0; s = String(s || ''); for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) % 360; return h; };
+    const av = (x) => `<span class="ib-av" style="--h:${hue(x.d || x.id)}">${e(who(x).slice(0, 1).toUpperCase())}</span>`;
+    const meta = (x) => [x.e ? '✉️ ' + e(x.e) : '', (FLAG[x.z] || '🌐') + ' ' + e(String(x.z || 'Unknown').split('/').pop().replace(/_/g, ' ')), '📱 ' + e(devName(x.ua)), x.d ? '#' + e(String(x.d).slice(0, 6)) : ''].filter(Boolean).map(s => `<span>${s}</span>`).join('');
+    function counts() { const d = ST.data || {}; return { fb: (d.fb || []).filter(x => x.st === 'new').length, sup: (d.sup || []).filter(t => +t.un > 0).length }; }
+
+    async function load(force) {
+        if (ST.busy || (!force && ST.data && Date.now() - ST.at < 25000)) return;
+        ST.busy = true;
+        try { ST.data = await H.adm('adm_inbox', {}, 40000); ST.at = Date.now(); }
+        catch (x) { ST.data = { err: String(x.message || x) }; }
+        ST.busy = false; badge(); H.render();
+    }
+    async function loadThread(th) {
+        ST.thd = { loading: 1 }; H.render();
+        try { ST.thd = await H.adm('adm_sup', { th }); const t = ((ST.data || {}).sup || []).find(x => x.id === th); if (t) t.un = 0; badge(); }
+        catch (x) { ST.thd = { err: String(x.message || x) }; }
+        H.render(); scrollEnd();
+    }
+    const scrollEnd = () => requestAnimationFrame(() => { const b = document.querySelector('#adm .ib-thread'); if (b) b.scrollTop = b.scrollHeight; });
+    function badge() {
+        const c = counts(), n = c.fb + c.sup, t = document.querySelector('#adm .adm-tabs [data-tab="inbox"]'); if (!t) return;
+        let s = t.querySelector('.ib-tb'); if (!n) { if (s) s.remove(); return; }
+        if (!s) { s = document.createElement('em'); s.className = 'ib-tb'; t.appendChild(s); } s.textContent = n > 99 ? '99+' : n;
+    }
+
+    /* ---------- the owner's phone alerts ---------- */
+    async function alertsOn() {
+        if (!('Notification' in window) || !('serviceWorker' in navigator)) { ST.al = 'This browser cannot show alerts. Open LunaRise in Chrome, or install the app.'; return H.render(); }
+        ST.al = 'Turning on…'; H.render();
+        try {
+            const perm = Notification.permission === 'granted' ? 'granted' : await Notification.requestPermission();
+            if (perm !== 'granted') throw new Error('Alerts are blocked. Allow notifications for this site in the browser settings.');
+            const DB = String((window.LR_FB || {}).databaseURL || '').replace(/\/$/, '');
+            const cfg = await fetch(DB + '/club/cfg/push.json').then(r => r.ok ? r.json() : null).catch(() => null);
+            if (!cfg || !cfg.vapid) throw new Error('Push is not set up on the server yet.');
+            if (!window.firebase || !firebase.apps || !firebase.apps.length) throw new Error('Firebase is not ready. Reload the page and try again.');
+            await window.lrFbMsg();
+            const reg = await navigator.serviceWorker.register('sw.js', { scope: './' });
+            const tok = await firebase.messaging().getToken({ vapidKey: cfg.vapid, serviceWorkerRegistration: reg });
+            if (!tok) throw new Error('No token from the browser.');
+            await H.adm('adm_tok', { tok });
+            try { localStorage.setItem('lr_ib_tok', tok); } catch (x) { }
+            ST.al = 'on'; if (ST.data && !ST.data.err) ST.data.alerts = Math.max(1, +ST.data.alerts || 0); H.toast('🔔 Alerts are on for this device');
+        } catch (x) { ST.al = String(x.message || x); }
+        H.render();
+    }
+    const alertsHere = () => { try { return !!localStorage.getItem('lr_ib_tok') && Notification.permission === 'granted'; } catch (x) { return false; } };
+
+    /* ---------- drawing ---------- */
+    function html() {
+        if (!ST.data) { load(); return '<div class="adm-skel"><i></i><i></i><i></i><i></i></div>'; }
+        const d = ST.data; if (d.err) return `<div class="adm-card"><p class="ib-err">Could not load the Inbox: ${e(d.err)}.${/unknown op/.test(d.err) ? ' Update the LunaRise alerts server to version 9.' : ''}</p><button type="button" class="adm-btn" data-ib="reload">Try again</button></div>`;
+        const c = counts(), here = alertsHere();
+        const alert = `<div class="ib-alert${here ? ' on' : ''}"><span class="ib-bell">${H.ICON.bell}</span><div><b>${here ? 'Alerts are on for this device' : 'Get an alert for every new message'}</b><small>${ST.al && ST.al !== 'on' ? e(ST.al) : here ? 'A notification pops up the moment someone writes. ' + (d.alerts || 1) + ' device' + ((d.alerts || 1) > 1 ? 's' : '') + ' in total.' : (d.alerts ? d.alerts + ' device' + (d.alerts > 1 ? 's get' : ' gets') + ' alerts. Turn them on here too.' : 'Like an SMS at the top of the screen, even when LunaRise is closed.')}</small></div>${here ? '' : `<button type="button" class="adm-btn pri" data-ib="alerts">Alert me</button>`}</div>`;
+        const seg = `<div class="ib-seg" role="tablist"><button type="button" role="tab" class="${ST.view === 'fb' ? 'on' : ''}" data-ibv="fb">Feedback${c.fb ? ` <em>${c.fb}</em>` : ''}</button><button type="button" role="tab" class="${ST.view === 'sup' ? 'on' : ''}" data-ibv="sup">Support chats${c.sup ? ` <em>${c.sup}</em>` : ''}</button></div>`;
+        return alert + seg + (ST.view === 'fb' ? fbHTML() : ST.th ? threadHTML() : supHTML());
+    }
+    function fbHTML() {
+        const all = ST.data.fb || [], F = [['all', 'All'], ['new', 'New'], ['bug', '🐞 Bugs'], ['idea', '💡 Ideas'], ['love', '❤️ Praise'], ['other', '💬 Notes'], ['done', '✓ Done']];
+        const cnt = (k) => all.filter(x => k === 'all' ? 1 : k === 'new' ? x.st === 'new' : k === 'done' ? x.st === 'done' : x.k === k).length;
+        const L = all.filter(x => ST.f === 'all' ? 1 : ST.f === 'new' ? x.st === 'new' : ST.f === 'done' ? x.st === 'done' : x.k === ST.f);
+        const chips = `<div class="ib-chips">${F.map(f => `<button type="button" class="${ST.f === f[0] ? 'on' : ''}" data-ibf="${f[0]}">${f[1]} <small>${cnt(f[0])}</small></button>`).join('')}</div>`;
+        if (!L.length) return chips + `<div class="ib-empty">${all.length ? 'Nothing here.' : '📭 No messages yet. They appear here as soon as learners write from their Profile.'}</div>`;
+        return chips + `<div class="ib-list">${L.map(x => { const k = KIND[x.k] || KIND.other, arm = ST.armed === 'del' + x.id; return `<article class="ib-item${x.st === 'new' ? ' new' : ''}${x.st === 'done' ? ' done' : ''}" data-k="${e(x.k)}">
+            <header>${av(x)}<div class="ib-who"><b>${e(who(x))}</b><time datetime="${new Date(x.t).toISOString()}">${full(x.t)} · ${H.ago(x.t)}</time></div><span class="ib-kind">${k[0]} ${k[1]}</span></header>
+            ${x.r ? `<p class="ib-rate">${'★'.repeat(x.r)}<span>${'★'.repeat(5 - x.r)}</span></p>` : ''}
+            <p class="ib-text">${e(x.x).replace(/\n/g, '<br>')}</p>
+            ${x.w ? `<div class="ib-what"><small>${x.k === 'idea' ? 'What it should do' : 'Expected'}</small><p>${e(x.w).replace(/\n/g, '<br>')}</p></div>` : ''}
+            <div class="ib-meta">${x.pg ? `<span>📍 ${e(PAGE[x.pg] || x.pg)}</span>` : ''}${meta(x)}</div>
+            <footer>${x.st === 'done' ? `<button type="button" class="ib-b" data-ibs="new" data-id="${e(x.id)}">↺ Reopen</button>` : `<button type="button" class="ib-b ok" data-ibs="done" data-id="${e(x.id)}">✓ Done</button>`}<button type="button" class="ib-b" data-ibc="${e(x.x)}">Copy</button><button type="button" class="ib-b del${arm ? ' armed' : ''}" data-ibs="del" data-id="${e(x.id)}">${arm ? 'Tap again to delete' : 'Delete'}</button></footer></article>`; }).join('')}</div>`;
+    }
+    function supHTML() {
+        const L = ST.data.sup || [];
+        if (!L.length) return `<div class="ib-empty">💬 No support chats yet. When a learner taps "Chat with support" in Profile, the chat appears here.</div>`;
+        return `<div class="ib-threads">${L.map(t => `<button type="button" class="ib-th${+t.un ? ' un' : ''}" data-ibt="${e(t.id)}">${av(t)}<div><b>${e(who(t))}</b><p>${t.lf === 'a' ? '<i>You:</i> ' : ''}${e(t.last || '')}</p><small>${full(t.t)} · ${H.ago(t.t)} · ${t.cnt || 0} messages</small></div>${+t.un ? `<em>${t.un}</em>` : ''}</button>`).join('')}</div>`;
+    }
+    function threadHTML() {
+        const t = ((ST.data || {}).sup || []).find(x => x.id === ST.th) || { id: ST.th }, d = ST.thd || {};
+        const head = `<div class="ib-thh"><button type="button" class="adm-ib" data-ib="back" aria-label="Back">‹</button>${av(t)}<div><b>${e(who(t))}</b><small>Started ${full(t.f || t.t)}</small></div></div><div class="ib-meta">${meta(t)}</div>`;
+        if (d.loading) return head + '<div class="adm-skel"><i></i><i></i></div>';
+        if (d.err) return head + `<p class="ib-err">${e(d.err)}</p>`;
+        let last = '';
+        const msgs = (d.msgs || []).map(m => { const day = new Date(m.t).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' }), sep = day !== last ? `<p class="ib-day">${day}</p>` : ''; last = day; return sep + `<div class="ib-m ${m.f === 'a' ? 'me' : 'them'}"><p>${e(m.x).replace(/\n/g, '<br>')}</p><time>${new Date(m.t).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}</time></div>`; }).join('');
+        const arm = ST.armed === 'thdel';
+        return head + `<div class="ib-thread">${msgs || '<p class="ib-empty">No messages.</p>'}</div>
+            <form class="ib-reply" data-ibr="1"><textarea id="ib-rt" class="lq-raw" rows="2" maxlength="2000" placeholder="Reply to ${e(who(t))}… they see it in their Profile"></textarea><button type="submit" class="adm-btn pri">Send</button></form>
+            <button type="button" class="ib-b del${arm ? ' armed' : ''}" data-ib="thdel">${arm ? 'Tap again to delete this chat' : 'Delete chat'}</button>`;
+    }
+
+    /* ---------- actions ---------- */
+    function arm(k) { clearTimeout(ST.armT); if (ST.armed === k) { ST.armed = ''; return true; } ST.armed = k; H.render(); ST.armT = setTimeout(() => { ST.armed = ''; H.render(); }, 4000); return false; }
+    function click(ev) {
+        const t = ev.target;
+        const v = t.closest('[data-ibv]'); if (v) { ST.view = v.dataset.ibv; ST.th = ''; H.render(); return true; }
+        const f = t.closest('[data-ibf]'); if (f) { ST.f = f.dataset.ibf; H.render(); return true; }
+        const c = t.closest('[data-ibc]'); if (c) { H.copy(c.dataset.ibc, 'Copied'); return true; }
+        const th = t.closest('[data-ibt]'); if (th) { ST.th = th.dataset.ibt; loadThread(ST.th); return true; }
+        const s = t.closest('[data-ibs]'); if (s) {
+            const id = s.dataset.id, st = s.dataset.ibs, it = (ST.data.fb || []).find(x => x.id === id); if (!it) return true;
+            if (st === 'del' && !arm('del' + id)) return true;
+            if (st === 'del') ST.data.fb = ST.data.fb.filter(x => x !== it); else it.st = st;
+            badge(); H.render();
+            H.adm('adm_fb_set', { id, st }).then(() => H.toast(st === 'del' ? 'Deleted' : st === 'done' ? 'Marked as done' : 'Reopened')).catch(() => { H.toast('⚠ Could not save. Try again.'); load(true); });
+            return true;
+        }
+        const b = t.closest('[data-ib]'); if (b) {
+            const a = b.dataset.ib;
+            if (a === 'reload') { ST.data = null; H.render(); }
+            else if (a === 'alerts') alertsOn();
+            else if (a === 'back') { ST.th = ''; ST.thd = null; H.render(); }
+            else if (a === 'thdel') { if (!arm('thdel')) return true; const id = ST.th; ST.data.sup = (ST.data.sup || []).filter(x => x.id !== id); ST.th = ''; H.render(); H.adm('adm_sup', { th: id, del: 1 }).then(() => H.toast('Chat deleted')).catch(() => H.toast('⚠ Could not delete')); }
+            return true;
+        }
+        return false;
+    }
+    document.addEventListener('submit', async (ev) => {
+        const f = ev.target.closest && ev.target.closest('[data-ibr]'); if (!f) return; ev.preventDefault();
+        const ta = document.getElementById('ib-rt'), text = ta && ta.value.trim(); if (!text || !ST.th) return;
+        const btn = f.querySelector('button'); btn.disabled = true;
+        try { await H.adm('adm_sup_reply', { th: ST.th, text }); if (ST.thd && ST.thd.msgs) ST.thd.msgs.push({ f: 'a', x: text, t: Date.now() }); const t = (ST.data.sup || []).find(x => x.id === ST.th); if (t) { t.last = text; t.lf = 'a'; t.t = Date.now(); } H.render(); scrollEnd(); H.toast('Sent'); }
+        catch (x) { btn.disabled = false; H.toast('⚠ Could not send: ' + (x.message || x)); }
+    }, true);
+    const input = () => false;
+
+    /* fresh messages every 30 s while the Inbox is open */
+    setInterval(() => { const a = document.getElementById('adm'); if (!a || document.hidden) return; const cur = (document.getElementById('adm-body') || {}).dataset; if (cur && cur.cur === 'inbox') { if (ST.th) { if (!document.getElementById('ib-rt') || !document.getElementById('ib-rt').value) loadThread(ST.th); } else load(true); } else load(); }, 30000);
+    /* a tap on an alert opens LunaRise with ?inbox=1: straight to the Inbox */
+    if (/[?&]inbox=1\b/.test(location.search)) setTimeout(() => { try { localStorage.setItem('lr_adm_tab', 'inbox'); } catch (x) { } try { history.replaceState(null, '', location.pathname); } catch (x) { } if (window.LRAdmin) LRAdmin.open(); }, 2500);
+    window.LRINBOX = { bind: (h) => { H = h; }, html, click, input, load, badge, after: () => { badge(); if (ST.th) scrollEnd(); }, _st: ST };
+})();
+</script><!--/hs:js-->
 <!--cz:js--><script id="cz-js">
 /* ===== Chess Arena 2: a real wooden board, classic pieces, smooth sliding moves, drag or tap, wooden sounds =====
    The rules, engine, clocks, online play and Puzzle Rush stay as they were; this draws the board and takes the input. */

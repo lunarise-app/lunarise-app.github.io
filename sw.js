@@ -2,7 +2,7 @@
    and the page itself kept for offline use (this also lets the browser offer "Install app").
    A call alert rings (sound + vibration) every few seconds until the call is answered, ends or times out.
    A reminder is one friendly notification; it is skipped if LunaRise is already open on screen. */
-const VERSION = 'lr-sw-22';
+const VERSION = 'lr-sw-23';
 const PAGES = 'lr-pages-1';
 const ICON = './icon-192.png';
 const BADGE = './badge-96.png';   // the small white moon in the phone's status bar
@@ -73,6 +73,7 @@ async function handle(d) {
     if (d.type === 'cancel') return cancel(d);
     if (d.type === 'remind' && d.news) return news(d);
     if (d.type === 'remind') return remind(d);
+    if (d.type === 'adm') return self.registration.showNotification(d.title || 'LunaRise', { body: d.body || '', icon: ICON, badge: BADGE, tag: d.tag || 'lr-adm', renotify: true, vibrate: [120, 60, 120], timestamp: Date.now(), data: { type: 'adm' } });
     return self.registration.showNotification(d.title || 'LunaRise', { body: d.body || '', icon: ICON, badge: ICON, tag: d.tag || 'lr' });
 }
 async function remind(d) {
@@ -155,6 +156,7 @@ function onClick(e) {
     else if (d.type === 'missed' && d.from) url.searchParams.set('chat', d.from);
     else if (d.type === 'remind') url.searchParams.set('remind', '1');
     else if (d.type === 'news') url.searchParams.set('news', '1');
+    else if (d.type === 'adm') url.searchParams.set('inbox', '1');
     else if (d.type === 'test') url.searchParams.set('testcall', '1');
     e.waitUntil((async () => {
         const all = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
