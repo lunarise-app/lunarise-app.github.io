@@ -6414,6 +6414,7 @@ html.hs-lock{overflow:hidden}
 .lra-x{flex:none;width:38px;border:0;background:none;color:rgba(199,210,254,.6);font-size:14px;cursor:pointer;border-radius:0 22px 22px 0}
 .lra-x:hover{color:#fff}
 @media (prefers-reduced-motion:reduce){.lra,.lra.in,.lra.out{transition:opacity .2s;transform:none}.lra::before{animation:none}}
+.adm-ch.grn{background:rgba(34,197,94,.16);color:#86efac}
 </style><style id="mv-art-css" data-th-skip>
 /* Movies: the big pictures stay cinematic (dark shade, white writing) in every theme and in Light mode */
 .mv-hero{position:relative;min-height:420px;border-radius:26px;overflow:hidden;display:flex;align-items:flex-end;background:#0b0d1a var(--bd) center 20%/cover no-repeat;box-shadow:0 30px 60px -30px rgba(0,0,0,.9);isolation:isolate}
@@ -39567,8 +39568,16 @@ ${p.p}`;
     /* ---------- 1 · who is here: one small write when the app opens, then one every 90 s while it is on screen ---------- */
     const rest = (path, method, body) => DB ? fetch(DB + '/' + path + '.json?x-http-method-override=' + method, { method: 'POST', body: JSON.stringify(body), keepalive: true }).catch(() => { }) : Promise.resolve();
     let lastBeat = 0, firstDone = false;
+    const isOwner = () => LS.get('lr_owner') === '1';
+    let hiddenAt = 0, visitBusy = false;
+    function visit() {
+        if (isOwner() || visitBusy) return; const id = dev(); if (!id) return;
+        const last = +LS.get('lr_vlast') || 0; if (Date.now() - last < 30 * 60000) { LS.set('lr_vlast', String(Date.now())); return; }
+        visitBusy = true; LS.set('lr_vlast', String(Date.now()));
+        call({ op: 'visit', device: id }, 15000).catch(() => { }).then(() => { visitBusy = false; });
+    }
     function beat() {
-        const id = dev(); if (!id || !DB || document.hidden) return;
+        const id = dev(); if (!id || !DB || document.hidden || isOwner()) return;
         const now = Date.now(); if (now - lastBeat < 30000) return; lastBeat = now;
         const u = U(), plan = String(u.proPlan || ''), o = { t: { '.sv': 'timestamp' }, r: reg() ? 1 : 0, a: isApp() ? 1 : 0, p: u.isPro ? (/gift/i.test(plan) ? 3 : /promo/i.test(plan) ? 2 : 1) : 0, v: 'web53' };
         // for the owner's People list: the first name (only after sign-up), the level-test result and today's Luna Coach progress
@@ -39585,7 +39594,8 @@ ${p.p}`;
     }
     function startStats() {
         if (/[?&]introT=/.test(location.search)) return;
-        setTimeout(beat, 3500); setTimeout(cfgCheck, 4500); setTimeout(giftCheck, 6000);
+        setTimeout(beat, 3500); setTimeout(visit, 5000); setTimeout(cfgCheck, 4500); setTimeout(giftCheck, 6000);
+        document.addEventListener('visibilitychange', () => { if (document.hidden) { hiddenAt = Date.now(); LS.set('lr_vlast', String(Date.now())); } else if (hiddenAt && Date.now() - hiddenAt > 30 * 60000) { LS.set('lr_vlast', '0'); setTimeout(visit, 1500); } });
         setInterval(beat, 90000);
         document.addEventListener('visibilitychange', () => { if (!document.hidden) { firstDone = firstDone && dayKey(Date.now()) === LS.get('lr_sd'); beat(); } });
     }
@@ -39791,8 +39801,14 @@ ${p.p}`;
         document.body.appendChild(A); document.documentElement.classList.add('adm-open');
         requestAnimationFrame(() => A.classList.add('in'));
         A.addEventListener('click', onClick); A.addEventListener('input', onInput); A.addEventListener('change', onInput); document.addEventListener('keydown', onKey);
+        markOwner();
+        try { const c = JSON.parse(LS.get('lr_adm_cache') || 'null'); if (c && c.d && Date.now() - c.t < 7 * 864e5 && !data) { data = c.d; render(); const up = $('adm-upd'); if (up) up.textContent = 'Updating…'; } } catch (e) { }
         paintTabs(); load(); timer = setInterval(() => { if (!document.hidden && tab === 'overview') load(true); }, 45000);
         try { history.pushState({ adm: 1 }, ''); } catch (e) { }
+    }
+    function markOwner(force) {
+        LS.set('lr_owner', '1'); const id = dev(); if (!id || (!force && LS.get('lr_own_ok') === id)) return;
+        adm('adm_own', { id, on: 1 }).then(() => { LS.set('lr_own_ok', id); }).catch(() => { });
     }
     function close() {
         if (!A) return; clearInterval(timer); document.removeEventListener('keydown', onKey);
@@ -39809,6 +39825,7 @@ ${p.p}`;
         const up = $('adm-upd'); if (up && !quiet) up.textContent = 'Loading…';
         try {
             data = await adm('adm_stats');
+            try { LS.set('lr_adm_cache', JSON.stringify({ t: Date.now(), d: data })); } catch (e) { }
             render(); if ($('adm-upd')) $('adm-upd').textContent = 'Updated ' + new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
             if (tab === 'people' && (!people || Date.now() - peopleAt > 60000)) loadPeople();
         } catch (e) {
@@ -39839,7 +39856,7 @@ ${p.p}`;
     /* Overview */
     function overHTML() {
         const d = data, days = d.days || [], max = Math.max(1, ...days.map(x => x[1]));
-        const bars = days.map((x, i) => { const h = Math.round(x[1] / max * 100); const dd = x[0].slice(6, 8) + '.' + x[0].slice(4, 6); return `<button type="button" class="adm-bar${i === days.length - 1 ? ' now' : ''}" style="--h:${h}" data-tip="${dd} · ${fmt(x[1])} ${x[1] === 1 ? 'person' : 'people'}" aria-label="${dd}: ${x[1]} people"><i></i><em>${i % 2 === (days.length - 1) % 2 ? dd : ''}</em></button>`; }).join('');
+        const bars = days.map((x, i) => { const h = Math.round(x[1] / max * 100); const dd = x[0].slice(6, 8) + '.' + x[0].slice(4, 6); return `<button type="button" class="adm-bar${i === days.length - 1 ? ' now' : ''}" style="--h:${h}" data-tip="${dd} · ${fmt(x[1])} ${x[1] === 1 ? 'person' : 'people'}${x[2] != null ? ' · ' + fmt(x[2]) + ' visits' : ''}" aria-label="${dd}: ${x[1]} people"><i></i><em>${i % 2 === (days.length - 1) % 2 ? dd : ''}</em></button>`; }).join('');
         const sum = (a) => a.reduce((s, x) => s + x[1], 0), w1 = sum(days.slice(-7)), w0 = sum(days.slice(0, -7)), dW = w0 ? Math.round((w1 - w0) / w0 * 100) : null;
         const tot = Math.max(1, d.app + d.web), pa = Math.round(d.app / tot * 100);
         const zm = {}; (d.zones || []).forEach(z => { const [f, n] = zoneName(z[0]); zm[n] = zm[n] || [f, n, 0]; zm[n][2] += z[1]; });   // two zones of one country count together
@@ -39855,10 +39872,10 @@ ${p.p}`;
         return `
             <section class="adm-hero">
                 <div class="adm-now"><span class="adm-pulse"><i></i></span><div><small>Using LunaRise right now</small><b id="adm-online">${fmt(d.online)}</b><span>${fmt(d.onlineApp)} in the app · ${fmt(Math.max(0, d.online - d.onlineApp))} on the website</span></div></div>
-                <div class="adm-hero-r">${tile('Today', fmt(d.today), fmt(d.newToday) + ' new')}${tile('Last 7 days', fmt(d.act7), fmt(d.new7) + ' new', '', dW)}${tile('Last 30 days', fmt(d.act30))}</div>
+                <div class="adm-hero-r">${tile('Today', fmt(d.today), fmt(d.newToday) + ' new · ' + fmt(d.backToday != null ? d.backToday : Math.max(0, d.today - d.newToday)) + ' returning' + (d.visitsToday != null ? ' · ' + fmt(d.visitsToday) + ' visits' : ''))}${tile('Last 7 days', fmt(d.act7), fmt(d.new7) + ' new', '', dW)}${tile('Last 30 days', fmt(d.act30))}</div>
             </section>
             <section class="adm-kpis">
-                ${tile('All visitors', fmt(d.all), 'devices since the start')}
+                ${tile('All visitors', fmt(d.all), 'each person once' + (d.own ? ' · your ' + d.own + ' device' + (d.own > 1 ? 's' : '') + ' not counted' : ''))}
                 ${tile('Signed up', fmt(d.reg), d.all ? pc(d.reg, d.all) + '% of visitors' : '')}
                 ${tile('PRO', fmt(d.pro), fmt(d.proPromo) + ' promo · ' + fmt(d.proGift || 0) + ' gift · ' + fmt(d.proPlan) + ' plan button', 'gold')}
                 ${tile('Came back', d.back != null ? pc(d.back, d.all) + '%' : '–', 'used LunaRise on more than one day')}
@@ -39868,7 +39885,7 @@ ${p.p}`;
             ${window.LRADM2 ? LRADM2.over(d) : ''}
             <section class="adm-card"><header><h3>People per day</h3><span>last 14 days · Tashkent time</span></header>
                 <div class="adm-chart" role="img" aria-label="People per day, last 14 days">${bars}<span class="adm-tip" id="adm-tip" hidden></span></div>
-                <details class="adm-tbl"><summary>Show as a table</summary><table><tbody>${days.map(x => `<tr><td>${x[0].slice(6, 8)}.${x[0].slice(4, 6)}.${x[0].slice(0, 4)}</td><td>${fmt(x[1])}</td></tr>`).join('')}</tbody></table></details></section>
+                <details class="adm-tbl"><summary>Show as a table</summary><table><tbody>${days.map(x => `<tr><td>${x[0].slice(6, 8)}.${x[0].slice(4, 6)}.${x[0].slice(0, 4)}</td><td>${fmt(x[1])} people</td><td>${x[2] != null ? fmt(x[2]) + ' visits' : ''}</td></tr>`).join('')}</tbody></table></details></section>
             <div class="adm-two">
                 <section class="adm-card"><header><h3>From visitor to PRO</h3><span>all devices</span></header><ul class="adm-fun">${funnel}</ul></section>
                 <section class="adm-card"><header><h3>Busy hours</h3><span>last 24 h · ${hrs.some(Boolean) ? 'busiest ' + String(peak).padStart(2, '0') + ':00' : 'no data yet'}</span></header>
@@ -39902,21 +39919,22 @@ ${p.p}`;
             <dl><div><dt>Device id</dt><dd><code>${esc(p.id)}</code> <button type="button" class="adm-ib xs" data-copy="${esc(p.id)}" aria-label="Copy id">${ICON.copy}</button></dd></div>
             <div><dt>First seen</dt><dd>${dShort(p.f)}</dd></div><div><dt>Last seen</dt><dd>${ago(p.t)}</dd></div><div><dt>Where</dt><dd>${flag} ${esc(zn)}</dd></div>
             <div><dt>Site version</dt><dd>${esc(p.v || '–')}</dd></div><div><dt>Level test</dt><dd>${p.l ? esc(p.l) : 'not taken'}</dd></div>
+            <div><dt>Visits today</dt><dd>${p.vt ? p.vt + (p.vt === 1 ? ' time' : ' times') : 'not today'}</dd></div>
             <div><dt>Luna Coach today</dt><dd>${p.c == null ? '–' : p.c + '% done'}</dd></div>
             <div><dt>PRO</dt><dd>${p.pc ? (p.pc.gift ? 'Gift ' : 'Code ') + '<code>' + esc(p.pc.code) + '</code> · until ' + dShort(p.pc.exp) : p.p ? 'plan button' : 'no'}</dd></div></dl>
-            <div class="adm-pa">${p.pc && p.pc.exp > Date.now() ? '' : `<button type="button" class="adm-btn sm gold${armed === 'gift:' + p.id ? ' armed' : ''}" data-x="gift" data-id="${esc(p.id)}">${ICON.gift}${armed === 'gift:' + p.id ? 'Tap again to give 1 year of PRO' : 'Give 1 year of PRO'}</button>`}</div></div>` : '';
+            <div class="adm-pa"><button type="button" class="adm-btn sm${armed === 'own:' + p.id ? ' armed' : ''}" data-x="own" data-id="${esc(p.id)}">${armed === 'own:' + p.id ? 'Tap again: hide from statistics' : 'This is me · don\'t count'}</button>${p.pc && p.pc.exp > Date.now() ? '' : `<button type="button" class="adm-btn sm gold${armed === 'gift:' + p.id ? ' armed' : ''}" data-x="gift" data-id="${esc(p.id)}">${ICON.gift}${armed === 'gift:' + p.id ? 'Tap again to give 1 year of PRO' : 'Give 1 year of PRO'}</button>`}</div></div>` : '';
         return `<li class="adm-p${pf.open === p.id ? ' open' : ''}"><button type="button" class="adm-pr" data-p="${esc(p.id)}" aria-expanded="${pf.open === p.id}">
             <span class="adm-av" style="--h:${hue(p.id)}">${esc((p.n || '?').charAt(0).toUpperCase())}${on ? '<i class="adm-on" title="Online now"></i>' : ''}</span>
             <span class="adm-pn"><b>${esc(nm)}</b><small>${flag} ${p.a ? 'App' : 'Website'} · ${on ? 'online now' : ago(p.t)}</small></span>
-            <span class="adm-pt">${p.l ? `<span class="adm-ch">${esc(p.l)}</span>` : ''}${p.c != null ? `<span class="adm-ch vio">Coach ${p.c}%</span>` : ''}${pro}</span></button>${det}</li>`;
+            <span class="adm-pt">${p.vt ? `<span class="adm-ch grn">${p.vt}× today</span>` : ''}${p.l ? `<span class="adm-ch">${esc(p.l)}</span>` : ''}${p.c != null ? `<span class="adm-ch vio">Coach ${p.c}%</span>` : ''}${pro}</span></button>${det}</li>`;
     }
     function peopleHTML() {
         const list = (people && people.users) || null;
         const q = pf.q.trim().toLowerCase(), now = Date.now();
-        const F = { all: () => true, online: p => now - p.t < 180000, reg: p => p.r, pro: p => p.p, app: p => p.a, tested: p => p.l };
+        const tdy = dayKey(now), F = { all: () => true, online: p => now - p.t < 180000, today: p => p.vt > 0 || dayKey(p.t) === tdy, newt: p => p.f && dayKey(p.f) === tdy, reg: p => p.r, pro: p => p.p, app: p => p.a, tested: p => p.l };
         const shown = list ? list.filter(F[pf.f] || F.all).filter(p => !q || (p.n || '').toLowerCase().includes(q) || p.id.includes(q) || (p.pc && p.pc.code.toLowerCase().includes(q))) : [];
-        const chips = [['all', 'All'], ['online', 'Online'], ['reg', 'Signed up'], ['tested', 'Level test'], ['pro', 'PRO'], ['app', 'App']];
-        return `<section class="adm-card"><header><h3>People</h3><span>${list ? fmt(people.total) + ' devices · newest activity first' : 'loading…'}</span></header>
+        const chips = [['all', 'All'], ['online', 'Online'], ['today', 'Today'], ['newt', 'New today'], ['reg', 'Signed up'], ['tested', 'Level test'], ['pro', 'PRO'], ['app', 'App']];
+        return `<section class="adm-card"><header><h3>People</h3><span>${list ? fmt(people.total) + ' people (one device = one person) · newest first' + (people.own ? ' · your ' + people.own + ' device' + (people.own > 1 ? 's are' : ' is') + ' hidden' : '') : 'loading…'}</span></header>
             <label class="adm-srch">${ICON.search}<input id="adm-pq" type="search" placeholder="Search by name, device id or code" value="${esc(pf.q)}" autocomplete="off"></label>
             <div class="adm-chips" role="group" aria-label="Filter">${chips.map(c => `<button type="button" class="adm-fc${pf.f === c[0] ? ' on' : ''}" data-pf="${c[0]}">${c[1]}${list ? ` <i>${fmt(list.filter(F[c[0]]).length)}</i>` : ''}</button>`).join('')}</div>
             <ul class="adm-people" id="adm-plist">${list ? (shown.slice(0, 200).map(personRow).join('') || '<li class="adm-none">Nobody matches.</li>') : '<li class="adm-skr"><i></i><i></i><i></i><i></i></li>'}</ul>
@@ -40051,6 +40069,10 @@ ${p.p}`;
             case 'del': {
                 const code = x.dataset.code; if (!arm('del:' + code)) return;
                 try { await adm('adm_code_del', { code }); toast(code + ' deleted'); await load(true); } catch (e) { toast('⚠ ' + (String(e.message) === 'used' ? 'That code is already used' : 'Could not delete it')); render(); } return;
+            }
+            case 'own': {
+                const id = x.dataset.id; if (!arm('own:' + id)) return;
+                try { await adm('adm_own', { id, on: 1 }); toast('Hidden from the statistics'); people = null; await loadPeople(); await load(true); } catch (e) { toast('⚠ Could not save (' + String(e.message || e).slice(0, 40) + ')'); render(); } return;
             }
             case 'gift': {
                 const id = x.dataset.id; if (!arm('gift:' + id)) return;
