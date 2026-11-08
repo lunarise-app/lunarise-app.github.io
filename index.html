@@ -6394,6 +6394,26 @@ html.hs-lock{overflow:hidden}
 .ib-reply textarea{width:100%;box-sizing:border-box;min-height:48px;padding:12px 14px;border-radius:16px;border:1px solid var(--ln,rgba(255,255,255,.12));background:rgba(255,255,255,.05);color:#fff;font:500 14.5px/1.4 system-ui,sans-serif;resize:vertical;outline:none}
 .ib-reply textarea:focus{border-color:var(--gold,#ffb44d)}
 .ib-reply .adm-btn.pri{margin-left:0;width:auto;min-width:88px}
+/* the owner's live alert banner */
+#lr-alerts{position:fixed;top:calc(10px + env(safe-area-inset-top,0px));left:50%;z-index:10050;width:min(420px,calc(100vw - 20px));transform:translateX(-50%);display:flex;flex-direction:column;gap:8px;pointer-events:none}
+.lra{position:relative;display:flex;align-items:stretch;border-radius:22px;background:rgba(24,28,58,.86);-webkit-backdrop-filter:blur(22px) saturate(1.5);backdrop-filter:blur(22px) saturate(1.5);border:1px solid rgba(165,180,252,.25);box-shadow:0 18px 44px -14px rgba(0,0,0,.65),0 0 0 1px rgba(0,0,0,.2);color:#f8fafc;pointer-events:auto;transform:translateY(-130%) scale(.96);opacity:0;transition:transform .5s cubic-bezier(.2,1.25,.35,1),opacity .3s}
+.lra.in{transform:none;opacity:1}
+.lra.out{transform:translateY(-40%) scale(.96);opacity:0;transition:transform .35s,opacity .3s}
+.lra::before{content:"";position:absolute;left:14px;right:14px;bottom:0;height:2px;border-radius:2px;background:linear-gradient(90deg,#818cf8,#f472b6);transform-origin:left;animation:lraT 9s linear forwards;opacity:.7}
+.lra.sup::before{background:linear-gradient(90deg,#34d399,#22d3ee)}
+.lra:hover::before{animation-play-state:paused}
+@keyframes lraT{to{transform:scaleX(0)}}
+.lra-main{flex:1;min-width:0;display:flex;gap:12px;align-items:flex-start;padding:13px 6px 14px 14px;border:0;background:none;color:inherit;text-align:left;cursor:pointer;font:inherit}
+.lra-ic{flex:none;display:grid;place-items:center;width:42px;height:42px;border-radius:13px;background:linear-gradient(135deg,#6366f1,#a78bfa);font-size:21px;box-shadow:0 6px 16px -6px rgba(99,102,241,.8)}
+.lra.sup .lra-ic{background:linear-gradient(135deg,#10b981,#06b6d4);box-shadow:0 6px 16px -6px rgba(16,185,129,.8)}
+.lra-tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
+.lra-top{display:flex;justify-content:space-between;gap:8px;font-size:11.5px;color:rgba(199,210,254,.7)}
+.lra-top b{font-weight:700;letter-spacing:.02em}
+.lra strong{font-size:15px;font-weight:800;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lra-body{font-size:13.5px;line-height:1.4;color:rgba(226,232,255,.85);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.lra-x{flex:none;width:38px;border:0;background:none;color:rgba(199,210,254,.6);font-size:14px;cursor:pointer;border-radius:0 22px 22px 0}
+.lra-x:hover{color:#fff}
+@media (prefers-reduced-motion:reduce){.lra,.lra.in,.lra.out{transition:opacity .2s;transform:none}.lra::before{animation:none}}
 </style><style id="mv-art-css" data-th-skip>
 /* Movies: the big pictures stay cinematic (dark shade, white writing) in every theme and in Light mode */
 .mv-hero{position:relative;min-height:420px;border-radius:26px;overflow:hidden;display:flex;align-items:flex-end;background:#0b0d1a var(--bd) center 20%/cover no-repeat;box-shadow:0 30px 60px -30px rgba(0,0,0,.9);isolation:isolate}
@@ -40295,7 +40315,7 @@ ${p.p}`;
     function counts() { const d = ST.data || {}; return { fb: (d.fb || []).filter(x => x.st === 'new').length, sup: (d.sup || []).filter(t => +t.un > 0).length }; }
 
     async function load(force) {
-        if (ST.busy || (!force && ST.data && Date.now() - ST.at < 25000)) return;
+        if (!H || ST.busy || (!force && ST.data && Date.now() - ST.at < 25000)) return;
         ST.busy = true;
         try { ST.data = await H.adm('adm_inbox', {}, 40000); ST.at = Date.now(); }
         catch (x) { ST.data = { err: String(x.message || x) }; }
@@ -40418,6 +40438,55 @@ ${p.p}`;
     /* a tap on an alert opens LunaRise with ?inbox=1: straight to the Inbox */
     if (/[?&]inbox=1\b/.test(location.search)) setTimeout(() => { try { localStorage.setItem('lr_adm_tab', 'inbox'); } catch (x) { } try { history.replaceState(null, '', location.pathname); } catch (x) { } if (window.LRAdmin) LRAdmin.open(); }, 2500);
     window.LRINBOX = { bind: (h) => { H = h; }, html, click, input, load, badge, after: () => { badge(); if (ST.th) scrollEnd(); }, _st: ST };
+})();
+
+/* ===== The owner's live alert: when someone writes and LunaRise is open, a banner slides in from the top with a soft chime
+   (when LunaRise is closed, the phone shows the usual notification with its sound). ===== */
+(function () {
+    'use strict';
+    if (window.LRALERT) return;
+    const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    let ac = null;
+    function chime() {
+        try {
+            ac = ac || new (window.AudioContext || window.webkitAudioContext)();
+            if (ac.state === 'suspended') ac.resume();
+            const t0 = ac.currentTime + 0.02, out = ac.createGain(); out.gain.value = 0.22; out.connect(ac.destination);
+            [[880, 0], [1318.5, 0.13], [1760, 0.26]].forEach(([f, d]) => {
+                const o = ac.createOscillator(), g = ac.createGain(), o2 = ac.createOscillator(), g2 = ac.createGain();
+                o.type = 'sine'; o.frequency.value = f; o2.type = 'sine'; o2.frequency.value = f * 2.01;
+                g.gain.setValueAtTime(0, t0 + d); g.gain.linearRampToValueAtTime(0.9, t0 + d + 0.012); g.gain.exponentialRampToValueAtTime(0.001, t0 + d + 0.9);
+                g2.gain.setValueAtTime(0, t0 + d); g2.gain.linearRampToValueAtTime(0.18, t0 + d + 0.01); g2.gain.exponentialRampToValueAtTime(0.001, t0 + d + 0.4);
+                o.connect(g); g.connect(out); o2.connect(g2); g2.connect(out); o.start(t0 + d); o2.start(t0 + d); o.stop(t0 + d + 1); o2.stop(t0 + d + 0.5);
+            });
+        } catch (e) { }
+        try { navigator.vibrate && navigator.vibrate([90, 50, 90]); } catch (e) { }
+    }
+    /* the first tap anywhere unlocks sound for the rest of the visit */
+    const unlock = () => { try { ac = ac || new (window.AudioContext || window.webkitAudioContext)(); if (ac.state === 'suspended') ac.resume(); } catch (e) { } };
+    addEventListener('pointerdown', unlock, { once: true, capture: true });
+    let stack = null;
+    function show(d) {
+        if (!stack) { stack = document.createElement('div'); stack.id = 'lr-alerts'; stack.setAttribute('aria-live', 'polite'); document.body.appendChild(stack); }
+        const sup = /sup/.test(d.tag || ''), el = document.createElement('div');
+        el.className = 'lra' + (sup ? ' sup' : ''); el.setAttribute('role', 'status');
+        el.innerHTML = `<button type="button" class="lra-main"><span class="lra-ic" aria-hidden="true">${sup ? '🛟' : (String(d.title || '').match(/^\S+/) || ['💬'])[0]}</span><span class="lra-tx"><span class="lra-top"><b>LunaRise · Inbox</b><time>now</time></span><strong>${esc(String(d.title || 'New message').replace(/^\S+\s/, ''))}</strong><span class="lra-body">${esc(d.body || '')}</span></span></button><button type="button" class="lra-x" aria-label="Dismiss">✕</button>`;
+        stack.prepend(el);
+        while (stack.children.length > 3) stack.lastChild.remove();
+        requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('in')));
+        const bye = () => { el.classList.remove('in'); el.classList.add('out'); setTimeout(() => el.remove(), 400); };
+        let t = setTimeout(bye, 9000);
+        el.addEventListener('pointerenter', () => clearTimeout(t)); el.addEventListener('pointerleave', () => { t = setTimeout(bye, 4000); });
+        el.querySelector('.lra-x').onclick = bye;
+        el.querySelector('.lra-main').onclick = () => { bye(); try { localStorage.setItem('lr_adm_tab', 'inbox'); } catch (e) { } if (window.LRINBOX) { LRINBOX._st.view = sup ? 'sup' : 'fb'; LRINBOX.load(true); } if (document.getElementById('adm') && window.LRINBOX) { const b = document.querySelector('#adm .adm-tabs [data-tab="inbox"]'); if (b) b.click(); } else if (window.LRAdmin) LRAdmin.open(); };
+        // swipe up to dismiss
+        let y0 = null; el.addEventListener('touchstart', (e) => { y0 = e.touches[0].clientY; }, { passive: true });
+        el.addEventListener('touchmove', (e) => { if (y0 != null && e.touches[0].clientY - y0 < -24) { y0 = null; bye(); } }, { passive: true });
+        chime();
+        if (window.LRINBOX) LRINBOX.load(true);
+    }
+    if ('serviceWorker' in navigator) navigator.serviceWorker.addEventListener('message', (e) => { if (e.data && e.data.type === 'lr-adm') show(e.data); });
+    window.LRALERT = { show, chime };
 })();
 </script><!--/hs:js-->
 <!--cz:js--><script id="cz-js">

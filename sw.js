@@ -73,8 +73,14 @@ async function handle(d) {
     if (d.type === 'cancel') return cancel(d);
     if (d.type === 'remind' && d.news) return news(d);
     if (d.type === 'remind') return remind(d);
-    if (d.type === 'adm') return self.registration.showNotification(d.title || 'LunaRise', { body: d.body || '', icon: ICON, badge: BADGE, tag: d.tag || 'lr-adm', renotify: true, vibrate: [120, 60, 120], timestamp: Date.now(), data: { type: 'adm' } });
+    if (d.type === 'adm') return admAlert(d);
     return self.registration.showNotification(d.title || 'LunaRise', { body: d.body || '', icon: ICON, badge: ICON, tag: d.tag || 'lr' });
+}
+/* a new message for the owner: LunaRise on screen shows its own banner with a chime; otherwise the phone's notification with sound */
+async function admAlert(d) {
+    const vis = await visibleClient();
+    if (vis) { vis.postMessage({ type: 'lr-adm', title: d.title, body: d.body, tag: d.tag }); if (!APPLE) return; }
+    return self.registration.showNotification(d.title || 'LunaRise', { body: d.body || '', icon: ICON, badge: BADGE, tag: d.tag || 'lr-adm', renotify: true, silent: false, requireInteraction: false, vibrate: [200, 100, 200], timestamp: Date.now(), data: { type: 'adm' } });
 }
 async function remind(d) {
     // already studying in LunaRise: no need to nudge (a test from Settings always shows)
