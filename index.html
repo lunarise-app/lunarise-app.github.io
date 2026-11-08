@@ -42925,6 +42925,9 @@ Reply with JSON only: {"words":[{"w":"","pos":"","ipa":"","def":"","ex":""}],"gr
         const c = vctx();
         try { if (c) { const b = c.createBuffer(1, 1, 22050), s = c.createBufferSource(); s.buffer = b; s.connect(c.destination); s.start(0); } } catch (e) { }
         if (!unlocked && 'speechSynthesis' in window) { try { const u = new SpeechSynthesisUtterance(' '); u.volume = 0; speechSynthesis.speak(u); } catch (e) { } }
+        // iPhone: sound plays even when the silent switch is on, and the word player is allowed to play later by itself
+        try { if (navigator.audioSession && navigator.audioSession.type !== 'playback') navigator.audioSession.type = 'playback'; } catch (e) { }
+        try { const a = wa(); if (!a.dataset.ok) { a.src = WSIL; const p = a.play(); if (p && p.then) p.then(() => { a.pause(); a.dataset.ok = '1'; }).catch(() => { }); } } catch (e) { }
         unlocked = 1;
     }
     ['touchend', 'pointerdown', 'click', 'keydown'].forEach(ev => document.addEventListener(ev, () => { if (!VO.ctx || VO.ctx.state !== 'running' || !unlocked) unlockAudio(); }, { capture: true, passive: true }));
@@ -42999,7 +43002,43 @@ Reply with JSON only: {"words":[{"w":"","pos":"","ipa":"","def":"","ex":""}],"gr
         if (!ok && tok === VO.tok) await sysVoice(text.replace(/\bha[- ]?ha\b[!.]*/gi, ''), tok);
         if (tok === VO.tok) { if (TEA) TEA.set(after || 'idle'); setTimeout(() => { if (tok === VO.tok) caption(''); }, 900); }
     }
-    function sayWord(w, btn) { hush(); const tok = VO.tok; if (btn) btn.classList.add('on'); (async () => { let ok = false; try { const b = await ttsBuf(w, 'talk'); if (tok === VO.tok) ok = await playBuf(b, tok); } catch (e) { } if (!ok && tok === VO.tok) await sysVoice(w, tok); if (btn) btn.classList.remove('on'); })(); }
+    /* ---------- the word player: one <audio> element (works on iPhone, in Telegram, with the silent switch on) ---------- */
+    const WSIL = 'data:audio/wav;base64,UklGRrQBAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YZABAACAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA';
+    let WA = null; const WURL = new Map();
+    function wa() { if (!WA) { WA = new Audio(); WA.preload = 'auto'; WA.setAttribute('playsinline', ''); WA.setAttribute('webkit-playsinline', ''); } return WA; }
+    const wkey = (w) => String(w || '').trim().toLowerCase();
+    /* get the AI voice for these words now, so a tap plays at once */
+    function prepWords(words) {
+        if (!aiOk()) return;
+        words.filter(w => w && !WURL.has(wkey(w))).slice(0, 12).forEach(w => {
+            WURL.set(wkey(w), null);
+            ttsBuf(w, 'talk').then(b => { WURL.set(wkey(w), URL.createObjectURL(new Blob([b], { type: 'audio/mpeg' }))); }).catch(() => { WURL.delete(wkey(w)); });
+        });
+    }
+    function phoneVoice(w) {
+        if (!('speechSynthesis' in window)) return false;
+        try {
+            speechSynthesis.cancel();
+            const u = new SpeechSynthesisUtterance(w), vs = speechSynthesis.getVoices().filter(v => /^en/i.test(v.lang));
+            const v = vs.find(v => /(samantha|daniel|karen|serena|aria|jenny|libby|sonia|google uk english female|google us english)/i.test(v.name)) || vs[0];
+            if (v) u.voice = v; u.lang = (v && v.lang) || 'en-GB'; u.rate = .9; u.volume = 1;
+            speechSynthesis.speak(u); return true;
+        } catch (e) { return false; }
+    }
+    /* say one word: the prepared AI voice if it is ready, otherwise the phone's English voice right away (inside the tap) */
+    function sayWord(w, btn) {
+        hush(); const tok = VO.tok, k = wkey(w), url = WURL.get(k);
+        if (btn) { btn.classList.add('on'); setTimeout(() => btn.classList.remove('on'), 1400); }
+        if (url) {
+            const a = wa(); try { speechSynthesis.cancel(); } catch (e) { }
+            a.src = url; a.currentTime = 0;
+            const p = a.play(); if (p && p.catch) p.catch(() => { if (tok === VO.tok && !phoneVoice(w)) playAi(); });
+            return;
+        }
+        if (phoneVoice(w)) { prepWords([w]); return; }
+        playAi();
+        function playAi() { (async () => { let ok = false; try { const b = await ttsBuf(w, 'talk'); if (tok !== VO.tok) return; const u = URL.createObjectURL(new Blob([b], { type: 'audio/mpeg' })); WURL.set(k, u); const a = wa(); a.src = u; await a.play(); ok = true; } catch (e) { } if (!ok && tok === VO.tok) { try { const b = await ttsBuf(w, 'talk'); ok = await playBuf(b, tok); } catch (e) { } } if (!ok && tok === VO.tok) toast('🔇 No sound? Turn up the volume, or open LunaRise in Safari or Chrome.'); })(); }
+    }
     function caption(t) { D.querySelectorAll('#dw .dw-cap').forEach(c => { if (t) { c.textContent = t; c.classList.add('on'); } else c.classList.remove('on'); }); const b = $('dw-bub'); if (b && t) b.textContent = t; }
 
     /* ---------- the teacher (one 3D view, moved between screens) ---------- */
@@ -43176,7 +43215,7 @@ Reply with JSON only: {"words":[{"w":"","pos":"","ipa":"","def":"","ex":""}],"gr
                 : '<p class="dw-q"' + (q.dir ? ' dir="rtl"' : '') + '>' + esc(q.q).replace('___', '<u style="text-decoration-thickness:2px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u>') + '</p><div class="dw-opts">' + q.o.map((o, i) => '<button type="button" class="dw-opt" data-a="pick" data-i="' + i + '"><em>' + String.fromCharCode(65 + i) + '</em><span>' + esc(o) + '</span></button>').join('') + '</div>') +
             '<div id="dw-qf"></div>';
         Q.picked = false;
-        if (q.spell) { setTimeout(() => { try { $('dw-sp').focus(); } catch (e) { } sayWord(q.ans); }, 250); }
+        if (q.spell) { prepWords(Q.list.filter(x => x.spell).map(x => x.ans)); sayWord(q.ans); setTimeout(() => { try { $('dw-sp').focus({ preventScroll: true }); } catch (e) { } }, 250); }
         if (timed) { const b = $('dw-qb'); requestAnimationFrame(() => { b.style.transitionDuration = '5s'; b.style.width = '0%'; }); clearTimeout(Q.tm); Q.tm = setTimeout(() => answer(-1), 5000); }
     }
     function answer(i, typed) {
@@ -43283,6 +43322,7 @@ Reply with JSON only: {"words":[{"w":"","pos":"","ipa":"","def":"","ex":""}],"gr
             else list.push(mcqWord(x, k === 1));
         });
         Q.list = list.slice(0, Math.max(6, Math.min(10, list.length))); Q.i = 0; Q.ok = 0; Q.kind = 'check'; Q.wrong = [];
+        prepWords(Q.list.filter(x => x.spell).map(x => x.ans));
         return '<div class="dw-ex-h"><h2 class="dw-h2">Check test</h2><p class="dw-sub">No hints on the way. See how many words you remember.</p></div><div class="dw-box" id="dw-q"></div>';
     };
     AFTER.check = () => {
@@ -43515,7 +43555,7 @@ Reply with JSON only: {"words":[{"w":"","pos":"","ipa":"","def":"","ex":""}],"gr
     }
     D.addEventListener('submit', (e) => { const f = e.target; if (!EL || !EL.contains(f)) return; e.preventDefault(); if (f.dataset.f === 'spell') answer(-1, ($('dw-sp') || {}).value || ''); }, true);
 
-    window.LRDW = { open, close: () => close(), state: S, ctx: () => CTX, _ex: EX, _judge: judge };
+    window.LRDW = { open, close: () => close(), state: S, ctx: () => CTX, _ex: EX, _judge: judge, _go: (v) => go(v) };
 })();
 </script>
 <!--pr:css--><style id="pr-css" data-th-skip>
