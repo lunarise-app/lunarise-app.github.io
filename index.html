@@ -11902,7 +11902,7 @@ function spaceGL() {
                     <div><span class="ce-tag"><i class="fa-solid fa-headphones"></i> 50 recordings · 10 topics</span><span class="ce-tag">NEW</span></div>
                     <div><h3>Note-taking</h3><p>Listen, pause and write every word you hear. AI checks your notes and translates any word into 14 languages.</p><div class="mt-3 text-[11px] font-bold opacity-90">${window.NT ? NT.doneText() : ''} <i class="fa-solid fa-arrow-right ml-1"></i></div></div></button>
                 <button class="ce-exam fullmock" style="min-height:150px;width:100%" onclick="LRFM.open()"><span class="wm">MOCK</span>
-                    <div><span class="ce-tag"><i class="fa-solid fa-stopwatch"></i> 40 full tests · real exam format</span><span class="ce-tag">NEW</span></div>
+                    <div><span class="ce-tag"><i class="fa-solid fa-stopwatch"></i> 80 full tests · 2026 topics</span><span class="ce-tag">NEW</span></div>
                     <div><h3>FullMock</h3><p>The whole IELTS in one sitting: Listening with real voices, Reading, Writing Task 1 and 2, and Speaking with Luna as your examiner. Get your band.</p><div class="mt-3 text-[11px] font-bold opacity-90">${(() => { try { const t = ((state.user.fm || {}).t) || {}; const d = Object.keys(t).filter(k => t[k].res); return d.length ? d.length + ' done · best band ' + Math.max(...d.map(k => t[k].res.overall)).toFixed(1) : 'Start Test 1'; } catch (e) { return 'Start Test 1'; } })()} <i class="fa-solid fa-arrow-right ml-1"></i></div></div></button>`;
         }
 
@@ -22733,7 +22733,7 @@ const GL_TXT = {
     ur: ['سبق', 'فارمولا', 'مثالیں', 'غلطیاں', 'کوئز', 'یہ کیا ہے؟', 'یہ کیوں اہم ہے؟', 'اردو میں وضاحت', 'فوری فارمولا', 'کلیدی الفاظ', 'لونا کا مشورہ', 'لونا کے مشورے', 'IELTS مشورہ', 'عام غلطی', 'ترجمہ ہو رہا ہے…', 'سوال', 'درست!', 'تقریباً۔', 'اگلا سوال', 'کوئز ختم کریں', 'مکمل جملہ', 'درست جواب', 'ماڈیول مکمل!', 'اچھی مشق!', 'آپ کا اسکور', 'دوبارہ کوشش کریں', 'سبق دہرائیں', 'ترجمہ بہتر کریں (AI)'],
     'zh-CN': ['课程', '公式', '例句', '常见错误', '测验', '这是什么？', '为什么重要？', '中文讲解', '快速公式', '关键词', 'Luna 小贴士', 'Luna 小贴士', '雅思提示', '常见错误', '正在翻译…', '问题', '正确！', '差一点。', '下一题', '完成测验', '完整句子', '正确答案', '已掌握本单元！', '练习得不错！', '你的得分', '再试一次', '复习课程', '优化翻译 (AI)']
 };
-const GL = {}; Object.keys(GL_TXT).forEach(k => { GL[k] = {}; GL_KEYS.forEach((key, i) => GL[k][key] = GL_TXT[k][i]); });
+const GL = {}; Object.keys(GL_TXT).forEach(k => { GL[k] = {}; GL_KEYS.forEach((key, i) => GL[k][key] = GL_TXT[k][i]); }); Object.keys(GL).forEach(k => ['q', 'correct', 'notq', 'next', 'finish', 'full', 'ans', 'mastered', 'practice', 'scored', 'again', 'review', 'improve'].forEach(key => { GL[k][key] = GL.en[key]; }));
 const GL_ORDER = ['uz', 'ru', 'hi', 'es', 'fr', 'ar', 'bn', 'pt', 'ur', 'zh-CN'];
 const gMem = {}, gBusy = {}; let gTitleMem = {};
 function gLang() { try { const c = state.user && state.user.gLang; return GL_ORDER.includes(c) ? c : 'uz'; } catch (e) { return 'uz'; } }
@@ -22865,10 +22865,11 @@ async function gImprove() {
 let currentGrammarSet = null, gqNote = '';
 function gqLoad(k) { try { return JSON.parse(localStorage.getItem(k) || '{}') || {}; } catch (e) { return {}; } }
 function gqSave(k, o) { try { localStorage.setItem(k, JSON.stringify(o)); } catch (e) { } }
+function gqBadQ(q) { try { const ok = String(q['ABC'.indexOf(q[4]) + 1]).trim().toLowerCase(), after = String(q[0]).split(/_{2,}/)[1] || ''; return /^(despite|in spite of|because of|due to|owing to|during)$/.test(ok) && /^\s*(i|you|he|she|it|we|they|there|this|that)\s+(am|is|are|was|were|has|had|have|will|would|can|could|did|do|does|felt|went|got|seemed|looked|[a-z]+ed)\b/i.test(after); } catch (e) { return false; } }
 function gqKey(q) { return (String(q[0]).toLowerCase().replace(/[^a-z0-9_ ]/g, '').replace(/\s+/g, ' ').trim() + '|' + String(q['ABC'.indexOf(q[4]) + 1]).toLowerCase().trim()); }
 function gqShuffle(a) { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); const t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
 function gqMix(q) { const ok = q['ABC'.indexOf(q[4]) + 1], o = gqShuffle([q[1], q[2], q[3]]); return [q[0], o[0], o[1], o[2], 'ABC'.charAt(o.indexOf(ok))]; }
-function gqAll(m) { const bank = (gqLoad('lunarise_gq_bank_v1')[m.id] || []), seen = {}, out = []; (m.quiz || []).concat(bank).forEach(q => { if (!q || q.length < 5) return; const k = gqKey(q); if (!seen[k]) { seen[k] = 1; out.push(q); } }); return out; }
+function gqAll(m) { const bank = (gqLoad('lunarise_gq_bank_v1')[m.id] || []), seen = {}, out = []; (m.quiz || []).concat(bank).forEach(q => { if (!q || q.length < 5 || gqBadQ(q)) return; const k = gqKey(q); if (!seen[k]) { seen[k] = 1; out.push(q); } }); return out; }
 function gqUnseen(m) { const sn = new Set(gqLoad('lunarise_gq_seen_v1')[m.id] || []); return gqAll(m).filter(q => !sn.has(gqKey(q))); }
 function gqMark(m, q) { const all = gqLoad('lunarise_gq_seen_v1'), a = all[m.id] || [], k = gqKey(q); if (a.indexOf(k) < 0) { a.push(k); all[m.id] = a.slice(-600); gqSave('lunarise_gq_seen_v1', all); } }
 async function gqGenerate(m, need) {
@@ -37535,6 +37536,17 @@ Return ONLY JSON with:
 
     /* ---------- tests: 20 questions, never the same question twice ---------- */
     let QT = 0;
+    /* a strict second AI reads every new question and tries EVERY option: the question stays only if exactly one option is correct and it is the marked one */
+    async function gqCheck(items) {
+        items = items.filter((q) => !gqBadQ(q)); if (!items.length) return items;
+        try {
+            const o = await ai('You are a strict Cambridge English grammar examiner. For each gap-fill item put EACH option into the gap and decide if the whole sentence is fully grammatical, natural standard English with a sensible meaning. Be strict: despite / in spite of / because of / due to / during must be followed by a noun phrase or -ing form, never by a clause (subject + verb); although / though / because / unless / while are followed by a clause. Reply JSON only: {"r":[{"i":0,"ok":[indexes of ALL correct options 0-2]}]}', JSON.stringify(items.map((q, i) => ({ i, s: q[0], o: [q[1], q[2], q[3]] }))), 300 + items.length * 40, 0);
+            const R = {}; (o.r || []).forEach((x) => { if (x && Array.isArray(x.ok)) R[+x.i] = x.ok.map(Number); });
+            if (!Object.keys(R).length) return items;
+            return items.filter((q, i) => { const ok = R[i]; return ok && ok.length === 1 && ok[0] === 'ABC'.indexOf(q[4]); });
+        } catch (e) { return items; }
+    }
+    window.gqCheck = gqCheck;
     window.gqGenerate = async function (m, need) {
         const key = (typeof aiKey === 'function') ? aiKey() : ''; if (!key) return 0;
         const seenKeys = new Set(gqAll(m).map(gqKey)), avoid = gqAll(m).slice(-60).map((q) => q[0].replace(/_{2,}/, '___')).join(' | ').slice(0, 3600);
@@ -37547,8 +37559,9 @@ Write exactly ${n} NEW multiple-choice fill-in-the-blank questions that test thi
         const res = await Promise.all(parts.map((n, i) => one(n, i ? 'work, study, science and IELTS-style situations' : 'everyday life situations')));
         const add = [];
         [].concat(...res).forEach((x) => { if (!x || typeof x.q !== 'string' || !/_{2,}/.test(x.q) || !Array.isArray(x.o) || x.o.length !== 3 || new Set(x.o.map((t) => String(t).trim().toLowerCase())).size !== 3 || !(+x.a >= 0 && +x.a < 3)) return; const q = [x.q.trim(), String(x.o[0]), String(x.o[1]), String(x.o[2]), 'ABC'.charAt(+x.a)], k = gqKey(q); if (seenKeys.has(k)) return; seenKeys.add(k); add.push(q); });
-        if (add.length) { const bank = gqLoad('lunarise_gq_bank_v1'); bank[m.id] = (bank[m.id] || []).concat(add).slice(-400); gqSave('lunarise_gq_bank_v1', bank); }
-        return add.length;
+        const good = (await gqCheck(add)).map((q) => q.slice(0, 5).concat([1]));
+        if (good.length) { const bank = gqLoad('lunarise_gq_bank_v1'); bank[m.id] = (bank[m.id] || []).concat(good).slice(-400); gqSave('lunarise_gq_bank_v1', bank); }
+        return good.length;
     };
     window.gqStart = async function () {
         const m = currentGrammarModule, N = N_Q, tok = ++QT; currentGrammarSet = null; gqNote = '';
@@ -37560,7 +37573,15 @@ Write exactly ${n} NEW multiple-choice fill-in-the-blank questions that test thi
         }
         if (!pool.length) { const all = gqLoad('lunarise_gq_seen_v1'); delete all[m.id]; gqSave('lunarise_gq_seen_v1', all); pool = gqAll(m); gqNote = 'You have seen every question for this topic — starting a new round. Connect to the internet to get brand-new ones.'; }
         else if (pool.length < N) gqNote = 'Only ' + pool.length + ' unseen questions left offline. Connect to the internet for more.';
-        currentGrammarSet = gqShuffle(pool).slice(0, N).map(gqMix); currentGrammarSet._m = m.id; currentGrammarQuizIndex = 0; currentGrammarScore = 0; currentGrammarAnswered = false;
+        let pick = gqShuffle(pool).slice(0, N + 8);
+        const base = new Set((m.quiz || []).map(gqKey)), old = pick.filter((q) => !base.has(gqKey(q)) && q[5] !== 1);
+        if (old.length && aiReady()) {
+            $('grammar-modal-content').innerHTML = `<div class="gl-wait"><i class="fa-solid fa-circle-notch fa-spin"></i> Checking your questions…</div>`;
+            const keep = new Set((await gqCheck(old)).map(gqKey)); if (tok !== QT || currentGrammarModule !== m) return;
+            const bank = gqLoad('lunarise_gq_bank_v1'); bank[m.id] = (bank[m.id] || []).filter((q) => { const k = gqKey(q); if (keep.has(k)) { q[5] = 1; return true; } return !old.some((x) => gqKey(x) === k); }); gqSave('lunarise_gq_bank_v1', bank);
+            pick = pick.filter((q) => base.has(gqKey(q)) || q[5] === 1 || keep.has(gqKey(q)));
+        }
+        currentGrammarSet = pick.slice(0, N).map(gqMix); currentGrammarSet._m = m.id; currentGrammarQuizIndex = 0; currentGrammarScore = 0; currentGrammarAnswered = false;
         if (currentGrammarTab === 'quiz') renderGrammarQuiz();
     };
 
@@ -41919,7 +41940,17 @@ Reply with JSON only: {"words":[{"w":"","pos":"","ipa":"","def":"","ex":""}],"gr
 
     /* ---------- Luna's voice ---------- */
     const VO = { ctx: null, an: null, src: null, tok: 0, amp: 0, cache: new Map(), utter: null };
-    function vctx() { try { VO.ctx = VO.ctx || new (window.AudioContext || window.webkitAudioContext)(); if (VO.ctx.state === 'suspended') VO.ctx.resume(); } catch (e) { VO.ctx = null; } return VO.ctx; }
+    function vctx() { try { VO.ctx = VO.ctx || new (window.AudioContext || window.webkitAudioContext)(); if (VO.ctx.state !== 'running') VO.ctx.resume(); } catch (e) { VO.ctx = null; } return VO.ctx; }
+    /* iPhone / Telegram browser: sound only works if it is switched on inside a tap. So on every tap we wake the audio
+       (and the phone's speech voice) — after that Luna's voice can play by itself. */
+    let unlocked = 0;
+    function unlockAudio() {
+        const c = vctx();
+        try { if (c) { const b = c.createBuffer(1, 1, 22050), s = c.createBufferSource(); s.buffer = b; s.connect(c.destination); s.start(0); } } catch (e) { }
+        if (!unlocked && 'speechSynthesis' in window) { try { const u = new SpeechSynthesisUtterance(' '); u.volume = 0; speechSynthesis.speak(u); } catch (e) { } }
+        unlocked = 1;
+    }
+    ['touchend', 'pointerdown', 'click', 'keydown'].forEach(ev => document.addEventListener(ev, () => { if (!VO.ctx || VO.ctx.state !== 'running' || !unlocked) unlockAudio(); }, { capture: true, passive: true }));
     const MOODV = {
         talk: 'You are Luna, a warm, lively young English teacher talking face to face with one student. Natural and human, clear, friendly, a smile in your voice, medium pace, small natural pauses.',
         happy: 'You are Luna, a warm young English teacher. Genuinely delighted and proud of your student, bright and encouraging, natural.',
@@ -41954,12 +41985,14 @@ Reply with JSON only: {"words":[{"w":"","pos":"","ipa":"","def":"","ex":""}],"gr
         return new Promise(async (res) => {
             try {
                 const c = vctx(); if (!c) return res(false);
+                if (c.state !== 'running') { try { await Promise.race([c.resume(), new Promise(r => setTimeout(r, 600))]); } catch (e) { } }
+                if (c.state !== 'running') return res(false);
                 const ab = await new Promise((ok, no) => { const p = c.decodeAudioData(buf.slice(0), ok, no); if (p && p.then) p.then(ok, no); });
                 if (tok !== VO.tok) return res(true);
                 const s = c.createBufferSource(); s.buffer = ab;
                 const an = c.createAnalyser(); an.fftSize = 256; an.smoothingTimeConstant = .55;
                 s.connect(an); an.connect(c.destination);
-                VO.src = s; VO.an = an; s.onended = () => { if (VO.src === s) { VO.an = null; VO.src = null; } res(true); }; s.start();
+                VO.src = s; VO.an = an; let fin = 0; const end = () => { if (fin) return; fin = 1; if (VO.src === s) { VO.an = null; VO.src = null; } res(true); }; s.onended = end; setTimeout(end, ab.duration * 1000 + 2500); s.start();
             } catch (e) { res(false); }
         });
     }
@@ -42604,10 +42637,10 @@ Reply with JSON only: {"words":[{"w":"","pos":"","ipa":"","def":"","ex":""}],"gr
             f: [['fa-check', 'Everything in Silver'], ['fa-microphone-lines', 'IELTS Speaking & Writing checks'], ['fa-book-open-reader', 'Reading Lab + Book Maker'], ['fa-chalkboard-user', 'Classroom: 3 classes as a teacher']] },
         { id: '6 Months Plan', key: 'amethyst', name: 'Amethyst', dur: '6 months', price: 40, per: '≈ $6.67 / month', uzs: '≈ 504,000 UZS', ai: 400, chk: 35, mock: 15, cls: 10, ic: 'fa-wand-magic-sparkles', tag: 'Most popular',
             f: [['fa-check', 'Everything in Emerald'], ['fa-stopwatch', 'FullMock with band score'], ['fa-user-graduate', 'Luna Coach: plan every day'], ['fa-chalkboard-user', 'Classroom: 10 classes']] },
-        { id: '1 Year VIP Plan', key: 'gold', name: 'Gold VIP', dur: '1 year', price: 60, per: '≈ $5.00 / month', uzs: '≈ 756,000 UZS', ai: 800, chk: 60, mock: 40, cls: 99, ic: 'fa-crown', tag: 'Best value',
-            f: [['fa-check', 'Everything in Amethyst'], ['fa-stopwatch', 'All 40 FullMock tests'], ['fa-tag', 'Lowest price: $5 a month'], ['fa-chalkboard-user', 'Unlimited classes']] }
+        { id: '1 Year VIP Plan', key: 'gold', name: 'Gold VIP', dur: '1 year', price: 60, per: '≈ $5.00 / month', uzs: '≈ 756,000 UZS', ai: 800, chk: 60, mock: 80, cls: 99, ic: 'fa-crown', tag: 'Best value',
+            f: [['fa-check', 'Everything in Amethyst'], ['fa-stopwatch', 'All 80 FullMock tests'], ['fa-tag', 'Lowest price: $5 a month'], ['fa-chalkboard-user', 'Unlimited classes']] }
     ];
-    const MAX = { ai: 800, chk: 60, mock: 40 };
+    const MAX = { ai: 800, chk: 60, mock: 80 };
     /* the AI request counter (blocking only when LR_LIMITS.on) */
     function planOf(u) { u = u || U(); if (!u.isPro) return null; const p = String(u.proPlan || ''); return PLANS.find(x => x.id === p) || (/year|promo|gift/i.test(p) ? PLANS[3] : /6/.test(p) ? PLANS[2] : /3/.test(p) ? PLANS[1] : PLANS[0]); }
     function limits() { const p = planOf(); return p ? { ai: p.ai, chk: p.chk, mock: p.mock } : FREE; }
@@ -42629,7 +42662,7 @@ Reply with JSON only: {"words":[{"w":"","pos":"","ipa":"","def":"","ex":""}],"gr
     /* ---------- the plans screen ---------- */
     const bar = (v, max) => '<i style="--w:' + Math.max(6, Math.min(100, v / max * 100)).toFixed(0) + '%"></i>';
     function card(p, mine) {
-        const lim = [['fa-robot', 'AI requests', p.ai + ' / day', p.ai, MAX.ai], ['fa-pen-nib', 'AI checks', p.chk + ' / day', p.chk, MAX.chk], ['fa-stopwatch', 'FullMock', p.mock === 40 ? 'all 40' : p.mock + ' / month', p.mock, MAX.mock]];
+        const lim = [['fa-robot', 'AI requests', p.ai + ' / day', p.ai, MAX.ai], ['fa-pen-nib', 'AI checks', p.chk + ' / day', p.chk, MAX.chk], ['fa-stopwatch', 'FullMock', p.mock === 80 ? 'all 80' : p.mock + ' / month', p.mock, MAX.mock]];
         return '<article class="pr-card pr-' + p.key + (mine ? ' mine' : '') + '">' + (p.tag ? '<span class="pr-tag">' + esc(p.tag) + '</span>' : '<span class="pr-tag ghost" aria-hidden="true">·</span>') +
             '<div class="pr-sheen" aria-hidden="true"></div><header class="pr-h"><span class="pr-emb"><i class="fa-solid ' + p.ic + '"></i></span><div><b>' + esc(p.name) + '</b><small>' + esc(p.dur) + '</small></div></header>' +
             '<div class="pr-price"><b>$' + p.price + '</b><span>' + esc(p.per) + '<em>' + esc(p.uzs) + '</em></span></div>' +
@@ -42876,9 +42909,10 @@ Reply with JSON only: {"words":[{"w":"","pos":"","ipa":"","def":"","ex":""}],"gr
 }
 @media (prefers-reduced-motion:reduce){#fm,.fm-bar i,.fm-cap{transition:none!important}}
 html.fm-lock,html.fm-lock body{overflow:hidden!important}
+.fm-new{display:inline-block;margin-left:4px;padding:2px 7px;border-radius:999px;background:rgba(52,211,153,.16);color:#34d399;font:700 10.5px/1.3 system-ui,sans-serif;font-style:normal;vertical-align:1px}
 </style>
 <!--fm:js--><script id="fm-js">
-/* ===== FullMock: 40 full IELTS Academic mock tests, in the order of the real exam:
+/* ===== FullMock: 80 full IELTS Academic mock tests, in the order of the real exam:
    Listening (4 parts, 40 questions, real voices and accents, a narrator, played once) -> Reading (3 passages, 40 questions, 60 min)
    -> Writing (Task 1 with a chart, table, process or map + Task 2 essay, 60 min) -> Speaking (Parts 1-3 with Luna as the examiner).
    Tests are original (written by the AI in the exact IELTS format, never copied), made once and shared with every learner.
@@ -42900,7 +42934,7 @@ html.fm-lock,html.fm-lock body{overflow:hidden!important}
     const s_ = (x, n) => String(x == null ? '' : x).slice(0, n);
     const REDUCED = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { return false; } })();
     const LOCAL = /^(localhost|127\.0\.0\.1)$/.test(location.hostname);
-    const VER = 'v1', N = 40;
+    const VER = 'v1', N = 80;
     const mmss = (s) => { s = Math.max(0, Math.round(s)); return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); };
     const P = {
         x: 'M6 6l12 12M18 6 6 18', back: 'M15 5l-7 7 7 7', next: 'M9 5l7 7-7 7', check: 'M5 12.5 10 17.5 19 7', play: 'M8 5.5v13l10.5-6.5z', clock: 'M12 7v5l3 2M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z',
@@ -42922,8 +42956,19 @@ html.fm-lock,html.fm-lock body{overflow:hidden!important}
     const W2S = ['working from home', 'children and mobile phones', 'free university education', 'city traffic', 'online shopping', 'learning a foreign language at school', 'space exploration funding', 'fast food and health', 'tourism and local culture', 'public transport', 'social media and young people', 'living abroad', 'renewable energy', 'museums and the arts', 'zoos', 'school uniforms', 'ageing populations', 'working long hours', 'advertising to children', 'cash and digital money'];
     const SPK = ['your home town', 'work or studies', 'music', 'food and cooking', 'weather', 'friends', 'reading', 'sport', 'travel', 'shopping', 'the internet', 'free time', 'clothes', 'animals', 'transport', 'birthdays', 'photos', 'the sky and stars', 'gifts', 'noise'];
     const CARD = ['a place you visited that you would like to go back to', 'a person who has influenced you', 'a skill you learned that was difficult', 'a time you helped someone', 'a book you enjoyed reading', 'a memorable trip', 'an important decision you made', 'a piece of technology you use every day', 'a time you were proud of yourself', 'a festival or celebration', 'a teacher you remember', 'a goal you want to achieve', 'a time you received good news', 'a café or restaurant you like', 'an interesting conversation you had', 'a building you find beautiful', 'a habit you want to change', 'a film that made you think', 'a time you tried something new', 'a gift you gave someone'];
+    /* ---------- tests 41-80: built around topics test-takers reported in 2026 and the big events of 2026 ---------- */
+    const L1b = ['a fan booking tickets for a World Cup 2026 fan zone', 'a student joining an e-scooter sharing scheme', 'a man registering at a community repair café', 'a parent enrolling a teenager in a coding club', 'a woman booking a trip to see the August 2026 solar eclipse', 'a customer ordering a weekly vegetable box', 'a caller enrolling on an evening AI skills course', 'a homeowner arranging a heat pump installation', 'a freelancer booking a co-working desk', 'a beginner joining a running club', 'a driver ordering a home electric car charger', 'a woman booking a pet-sitter', 'a volunteer applying to help at the Glasgow 2026 Commonwealth Games', 'a man joining a café book club', 'a family booking a photography session', 'a tenant reporting a smart meter problem', 'a tourist renting bikes for a cycling holiday', 'a student booking a language exchange evening', 'a crafter booking a market stall', 'a woman booking a first climbing session', 'a parent registering a child for a robotics camp', 'a couple booking a guided stargazing walk', 'a man joining a community choir', 'a student applying for a railcard', 'a manager booking hotel rooms for a conference', 'a woman enrolling in first-aid training', 'a man hiring equipment for a garden party', 'a resident joining a tool library', 'a caller booking a plant-based cookery class', 'a woman booking a digital detox retreat', 'a student booking a removal van', 'a man registering at a new dentist', 'a family renting a flat for the Winter Olympics', 'a volunteer joining a park-run team', 'an adult booking swimming lessons', 'a homeowner booking an energy check', 'a woman joining a film society', 'a parent ordering a graduation cake', 'a group booking a kayak tour', 'a runner registering for a city marathon'];
+    const L2b = ['a guide introducing a new wildlife bridge (with a map)', 'a radio talk about solar eclipse viewing events', 'a talk to volunteers at a beach clean-up (with a map)', 'an introduction to a library with a maker space (with a floor plan)', 'a manager welcoming staff at a World Cup fan festival', 'a talk about changes to recycling collections', 'a guide at a rewilded country estate (with a map)', 'a podcast about saving money on energy', 'a talk about a new bike-sharing scheme', 'an introduction to a community food garden (with a plan)', 'a talk for parents about screen time', 'a guide at a new science centre (with a floor plan)', 'an announcement about a car-free day', 'a talk about a sleep-better programme', 'a radio programme about Commonwealth Games volunteers', 'a talk introducing a repair café', 'a guide on a street-art walk (with a map)', 'a talk to residents of a smart housing estate', 'a museum guide at a space-travel exhibition (with a floor plan)', 'a talk about a summer reading challenge', 'an orientation talk at a university open day (with a campus map)', 'a talk about a new electric bus network', 'a radio talk about a food festival', 'a talk about a coastal path project (with a map)', 'a talk for tourists on a river cruise', 'a manager talking to café staff about waste', 'a talk about an adventure park (with a site map)', 'a talk about a tree-planting programme', 'an introduction to an online learning platform', 'a guide at a heritage railway (with a map)', 'a guide at a vertical farm (with a plan)', 'a talk about a charity cycle ride (with a route map)', 'a talk to new members of a sports centre (with a plan)', 'a radio talk on staying cool in a heatwave', 'a guide at a botanical glasshouse (with a map)', 'a talk about a community energy co-operative', 'a guide to a park on an old railway line (with a map)', 'a talk at a dark-sky reserve', 'a talk about safety at a music festival (with a site map)', 'a talk introducing a children’s farm (with a map)'];
+    const L3b = ['two students planning a presentation on AI tutors', 'a tutor and student discussing a survey on the four-day week', 'students reviewing a project on microplastics in rivers', 'two students preparing a report on e-scooters', 'a tutor giving feedback on an essay about remote work', 'students discussing a case study on lab-grown meat', 'two students planning research on social media and sleep', 'students analysing data on urban heat and trees', 'a student and tutor discussing a placement at a start-up', 'students preparing a seminar on space debris', 'two students comparing online and classroom learning', 'students discussing a green roof design', 'a tutor and students discussing fast fashion', 'students planning a survey on the cost of living', 'two students discussing an experiment on attention and phones', 'students evaluating a recycling app', 'two students preparing a talk on rewilding', 'students discussing a report on EV batteries', 'a tutor and student discussing coral restoration', 'two students planning a documentary about a market', 'students discussing a plan for a sustainable café', 'two students reviewing research on bilingual children', 'students preparing a poster on saving water', 'a tutor and student discussing digital money', 'two students analysing a survey about bus fares', 'students discussing a field trip to a wind farm', 'two students preparing a debate on phone bans in schools', 'students reviewing research on music and memory', 'a tutor and student discussing ageing populations', 'two students planning research on food delivery apps', 'students discussing noise in cities', 'two students comparing museums’ use of virtual reality', 'students preparing a presentation on the Artemis missions', 'a tutor and student discussing gaming and learning', 'two students planning a community garden project', 'students discussing a case study of a tourist town', 'two students analysing a plant growth experiment', 'students evaluating a healthy eating campaign', 'a tutor and students discussing sport and wellbeing', 'two students studying language-learning apps'];
+    const L4b = ['the science of total solar eclipses', 'microplastics in the human body', 'rewilding and the beaver', 'the Artemis programme', 'urban heat islands and street trees', 'the history of the World Cup', 'deep-sea mining', 'quantum computing', 'the psychology of procrastination', 'space debris', 'the decline of insects', 'battery recycling', 'sleep and teenagers', 'coral reef restoration', 'the gig economy', 'carbon capture', 'heat pumps', 'citizen science', 'dolphin communication', 'smart cities', 'cocoa farming and chocolate', 'noise and wildlife', 'the Great Green Wall', 'nuclear fusion', 'seaweed farming', 'glacier loss', 'desalination', 'bilingual brains', 'the placebo effect', 'mangroves', 'e-sports', 'Roman engineering', 'farm drones', 'light pollution', 'fungal networks', 'robots in hospitals', 'textile recycling', 'the origins of writing', 'crow intelligence', 'fermentation'];
+    const RPb = ['AI tutors in the classroom', 'Chasing the 2026 eclipse', 'Plastic inside us', 'The four-day week experiment', 'The return of the beaver', 'Meat without animals', 'Back to the Moon', 'Cooling cities with trees', 'A century of the World Cup', 'Mining the deep sea', 'How bees find their way', 'Quantum computers', 'Why we put things off', 'Farming upwards', 'Junk in orbit', 'The silent decline of insects', 'Second life for batteries', 'The Winter Olympics through history', 'Teenagers and sleep', 'Gardening the reef', 'The gig economy', 'Catching carbon', 'The heat pump revolution', 'Science by everyone', 'Do dolphins have names?', 'Caravans of the Sahara', 'The power of habit', 'Cities that think', 'The bitter history of chocolate', 'A noisy world for animals', 'Living roofs', 'The Great Green Wall', 'Islands born of fire', 'Teens and the scroll', 'The promise of fusion', 'Seaweed: food of the future?', 'Colour and choice', 'Rivers of ice', 'The printing revolution', 'Birds on the move', 'Turning seawater into drinking water', 'Growing up with two languages', 'Tiny houses', 'Libraries reinvented', 'The mind cure', 'Mangroves: nature’s sea walls', 'Sport on a screen', 'Roads to Rome', 'Drones over the fields', 'The science of laughing', 'Losing the dark', 'From paper maps to GPS', 'Can plants think?', 'Money and happiness', 'Wind at sea', 'The wood wide web', 'Working longer lives', 'Saving dying languages', 'Robots on the ward', 'Fashion’s waste problem', 'How memories are made', 'Shaking but standing: safe buildings', 'Clever crows', 'Too many tourists', 'The science of fermentation', 'Cars without drivers', 'Coffee’s journey', 'Bogs and the climate', 'Nudging behaviour', 'Silk Road stories', 'Does a digital detox work?', 'Cleaning the oceans', 'Measuring time', 'Sweeteners under scrutiny', 'Wolves come home', 'Music and the young brain', 'Hydrogen power', 'Evolution on islands', 'Faces that lie', 'The rise of the electric bike'];
+    const W1Sb = ['electric car sales in four countries 2020-2026', 'time spent on social media by age group', 'household energy sources before and after heat pumps', 'visitors to three World Cup host cities', 'how lab-grown meat is produced', 'a city centre before and after becoming car-free', 'university enrolment in three countries 2000-2025', 'energy use by source in two regions', 'weekly leisure hours by age group', 'how a heat pump warms a house', 'remote working rates in five countries', 'plastic recycling rates 2010-2025', 'how a solar eclipse happens', 'a riverside area before and after rewilding', 'average rent in four cities', 'smartphone ownership among children', 'how batteries are recycled', 'a high street in 2005 and 2026', 'spending on food delivery apps', 'sources of electricity 2000 vs 2025'];
+    const W2Qb = ['should governments spend more on public transport than on new roads', 'should primary schools teach children coding', 'is advertising on social media good or bad for society', 'should university education be free for everyone', 'will artificial intelligence replace most workers, and do the benefits outweigh the problems', 'are individual actions or government policies more effective against climate change', 'should governments tax unhealthy food and drinks', 'do longer prison sentences or rehabilitation reduce crime more', 'should public money go to the arts or to public services', 'should companies move to a four-day working week', 'should children’s screen time be limited by law', 'is the rising cost of housing a problem for young people, and what can be done', 'should mobile phones be banned in schools', 'should cities replace petrol cars with electric vehicles', 'is working from home better for employees and companies', 'should people be encouraged to buy fewer clothes', 'is international tourism good for local communities', 'should space exploration be funded by governments or private companies', 'is social media harmful to mental health', 'should older people be encouraged to keep working'];
+    const SPKb = ['learning new skills', 'celebrations', 'photography', 'animals and nature', 'future plans', 'travel', 'weather and seasons', 'sport and exercise', 'shopping', 'music', 'your home', 'work or studies', 'your neighbourhood', 'daily routine', 'hobbies', 'food', 'friends', 'apps you use', 'public transport', 'sleep'];
+    const CARDb = ['an important change in your life', 'a public figure you admire', 'a piece of technology you use every day', 'a festival or celebration you enjoyed', 'a natural place you have visited', 'a time you had to adapt to something new', 'a memorable journey', 'a building you find impressive', 'an environmental problem in your area', 'a time you helped someone', 'a book or film that affected you', 'a goal you are working towards', 'an app that is useful to you', 'a sports event you watched', 'a time you learned something online', 'a person who is good at their job', 'a place where you like to relax', 'a time you saved money', 'a tradition in your country', 'a skill you would like to learn with AI'];
     function seed(n) {
         const i = n - 1;
+        if (n > 40) { const j = n - 41; return { n, y: 2026, L: [L1b[j % 40], L2b[(j * 7 + 3) % 40], L3b[(j * 3 + 5) % 40], L4b[(j * 11 + 2) % 40]], R: [RPb[j], RPb[j + 40], RPb[(j + 20) % 40 + 40 * ((j + 1) % 2)]], W1: (() => { const a = W1Sb[(j * 3) % 20], t = /^how /.test(a) ? 'process' : /before and after|in 2005 and/.test(a) ? 'map' : ['bar', 'line', 'pie', 'table'][j % 4]; return { type: t, about: a }; })(), W2: { type: W2T[j % 5], about: W2Qb[(j * 7 + 1) % 20] }, S: { p1: SPKb[j % 20], p2: CARDb[(j * 9 + 4) % 20] } }; }
         return {
             n, L: [L1[i % 20], L2[(i * 7 + 3) % 20], L3[(i * 3 + 5) % 20], L4[(i * 11 + 2) % 20]],
             R: [RP[i % 60], RP[(i + 20) % 60], RP[(i + 40) % 60]],
@@ -43138,7 +43183,7 @@ Write the IELTS SPEAKING test. Schema: {"p1":{"topic":"","qs":["5 Part 1 questio
         if (EL) return;
         RET = D.activeElement;
         EL = D.createElement('div'); EL.id = 'fm'; EL.setAttribute('role', 'dialog'); EL.setAttribute('aria-modal', 'true'); EL.setAttribute('aria-label', 'FullMock IELTS tests');
-        EL.innerHTML = '<div class="fm-top" role="banner"><button type="button" class="fm-ib" data-a="close" aria-label="Close">' + I('x') + '</button><div class="fm-tt"><b id="fm-title">FullMock</b><span id="fm-sub">40 full IELTS Academic tests</span></div><div id="fm-timer" class="fm-timer" hidden></div></div><div class="fm-main" id="fm-main" role="main" tabindex="-1"></div><div id="fm-nav" class="fm-nav" hidden></div>';
+        EL.innerHTML = '<div class="fm-top" role="banner"><button type="button" class="fm-ib" data-a="close" aria-label="Close">' + I('x') + '</button><div class="fm-tt"><b id="fm-title">FullMock</b><span id="fm-sub">80 full IELTS Academic tests</span></div><div id="fm-timer" class="fm-timer" hidden></div></div><div class="fm-main" id="fm-main" role="main" tabindex="-1"></div><div id="fm-nav" class="fm-nav" hidden></div>';
         D.body.appendChild(EL); D.documentElement.classList.add('fm-lock');
         EL.addEventListener('click', onClick); EL.addEventListener('input', onInput, true); EL.addEventListener('change', onInput, true);
         D.addEventListener('keydown', onKey); addEventListener('popstate', onPop); D.addEventListener('visibilitychange', onVis);
@@ -43166,14 +43211,14 @@ Write the IELTS SPEAKING test. Schema: {"p1":{"topic":"","qs":["5 Part 1 questio
 
     /* ---------- the library of 40 tests ---------- */
     V.lib = () => {
-        head('FullMock', '40 full IELTS Academic tests'); const f = FMS();
+        head('FullMock', '80 full IELTS Academic tests · 41–80 use 2026 topics'); const f = FMS();
         const best = Object.keys(f.t).map(k => f.t[k]).filter(x => x.res).map(x => x.res.overall);
         const hist = best.length ? '<div class="fm-stat"><span>' + I('check') + best.length + ' done</span><span>' + I('star') + 'Best ' + bandStr(Math.max.apply(null, best)) + '</span></div>' : '';
         return '<section class="fm-hero"><div class="fm-hx"><h1 class="fm-h1">The real IELTS, from start to finish</h1><p class="fm-p">Listening with real voices and accents, Reading, both Writing tasks and a Speaking test with Luna as your examiner. Same order, same timing and the same question types as the exam. Your band at the end.</p>' + hist + '</div>' +
             '<ol class="fm-order"><li>' + I('listen') + '<b>Listening</b><span>4 parts · 40 questions · about 30 min</span></li><li>' + I('read') + '<b>Reading</b><span>3 passages · 40 questions · 60 min</span></li><li>' + I('write') + '<b>Writing</b><span>Task 1 + Task 2 · 60 min</span></li><li>' + I('speak') + '<b>Speaking</b><span>3 parts · 11–14 min</span></li></ol></section>' +
             '<div class="fm-grid">' + Array.from({ length: N }, (_, i) => i + 1).map(n => {
                 const t = f.t[n], st = t && t.res ? 'done' : t && (t.st !== 'L' || Object.keys(t.ans || {}).length) ? 'wip' : '';
-                return '<button type="button" class="fm-card ' + st + '" data-a="test" data-n="' + n + '"><span class="fm-n">Test ' + n + '</span><b>' + esc(testName(n)) + '</b><small>' + esc(seed(n).L[0]) + '</small>' +
+                return '<button type="button" class="fm-card ' + st + '" data-a="test" data-n="' + n + '"><span class="fm-n">Test ' + n + (n > 40 ? ' <i class="fm-new">2026</i>' : '') + '</span><b>' + esc(testName(n)) + '</b><small>' + esc(seed(n).L[0]) + '</small>' +
                     '<span class="fm-cs">' + (st === 'done' ? '<em class="b">' + bandStr(t.res.overall) + '</em>Band' : st === 'wip' ? '<em>' + ({ L: 'Listening', R: 'Reading', W: 'Writing', S: 'Speaking' }[t.st] || '') + '</em>Continue' : 'Start') + '</span></button>';
             }).join('') + '</div>';
     };
@@ -46862,6 +46907,284 @@ void main(){
         else if (a === 'sfx') { const on = !sfxOn(); LS.set('lf_sfx', on ? '1' : '0'); b.setAttribute('aria-pressed', String(on)); b.innerHTML = svgI(on ? 'note' : 'nonote'); }
     }
     window.LRLF = { open, close, _round: makeRound, _draw: draw, _describe: describe, _g: () => G, _hush: () => hush(), _ply: PLY, _play: () => playStory(), _topic: makeTopicRound, _animal: makeAnimal, _TOP: TOP };
+})();
+</script>
+<!--mk:css--><style id="mk-css" data-th-skip>
+/* v68: new 2026 mocks */
+.lx-chip.mk-nw{position:relative}
+.lx-chip.mk-nw::after{content:'';position:absolute;top:5px;right:5px;width:7px;height:7px;border-radius:50%;background:#34d399;box-shadow:0 0 0 2px rgba(52,211,153,.25)}
+.mk-note{display:flex;flex-direction:column;gap:4px;margin:10px 0;padding:12px 14px;border-radius:14px;border:1px dashed rgba(52,211,153,.45);background:rgba(52,211,153,.08);font-size:13.5px;line-height:1.45}
+.mk-note b{color:#6ee7b7;font-size:14px}
+.mk-ov{position:fixed;inset:0;z-index:2147483000;display:grid;place-items:center;padding:16px;background:rgba(6,8,24,.62);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.mk-card{width:min(420px,100%);padding:26px 22px;border-radius:24px;background:#12163a;color:#eef0ff;text-align:center;box-shadow:0 30px 70px -30px rgba(0,0,0,.8);border:1px solid rgba(255,255,255,.08)}
+.mk-card b{display:block;margin-top:14px;font-size:18px}
+.mk-card p{margin:8px 0 16px;color:#aab0d6;font-size:14px;line-height:1.5}
+.mk-card small{display:block;margin-top:8px;color:#aab0d6;font-variant-numeric:tabular-nums}
+.mk-orb{width:64px;height:64px;margin:0 auto;border-radius:50%;background:conic-gradient(#34d399,#60a5fa,#a78bfa,#34d399);animation:mkSpin 1.4s linear infinite;display:grid;place-items:center}
+.mk-orb span{width:48px;height:48px;border-radius:50%;background:#12163a}
+.mk-bar{height:8px;border-radius:9px;background:rgba(255,255,255,.08);overflow:hidden}
+.mk-bar i{display:block;height:100%;border-radius:9px;background:linear-gradient(90deg,#34d399,#60a5fa);transition:width .4s}
+@keyframes mkSpin{to{transform:rotate(1turn)}}
+mark.rd-hl{background:#fde68a;color:#1f2937;border-radius:3px;padding:0 1px;cursor:pointer}
+.mk-hb{position:fixed;z-index:2147482000;display:inline-flex;align-items:center;gap:6px;height:38px;padding:0 14px;border:0;border-radius:999px;background:#fde68a;color:#1f2937;font:700 13.5px/1 system-ui,sans-serif;box-shadow:0 10px 24px -10px rgba(0,0,0,.5);cursor:pointer}
+@media (prefers-reduced-motion:reduce){.mk-orb{animation:none}.mk-bar i{transition:none}}
+</style>
+<!--mk:js--><script id="mk-js">
+/* ===== Mock Studio expansion (v68): Listening + Reading mocks 39–80 for IELTS and CEFR.
+   Each new mock is ORIGINAL (written by the AI in exactly the same format as the hand-made mocks, never copied from a real paper),
+   built around topics that test-takers reported in 2026. A mock is written once, the first time anyone opens it,
+   checked by code (structure, number of questions, every answer really in the audio / text), then saved for everyone
+   (Firebase mk/v1, write-once) and on this device (lrIDB). Also: reading highlighter (like the computer-delivered exam),
+   "next new test" button and a 2026 badge. ===== */
+(function () {
+    'use strict';
+    if (window.LRMK) return;
+    const VER = 'v1', FIRST = 39, LAST = 80;
+    const LOCAL = /^(localhost|127\.0\.0\.1)$/.test(location.hostname);
+    const toast = (m) => { try { showToast(m); } catch (e) { } };
+    const key = () => { try { return aiKey(); } catch (e) { return ''; } };
+    const idb = () => (typeof lrIDB !== 'undefined' && lrIDB) ? lrIDB : null;
+    const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const low = (s) => String(s || '').toLowerCase().replace(/[’‘]/g, "'").replace(/\s+/g, ' ');
+
+    /* ---------- 2026 topics (from topics test-takers reported in 2026 + the big events of 2026) ---------- */
+    const S1 = ['booking tickets for a FIFA World Cup 2026 fan zone', 'registering for an e-scooter sharing scheme', 'joining a community repair café', 'signing up for a coding club for teenagers', 'booking a viewing trip for the August 2026 solar eclipse in Spain', 'ordering a weekly vegetable box', 'enrolling on an evening AI skills course', 'arranging a heat pump installation', 'booking a co-working desk', 'joining a running club for beginners', 'registering a new electric car charger at home', 'booking a pet-sitter for a holiday', 'applying to volunteer at the Glasgow 2026 Commonwealth Games', 'joining a book club at a local café', 'booking a family photography session', 'reporting a problem with a smart meter', 'renting a bike for a cycling holiday', 'signing up for a language exchange app meet-up', 'booking a stand at a weekend craft market', 'joining a climbing wall for the first time', 'ordering a made-to-measure desk', 'registering a child for a robotics holiday camp', 'booking a guided night walk to see stars', 'joining a community choir', 'applying for a student discount railcard', 'booking a hotel for a work conference', 'enrolling in first-aid training', 'hiring equipment for a garden party', 'joining a tool library', 'booking a cookery class on plant-based food', 'signing up for a ‘digital detox’ weekend retreat', 'ordering school uniform online and changing a size', 'booking a removal van for a student move', 'registering at a new dental practice', 'renting a holiday flat for the Winter Olympics', 'joining a park-run volunteer team', 'booking swimming lessons for adults', 'arranging a home energy check', 'joining a film society', 'ordering a cake for a graduation party', 'booking a kayak tour', 'registering for a city marathon'];
+    const S2 = ['a guide introducing a new wildlife bridge over a motorway', 'a radio talk about the 2026 solar eclipse viewing events', 'a talk to volunteers at a beach clean-up', 'an introduction to a new public library with a maker space', 'a manager welcoming new staff at a World Cup fan festival', 'a talk about changes to a town’s recycling collections', 'a guide at a rewilded country estate', 'a podcast about saving money on household energy', 'a talk about a new city bike-sharing scheme', 'an introduction to a community food garden', 'a talk for parents about children’s screen time', 'a guide at a newly opened science centre', 'an announcement about a car-free day in the city centre', 'a talk about a sleep-better programme at a gym', 'a radio programme about volunteering at the Commonwealth Games', 'a talk introducing a repair café', 'a guide on a street-art walking tour', 'a talk to new residents about a smart housing estate', 'a museum guide introducing an exhibition on space travel', 'a talk about a summer reading challenge for children', 'an orientation talk at a university open day', 'a talk about a new electric bus network', 'a radio talk about a local food festival', 'an introduction to a coastal path restoration project', 'a talk for tourists on a river cruise', 'a manager talking to café staff about reducing waste', 'a talk about a new climbing and adventure park', 'a talk about a town’s tree-planting programme', 'an introduction to an online learning platform for adults', 'a talk about a heritage railway', 'a guide at a vertical farm', 'a talk about a charity cycle ride', 'a talk to new members of a sports centre', 'a radio talk on staying cool in a heatwave', 'a guide at a botanical glasshouse', 'a talk about a community energy co-operative', 'an introduction to a new city park built on an old railway', 'a talk to visitors at a dark-sky reserve', 'a talk about safety at a music festival', 'a talk introducing a children’s farm', 'a talk about a new hospital volunteers’ scheme', 'a guide at a recycling centre'];
+    const S3 = ['two students planning a presentation on AI tutors', 'a tutor and student discussing a survey on the four-day working week', 'students reviewing a project on microplastics in rivers', 'two students preparing a report on e-scooters in cities', 'a tutor giving feedback on an essay about remote work', 'students discussing a case study on lab-grown meat', 'two students planning research on social media and sleep', 'students analysing data on urban heat and trees', 'a student and a tutor discussing a placement at a tech start-up', 'students preparing a seminar on space debris', 'two students comparing studies on online versus classroom learning', 'students discussing a design for a green roof', 'a tutor and two students discussing a project on fast fashion', 'students planning a survey about cost of living and students', 'two students discussing an experiment on attention and smartphones', 'students evaluating a recycling app they designed', 'two students preparing a talk on rewilding', 'students discussing a report on electric vehicle batteries', 'a tutor and student discussing a dissertation on coral restoration', 'two students planning a documentary about a local market', 'students discussing a business plan for a sustainable café', 'two students reviewing research on bilingual children', 'students preparing a poster on water saving in homes', 'a tutor and student discussing a project on digital money', 'two students analysing a survey about public transport fares', 'students discussing a field trip to a wind farm', 'two students preparing a debate on school mobile phone bans', 'students reviewing research on music and memory', 'a tutor and student discussing a study on ageing populations', 'two students planning research on food delivery apps', 'students discussing a project on noise in cities', 'two students comparing museums’ use of virtual reality', 'students preparing a presentation on the Artemis moon missions', 'a tutor and student discussing a study on gaming and learning', 'two students planning a project on community gardens', 'students discussing a case study of a tourist town', 'two students analysing an experiment on plant growth under LED light', 'students evaluating a campaign about healthy eating', 'a tutor and students discussing a report on sports and wellbeing', 'two students preparing a study of language apps', 'students discussing research on citizen science', 'two students planning a presentation on deep-sea mining'];
+    const ACAD = ['how AI chatbots are changing education', 'the science of total solar eclipses', 'microplastics in the human body', 'the four-day working week trials', 'rewilding and the return of the beaver', 'lab-grown meat', 'the Artemis programme and the return to the Moon', 'urban heat islands and street trees', 'the history of the football World Cup', 'deep-sea mining and ocean life', 'how bees navigate', 'quantum computers explained simply', 'the psychology of procrastination', 'vertical farming', 'space debris around the Earth', 'the decline of insect populations', 'electric vehicle batteries and recycling', 'the history of the Winter Olympics', 'sleep and learning in teenagers', 'restoring coral reefs', 'the economics of the gig economy', 'carbon capture technology', 'heat pumps and home heating', 'citizen science projects', 'the language of dolphins', 'ancient trade routes across the desert', 'the science of habits', 'smart cities and data', 'the history of chocolate and cocoa farming', 'the effects of noise on wildlife', 'green roofs and living walls', 'the Great Green Wall of Africa', 'how volcanoes create new land', 'social media and teenage wellbeing', 'the future of nuclear fusion', 'seaweed as food and fuel', 'the psychology of colour in marketing', 'glaciers and melting ice', 'the invention of the printing press', 'bird migration and climate change', 'water scarcity and desalination', 'children learning two languages', 'tiny houses and the housing crisis', 'the history of public libraries', 'the placebo effect', 'mangroves as coastal protection', 'the rise of e-sports', 'ancient Roman engineering', 'drones in farming', 'the science of laughter', 'light pollution and the night sky', 'the history of maps and GPS', 'plant intelligence', 'the economics of happiness', 'wind energy at sea', 'fungi and the ‘wood wide web’', 'ageing populations and work', 'lost languages and how they are saved', 'robots in hospitals', 'the history of the bicycle', 'desert locust swarms', 'the benefits of urban parks', 'recycling textiles', 'memory and the brain', 'the origins of writing', 'earthquake-proof buildings', 'animal intelligence: crows and octopuses', 'tourism and overcrowded cities', 'the science of fermentation', 'self-driving cars and road safety', 'the history of coffee', 'peatlands and carbon', 'nudge theory and behaviour', 'the Silk Road', 'digital detox: does it work?', 'cleaning the oceans of plastic', 'the history of timekeeping', 'artificial sweeteners', 'the return of wolves to Europe', 'music and the developing brain', 'hydrogen as a fuel', 'island species and evolution', 'the history of photography', 'lie detection and the face'];
+    const CEF = ['shopping and online orders', 'travel and holidays', 'food and healthy eating', 'school and learning', 'sport and keeping fit', 'technology in daily life', 'the weather and seasons', 'music and concerts', 'animals and pets', 'festivals and celebrations', 'jobs and part-time work', 'cities and transport', 'friends and family', 'films and series', 'the environment at home', 'hobbies and free time', 'health and doctors', 'photography and social media', 'the World Cup 2026', 'nature and parks', 'housing and moving home', 'restaurants and cafés', 'learning new skills', 'volunteering', 'future plans', 'money and saving', 'books and libraries', 'games and apps', 'art and museums', 'clothes and fashion', 'science and space', 'cooking at home', 'sleep and routines', 'neighbours and community', 'cars, bikes and scooters', 'climate and energy', 'languages and travel', 'competitions and prizes', 'workplaces and offices', 'gardens and plants', 'weekend trips', 'phones and screen time'];
+
+    /* ---------- the part recipes ---------- */
+    const pick = (a, i) => a[((i % a.length) + a.length) % a.length];
+    const RULES = {
+        S1: 'Section 1: a natural phone or face-to-face conversation between two people (roles "Name:f"/"Name:m"; A speaks first). 10 form/note lines, each with exactly ONE answer in [[answer|alternative]] (ONE WORD AND/OR A NUMBER), and every answer must be said clearly in that beat\'s dialogue, spelled out letter by letter for names. Include realistic distractors (the speaker first says something, then corrects it). Lines in the dialogue are "A:...|B:...".',
+        S2: 'Section 2: a monologue by ONE speaker. kind must be "match". 5 multiple-choice beats [sentence said, question, correct answer, wrong, wrong], then a matching task with 6 or 7 options and exactly 5 items [label, option index, "A:what the speaker says"], plus one distractor line (dsaid) about an option that is not used. Wrong options must be mentioned or plausible, as in the real test.',
+        S3: 'Section 3: a discussion between 2 students (and maybe a tutor). Names "Name:f"/"Name:m". 5 multiple-choice beats ["A:...|B:...", question, correct, wrong, wrong] where speakers change their minds or reject an idea, then a matching task: instruction, 6 options, exactly 5 items [label, option index, "C:..." or "A:..."], one distractor line, closing.',
+        S4: 'Section 4: an academic lecture by ONE lecturer, about 700 words. Exactly 10 facts [sentence the lecturer says with the answer inside {answer}, note line with [[answer|alternative]]]. Each answer is ONE WORD ONLY and appears exactly inside the spoken sentence.',
+        C1: 'CEFR Part 1: exactly 8 very short everyday dialogues ("A:...|B:..."), each [question, dialogue, correct, wrong, wrong]; the wrong options are mentioned in the dialogue too, so the listener must really understand.',
+        C2: 'CEFR Part 2: one conversation between two people. [context sentence beginning "Part 2. You will hear ...", opening dialogue, 6 beats ["A:...|B:...", question, correct, wrong, wrong]].',
+        C3: 'CEFR Part 3: four different speakers. Write exactly 4 short monologues (40-70 words each), each one clearly about ONE different option (use the option index 0-5) without saying the option word itself. Two options are not used.',
+        C5: 'CEFR Part 5: exactly 3 extracts [intro sentence "You hear ...", the speech ("A:..." or a dialogue "A:...|B:..."), [question, correct, wrong, wrong], [question, correct, wrong, wrong]].',
+        C6: 'CEFR Part 6: a talk. [topic (short noun phrase), intro sentence, exactly 6 facts [spoken sentence with the answer inside {answer}, gap sentence with [[answer|alternative]]], outro]. ONE WORD per gap and the word appears exactly in the spoken sentence.',
+        R1: 'IELTS Reading Passage 1: [title, 5-6 paragraphs (about 750-850 words in total, factual, B2-C1), 7 TRUE/FALSE/NOT GIVEN statements ["statement","T"|"F"|"N"], 6 sentence-completion lines with [[answer]] (NO MORE THAN TWO WORDS taken exactly from the passage)]. 13 questions in total.',
+        R2: 'IELTS Reading Passage 2: [title, EXACTLY 5 paragraphs (A-E, about 800-900 words in total), 7 headings (the first 5 are the correct headings for paragraphs A-E in order, 2 are extra distractors), 4 multiple-choice questions [question, correct, wrong, wrong, wrong], 4 sentence-completion lines with [[answer]] (NO MORE THAN TWO WORDS from the passage)]. 13 questions in total.',
+        R3: 'IELTS Reading Passage 3: [title, 6-7 paragraphs (about 900-1000 words, academic, argumentative, with the writer\'s views), 5 YES/NO/NOT GIVEN statements ["statement","Y"|"N"|"NG"] about the writer\'s views (use exactly the answer codes of the example), 5 multiple-choice [question, correct, wrong, wrong, wrong], 4 summary-completion lines with [[answer]] from the passage]. 14 questions in total.',
+        Q1: 'CEFR Reading Part 1: exactly 6 short real-life texts (notices, messages, emails, adverts), each [text, question, correct, wrong, wrong, wrong].',
+        Q2: 'CEFR Reading Part 2: [title, one text of 120-170 words with exactly 6 gaps written ___, 6 items [correct word, wrong, wrong, wrong]] testing grammar and vocabulary (word forms, linkers, prepositions, tenses).',
+        Q3: 'CEFR Reading Part 3: [[4 short texts by 4 different people, 50-70 words each], exactly 6 statements [statement, index 0-3 of the text it matches]]. Each text is used at least once.',
+        Q4: 'CEFR Reading Part 4: [title, 4-5 paragraphs (350-450 words), exactly 6 TRUE/FALSE/NOT GIVEN statements ["statement","T"|"F"|"N"]].',
+        Q5: 'CEFR Reading Part 5: [title, 5-6 paragraphs (450-550 words), exactly 6 multiple-choice [question, correct, wrong, wrong, wrong]].',
+        Q6: 'CEFR Reading Part 6: [title, 4-5 paragraphs (350-450 words), exactly 5 sentences with [[answer]] where the answer is ONE WORD taken exactly from the text].'
+    };
+    /* k = mock number (39..80); i = k - FIRST (0..41) */
+    const R = {
+        lx_ielts: [
+            { c: 'S1', ex: (i) => pick(LX_S1, i), about: (i) => pick(S1, i), build: (d, k) => ieS1(d, 100 + k) },
+            { c: 'S2', ex: (i) => { const a = LX_S2.filter(r => r[0] !== 'map'); return pick(a, i); }, about: (i) => pick(S2, i), build: (d, k) => ieS2(d, 200 + k), fix: (d) => { if (Array.isArray(d)) d[0] = 'match'; return d; } },
+            { c: 'S3', ex: (i) => pick(LX_S3, i), about: (i) => pick(S3, i), build: (d, k) => ieS3(d, 300 + k) },
+            { c: 'S4', ex: (i) => pick(LX_S4, i), about: (i) => pick(ACAD, i * 2 + 1), build: (d) => ieS4(d) }
+        ],
+        lx_cefr: [
+            { c: 'C1', ex: (i) => pick(LX_C1, i), about: (i) => pick(CEF, i) + ' (8 different everyday situations)', build: (d, k) => ceP1(d, 400 + k) },
+            { c: 'C2', ex: (i) => pick(LX_C2, i), about: (i) => pick(CEF, i + 9), build: (d, k) => ceP2(d, 500 + k) },
+            { c: 'C3', theme: (i) => i % LX_THEMES.length, about: (i) => LX_THEMES[i % LX_THEMES.length][0], build: (d) => ceP3(d) },
+            { c: 'P4', proc: (k) => ceP4(ceP4gen(k + 100), 600 + k) },
+            { c: 'C5', ex: (i) => pick(LX_C5, i + 2), about: (i) => pick(CEF, i + 17) + ', ' + pick(CEF, i + 23) + ' and ' + pick(CEF, i + 31), build: (d, k) => ceP5(d, 700 + k) },
+            { c: 'C6', ex: (i) => pick(LX_C6, i), about: (i) => pick(CEF, i + 5), build: (d) => ceP6(d) }
+        ],
+        rd_ielts: [
+            { c: 'R1', ex: (i) => pick(RD_I, i)[0], about: (i) => pick(ACAD, i * 2), build: (d) => ieR1(d) },
+            { c: 'R2', ex: (i) => pick(RD_I, i)[1], about: (i) => pick(ACAD, i * 2 + 41), build: (d, k) => ieR2(d, 800 + k) },
+            { c: 'R3', ex: (i) => pick(RD_I, i)[2], about: (i) => pick(ACAD, i * 2 + 18), build: (d, k) => ieR3(d, 900 + k) }
+        ],
+        rd_cefr: [
+            { c: 'Q1', ex: (i) => pick(RD_C, i)[0], about: (i) => pick(CEF, i), build: (d, k) => ceR1(d, 1000 + k) },
+            { c: 'Q2', ex: (i) => pick(RD_C, i)[1], about: (i) => pick(CEF, i + 7), build: (d, k) => ceR2(d, 1100 + k) },
+            { c: 'Q3', ex: (i) => pick(RD_C, i)[2], about: (i) => pick(CEF, i + 14), build: (d) => ceR3(d) },
+            { c: 'Q4', ex: (i) => pick(RD_C, i)[3], about: (i) => pick(ACAD, i + 7), build: (d) => ceR4(d) },
+            { c: 'Q5', ex: (i) => pick(RD_C, i)[4], about: (i) => pick(ACAD, i + 29), build: (d, k) => ceR5(d, 1200 + k) },
+            { c: 'Q6', ex: (i) => pick(RD_C, i)[5], about: (i) => pick(ACAD, i + 53), build: (d) => ceR6(d) }
+        ]
+    };
+
+    /* ---------- checking (a generated part is used only if it passes every check) ---------- */
+    const qcount = (part, exam, isLx) => { const m = { exam, parts: [part] }; (isLx ? luxBuild : rdBuild)(m); return part.qs.length; };
+    const gapAns = (lines) => { const out = []; (lines || []).forEach(l => String(l).replace(/\[\[(.+?)\]\]/g, (_, a) => { out.push(a.split('|').map(x => x.trim()).filter(Boolean)); return ''; })); return out; };
+    const has = (txt, alts) => { const t = low(txt).replace(/[^a-z0-9 ]+/g, ' ').replace(/\s+/g, ' '); return alts.some(a => { const w = low(a).replace(/[^a-z0-9 ]+/g, ' ').replace(/\s+/g, ' ').trim(); return w && (' ' + t + ' ').includes(' ' + w + ' '); }); };
+    const codeLike = (alts) => alts.some(a => /\d/.test(a) || /^[A-Z0-9 -]{3,}$/.test(a));
+    function check(c, d, part, want) {
+        if (!part || !Array.isArray(part.groups) || !part.qs || part.qs.length !== want) return 'count';
+        const words = (s) => String(s || '').split(/\s+/).filter(Boolean).length;
+        const mcqOk = (g) => (g.items || []).every(it => Array.isArray(it.o) && it.o.length >= 3 && new Set(it.o.map(low)).size === it.o.length && it.o.every(x => String(x).trim()));
+        if (!part.groups.filter(g => g.kind === 'mcq').every(mcqOk)) return 'mcq';
+        if (c === 'S1') { let miss = 0; d[4].forEach(b => gapAns([b[0]]).forEach(a => { if (!has(b[1], a) && !codeLike(a)) miss++; })); if (miss > 1) return 'gap-audio'; }
+        if (c === 'S4' || c === 'C6') { const fx = c === 'S4' ? d[3] : d[2]; let miss = 0; fx.forEach(f => gapAns([f[1]]).forEach(a => { if (!has(String(f[0]).replace(/[{}]/g, ''), a) && !codeLike(a)) miss++; if (!/\{[^}]+\}/.test(f[0])) miss++; })); if (miss) return 'gap-audio'; }
+        if (c === 'S2' || c === 'S3') { const g = part.groups.find(x => x.kind === 'match'); if (!g || !g.opts || g.opts.length < 5 || g.items.some(it => !it.a || 'ABCDEFGH'.indexOf(it.a) >= g.opts.length)) return 'match'; }
+        if (c === 'C3') { if (!Array.isArray(d[1]) || d[1].length !== 4 || new Set(d[1].map(x => x[0])).size !== 4 || d[1].some(x => !(x[0] >= 0 && x[0] < 6) || words(x[1]) < 20)) return 'speakers'; }
+        if (/^R[123]$|^Q[46]$/.test(c)) {
+            const text = (part.paras || []).map(p => p.t).join(' ');
+            if (words(text) < (c[0] === 'R' ? 450 : 130)) return 'short';
+            const g = part.groups.find(x => x.kind === 'gap'); if (g) { const miss = gapAns(g.lines).filter(a => !has(text, a)).length; if (miss) return 'gap-text'; }
+            const tf = part.groups.find(x => x.kind === 'tfng'); if (tf) { const ok = new Set(c === 'R3' ? want3 : ['T', 'F', 'N']); if (tf.items.some(it => !ok.has(String(it.a)))) return 'tfng'; if (new Set(tf.items.map(it => it.a)).size < 3) return 'tfng-mix'; }
+        }
+        if (c === 'R2' && (!Array.isArray(d[1]) || d[1].length !== 5 || !Array.isArray(d[2]) || d[2].length < 7)) return 'headings';
+        if (c === 'Q2') { const gaps = (String(d[1]).match(/___/g) || []).length; if (gaps !== d[2].length) return 'cloze'; }
+        if (c === 'Q3' && (!Array.isArray(d[0]) || d[0].length !== 4 || d[1].some(x => !(x[1] >= 0 && x[1] < 4)))) return 'match';
+        return '';
+    }
+    let want3 = ['Y', 'N', 'NG'];
+    try { const ex = (typeof RD_I !== 'undefined' && RD_I[0] && RD_I[0][2]) ? RD_I[0][2][2] : null; if (Array.isArray(ex)) { const s = Array.from(new Set(ex.map(x => String(x[1])))); if (s.length) want3 = s.length >= 3 ? s : want3; } } catch (e) { }
+
+    /* ---------- AI ---------- */
+    async function ai(sys, user) {
+        for (const model of ['gpt-4o', 'gpt-4o-mini']) {
+            const ctl = new AbortController(), to = setTimeout(() => ctl.abort(), 150000);
+            try {
+                const r = await lrAIFetch('https://api.openai.com/v1/chat/completions', { method: 'POST', signal: ctl.signal, headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + key() }, body: JSON.stringify({ model, temperature: .8, max_tokens: 6500, response_format: { type: 'json_object' }, messages: [{ role: 'system', content: sys }, { role: 'user', content: user }] }) });
+                if (!r.ok) continue;
+                const j = await r.json(), tx = String((((j.choices || [])[0] || {}).message || {}).content || ''), m = tx.match(/\{[\s\S]*\}/);
+                if (m) { const v = JSON.parse(m[0]); if (v && Array.isArray(v.d)) return v.d; }
+            } catch (e) { } finally { clearTimeout(to); }
+        }
+        return null;
+    }
+    const SYS = (ex) => 'You write ORIGINAL ' + (ex === 'ielts' ? 'IELTS' : 'CEFR (Uzbekistan Multilevel style)') + ' exam material that feels exactly like the real exam in 2026: same structure, instructions, difficulty, natural spoken English, realistic distractors, British spelling. Never copy a real test or the example: new people, places, numbers and facts. Reply with JSON only: {"d": <the data array in EXACTLY the same shape as the example>}.';
+    function userMsg(rc, i, k) {
+        if (rc.c === 'C3') {
+            const T = LX_THEMES[rc.theme(i)];
+            return RULES.C3 + '\nTheme: ' + T[0] + '. Options (index: option): ' + T[1].map((o, j) => j + ': ' + o).join('; ') + '.\nReturn {"d": [' + rc.theme(i) + ', [[optionIndex, "speech"], [optionIndex, "speech"], [optionIndex, "speech"], [optionIndex, "speech"]]]} with 4 different option indexes in random order. Mock ' + k + '.';
+        }
+        return RULES[rc.c] + '\nTopic for this new one: ' + rc.about(i) + '. Make it feel current (2026).\nExample of the exact JSON shape (do NOT reuse its content):\n' + JSON.stringify(rc.ex(i)) + '\nMock ' + k + '. Return {"d": [...]}.';
+    }
+
+    /* ---------- cache: memory -> device -> Firebase (shared) -> AI ---------- */
+    const MEM = {};
+    async function fbGet(k) { try { if (LOCAL && window.__mkStore) return window.__mkStore.get(k); if (typeof lrFbBase !== 'function') return null; await lrFbBase(); const s = await firebase.database().ref('mk/' + VER + '/' + k).once('value'); return s.val(); } catch (e) { return null; } }
+    async function fbPut(k, v) { try { if (LOCAL && window.__mkStore) return window.__mkStore.set(k, v); if (typeof lrFbBase !== 'function') return; await lrFbBase(); await firebase.database().ref('mk/' + VER + '/' + k).set(v); } catch (e) { } }
+    function tryBuild(rc, d, k, exam, isLx, want) {
+        try { if (rc.fix) d = rc.fix(d); const part = rc.build(JSON.parse(JSON.stringify(d)), k); const n = qcount(part, exam, isLx); const bad = check(rc.c, d, part, want); return bad || n !== want ? null : rc.build(JSON.parse(JSON.stringify(d)), k); } catch (e) { return null; }
+    }
+    async function getPart(ent, pi, gen) {
+        const rc = R[ent.kind][pi], k = ent.n, i = k - FIRST, isLx = ent.kind.startsWith('lx'), ck = ent.id + '_' + pi;
+        if (rc.proc) return rc.proc(k);
+        const want = ent.want[pi];
+        if (MEM[ck]) return tryBuild(rc, MEM[ck], k, ent.exam, isLx, want);
+        const fromRaw = (raw) => { try { const d = JSON.parse(raw); const p = tryBuild(rc, d, k, ent.exam, isLx, want); if (p) MEM[ck] = d; return p; } catch (e) { return null; } };
+        try { const x = idb() && await idb().get('mk_' + VER + '_' + ck); if (x) { const p = fromRaw(x); if (p) return p; } } catch (e) { }
+        { const x = await fbGet(ck); if (x) { const p = fromRaw(x); if (p) { try { idb() && idb().set('mk_' + VER + '_' + ck, x); } catch (e) { } return p; } } }
+        if (!gen) return null;
+        for (let t = 0; t < 3; t++) {
+            const d = await ai(SYS(ent.exam), userMsg(rc, i, k)); if (!d) continue;
+            const p = tryBuild(rc, d, k, ent.exam, isLx, want);
+            if (p) { const raw = JSON.stringify(rc.fix ? rc.fix(d) : d); MEM[ck] = JSON.parse(raw); fbPut(ck, raw); try { idb() && idb().set('mk_' + VER + '_' + ck, raw); } catch (e) { } return p; }
+        }
+        return null;
+    }
+    const BUSY = {};
+    async function ensure(ent, gen, onp) {
+        if (ent.parts) return true;
+        if (BUSY[ent.id]) { const ok0 = await BUSY[ent.id].p; if (ok0 || ent.parts) return true; if (BUSY[ent.id] && BUSY[ent.id].gen) return BUSY[ent.id].p; if (!gen) return false; }
+        const job = (async () => {
+            const n = R[ent.kind].length; let done = 0;
+            const parts = await Promise.all(R[ent.kind].map((_, pi) => getPart(ent, pi, gen).then(p => { done++; onp && onp(done / n); return p; })));
+            if (parts.every(Boolean)) { ent.parts = parts; delete ent._b; return true; }
+            return false;
+        })();
+        const me = BUSY[ent.id] = { p: job, gen }; const ok = await job; if (BUSY[ent.id] === me) delete BUSY[ent.id]; return ok;
+    }
+
+    /* ---------- the new entries ---------- */
+    function wantCounts(kind, exam, isLx) {
+        const list = isLx ? luxMocks(exam) : rdMocks(exam), ref = (isLx ? luxBuild : rdBuild)(list[0]);
+        return ref.parts.map(p => p.qs.length);
+    }
+    const ENT = [];
+    function add() {
+        const defs = [['lx_ielts', 'ielts', 'ie', 'IELTS Listening Mock ', 'Academic & General Training format · 2026 topics', LUX_IELTS, true],
+        ['lx_cefr', 'cefr', 'ce', 'CEFR Listening Mock ', 'Multilevel format · 2026 topics', LUX_CEFR, true],
+        ['rd_ielts', 'ielts', 'ri', 'IELTS Reading Mock ', 'Academic format · 3 passages · 2026 topics', RD_IELTS, false],
+        ['rd_cefr', 'cefr', 'rc', 'CEFR Reading Mock ', 'Multilevel format · 6 parts · 2026 topics', RD_CEFR, false]];
+        defs.forEach(([kind, exam, pre, title, sub, list, isLx]) => {
+            if (list.some(x => x.lazy)) return;
+            const want = wantCounts(kind, exam, isLx), total = want.reduce((a, b) => a + b, 0);
+            for (let n = list.length + 1; n <= LAST; n++) {
+                const e = { id: pre + n, exam, title: title + n, sub, lazy: 1, kind, n, want, total, nw: 1 };
+                if (n < FIRST) continue; list.push(e); ENT.push(e);
+            }
+        });
+    }
+
+    /* ---------- hooks into the studios ---------- */
+    const stub = (m) => ({ id: m.id, exam: m.exam, title: m.title, sub: m.sub, total: m.total, parts: [], lazy: 1, _b: 1 });
+    const oLB = window.luxBuild, oRB = window.rdBuild;
+    window.luxBuild = function (m) { return m && m.lazy && !m.parts ? stub(m) : oLB(m); };
+    window.rdBuild = function (m) { return m && m.lazy && !m.parts ? stub(m) : oRB(m); };
+    try { luxBuild = window.luxBuild; rdBuild = window.rdBuild; } catch (e) { }
+
+    let OV = null;
+    function overlay(on, txt, f) {
+        if (!on) { if (OV) { OV.remove(); OV = null; } return; }
+        if (!OV) { OV = document.createElement('div'); OV.className = 'mk-ov'; OV.setAttribute('role', 'status'); OV.setAttribute('aria-live', 'polite'); document.body.appendChild(OV); }
+        OV.innerHTML = '<div class="mk-card"><div class="mk-orb"><span></span></div><b>' + esc(txt) + '</b><p>A brand-new test is being written for you, checked and saved. Next time it opens instantly — for every learner.</p><div class="mk-bar"><i style="width:' + Math.round((f || 0) * 100) + '%"></i></div><small>' + Math.round((f || 0) * 100) + '%</small></div>';
+    }
+    async function startLazy(ent, go) {
+        if (!key()) { toast('Connect to the internet and AI to open the new 2026 tests'); return; }
+        overlay(true, 'Preparing ' + ent.title + '…', 0.03);
+        const ok = await ensure(ent, true, (f) => overlay(true, 'Preparing ' + ent.title + '…', Math.max(.05, f)));
+        overlay(false);
+        if (ok) go(); else toast('Could not prepare this test right now. Please try again in a minute.');
+    }
+    const oLS = window.luxStart, oRS = window.rdStart;
+    window.luxStart = function (mi, scope) { const e = luxMocks(cert.exam)[mi]; if (e && e.lazy && !e.parts) return startLazy(e, () => oLS(mi, scope)); return oLS(mi, scope); };
+    window.rdStart = function (mi, scope) { const e = rdMocks(cert.exam)[mi]; if (e && e.lazy && !e.parts) return startLazy(e, () => oRS(mi, scope)); return oRS(mi, scope); };
+    try { luxStart = window.luxStart; rdStart = window.rdStart; } catch (e) { }
+
+    const PEEK = {};
+    function peek(e) { if (!e || !e.lazy || e.parts || PEEK[e.id]) return; PEEK[e.id] = 1; ensure(e, false).then(ok => { if (ok) try { renderCert(); } catch (x) { } }); }
+    function decorate(h, list, sel, isLx) {
+        const e = list[sel];
+        if (e && e.lazy && !e.parts) {
+            peek(e);
+            h = h.replace('<div class="lx-pl"></div>', '<div class="mk-note"><b>New 2026 test</b><span>Written in the real exam format around topics from 2026. It is prepared the first time it is opened (about a minute), then it opens instantly for everyone.</span></div>');
+        }
+        let ci = 0; h = h.replace(/<button class="lx-chip ([^"]*)"/g, (m, cls) => { const x = list[ci++]; return '<button class="lx-chip ' + cls + (x && x.nw ? ' mk-nw' : '') + '"'; });
+        const nxt = list.findIndex((x, i) => i > sel && !doneSet(isLx).has(x.title)); const n2 = nxt >= 0 ? nxt : list.findIndex(x => !doneSet(isLx).has(x.title));
+        if (n2 >= 0 && n2 !== sel) h = h.replace(/(<div class="lx-nav">)/, '$1<button onclick="' + (isLx ? 'luxSel2' : 'rdSel2') + '(' + n2 + ')"><i class="fa-solid fa-forward"></i> Next new</button>');
+        return h;
+    }
+    function doneSet(isLx) { const s = new Set(); try { (isLx ? luxLog() : rdLog()).filter(h => h.exam === cert.exam).forEach(h => s.add(h.mock)); } catch (e) { } return s; }
+    const oLM = window.luxMenu, oRM = window.rdMenu;
+    window.luxMenu = function () { const h = oLM(); const all = luxMocks(cert.exam), sel = Math.min(Math.max(lx.sel[cert.exam] || 0, 0), all.length - 1); return decorate(h, all, sel, true); };
+    window.rdMenu = function () { const h = oRM(); const all = rdMocks(cert.exam), sel = Math.min(Math.max(rd.sel[cert.exam] || 0, 0), all.length - 1); return decorate(h, all, sel, false); };
+    try { luxMenu = window.luxMenu; rdMenu = window.rdMenu; } catch (e) { }
+
+    /* ---------- Reading highlighter (like the computer-delivered IELTS): select words in the passage -> Highlight ---------- */
+    const HL = {}; let HB = null;
+    function hlKey() { try { return rd.mock.id + '_' + rd.pi; } catch (e) { return ''; } }
+    function hideHB() { if (HB) HB.hidden = true; }
+    function wrapRange(r) { try { const mk = document.createElement('mark'); mk.className = 'rd-hl'; mk.appendChild(r.extractContents()); r.insertNode(mk); return true; } catch (e) { return false; } }
+    function applyHL() {
+        const box = document.querySelector('.rd-pass'); if (!box) return; const list = HL[hlKey()] || [];
+        list.forEach(t => {
+            const w = document.createTreeWalker(box, NodeFilter.SHOW_TEXT); let nd;
+            while ((nd = w.nextNode())) { if (nd.parentNode.closest && nd.parentNode.closest('mark.rd-hl')) continue; const ix = nd.nodeValue.indexOf(t); if (ix >= 0) { const r = document.createRange(); r.setStart(nd, ix); r.setEnd(nd, ix + t.length); wrapRange(r); break; } }
+        });
+    }
+    function onSel() {
+        const s = window.getSelection && window.getSelection(); if (!s || s.isCollapsed || !s.rangeCount) return hideHB();
+        const r = s.getRangeAt(0), box = r.commonAncestorContainer.nodeType === 1 ? r.commonAncestorContainer : r.commonAncestorContainer.parentNode;
+        if (!box || !box.closest || !box.closest('.rd-pass') || r.startContainer !== r.endContainer || r.startContainer.nodeType !== 3) return hideHB();
+        const t = s.toString(); if (t.trim().length < 2 || t.length > 300) return hideHB();
+        if (!HB) { HB = document.createElement('button'); HB.type = 'button'; HB.className = 'mk-hb'; HB.innerHTML = '<i class="fa-solid fa-highlighter"></i> Highlight'; document.body.appendChild(HB); HB.addEventListener('mousedown', e => e.preventDefault()); HB.addEventListener('click', () => { const s2 = window.getSelection(); if (s2 && s2.rangeCount) { const rr = s2.getRangeAt(0), tx = s2.toString(); if (wrapRange(rr)) { (HL[hlKey()] = HL[hlKey()] || []).push(tx); } s2.removeAllRanges(); } hideHB(); }); }
+        const b = r.getBoundingClientRect(); HB.hidden = false; HB.style.left = Math.max(8, Math.min(innerWidth - 130, b.left + b.width / 2 - 60)) + 'px'; HB.style.top = Math.max(8, b.top - 46) + 'px';
+    }
+    document.addEventListener('selectionchange', () => { clearTimeout(onSel.t); onSel.t = setTimeout(onSel, 180); });
+    document.addEventListener('click', (e) => { const m = e.target.closest && e.target.closest('mark.rd-hl'); if (!m) return; const t = m.textContent, l = HL[hlKey()] || []; const ix = l.indexOf(t); if (ix >= 0) l.splice(ix, 1); m.replaceWith(document.createTextNode(t)); try { m.parentNode && m.parentNode.normalize(); } catch (x) { } });
+    const oRC = window.renderCert;
+    if (typeof oRC === 'function') { window.renderCert = function () { const r = oRC.apply(this, arguments); try { if (rd.stage === 'run') { hideHB(); applyHL(); } } catch (e) { } return r; }; try { renderCert = window.renderCert; } catch (e) { } }
+
+    try { add(); } catch (e) { console.warn('mk', e); }
+    window.LRMK = { ensure, getPart, ENT, R, check, _fb: { get: fbGet }, applyHL, HL };
 })();
 </script>
 <!--/lc:js-->
