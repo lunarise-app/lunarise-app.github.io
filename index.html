@@ -8377,7 +8377,7 @@ void main(){
                 <span class="gm-blob b1"></span><span class="gm-blob b2"></span><span class="gm-blob b3"></span>
                 <div class="text-[11px] font-bold uppercase tracking-[.2em] text-cyan-300 mb-2">LunaRise Games</div>
                 <h2 class="gm-h">Game Zone</h2>
-                <p class="text-sm text-indigo-100/80 mt-3" style="max-width:52ch">Learn English while you play. Pop talking balloons with Lumi, spell words on a metro run, type down neon drones, swipe Real or Wrong, build crosswords around the world, race your class through space or beat a chess engine.</p>
+                <p class="text-sm text-indigo-100/80 mt-3" style="max-width:52ch">Learn English while you play. Pop talking balloons with Lumi, solve sums in the sky with a 3D panda, spell words on a metro run, type down neon drones, swipe Real or Wrong, build crosswords around the world, race your class through space or beat a chess engine.</p>
                 <div class="gm-chips" id="gm-chips"></div>
             </div>
             <div class="gm-grid">
@@ -8397,6 +8397,15 @@ void main(){
                         <p class="gm-desc">Pip the 3D penguin reads a short English story about one picture. Your child listens, looks closely and taps the right one. Easy has 2 pictures, Normal 4, Hard 6 with tiny differences. Every picture is new.</p>
                         <div class="gm-tags"><span>3D penguin</span><span>Listening</span><span>Reading</span><span>3 levels</span><span>Stickers</span><span>Voice on/off</span></div>
                         <div class="gm-foot"><span class="gm-live"></span><span class="gm-play" style="color:#064e3b"><i class="fa-solid fa-ear-listen"></i> Play</span></div>
+                    </div>
+                </button>
+                <button class="gm-card kgc" style="--gc:rgba(77,150,255,.7);--ga:rgba(255,210,63,.5);--gb:linear-gradient(120deg,#ffd23f,#ff5a5f)" onclick="LRMG.open()">
+                    <div class="gm-art kgc-art mgc-art" aria-hidden="true"><span class="mgc-q">7 + <i>?</i> = 12</span><i class="mgc-b" style="--c:#ff5a5f;left:10%;--d:0s">4</i><i class="mgc-b" style="--c:#3ddc84;left:31%;--d:-.8s">5</i><i class="mgc-b" style="--c:#4d96ff;left:52%;--d:-1.6s">6</i><i class="mgc-b" style="--c:#f15bb5;left:73%;--d:-2.2s">8</i></div>
+                    <div class="gm-body">
+                        <div class="gm-title">Math Sky Pop <span class="hb-new" style="position:static">New</span></div>
+                        <p class="gm-desc">A puzzle with a hidden number sits in the sky. Pop the one balloon with the right answer! Sums, story sums, patterns, counting, tens and ones, odd and even, up to 10, 20 or 100. A 3D panda, bear or koala cheers and jokes in English. Play solo, Boys vs Girls, Survival, Times tables or the Daily challenge.</p>
+                        <div class="gm-tags"><span>3D animal friend</span><span>Up to 10 · 20 · 100</span><span>+ − × ÷</span><span>8 puzzle types</span><span>Boys vs Girls</span><span>Survival</span><span>Times tables</span><span>Daily challenge</span><span>Badges &amp; stickers</span></div>
+                        <div class="gm-foot"><span class="gm-live" id="gm-mg-live"></span><span class="gm-play" style="color:#7a1020"><i class="fa-solid fa-calculator"></i> Play</span></div>
                     </div>
                 </button>
                 <button class="gm-card kgc" style="--gc:rgba(99,102,241,.7);--ga:rgba(250,204,21,.45);--gb:linear-gradient(120deg,#fde047,#a3e635)" onclick="kgOpen('dash')">
@@ -24636,7 +24645,7 @@ Rules: exactly one correct answer; the wrong answers are plausible but clearly w
     /* Game Zone page */
     window.gmRender = function () {
         const u = state.user, g = u.gr || { played: 0, pts: 0 }, c = u.chess || { w: 0, l: 0, d: 0 }, ch = $('gm-chips');
-        if (ch) ch.innerHTML = `<span class="gm-chip">🧩 ${(u.wv && u.wv.words) || 0} words found</span><span class="gm-chip">🚀 ${g.played} rushes</span><span class="gm-chip">🎈 ${(((u.kg || {}).balloon || {}).stickers || []).length} stickers</span><span class="gm-chip">🏆 ${u.gamePts || 0} game points</span><span class="gm-chip">♟️ ${c.w}W · ${c.l}L · ${c.d}D</span>`;
+        if (ch) ch.innerHTML = `<span class="gm-chip">🧩 ${(u.wv && u.wv.words) || 0} words found</span><span class="gm-chip">🚀 ${g.played} rushes</span><span class="gm-chip">🎈 ${(((u.kg || {}).balloon || {}).stickers || []).length} stickers</span><span class="gm-chip">🧮 ${((u.mg || {}).solved) || 0} sums</span><span class="gm-chip">🏆 ${u.gamePts || 0} game points</span><span class="gm-chip">♟️ ${c.w}W · ${c.l}L · ${c.d}D</span>`;
         try { const wv = u.wv, wl = $('gm-wv-live'); if (wl) wl.textContent = wv && wv.lv ? 'Level ' + (wv.lv + 1) + ' · ' + (wv.words || 0) + ' words' : 'New'; } catch (e) { } const a = $('gm-gr-live'); if (a) a.textContent = g.played ? g.played + ' played · ' + (u.gamePts || 0) + ' pts' : 'New'; const b = $('gm-ch-live'); if (b) b.textContent = (c.w + c.l + c.d) ? c.w + 'W · ' + c.l + 'L · ' + c.d + 'D' : '';
         try { window.kgLive && window.kgLive(); } catch (e) { }
     };
@@ -47185,6 +47194,1105 @@ mark.rd-hl{background:#fde68a;color:#1f2937;border-radius:3px;padding:0 1px;curs
 
     try { add(); } catch (e) { console.warn('mk', e); }
     window.LRMK = { ensure, getPart, ENT, R, check, _fb: { get: fbGet }, applyHL, HL };
+})();
+</script>
+<!--mg:css--><style id="mg-css" data-th-skip>
+/* ===== Math Sky Pop ===== */
+html.mg-lock, html.mg-lock body { overflow: hidden !important; }
+#mg { --ink: #23204a; --paper: #fffdf6; --a: #4d96ff; --b: #f15bb5;
+  position: fixed; inset: 0; z-index: 2147482000; display: flex; flex-direction: column; color: var(--ink);
+  font-family: 'Fredoka', ui-rounded, 'Arial Rounded MT Bold', system-ui, sans-serif; opacity: 0; transform: scale(.98); transition: opacity .3s, transform .3s; -webkit-tap-highlight-color: transparent; user-select: none; -webkit-user-select: none; }
+#mg.on { opacity: 1; transform: none; }
+#mg button { font: inherit; color: inherit; cursor: pointer; border: 0; background: none; }
+#mg button:focus-visible, #mg input:focus-visible { outline: 3px solid #fff; outline-offset: 3px; box-shadow: 0 0 0 6px var(--ink); }
+
+/* sky */
+#mg .mg-sky { position: absolute; inset: 0; overflow: hidden; background: linear-gradient(#6fcbff 0%, #bfeaff 62%, #e9fbff 100%); transition: background .8s; }
+#mg .mg-sky[data-sky=dusk] { background: linear-gradient(#ff8fa3 0%, #ffc28a 55%, #ffe8b8 100%); }
+#mg .mg-sky[data-sky=night] { background: linear-gradient(#0c1446 0%, #2c1a6e 60%, #50288f 100%); }
+#mg .mg-sun { position: absolute; right: 8%; top: 9%; width: 90px; height: 90px; border-radius: 50%; background: radial-gradient(#fff6a8, #ffd23f 60%, #ffb21c); box-shadow: 0 0 60px 20px rgba(255, 220, 90, .55); transition: all .8s; }
+#mg .mg-sky[data-sky=dusk] .mg-sun { top: 30%; background: radial-gradient(#fff1b0, #ff9f1c); box-shadow: 0 0 80px 30px rgba(255, 140, 60, .5); }
+#mg .mg-sky[data-sky=night] .mg-sun { background: radial-gradient(circle at 35% 35%, #fffbe8, #e9e3c9); box-shadow: 0 0 50px 10px rgba(255, 255, 230, .35); width: 70px; height: 70px; }
+#mg .mg-cl { position: absolute; width: 160px; height: 46px; background: #fff; border-radius: 40px; opacity: .85; animation: mg-cloud 46s linear infinite; }
+#mg .mg-cl::before, #mg .mg-cl::after { content: ''; position: absolute; background: #fff; border-radius: 50%; }
+#mg .mg-cl::before { width: 70px; height: 70px; left: 24px; top: -34px; }
+#mg .mg-cl::after { width: 54px; height: 54px; left: 80px; top: -24px; }
+#mg .mg-cl.c1 { top: 16%; animation-delay: -10s; }
+#mg .mg-cl.c2 { top: 36%; transform: scale(.7); animation-duration: 60s; animation-delay: -34s; }
+#mg .mg-cl.c3 { top: 58%; transform: scale(.55); animation-duration: 70s; animation-delay: -52s; opacity: .6; }
+#mg .mg-sky[data-sky=night] .mg-cl { opacity: .12; }
+@keyframes mg-cloud { from { left: -200px; } to { left: 110%; } }
+#mg .mg-hill { position: absolute; bottom: -18vh; border-radius: 50%; background: #5fd38d; transition: background .8s; }
+#mg .mg-hill.h1 { left: -20vw; width: 90vw; height: 40vh; }
+#mg .mg-hill.h2 { right: -25vw; width: 100vw; height: 34vh; background: #3fbf72; }
+#mg .mg-sky[data-sky=dusk] .mg-hill.h1 { background: #b06ab3; } #mg .mg-sky[data-sky=dusk] .mg-hill.h2 { background: #8e4b9a; }
+#mg .mg-sky[data-sky=night] .mg-hill.h1 { background: #2a1960; } #mg .mg-sky[data-sky=night] .mg-hill.h2 { background: #1e1250; }
+#mg .mg-stars { position: absolute; inset: 0; opacity: 0; transition: opacity .8s;
+  background-image: radial-gradient(2px 2px at 10% 20%, #fff, transparent), radial-gradient(2px 2px at 30% 8%, #fff, transparent), radial-gradient(1.5px 1.5px at 50% 30%, #fff, transparent), radial-gradient(2px 2px at 70% 14%, #fff, transparent), radial-gradient(1.5px 1.5px at 85% 40%, #fff, transparent), radial-gradient(2px 2px at 20% 50%, #fff, transparent), radial-gradient(1.5px 1.5px at 60% 55%, #fff, transparent), radial-gradient(2px 2px at 92% 8%, #fff, transparent);
+  animation: mg-tw 3s ease-in-out infinite alternate; }
+#mg .mg-sky[data-sky=night] .mg-stars { opacity: 1; }
+@keyframes mg-tw { to { filter: brightness(.6); } }
+
+/* top bar */
+#mg .mg-top { position: relative; z-index: 2; display: flex; align-items: center; gap: 8px; padding: max(10px, env(safe-area-inset-top)) 14px 6px; }
+#mg .mg-tt { flex: 1; font-weight: 700; font-size: 18px; color: #fff; text-shadow: 0 2px 0 rgba(35, 32, 74, .35); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#mg .mg-ib { width: 44px; height: 44px; border-radius: 16px; background: rgba(255, 255, 255, .9) !important; display: grid; place-items: center; box-shadow: 0 4px 0 rgba(35, 32, 74, .18); flex: none; }
+#mg .mg-ib svg { width: 22px; height: 22px; }
+#mg .mg-ib[aria-pressed=false] { opacity: .65; }
+#mg .mg-main { position: relative; z-index: 1; flex: 1; min-height: 0; overflow-y: auto; overflow-x: hidden; padding: 4px 16px 130px; -webkit-overflow-scrolling: touch; }
+
+/* Twinkle */
+#mg .mg-pal { position: absolute; z-index: 3; left: 8px; bottom: max(8px, env(safe-area-inset-bottom)); pointer-events: none; display: flex; align-items: flex-end; }
+#mg .mg-star { width: clamp(76px, 14vw, 120px); animation: mg-bounce 2.4s ease-in-out infinite; transform-origin: 50% 90%; filter: drop-shadow(0 6px 0 rgba(35, 32, 74, .18)); }
+#mg .mg-star svg { width: 100%; display: block; }
+#mg .mg-star .mg-eyes { animation: mg-blink 4.2s infinite; transform-origin: 60px 52px; }
+#mg .mg-star .mg-mouth { transform-origin: 60px 68px; transition: transform .12s; }
+#mg .mg-star.talk .mg-mouth { animation: mg-talk .26s ease-in-out infinite alternate; }
+#mg .mg-star.talk { animation-duration: 1.1s; }
+@keyframes mg-bounce { 0%, 100% { transform: translateY(0) rotate(-4deg); } 50% { transform: translateY(-8px) rotate(4deg); } }
+@keyframes mg-blink { 0%, 92%, 100% { transform: scaleY(1); } 95% { transform: scaleY(.1); } }
+@keyframes mg-talk { from { transform: scaleY(.6); } to { transform: scaleY(1.7); } }
+#mg .mg-bub { order: 2; margin: 0 0 54px -6px; max-width: min(64vw, 380px); background: #fff; border-radius: 20px 20px 20px 6px; padding: 10px 14px; font-weight: 600; font-size: 15px; line-height: 1.3; box-shadow: 0 6px 0 rgba(35, 32, 74, .15); opacity: 0; transform: translateY(8px) scale(.9); transform-origin: 0 100%; transition: opacity .2s, transform .2s; }
+#mg .mg-bub.on { opacity: 1; transform: none; }
+
+/* home */
+#mg .mg-home { max-width: 760px; margin: 0 auto; }
+#mg .mg-hero { text-align: center; padding: 6px 0 4px; }
+#mg .mg-logo { font-weight: 700; font-size: clamp(40px, 10vw, 76px); line-height: 1; letter-spacing: .01em; }
+#mg .mg-logo span { display: inline-block; color: var(--c); -webkit-text-stroke: 2px #fff; paint-order: stroke fill; text-shadow: 0 5px 0 rgba(35, 32, 74, .28); animation: mg-wig 3s ease-in-out infinite; }
+#mg .mg-logo span:nth-child(odd) { animation-delay: -1.5s; }
+@keyframes mg-wig { 0%, 100% { transform: translateY(0) rotate(-3deg); } 50% { transform: translateY(-5px) rotate(3deg); } }
+#mg .mg-sub { margin: 10px auto 0; font-weight: 600; font-size: 16px; color: var(--ink); max-width: 40ch; text-align: center; }
+#mg .mg-blk { background: rgba(255, 253, 246, .92); border-radius: 26px; padding: 14px; margin-top: 14px; box-shadow: 0 6px 0 rgba(35, 32, 74, .12); }
+#mg .mg-lab { font-weight: 700; font-size: 17px; margin: 0 4px 10px; }
+#mg .mg-seg { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+#mg .mg-sg { border-radius: 18px; padding: 10px 6px; background: #eef1ff !important; display: flex; flex-direction: column; align-items: center; gap: 2px; box-shadow: inset 0 0 0 3px transparent; transition: transform .15s; }
+#mg .mg-sg .mg-sge { font-size: 26px; line-height: 1.1; }
+#mg .mg-sg b { font-size: 15px; } #mg .mg-sg small { font-size: 12px; opacity: .7; }
+#mg .mg-sg.on { background: #fff !important; box-shadow: inset 0 0 0 3px var(--a), 0 4px 0 #2f6fd6; transform: translateY(-2px); }
+#mg .mg-team { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 12px; }
+#mg .mg-tn { flex: 1 1 130px; display: flex; align-items: center; gap: 6px; border-radius: 16px; padding: 6px 10px; background: #e4efff; }
+#mg .mg-tn.b { background: #ffe4f3; }
+#mg .mg-tn span { font-size: 24px; }
+#mg .mg-tn input { width: 100%; min-width: 0; border: 0; background: transparent; font: inherit; font-weight: 700; font-size: 17px; color: var(--ink); padding: 6px 2px; }
+#mg .mg-vs { font-weight: 700; color: #ff5a5f; }
+#mg .mg-turns { flex: 1 1 100%; font-weight: 600; font-size: 14px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+#mg .mg-chip { border-radius: 999px; padding: 8px 14px; background: #eef1ff !important; font-weight: 700; font-size: 14px; display: inline-flex; align-items: center; gap: 6px; min-height: 40px; }
+#mg .mg-chip svg { width: 18px; height: 18px; }
+#mg .mg-chip.on { background: var(--a) !important; color: #fff; }
+#mg .mg-ops { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+#mg .mg-op { border-radius: 20px; padding: 8px 4px; background: #f1f1f6 !important; display: flex; flex-direction: column; align-items: center; opacity: .6; transition: transform .15s, opacity .15s; }
+#mg .mg-op b { font-size: 36px; line-height: 1.05; } #mg .mg-op small { font-size: 12px; font-weight: 600; }
+#mg .mg-op.on { opacity: 1; background: #fff3c4 !important; box-shadow: 0 4px 0 #e0b100, inset 0 0 0 3px #ffd23f; transform: translateY(-2px); }
+#mg .mg-lvs3 { display: grid; gap: 10px; }
+#mg .mg-lv { display: flex; align-items: center; gap: 14px; text-align: left; border-radius: 24px; padding: 12px 14px; background: #fff !important; box-shadow: inset 0 0 0 3px var(--lc), 0 6px 0 var(--lc); transition: transform .15s; }
+#mg .mg-lv:active { transform: translateY(4px); box-shadow: inset 0 0 0 3px var(--lc), 0 2px 0 var(--lc); }
+#mg .mg-lvn { flex: none; width: 78px; height: 88px; border-radius: 50% 50% 48% 52% / 56% 56% 44% 44%; background: radial-gradient(circle at 32% 28%, rgba(255, 255, 255, .7) 0 10%, transparent 11%), var(--lc); color: #fff; display: grid; place-items: center; font-weight: 700; font-size: 30px; -webkit-text-stroke: 1.5px rgba(35, 32, 74, .3); animation: mg-bob 3s ease-in-out infinite; }
+#mg .mg-lvt { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+#mg .mg-lvt b { font-size: 21px; } #mg .mg-lvt em { font-style: normal; font-size: 14px; opacity: .7; font-weight: 600; } #mg .mg-lvt small { font-size: 13px; font-weight: 600; opacity: .75; }
+#mg .mg-lvs { display: flex; gap: 2px; } #mg .mg-lvs i { width: 20px; height: 20px; color: #d8d6e8; } #mg .mg-lvs i.on { color: #ffc61a; } #mg .mg-lvs svg { width: 100%; height: 100%; }
+#mg .mg-stats { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 14px; font-weight: 700; font-size: 14px; }
+#mg .mg-stats > span { background: rgba(255, 255, 255, .85); border-radius: 999px; padding: 9px 14px; }
+#mg .mg-h2 { font-weight: 700; font-size: clamp(28px, 7vw, 44px); text-align: center; margin: 6px 0 0; color: #fff; -webkit-text-stroke: 1.5px var(--ink); paint-order: stroke fill; text-shadow: 0 4px 0 rgba(35, 32, 74, .3); }
+#mg .mg-bookg { display: grid; grid-template-columns: repeat(auto-fill, minmax(64px, 1fr)); gap: 10px; background: rgba(255, 253, 246, .92); border-radius: 26px; padding: 14px; margin: 14px 0; }
+#mg .mg-stk { aspect-ratio: 1; display: grid; place-items: center; font-size: 38px; background: #fff; border-radius: 18px; box-shadow: 0 4px 0 rgba(35, 32, 74, .12); }
+#mg .mg-stk.off { font-size: 24px; color: #b8b5cc; background: #f0eff6; font-weight: 700; }
+#mg .mg-btn { display: block; width: 100%; max-width: 360px; margin: 10px auto 0; border-radius: 22px; padding: 15px; background: #3ddc84 !important; color: #0b3b22 !important; font-weight: 700; font-size: 19px; box-shadow: 0 6px 0 #22a85e; }
+#mg .mg-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #22a85e; }
+#mg .mg-btn.ghost { background: #fff !important; color: var(--ink) !important; box-shadow: 0 6px 0 rgba(35, 32, 74, .2); }
+
+/* game */
+#mg .mg-game { max-width: 820px; margin: 0 auto; display: flex; flex-direction: column; min-height: 100%; }
+#mg .mg-hud { display: flex; justify-content: space-between; gap: 8px; font-weight: 600; font-size: 16px; }
+#mg .mg-hud > div:not(:empty) { background: rgba(255, 255, 255, .9); border-radius: 999px; padding: 6px 14px; }
+#mg .mg-hud b { font-size: 19px; }
+#mg .mg-timer { height: 12px; border-radius: 99px; background: rgba(255, 255, 255, .6); margin-top: 8px; overflow: hidden; }
+#mg .mg-timer i { display: block; height: 100%; width: 100%; background: linear-gradient(90deg, #3ddc84, #ffd23f); border-radius: 99px; transition: width 1s linear; }
+#mg .mg-timer i.low { background: #ff5a5f; animation: mg-pulse .5s infinite alternate; }
+@keyframes mg-pulse { to { opacity: .55; } }
+#mg .mg-tb2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
+#mg .mg-tp { display: flex; align-items: center; gap: 6px; border-radius: 18px; padding: 6px 12px; background: rgba(255, 255, 255, .75); transition: transform .2s, box-shadow .2s; min-width: 0; }
+#mg .mg-tp span { font-size: 24px; } #mg .mg-tp b { flex: 1; font-size: 16px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } #mg .mg-tp em { font-style: normal; font-weight: 700; font-size: 22px; }
+#mg .mg-tp.a.on { background: #fff; box-shadow: inset 0 0 0 3px var(--a), 0 4px 0 #2f6fd6; transform: scale(1.04); }
+#mg .mg-tp.b.on { background: #fff; box-shadow: inset 0 0 0 3px var(--b), 0 4px 0 #c43b8f; transform: scale(1.04); }
+#mg .mg-qc { margin: 14px auto 0; background: var(--paper); border-radius: 30px; padding: 14px 18px 12px; box-shadow: 0 8px 0 rgba(35, 32, 74, .16); text-align: center; min-width: min(100%, 320px); }
+#mg .mg-qc.in { animation: mg-qin .45s cubic-bezier(.3, 1.6, .5, 1); }
+@keyframes mg-qin { from { transform: scale(.6) rotate(-4deg); opacity: 0; } }
+#mg .mg-eq { display: flex; align-items: center; justify-content: center; gap: .22em; font-weight: 700; font-size: clamp(44px, 12vw, 88px); line-height: 1.05; }
+#mg .mg-eq.long { font-size: clamp(36px, 10vw, 78px); }
+#mg .mg-o { color: #ff5a5f; }
+#mg .mg-hole { display: inline-grid; place-items: center; min-width: 1.15em; height: 1.15em; padding: 0 .1em; border-radius: .25em; border: .06em dashed #9b5de5; color: #9b5de5; background: #f4ecff; animation: mg-holep 1.2s ease-in-out infinite; }
+#mg .mg-hole.fill { border-style: solid; border-color: #3ddc84; background: #dcfbe9; color: #128a48; animation: mg-qin .4s; }
+#mg .mg-hole.shown { border-color: #ff9f1c; background: #fff1dc; color: #c25e00; }
+@keyframes mg-holep { 50% { transform: scale(1.08); } }
+#mg .mg-qh { font-weight: 600; font-size: 15px; opacity: .65; margin-top: 2px; }
+#mg .mg-combo { text-align: center; height: 30px; margin-top: 8px; font-weight: 700; font-size: 18px; color: #fff; text-shadow: 0 2px 0 rgba(35, 32, 74, .4); opacity: 0; transform: scale(.6); transition: all .25s; }
+#mg .mg-combo.on { opacity: 1; transform: none; }
+#mg .mg-combo b { background: #ff5a5f; border-radius: 10px; padding: 0 8px; text-shadow: none; }
+#mg .mg-field { flex: 1; display: flex; flex-wrap: wrap; justify-content: center; align-content: center; gap: 6px 12px; padding: 6px 0 10px; min-height: 260px; }
+
+/* balloons */
+#mg .mg-b { position: relative; width: clamp(82px, 24vw, 150px); height: clamp(150px, 40vw, 250px); padding: 0; animation: mg-rise .7s cubic-bezier(.25, 1.4, .5, 1) var(--d) both; }
+#mg .mg-bb { position: absolute; left: 0; right: 0; top: 0; height: 66%; display: grid; place-items: center; border-radius: 50% 50% 48% 52% / 56% 56% 44% 44%; background: radial-gradient(ellipse at 30% 24%, rgba(255, 255, 255, .75) 0 9%, rgba(255, 255, 255, 0) 22%), radial-gradient(circle at 70% 80%, rgba(0, 0, 0, .18), transparent 60%), var(--c); box-shadow: inset -6px -8px 0 rgba(0, 0, 0, .08); animation: mg-bob var(--bd) ease-in-out var(--bo) infinite; transform-origin: 50% 120%; rotate: var(--rt); }
+#mg .mg-bb::after { content: ''; position: absolute; left: 50%; bottom: -9px; width: 16px; height: 12px; margin-left: -8px; background: var(--c); clip-path: polygon(50% 0, 100% 100%, 0 100%); filter: brightness(.85); }
+#mg .p-stripes .mg-bb { background: radial-gradient(ellipse at 30% 24%, rgba(255, 255, 255, .75) 0 9%, rgba(255, 255, 255, 0) 22%), repeating-linear-gradient(115deg, rgba(255, 255, 255, .22) 0 10px, transparent 10px 22px), var(--c); }
+#mg .p-dots .mg-bb { background: radial-gradient(ellipse at 30% 24%, rgba(255, 255, 255, .75) 0 9%, rgba(255, 255, 255, 0) 22%), radial-gradient(circle, rgba(255, 255, 255, .3) 0 4px, transparent 5px) 0 0 / 20px 20px, var(--c); }
+#mg .p-spark .mg-bb::before { content: '✦  ✧\A  ✦'; white-space: pre; position: absolute; right: 12%; top: 14%; color: rgba(255, 255, 255, .7); font-size: 13px; line-height: 1.2; }
+#mg .mg-bn { position: relative; font-weight: 700; font-size: clamp(34px, 9vw, 54px); color: #fff; -webkit-text-stroke: 2px rgba(35, 32, 74, .55); paint-order: stroke fill; text-shadow: 0 3px 0 rgba(35, 32, 74, .3); }
+#mg .mg-bn.sg { font-family: system-ui, sans-serif; font-size: clamp(54px, 15vw, 84px); line-height: 1; -webkit-text-stroke: 2.5px rgba(35, 32, 74, .55); }
+#mg .mg-bn.sm { font-size: clamp(28px, 7.5vw, 44px); }
+#mg .mg-str { position: absolute; left: 50%; top: 66%; width: 2px; height: 34%; margin-left: -1px; background: repeating-linear-gradient(rgba(35, 32, 74, .45) 0 6px, rgba(35, 32, 74, .3) 6px 12px); border-radius: 2px; animation: mg-sway var(--bd) ease-in-out var(--bo) infinite; transform-origin: 50% 0; }
+@keyframes mg-rise { from { transform: translateY(70vh) scale(.6); opacity: 0; } }
+@keyframes mg-bob { 0%, 100% { transform: translateY(0) rotate(-3deg); } 50% { transform: translateY(-12px) rotate(3deg); } }
+@keyframes mg-sway { 0%, 100% { transform: rotate(5deg); } 50% { transform: rotate(-5deg); } }
+#mg .mg-b:hover .mg-bb { filter: brightness(1.08); }
+#mg .mg-b:active .mg-bb { scale: .94; }
+#mg .mg-b.pop { pointer-events: none; }
+#mg .mg-b.pop .mg-bb { animation: mg-popb .28s ease-out forwards; }
+#mg .mg-b.pop .mg-str { animation: mg-fall .6s ease-in forwards; }
+@keyframes mg-popb { 40% { transform: scale(1.3); opacity: 1; } 100% { transform: scale(1.6); opacity: 0; } }
+@keyframes mg-fall { to { transform: translateY(80px) rotate(30deg); opacity: 0; } }
+#mg .mg-b.no { pointer-events: none; }
+#mg .mg-b.no .mg-bb { animation: mg-shake .45s, mg-shrink .5s .45s forwards; }
+#mg .mg-b.no .mg-str { opacity: .2; }
+@keyframes mg-shake { 20%, 60% { transform: translateX(-10px) rotate(-6deg); } 40%, 80% { transform: translateX(10px) rotate(6deg); } }
+@keyframes mg-shrink { to { transform: scale(.55) translateY(40px); filter: grayscale(1); opacity: .35; } }
+#mg .mg-b.fly { pointer-events: none; animation: mg-away .9s ease-in forwards; }
+@keyframes mg-away { to { transform: translateY(-110vh) rotate(12deg); opacity: 0; } }
+#mg .mg-b.glow .mg-bb { box-shadow: 0 0 0 6px #fff, 0 0 30px 12px rgba(255, 255, 255, .9); }
+
+/* effects */
+#mg .mg-fx { position: fixed; inset: 0; pointer-events: none; z-index: 5; overflow: hidden; }
+#mg .mg-pt { position: fixed; width: 10px; height: 10px; border-radius: 50%; margin: -5px; animation: mg-pt .75s ease-out forwards; }
+@keyframes mg-pt { to { transform: translate(var(--x), var(--y)) scale(.2); opacity: 0; } }
+#mg .mg-cf { position: absolute; top: -20px; width: 10px; height: 16px; border-radius: 3px; animation: mg-cf var(--du) linear var(--dl) forwards; }
+@keyframes mg-cf { to { transform: translate(var(--sx), 110vh) rotate(calc(var(--r) + 720deg)); } }
+#mg .mg-ft { position: fixed; transform: translateX(-50%); font-weight: 700; font-size: 28px; color: #fff; -webkit-text-stroke: 1.5px #23204a; paint-order: stroke fill; animation: mg-ft 1.1s ease-out forwards; }
+@keyframes mg-ft { to { transform: translate(-50%, -70px); opacity: 0; } }
+#mg .mg-banner { position: absolute; left: 50%; top: 40%; transform: translate(-50%, -50%); padding: 16px 28px; border-radius: 28px; font-weight: 700; font-size: clamp(28px, 7vw, 48px); color: #fff; background: var(--a); box-shadow: 0 8px 0 #2f6fd6; display: flex; align-items: center; gap: 10px; white-space: nowrap; animation: mg-ban 1.1s cubic-bezier(.3, 1.5, .5, 1) forwards; }
+#mg .mg-banner.b { background: var(--b); box-shadow: 0 8px 0 #c43b8f; }
+#mg .mg-banner span { font-size: 1.2em; }
+@keyframes mg-ban { 0% { transform: translate(-50%, -50%) scale(.3) rotate(-8deg); opacity: 0; } 25% { transform: translate(-50%, -50%) scale(1.05); opacity: 1; } 80% { opacity: 1; } 100% { transform: translate(-50%, -50%) scale(.9); opacity: 0; } }
+#mg .mg-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+
+/* tools */
+#mg .mg-tools { position: sticky; bottom: 0; display: flex; justify-content: flex-end; gap: 8px; padding-bottom: 6px; }
+#mg .mg-tool { display: flex; align-items: center; gap: 6px; border-radius: 18px; padding: 10px 14px; background: #fff !important; font-weight: 700; font-size: 15px; box-shadow: 0 4px 0 rgba(35, 32, 74, .2); min-height: 48px; }
+#mg .mg-tool svg { width: 22px; height: 22px; }
+#mg .mg-tool b { background: #ffd23f; border-radius: 99px; min-width: 22px; padding: 0 6px; font-size: 13px; }
+#mg .mg-tool:disabled { opacity: .45; }
+
+/* end */
+#mg .mg-end { max-width: 560px; margin: 0 auto; text-align: center; padding-top: 10px; }
+#mg .mg-bigst { display: flex; justify-content: center; gap: 6px; }
+#mg .mg-bigst i { width: clamp(64px, 18vw, 96px); color: rgba(255, 255, 255, .55); animation: mg-qin .6s cubic-bezier(.3, 1.6, .5, 1) calc(var(--i) * .25s) both; }
+#mg .mg-bigst i:nth-child(2) { margin-top: -18px; }
+#mg .mg-bigst i.on { color: #ffd23f; filter: drop-shadow(0 4px 0 #e0a200); }
+#mg .mg-bigst svg { width: 100%; }
+#mg .mg-res { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 14px; }
+#mg .mg-res span { background: rgba(255, 253, 246, .94); border-radius: 22px; padding: 12px 6px; font-weight: 600; font-size: 14px; display: flex; flex-direction: column; box-shadow: 0 5px 0 rgba(35, 32, 74, .12); }
+#mg .mg-res b { font-size: 30px; }
+#mg .mg-new { display: inline-block; margin-top: 12px; background: #ff5a5f; color: #fff; font-weight: 700; padding: 8px 16px; border-radius: 99px; animation: mg-holep 1s infinite; }
+#mg .mg-gotstk { margin: 12px auto 0; display: inline-flex; align-items: center; gap: 10px; background: #fff; border-radius: 22px; padding: 8px 16px 8px 8px; font-weight: 700; box-shadow: 0 5px 0 rgba(35, 32, 74, .12); }
+#mg .mg-gotstk span { font-size: 44px; animation: mg-wig 1.2s ease-in-out infinite; }
+#mg .mg-endb { margin-top: 10px; }
+#mg .mg-cup { font-size: 80px; animation: mg-bounce 1.6s ease-in-out infinite; }
+#mg .mg-pod { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; align-items: end; }
+#mg .mg-pc { position: relative; border-radius: 26px; padding: 14px 8px; background: #e4efff; display: flex; flex-direction: column; align-items: center; gap: 2px; box-shadow: 0 6px 0 #2f6fd6; }
+#mg .mg-pc.b { background: #ffe4f3; box-shadow: 0 6px 0 #c43b8f; }
+#mg .mg-pc.win { padding-top: 34px; transform: scale(1.04); }
+#mg .mg-pc > span { font-size: 40px; } #mg .mg-pc b { font-size: 18px; } #mg .mg-pc em { font-style: normal; font-weight: 700; font-size: 28px; } #mg .mg-pc small { font-weight: 600; opacity: .7; }
+#mg .mg-pc i { position: absolute; top: -26px; font-size: 44px; font-style: normal; animation: mg-wig 1.4s infinite; }
+
+@media (min-width: 640px) { #mg .mg-lvs3 { grid-template-columns: repeat(3, 1fr); } #mg .mg-lv { flex-direction: column; text-align: center; } #mg .mg-lvt { align-items: center; } }
+@media (prefers-reduced-motion: reduce) { #mg *, #mg *::before, #mg *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; } }
+
+/* Game Zone card */
+.mgc-art { background: linear-gradient(#6fcbff, #c9f0ff) !important; position: relative; overflow: hidden; }
+.mgc-art .mgc-q { position: absolute; left: 50%; top: 12%; transform: translateX(-50%); background: #fffdf6; color: #23204a; border-radius: 16px; padding: 4px 14px; font: 700 26px/1.1 'Fredoka', ui-rounded, system-ui, sans-serif; box-shadow: 0 4px 0 rgba(35, 32, 74, .2); white-space: nowrap; }
+.mgc-art .mgc-q i { font-style: normal; color: #9b5de5; border: 2px dashed #9b5de5; border-radius: 8px; padding: 0 6px; }
+.mgc-art .mgc-b { position: absolute; bottom: 10%; width: 46px; height: 54px; border-radius: 50% 50% 48% 52% / 56% 56% 44% 44%; background: radial-gradient(circle at 30% 25%, rgba(255, 255, 255, .7) 0 10%, transparent 22%), var(--c); color: #fff; display: grid; place-items: center; font: 700 20px 'Fredoka', ui-rounded, system-ui, sans-serif; -webkit-text-stroke: 1px rgba(35, 32, 74, .45); animation: mgc-bob 2.6s ease-in-out var(--d) infinite; }
+.mgc-art .mgc-b::after { content: ''; position: absolute; top: 100%; left: 50%; width: 1.5px; height: 22px; background: rgba(35, 32, 74, .4); }
+@keyframes mgc-bob { 50% { transform: translateY(-8px) rotate(4deg); } }
+@media (prefers-reduced-motion: reduce) { .mgc-art .mgc-b { animation: none; } }
+
+/* ===== v71: 3D friend, more puzzle types, more modes ===== */
+#mg .mg-bd { pointer-events: auto; display: block; width: clamp(120px, 20vw, 180px); height: clamp(130px, 22vw, 196px); padding: 0; border-radius: 30px; transition: width .35s, height .35s; }
+#mg.athome .mg-bd { width: clamp(130px, 24vw, 210px); height: clamp(140px, 26vw, 226px); }
+#mg .mg-cv { width: 100%; height: 100%; display: block; filter: drop-shadow(0 8px 6px rgba(35, 32, 74, .25)); }
+#mg .mg-emo { display: grid; place-items: center; width: 100%; height: 100%; font-size: 84px; animation: mg-bounce 2.4s ease-in-out infinite; }
+#mg .mg-emo.happy, #mg .mg-emo.dance, #mg .mg-emo.boing { animation: mg-bounce .5s ease-in-out infinite; }
+#mg .mg-emo.sad { filter: grayscale(.5); transform: rotate(10deg); animation: none; }
+#mg .mg-bub { margin-bottom: clamp(90px, 15vw, 140px); }
+#mg .mg-frs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+#mg .mg-fr { border-radius: 20px; padding: 10px 6px; background: #f1f1f6 !important; display: flex; flex-direction: column; align-items: center; gap: 1px; transition: transform .15s; }
+#mg .mg-fr span { font-size: 38px; line-height: 1.1; } #mg .mg-fr b { font-size: 17px; } #mg .mg-fr small { font-size: 12px; opacity: .7; font-weight: 600; }
+#mg .mg-fr.on { background: #fff !important; box-shadow: inset 0 0 0 3px #3ddc84, 0 4px 0 #22a85e; transform: translateY(-2px); }
+#mg .mg-seg { grid-template-columns: repeat(3, 1fr); }
+#mg .mg-lab.mt { margin-top: 14px; }
+#mg .mg-tys { display: flex; flex-wrap: wrap; gap: 8px; }
+#mg .mg-ty { display: inline-flex; align-items: center; gap: 6px; border-radius: 999px; padding: 8px 14px 8px 10px; min-height: 44px; background: #f1f1f6 !important; font-weight: 700; font-size: 14px; opacity: .6; }
+#mg .mg-ty span { font-size: 20px; } #mg .mg-ty small { font-weight: 600; font-size: 11px; opacity: .7; }
+#mg .mg-ty.on { opacity: 1; background: #e3f6ff !important; box-shadow: inset 0 0 0 2.5px #4d96ff; }
+#mg .mg-tbs { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+#mg .mg-tbb { border-radius: 20px; padding: 10px 4px 8px; background: #fff !important; box-shadow: inset 0 0 0 3px #ff9f1c, 0 5px 0 #d97a00; display: flex; flex-direction: column; align-items: center; gap: 2px; }
+#mg .mg-tbb b { font-size: 26px; } #mg .mg-tbb small { font-size: 11px; font-weight: 600; opacity: .7; }
+#mg .mg-tbb.mix { box-shadow: inset 0 0 0 3px #9b5de5, 0 5px 0 #6d33b8; }
+#mg .mg-tbb:active { transform: translateY(3px); }
+#mg .mg-lvs.sm i { width: 14px; height: 14px; }
+#mg .mg-qc { max-width: 100%; }
+#mg .mg-st { margin: 0; font-weight: 600; font-size: clamp(19px, 4.6vw, 26px); line-height: 1.35; max-width: 34ch; text-align: left; }
+#mg .mg-ste { float: left; font-size: 2.2em; line-height: 1; margin: 0 10px 0 0; }
+#mg .mg-eq.sm { font-size: clamp(30px, 8vw, 54px); margin-top: 6px; }
+#mg .mg-w { font-size: .5em; font-weight: 700; color: #6b67a0; align-self: center; }
+#mg .mg-seq { gap: .1em; font-size: clamp(32px, 9vw, 70px); flex-wrap: wrap; }
+#mg .mg-cm { color: #b3b0cc; margin-right: .12em; }
+#mg .mg-cnt { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px; font-size: clamp(24px, 6vw, 38px); line-height: 1.15; }
+#mg .mg-cnt .g { max-width: 6.2em; word-break: break-all; letter-spacing: .04em; background: #f4f1ff; border-radius: 16px; padding: 4px 8px; }
+#mg .mg-cnt b { color: #ff5a5f; font-size: 1.2em; }
+#mg .mg-cnt .mg-hole { font-size: 1.3em; }
+#mg .mg-tens { display: flex; align-items: flex-end; justify-content: center; gap: 5px; flex-wrap: wrap; min-height: 70px; }
+#mg .mg-tens .rod { width: 12px; height: 66px; border-radius: 4px; background: repeating-linear-gradient(#4d96ff 0 5.6px, #2f6fd6 5.6px 6.6px); box-shadow: 0 2px 0 #1f4fa8; }
+#mg .mg-tens .cubes { display: grid; grid-template-columns: repeat(3, 12px); gap: 3px; margin-left: 10px; }
+#mg .mg-tens .cube { width: 12px; height: 12px; border-radius: 3px; background: #ff9f1c; box-shadow: 0 2px 0 #c46f00; }
+#mg .mg-eo { font-weight: 700; font-size: clamp(30px, 8vw, 56px); line-height: 1.1; }
+#mg .mg-eo b { color: #9b5de5; }
+#mg .mg-hearts i { font-style: normal; filter: grayscale(1); opacity: .35; } #mg .mg-hearts i.on { filter: none; opacity: 1; }
+#mg .mg-field.many .mg-b { width: clamp(72px, 21vw, 130px); height: clamp(132px, 35vw, 220px); }
+#mg .mg-bdg { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; background: rgba(255, 253, 246, .92); border-radius: 26px; padding: 14px; margin: 14px 0 18px; }
+#mg .mg-bg { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 2px; background: #fff; border-radius: 20px; padding: 10px 6px; box-shadow: 0 4px 0 rgba(35, 32, 74, .12); }
+#mg .mg-bg span { font-size: 36px; } #mg .mg-bg b { font-size: 15px; } #mg .mg-bg small { font-size: 12px; opacity: .7; font-weight: 600; }
+#mg .mg-bg.off { background: #f0eff6; } #mg .mg-bg.off b { opacity: .6; }
+#mg .mg-newb { display: flex; flex-direction: column; align-items: center; gap: 8px; margin-top: 12px; }
+#mg .mg-newb span { display: inline-flex; align-items: center; gap: 10px; background: #ffd23f; border-radius: 99px; padding: 6px 16px 6px 8px; font-weight: 700; box-shadow: 0 4px 0 #d9a800; }
+#mg .mg-newb i { font-style: normal; font-size: 30px; animation: mg-wig 1.2s infinite; }
+@media (max-width: 420px) { #mg .mg-seg { gap: 6px; } #mg .mg-sg b { font-size: 13px; } #mg .mg-sg small { font-size: 11px; } #mg .mg-tbs { grid-template-columns: repeat(5, 1fr); gap: 6px; } #mg .mg-tbb b { font-size: 21px; } }
+
+#mg .mg-hslot { display: flex; align-items: center; justify-content: center; gap: 4px; margin-top: 6px; }
+#mg .mg-hslot .mg-bd { flex: none; }
+#mg .mg-hslot .mg-bub { position: static; order: 2; margin: 0; max-width: min(52vw, 340px); opacity: 1; transform: none; border-radius: 20px 20px 20px 6px; }
+#mg .mg-hslot .mg-bub:empty { visibility: hidden; }
+</style>
+<!--mg:js--><script id="mg-js">
+/* ===== Math Sky Pop: a maths game for children.
+   A puzzle sits at the top with one number (or a sign) hidden; balloons float below, each with a different answer,
+   and only one is right.
+   Levels: up to 10, up to 20, up to 100. Signs: + − × ÷.
+   Puzzle types: sums, story sums (simple English), patterns, bigger/smaller, counting, tens & ones, odd & even, double & half.
+   Modes: Solo, Boys vs Girls, Time attack, Survival (3 hearts), Times tables, Daily challenge.
+   Puzzles never repeat: every puzzle is remembered on this device until all puzzles of that kind have been used.
+   A 3D animal friend (Bao the panda, Coco the bear or Kiki the koala) talks in English with a cartoon AI voice
+   (cached on the device; the phone's own voice is the fallback). Music and sounds are made by the code. ===== */
+(function () {
+    'use strict';
+    if (window.LRMG) return;
+    const D = document, $ = (id) => D.getElementById(id);
+    const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const LS = { get: (k, d) => { try { const v = localStorage.getItem(k); return v == null ? d : v; } catch (e) { return d; } }, set: (k, v) => { try { localStorage.setItem(k, v); } catch (e) { } } };
+    const R = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
+    const pick = (a) => a[Math.floor(Math.random() * a.length)];
+    const shuf = (a) => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+    const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+    const REDUCED = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { return false; } })();
+    const U = () => { try { return state.user || {}; } catch (e) { return {}; } };
+    const save = () => { try { pfSave(); } catch (e) { } };
+    const aiOk = () => { try { return typeof aiReady === 'function' ? !!aiReady() : false; } catch (e) { return false; } };
+    const aiK = () => { try { return aiKey(); } catch (e) { return ''; } };
+    const today = () => { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); };
+
+    const LV = {
+        10: { max: 10, n: 4, name: 'Up to 10', nick: 'Little Stars', sky: 'day', bpm: 112, tr: 0 },
+        20: { max: 20, n: 5, name: 'Up to 20', nick: 'Rocket Riders', sky: 'dusk', bpm: 120, tr: 2 },
+        100: { max: 100, n: 6, name: 'Up to 100', nick: 'Math Masters', sky: 'night', bpm: 128, tr: -3 }
+    };
+    const SG = { add: '+', sub: '−', mul: '×', div: '÷' };
+    const SW = { add: 'plus', sub: 'minus', mul: 'times', div: 'divided by' };
+    const OPN = { add: 'Add', sub: 'Take away', mul: 'Times', div: 'Share' };
+    const SAYSIGN = { '+': 'plus', '−': 'minus', '×': 'times', '÷': 'divided by', '>': 'greater than', '<': 'less than', '=': 'equals' };
+    const TYPES = {
+        sums: { n: 'Sums', e: '🧮', lv: [10, 20, 100] }, story: { n: 'Story sums', e: '📖', lv: [10, 20, 100] }, seq: { n: 'Patterns', e: '🔢', lv: [10, 20, 100] },
+        cmp: { n: 'Bigger or smaller', e: '⚖️', lv: [10, 20, 100] }, count: { n: 'Counting', e: '🍎', lv: [10, 20] }, tens: { n: 'Tens & ones', e: '🧱', lv: [100] },
+        eo: { n: 'Odd & even', e: '🎲', lv: [10, 20, 100] }, dbl: { n: 'Double & half', e: '✌️', lv: [20, 100] }
+    };
+    const MODES = [['solo', '🎈', 'Solo', '10 puzzles'], ['team', '👦👧', 'Boys vs Girls', 'Take turns'], ['time', '⏱️', 'Time attack', '60 seconds'], ['surv', '❤️', 'Survival', '3 hearts'], ['tables', '✖️', 'Times tables', '1 to 10'], ['daily', '📅', 'Daily challenge', 'New every day']];
+    const COLS = ['#ff5a5f', '#ff9f1c', '#ffd23f', '#3ddc84', '#2ec4b6', '#4d96ff', '#9b5de5', '#f15bb5'];
+    const PATS = ['plain', 'stripes', 'dots', 'spark'];
+    const STICKERS = ['🦁', '🐯', '🐼', '🐨', '🦊', '🐸', '🐵', '🦄', '🐙', '🦋', '🐢', '🐬', '🦒', '🐘', '🦉', '🐧', '🦖', '🐳', '🦩', '🐝', '🐞', '🦔', '🐰', '🐶', '🐱', '🐹', '🦦', '🦜', '🐠', '🐲', '🦓', '🦘', '🐿️', '🦥', '🐊', '🦚', '🐌', '🦀', '🐡', '🦭'];
+    const BADGES = [
+        ['first', '🎈', 'First pop', 'Solve your first puzzle', s => s.solved >= 1], ['s100', '💯', '100 puzzles', 'Solve 100 puzzles', s => s.solved >= 100], ['s500', '🏅', '500 puzzles', 'Solve 500 puzzles', s => s.solved >= 500],
+        ['fire', '🔥', 'On fire', '10 right in a row', s => s.combo >= 10], ['speed', '⚡', 'Speed star', '200 points in a race', s => Object.values(s.ta).some(v => v >= 200)], ['surv', '❤️', 'Survivor', '20 right in Survival', s => Object.values(s.sv).some(v => v >= 20)],
+        ['team', '🤝', 'Team player', 'Play Boys vs Girls', s => s.team >= 1], ['daily', '📅', 'Daily hero', 'Finish 3 daily challenges', s => (s.daily.n || 0) >= 3], ['tables', '✖️', 'Times master', '3 stars on 5 times tables', s => Object.values(s.tb).filter(v => v >= 3).length >= 5],
+        ['stick', '📒', 'Collector', 'Collect 10 stickers', s => s.stk.length >= 10]
+    ];
+
+    /* ===================== THE FRIENDS ===================== */
+    const FR = {
+        bao: { name: 'Bao', what: 'panda', e: '🐼', K: 0, voice: 'coral', pitch: 1.45, rate: 1.02,
+            instr: 'Voice: Bao, a lovable cartoon panda from a children\'s TV show. Tone: bubbly, warm and playful, smiling all the time, with little giggles and big excited ups and downs. Pacing: lively but very clear for children aged 4 to 10. Simple, crisp English.',
+            intro: 'Hi, I\'m Bao the panda! Let\'s have a pan-tastic time with numbers!', catch: ['Pan-tastic!', 'Bamboo-tastic!', 'That\'s black-and-white brilliant!', 'Even my bamboo is clapping for you!', 'Panda power!'] },
+        coco: { name: 'Coco', what: 'bear', e: '🐻', K: 1, voice: 'ash', pitch: 1.0, rate: 1,
+            instr: 'Voice: Coco, a big-hearted, funny cartoon bear from a children\'s TV show. Tone: energetic, cheeky and charismatic like a sports coach who loves kids, full of fun and big laughs. Pacing: bouncy but clear for children aged 4 to 10. Simple, crisp English.',
+            intro: 'Hey hey! I\'m Coco the bear. Ready for a beary fun game?', catch: ['Beary good!', 'Un-bear-lievable!', 'That\'s beary clever!', 'Big bear hug for you!', 'Roar-some!'] },
+        kiki: { name: 'Kiki', what: 'koala', e: '🐨', K: 2, voice: 'shimmer', pitch: 1.7, rate: 1.05,
+            instr: 'Voice: Kiki, a cute, sparkly cartoon koala from a children\'s TV show. Tone: sweet, cheerful and super excited, like a best friend cheering at a party, with happy squeals and giggles. Pacing: light and quick but clear for children aged 4 to 10. Simple, crisp English.',
+            intro: 'Hello hello! I\'m Kiki the koala. Let\'s climb the number tree together!', catch: ['Koala-ty work!', 'Eucalyp-tastic!', 'You\'re tree-mendous!', 'Koala-fied genius!', 'Hugs and high fives!'] }
+    };
+    const fid = () => { const f = LS.get('mg_friend', 'bao'); return FR[f] ? f : 'bao'; };
+    const F = () => FR[fid()];
+
+    /* ===================== WHAT THE FRIEND SAYS (all English) ===================== */
+    const L = {
+        start: ['Let\'s make some math magic!', 'Ready, set, pop!', 'Hello, superstar! Let\'s have fun with numbers!', 'Put on your thinking cap. Here we go!', 'Your brain is warming up. Let\'s go!', 'Math time! Let\'s make the numbers dance!', 'Big smiles, sharp minds. Let\'s start!', 'Balloons are ready. Are you ready? Let\'s go!', 'Today you are the number boss!', 'Let\'s pop, let\'s count, let\'s win!'],
+        ok: ['Awesome!', 'You nailed it!', 'Super smart!', 'Boom! Correct!', 'High five!', 'You\'re a math wizard!', 'Brilliant thinking!', 'That\'s right! Amazing!', 'Fantastic!', 'You did it!', 'Perfect pop!', 'Your brain is super strong!', 'Great job, champion!', 'Woohoo! Correct!', 'Yes! You\'re a number ninja!', 'Splendid!', 'Nice one!', 'Smart cookie!', 'Excellent!', 'Bravo!', 'That was quick!', 'You make math look easy!', 'Wow, look at you go!', 'Right on target!', 'Superb!', 'You\'re a shining star!', 'Clever you!', 'Ka-pow! Correct!', 'Math magic!', 'Yes, yes, yes!', 'Ding ding ding! Winner!', 'Your teacher would be so proud!', 'Pop goes the right answer!', 'Super duper!', 'Nailed it like a pro!', 'Genius alert!', 'I\'m doing a happy dance for you!', 'That\'s the one!', 'Absolutely right!', 'Hip hip hooray!'],
+        combo3: ['Three in a row! You\'re on fire!', 'Combo! Keep it going!', 'Hat trick! Three correct!', 'Three! Double points are on!'],
+        combo5: ['Five in a row! Super star!', 'Five! Your brain is blazing!', 'Wow, five in a row! Let\'s dance!'],
+        combo8: ['Unstoppable! What a streak!', 'Incredible! You\'re a math rocket!', 'Legendary streak! Triple points!'],
+        no: ['Oops! Try another balloon.', 'Almost! You can do it.', 'Not this one. Think again!', 'Mistakes help your brain grow!', 'Good try! Look again.', 'Hmm, count once more.', 'No worries, try again!', 'Close! Have another go.', 'Every champion makes mistakes. Try again!', 'Take a deep breath and try again.', 'Use your fingers if you need to!', 'Keep going, you\'re learning!', 'Whoopsie daisy! One more try!', 'That balloon was sneaky! Try again.', 'Nope, but I believe in you!'],
+        wise: ['Practice makes progress!', 'When something is hard, your brain is getting stronger.', 'Big things start with small steps.', 'Believe in yourself. You can do amazing things!', 'Never give up. Every try counts!', 'Be brave, be curious, be kind.', 'Smart is something you grow, like a tree.', 'A mistake is just a lesson in disguise.', 'Slow and steady wins the race.', 'Your effort is your superpower!', 'Champions keep trying.', 'Today\'s practice is tomorrow\'s magic.', 'You don\'t have to be perfect. Just keep going!', 'Every expert was once a beginner.', 'Your brain is like a muscle. Math makes it strong!'],
+        joke: ['Why was six afraid of seven? Because seven ate nine!', 'Why did the math book look sad? It had too many problems!', 'Why is eight never hungry? Because it just ate!', 'Which snake is good at math? An adder!', 'What did zero say to eight? Nice belt!', 'What is a balloon\'s favorite music? Pop music!', 'Why do plants hate math? It gives them square roots!', 'Why did the cookie go to the doctor? It was feeling crummy!', 'What do you call a number that can\'t keep still? A roamin\' numeral!', 'Why was the equal sign so humble? It knew it wasn\'t less than or greater than anyone!', 'What did the triangle say to the circle? You\'re pointless!', 'Why did the teddy bear say no to dessert? It was already stuffed!', 'What do you call a sleeping dinosaur? A dino-snore!'],
+        reveal: ['The answer was {x}. Now you know it!', 'It was {x}. You\'ll get the next one!', 'The right balloon was {x}. Let\'s keep going!'],
+        hurry: ['Ten seconds left! Hurry!', 'Quick, quick! Ten seconds!'],
+        timeup: ['Time\'s up! What a race!', 'Time\'s up! Great racing!'],
+        heart: ['Oh no, we lost a heart! The answer was {x}.', 'One heart gone! It was {x}. Be careful now!'],
+        e3: ['Wow! Three stars! You are a math superstar!', 'Three stars! Your brain is a rocket!', 'Perfect! Three shining stars!'],
+        e2: ['Great work! Two shiny stars!', 'Two stars! You are getting better and better!'],
+        e1: ['Good job! Keep practising and you\'ll shine even brighter!', 'One star! Every star counts. Let\'s try again!'],
+        e0: ['Thanks for playing! Practice makes progress. Let\'s try again!', 'Good effort! Let\'s play again and grow those brains!'],
+        sticker: ['You won a new sticker!', 'A new sticker for your book!'],
+        best: ['New best score! Hooray!', 'That\'s your best ever!'],
+        nudge: ['Psst! Pop the right balloon!', 'Take your time. I\'m right here.', 'Hmm, which balloon could it be?', 'You can tap Hear it if you want me to read it.', 'I\'m waiting... and doing a little dance!', 'Think, think, think!'],
+        tap: ['Hee hee! That tickles!', 'Boop! You found my nose!', 'Hi there, friend!', 'Want to hear a joke? Pop a balloon first!', 'I love doing math with you!', 'Wheee! Do that again!', 'You are my favorite math buddy!'],
+        story: ['Listen to the story.', 'Here is a story sum.', 'Story time! Listen carefully.']
+    };
+    const BAG = {};
+    function line(k, x) { let b = BAG[k]; if (!b || !b.length) { const prev = b && b.last; b = BAG[k] = shuf(L[k]); if (b.length > 1 && b[b.length - 1] === prev) b.unshift(b.pop()); } const t = b.pop(); b.last = t; return x == null ? t : t.replace('{x}', x); }
+    const okLine = () => Math.random() < .2 ? pick(F().catch) : line('ok');
+
+    /* ===================== SETTINGS + SAVED PROGRESS ===================== */
+    const on = (k) => LS.get('mg_' + k, '1') === '1';
+    const tog = (k) => LS.set('mg_' + k, on(k) ? '0' : '1');
+    function ST() {
+        const u = U(); if (!u.mg || typeof u.mg !== 'object') u.mg = {}; const s = u.mg;
+        s.best = s.best || {}; s.ta = s.ta || {}; s.sv = s.sv || {}; s.tb = s.tb || {}; s.daily = s.daily || {}; s.bdg = Array.isArray(s.bdg) ? s.bdg : [];
+        s.stk = Array.isArray(s.stk) ? s.stk : []; s.solved = s.solved || 0; s.combo = s.combo || 0; s.games = s.games || 0; s.team = s.team || 0; return s;
+    }
+
+    /* ===================== PUZZLES ===================== */
+    const H = '<span class="mg-hole">?</span>', N = (v) => '<span class="mg-n">' + v + '</span>', O = (s) => '<span class="mg-o">' + s + '</span>', W = (s) => '<span class="mg-w">' + s + '</span>';
+    function pairs(max) { const p = []; for (let x = 1; x <= 10; x++) for (let y = 1; y <= 10; y++) if (x * y <= max) p.push([x, y]); return p; }
+    const PAIRS = { 10: pairs(10), 20: pairs(20), 100: pairs(100) };
+    function eq(op, lv) {
+        const max = LV[lv].max, big = max >= 100;
+        let a, b, c;
+        if (op === 'add') { c = big && Math.random() < .8 ? R(20, 100) : R(2, max); a = R(1, c - 1); b = c - a; }
+        else if (op === 'sub') { a = big && Math.random() < .8 ? R(20, 100) : R(2, max); b = R(1, a - 1); c = a - b; }
+        else {
+            let P = PAIRS[lv]; if (big && Math.random() < .9) P = P.filter(p => p[0] > 1 && p[1] > 1);
+            const [x, y] = pick(P);
+            if (op === 'mul') { a = x; b = y; c = x * y; } else { a = x * y; b = y; c = x; if (y === 1 && Math.random() < .7) return null; }
+        }
+        return { op, a, b, c };
+    }
+    const sat = (op, a, b, c) => op === 'add' ? a + b === c : op === 'sub' ? a - b === c : op === 'mul' ? a * b === c : (b !== 0 && a / b === c);
+    const eqLong = (s) => s.replace(/<[^>]+>/g, '').length > 7 ? ' long' : '';
+    function eqQ(e, pos, key, lim) {
+        const v = [e.a, e.b, e.c].map((x, i) => i === pos ? H : N(x)), inner = v[0] + O(SG[e.op]) + v[1] + O('=') + v[2];
+        const p = [e.a, e.b, e.c].map((x, i) => i === pos ? 'what' : x);
+        return { kind: 'num', e, pos, ans: [e.a, e.b, e.c][pos], key, hi: lim, html: '<div class="mg-eq' + eqLong(inner) + '">' + inner + '</div>', hint: 'Which number is hiding?', say: p[0] + ' ' + SW[e.op] + ' ' + p[1] + ' equals ' + p[2] + '?' };
+    }
+    function numQ(op, lv) { const e = eq(op, lv); if (!e) return null; const pos = Math.random() < .45 ? 2 : (Math.random() < .5 ? 0 : 1); return eqQ(e, pos, e.op + e.a + '_' + e.b + '_' + pos, LV[lv].max); }
+    function signQ(lv) {
+        const e = eq(pick(['add', 'sub', 'mul', 'div']), lv); if (!e) return null;
+        const ok = Object.keys(SG).filter(o => sat(o, e.a, e.b, e.c)); if (ok.length !== 1) return null;
+        return { kind: 'sign', e, ans: SG[e.op], opts: ['+', '−', '×', '÷'], key: 's' + e.a + '_' + e.b + '_' + e.c, html: '<div class="mg-eq">' + N(e.a) + H + N(e.b) + O('=') + N(e.c) + '</div>', hint: 'Which sign is hiding?', say: e.a + ', what sign, ' + e.b + ', makes ' + e.c + '? Find the sign!' };
+    }
+    function threeQ(lv) {
+        const max = LV[lv].max, top = max >= 100 ? 40 : 9;
+        const a = R(1, top), b = R(1, top), minus = Math.random() < .4;
+        let c, d; if (minus) { if (a + b < 2) return null; c = R(1, Math.min(top, a + b - 1)); d = a + b - c; } else { c = R(1, top); d = a + b + c; }
+        if (d > max || d < 0) return null;
+        const pos = Math.random() < .7 ? 3 : 1, v = [a, b, c, d].map((x, i) => i === pos ? H : N(x));
+        const inner = v[0] + O('+') + v[1] + O(minus ? '−' : '+') + v[2] + O('=') + v[3];
+        const p = [a, b, c, d].map((x, i) => i === pos ? 'what' : x);
+        return { kind: 'three', v: [a, b, c, d], minus, pos, ans: [a, b, c, d][pos], key: 'h' + a + '_' + b + '_' + c + (minus ? 'm' : 'p') + pos, hi: max, html: '<div class="mg-eq' + eqLong(inner) + '">' + inner + '</div>', hint: 'Three numbers! Which one is hiding?', say: p[0] + ' plus ' + p[1] + (minus ? ' minus ' : ' plus ') + p[2] + ' equals ' + p[3] + '?' };
+    }
+    /* story sums in simple English */
+    const NAMES = [['Tom', 'he'], ['Lily', 'she'], ['Sam', 'he'], ['Mia', 'she'], ['Max', 'he'], ['Zoe', 'she'], ['Ben', 'he'], ['Emma', 'she'], ['Leo', 'he'], ['Ava', 'she'], ['Aziz', 'he'], ['Malika', 'she'], ['Timur', 'he'], ['Nilufar', 'she'], ['Jack', 'he'], ['Sara', 'she'], ['Omar', 'he'], ['Nina', 'she']];
+    const OBJ = [['apple', 'apples', '🍎'], ['balloon', 'balloons', '🎈'], ['sticker', 'stickers', '⭐'], ['sweet', 'sweets', '🍬'], ['cookie', 'cookies', '🍪'], ['book', 'books', '📘'], ['toy car', 'toy cars', '🚗'], ['fish', 'fish', '🐟'], ['flower', 'flowers', '🌸'], ['pencil', 'pencils', '✏️'], ['egg', 'eggs', '🥚'], ['ball', 'balls', '⚽'], ['duck', 'ducks', '🦆'], ['cupcake', 'cupcakes', '🧁'], ['shell', 'shells', '🐚'], ['kite', 'kites', '🪁'], ['banana', 'bananas', '🍌'], ['star', 'stars', '🌟'], ['crayon', 'crayons', '🖍️'], ['robot', 'robots', '🤖']];
+    const cap = (s) => s[0].toUpperCase() + s.slice(1);
+    const ST_T = {
+        add: [
+            (n, m, o, a, b) => `${n[0]} has ${a} ${o(a)}. ${cap(n[1])} gets ${b} more. How many ${o(2)} does ${n[1]} have now?`,
+            (n, m, o, a, b) => `There ${a === 1 ? 'is' : 'are'} ${a} ${o(a)} in a box. Mum puts in ${b} more. How many ${o(2)} are in the box now?`,
+            (n, m, o, a, b) => `${n[0]} has ${a} ${o(a)}. ${m[0]} has ${b} ${o(b)}. How many ${o(2)} do they have together?`,
+            (n, m, o, a, b) => `${a} ${o(a)} ${a === 1 ? 'is' : 'are'} on the table and ${b} ${o(b)} ${b === 1 ? 'is' : 'are'} on the chair. How many ${o(2)} are there in all?`,
+            (n, m, o, a, b) => `${n[0]} found ${a} ${o(a)} in the morning and ${b} ${o(b)} in the afternoon. How many ${o(2)} did ${n[1]} find?`,
+            (n, m, o, a, b) => `On Monday ${n[0]} made ${a} ${o(a)}. On Tuesday ${n[1]} made ${b} more. How many ${o(2)} did ${n[1]} make?`
+        ],
+        sub: [
+            (n, m, o, a, b) => `${n[0]} has ${a} ${o(a)}. ${cap(n[1])} gives ${b} to ${m[0]}. How many ${o(2)} are left?`,
+            (n, m, o, a, b) => `There are ${a} ${o(a)} in the bag. ${n[0]} takes out ${b}. How many ${o(2)} are still in the bag?`,
+            (n, m, o, a, b) => `${n[0]} had ${a} ${o(a)}. ${cap(n[1])} lost ${b}. How many ${o(2)} does ${n[1]} have now?`,
+            (n, m, o, a, b) => `${n[0]} has ${a} ${o(a)}. ${m[0]} has ${b}. How many more ${o(2)} does ${n[0]} have?`,
+            (n, m, o, a, b) => `${a} ${o(a)} were in the shop. The shop sold ${b}. How many ${o(2)} are left in the shop?`
+        ],
+        mul: [
+            (n, m, o, a, b) => `There ${a === 1 ? 'is' : 'are'} ${a} ${a === 1 ? 'bag' : 'bags'}. Each bag has ${b} ${o(b)}. How many ${o(2)} are there?`,
+            (n, m, o, a, b) => `${n[0]} has ${a} ${a === 1 ? 'box' : 'boxes'} with ${b} ${o(b)} in each box. How many ${o(2)} does ${n[1]} have in all?`,
+            (n, m, o, a, b) => `${a} ${a === 1 ? 'friend' : 'friends'} each bring ${b} ${o(b)} to the party. How many ${o(2)} are at the party?`,
+            (n, m, o, a, b) => `There ${a === 1 ? 'is' : 'are'} ${a} ${a === 1 ? 'row' : 'rows'} of ${o(2)}. Each row has ${b}. How many ${o(2)} are there?`
+        ],
+        div: [
+            (n, m, o, a, b) => `${n[0]} has ${a} ${o(a)}. ${cap(n[1])} shares them equally between ${b} ${b === 1 ? 'friend' : 'friends'}. How many ${o(2)} does each friend get?`,
+            (n, m, o, a, b) => `${a} ${o(a)} are put into ${b} equal ${b === 1 ? 'group' : 'groups'}. How many ${o(2)} are in each group?`,
+            (n, m, o, a, b) => `The teacher has ${a} ${o(a)} for ${b} ${b === 1 ? 'child' : 'children'}. Each child gets the same number. How many ${o(2)} does each child get?`
+        ]
+    };
+    function storyQ(op, lv) {
+        const e = eq(op, lv); if (!e || ((op === 'mul' || op === 'div') && (e.a < 2 || e.b < 2))) return null;
+        const ti = R(0, ST_T[op].length - 1), n = pick(NAMES); let m = pick(NAMES); if (m[0] === n[0]) m = NAMES[(NAMES.indexOf(n) + 1) % NAMES.length];
+        const ob = pick(OBJ), o = (k) => k === 1 ? ob[0] : ob[1];
+        const text = ST_T[op][ti](n, m, o, e.a, e.b);
+        return { kind: 'story', e, ans: e.c, key: 'y' + op + ti + '_' + e.a + '_' + e.b + ob[0], hi: LV[lv].max, story: 1,
+            html: '<p class="mg-st"><span class="mg-ste" aria-hidden="true">' + ob[2] + '</span>' + esc(text) + '</p><div class="mg-eq sm">' + W('Answer:') + H + '</div>', hint: 'Listen, think, then pop the answer!', say: text };
+    }
+    function seqQ(lv) {
+        const max = LV[lv].max, steps = lv === 10 ? [1, 2, -1] : lv === 20 ? [1, 2, 3, 5, -1, -2, 4] : [2, 3, 4, 5, 10, -10, -5, -2, 11, 20];
+        const d = pick(steps), len = 5, span = Math.abs(d) * (len - 1); if (span > max) return null;
+        const s = d > 0 ? R(0, max - span) : R(span, max), t = []; for (let i = 0; i < len; i++) t.push(s + d * i);
+        const h = Math.random() < .5 ? len - 1 : R(0, len - 2);
+        return { kind: 'seq', t, d, h, ans: t[h], key: 'q' + s + '_' + d + '_' + h, hi: max,
+            html: '<div class="mg-eq mg-seq">' + t.map((v, i) => i === h ? H : N(v)).join('<span class="mg-cm">,</span>') + '</div>', hint: 'What number is missing in the pattern?', say: 'Find the missing number. ' + t.map((v, i) => i === h ? 'what' : v).join(', ') + '.' };
+    }
+    function cmpQ(lv, ops) {
+        const max = LV[lv].max; let lh, ls, lv2, key;
+        if (lv === 10 || Math.random() < .45) { lv2 = R(0, max); lh = N(lv2); ls = String(lv2); key = 'c' + lv2; }
+        else { const o = pick(ops.filter(x => x === 'add' || x === 'sub').concat(['add'])), e = eq(o, lv); if (!e) return null; lv2 = e.c; lh = N(e.a) + O(SG[o]) + N(e.b); ls = e.a + ' ' + SW[o] + ' ' + e.b; key = 'c' + e.a + o + e.b; }
+        let r = Math.random() < .2 ? lv2 : Math.max(0, Math.min(max, lv2 + pick([-3, -2, -1, 1, 2, 3, 5, -5])));
+        if (r === lv2 && Math.random() < .5 && lh.indexOf('mg-o') < 0) r = Math.min(max, lv2 + 1);
+        const ans = lv2 > r ? '>' : lv2 < r ? '<' : '=';
+        return { kind: 'cmp', l: lv2, r, ans, opts: ['>', '<', '='], key: key + '_' + r, html: '<div class="mg-eq' + eqLong(lh + r) + '">' + lh + H + N(r) + '</div>', hint: 'Bigger, smaller or the same?', say: 'Is ' + ls + ' greater than, less than, or equal to ' + r + '? Pop the right sign!' };
+    }
+    function countQ(lv) {
+        const ob = pick(OBJ);
+        if (Math.random() < .45) { const n = R(3, lv === 10 ? 10 : 15); return { kind: 'count', n, ans: n, lo: 1, hi: LV[lv].max, key: 'n' + ob[0] + n, html: '<div class="mg-cnt"><span class="g">' + ob[2].repeat(n) + '</span></div><div class="mg-eq sm">' + W('How many?') + H + '</div>', hint: 'Count the ' + ob[1] + '!', say: 'How many ' + ob[1] + ' can you count?' }; }
+        const a = R(1, lv === 10 ? 6 : 9), b = R(1, Math.min(9, (lv === 10 ? 10 : 18) - a));
+        return { kind: 'count', a, b, ans: a + b, lo: 1, hi: LV[lv].max, key: 'g' + ob[0] + a + '_' + b, html: '<div class="mg-cnt"><span class="g">' + ob[2].repeat(a) + '</span><b>+</b><span class="g">' + ob[2].repeat(b) + '</span><b>=</b>' + H + '</div>', hint: 'Count them all together!', say: a + ' ' + (a === 1 ? ob[0] : ob[1]) + ' and ' + b + ' more. How many altogether?' };
+    }
+    function tensQ() {
+        const t = R(1, 9), u = R(0, 9), c = t * 10 + u, r = Math.random(), pos = r < .6 ? 2 : r < .8 ? 0 : 1;
+        const v = [t, u, c].map((x, i) => i === pos ? H : N(x));
+        const vis = '<div class="mg-tens" aria-hidden="true">' + '<i class="rod"></i>'.repeat(t) + '<span class="cubes">' + '<i class="cube"></i>'.repeat(u) + '</span></div>';
+        return { kind: 'tens', t, u, pos, ans: [t, u, c][pos], lo: pos === 0 ? 1 : 0, hi: pos === 2 ? 99 : 9, key: 'u' + t + '_' + u + '_' + pos,
+            html: vis + '<div class="mg-eq sm">' + v[0] + W('tens') + O('+') + v[1] + W('ones') + O('=') + v[2] + '</div>', hint: 'Each tall stick is 10. Each little cube is 1.', say: [t, u, c].map((x, i) => i === pos ? 'what' : x).reduce((a, x, i) => a + x + ['  tens plus ', ' ones equals ', '?'][i], '') };
+    }
+    function eoQ(lv) {
+        const max = LV[lv].max, want = Math.random() < .5 ? 0 : 1, n = LV[lv].n, P = [], Q = [];
+        for (let x = 0; x <= max; x++) (x % 2 === want ? P : Q).push(x);
+        const ans = pick(P), near = shuf(Q.filter(x => Math.abs(x - ans) <= 12)), rest = shuf(Q);
+        const opts = [ans]; for (const x of near.concat(rest)) { if (opts.length >= n) break; if (!opts.includes(x)) opts.push(x); }
+        const w = want ? 'odd' : 'even';
+        return { kind: 'eo', want, ans, opts, key: 'e' + w + ans, html: '<div class="mg-eo">Pop the <b>' + w + '</b> number!</div>', hint: want ? 'Odd numbers end in 1, 3, 5, 7 or 9.' : 'Even numbers end in 0, 2, 4, 6 or 8.', say: 'Pop the ' + w + ' number!' };
+    }
+    function dblQ(lv) {
+        const max = LV[lv].max, x = R(1, Math.floor(max / 2)), half = Math.random() < .45;
+        return half ? { kind: 'dbl', half, x: 2 * x, ans: x, hi: max, key: 'b' + (2 * x), html: '<div class="mg-eq">' + W('Half of') + N(2 * x) + O('=') + H + '</div>', hint: 'Half means two equal parts.', say: 'What is half of ' + (2 * x) + '?' }
+            : { kind: 'dbl', half, x, ans: 2 * x, hi: max, key: 'd' + x, html: '<div class="mg-eq">' + W('Double') + N(x) + O('=') + H + '</div>', hint: 'Double means two times.', say: 'What is double ' + x + '?' };
+    }
+    function tableQ(t) {
+        const tt = t || R(2, 10), x = R(1, 10), f = R(0, 2);
+        const e = f === 0 ? { op: 'mul', a: x, b: tt, c: x * tt } : f === 1 ? { op: 'mul', a: tt, b: x, c: x * tt } : { op: 'div', a: x * tt, b: tt, c: x };
+        const pos = Math.random() < .6 ? 2 : (Math.random() < .5 ? 0 : 1);
+        return eqQ(e, pos, 'T' + e.op + e.a + '_' + e.b + '_' + pos, 100);
+    }
+    function avail(lv) { return Object.keys(TYPES).filter(k => TYPES[k].lv.includes(lv)); }
+    function genOne() {
+        if (G.mode === 'tables') return tableQ(G.tb);
+        const lv = G.lv, av = avail(lv).filter(t => G.types.includes(t)); const list = av.length ? av : ['sums'];
+        const w = list.map(t => t === 'sums' ? 4 : t === 'story' ? 1.6 : 1.2), sum = w.reduce((a, b) => a + b, 0); let r = Math.random() * sum, ty = list[0];
+        for (let i = 0; i < list.length; i++) { r -= w[i]; if (r <= 0) { ty = list[i]; break; } }
+        if (ty === 'sums') { const x = Math.random(); if (G.ops.length > 1 && x < .1) return signQ(lv); if (lv >= 20 && x < .24 && (G.ops.includes('add') || G.ops.includes('sub'))) return threeQ(lv); return numQ(pick(G.ops), lv); }
+        if (ty === 'story') return storyQ(pick(G.ops), lv);
+        if (ty === 'seq') return seqQ(lv); if (ty === 'cmp') return cmpQ(lv, G.ops); if (ty === 'count') return countQ(lv);
+        if (ty === 'tens') return tensQ(); if (ty === 'eo') return eoQ(lv); if (ty === 'dbl') return dblQ(lv);
+        return numQ('add', lv);
+    }
+    function numOpts(x, n, lo, hi, q) {
+        const set = new Set([x]), out = [x];
+        const near = shuf([x + 1, x - 1, x + 2, x - 2]), far = [x + 3, x - 3];
+        if (hi >= 20) far.push(x + 10, x - 10, x + 5, x - 5);
+        if (x >= 12 && x <= 99) { const r = +String(x).split('').reverse().join(''); if (r !== x) far.push(r); }
+        if (q && q.kind === 'num' && q.pos === 2) { const e = q.e; far.push(e.op === 'add' ? Math.abs(e.a - e.b) : e.op === 'sub' ? e.a + e.b : e.op === 'mul' ? e.a + e.b : e.a * e.b); }
+        const C = near.slice(0, 2).concat(shuf(far.concat(near.slice(2))));
+        for (const c of C) { if (out.length >= n) break; if (c >= lo && c <= hi && !set.has(c)) { set.add(c); out.push(c); } }
+        for (let t = 0; out.length < n && t < 400; t++) { const c = t < 200 ? R(Math.max(lo, x - 9), Math.min(hi, x + 9)) : R(lo, hi); if (!set.has(c)) { set.add(c); out.push(c); } }
+        return out;
+    }
+    function finish(q) {
+        const n = G.n || LV[G.lv].n;
+        q.opts = shuf((q.opts || numOpts(q.ans, n, q.lo || 0, q.hi != null ? q.hi : LV[G.lv].max, q)).map(String));
+        q.ans = String(q.ans); return q;
+    }
+    const SEEN = {};
+    function seen(bk) { if (SEEN[bk]) return SEEN[bk]; let a = []; try { a = JSON.parse(LS.get('mg_seen_' + bk, '[]')); } catch (e) { } SEEN[bk] = new Set(a); return SEEN[bk]; }
+    function seenSave(bk) { LS.set('mg_seen_' + bk, JSON.stringify(Array.from(seen(bk)).slice(-6000))); }
+    function nextQ() {
+        if (G.pre) return G.pre[G.i - 1] || G.pre[G.pre.length - 1];
+        const bk = G.bucket, S = seen(bk);
+        for (let pass = 0; pass < 2; pass++) {
+            for (let t = 0; t < 700; t++) {
+                const q = genOne();
+                if (!q || G.used.has(q.key) || (pass === 0 && S.has(q.key))) continue;
+                S.add(q.key); G.used.add(q.key); seenSave(bk); return finish(q);
+            }
+            /* every puzzle of this kind has been used: start the list again (but never repeat inside this game) */
+            S.clear(); G.used.forEach(k => S.add(k));
+        }
+        return finish(numQ('add', G.lv));
+    }
+    /* a daily challenge is the same for everyone on the same day */
+    function seeded(seed) { let a = seed >>> 0; return () => { a = (a + 0x6D2B79F5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+    function dailySet(lv) {
+        const d = today(), seed = [...(d + '/' + lv)].reduce((h, c) => Math.imul(h ^ c.charCodeAt(0), 16777619) >>> 0, 2166136261);
+        const orig = Math.random; Math.random = seeded(seed); const out = [], used = new Set();
+        try { for (let t = 0; out.length < 10 && t < 2000; t++) { const q = genOne(); if (!q || used.has(q.key)) continue; used.add(q.key); out.push(finish(q)); } } finally { Math.random = orig; }
+        return out;
+    }
+
+    /* ===================== MUSIC + SOUNDS (made by the code) ===================== */
+    const AU = { ctx: null, master: null, mus: null, sfx: null, voice: null, an: null, noise: null, timer: 0, step: 0, next: 0, bpm: 120, tr: 0, playing: false };
+    function actx() {
+        try {
+            if (!AU.ctx) {
+                const C = window.AudioContext || window.webkitAudioContext; if (!C) return null;
+                const c = AU.ctx = new C();
+                AU.master = c.createGain(); AU.master.gain.value = 1; AU.master.connect(c.destination);
+                AU.mus = c.createGain(); AU.mus.gain.value = 0; AU.mus.connect(AU.master);
+                AU.sfx = c.createGain(); AU.sfx.gain.value = .55; AU.sfx.connect(AU.master);
+                AU.voice = c.createGain(); AU.voice.gain.value = 1.15; AU.an = c.createAnalyser(); AU.an.fftSize = 512; AU.voice.connect(AU.an); AU.an.connect(AU.master);
+                const b = c.createBuffer(1, c.sampleRate * .5, c.sampleRate), d = b.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1; AU.noise = b;
+            }
+            if (AU.ctx.state !== 'running') AU.ctx.resume().catch(() => { });
+            return AU.ctx;
+        } catch (e) { return null; }
+    }
+    function unlock() { const c = actx(); if (!c) return; try { const s = c.createBufferSource(); s.buffer = c.createBuffer(1, 1, 22050); s.connect(c.destination); s.start(0); } catch (e) { } }
+    const hz = (semi) => 261.63 * Math.pow(2, semi / 12);
+    function tone(t, f, dur, type, vol, dest, glide) {
+        const c = AU.ctx, o = c.createOscillator(), g = c.createGain();
+        o.type = type; o.frequency.setValueAtTime(f, t); if (glide) o.frequency.exponentialRampToValueAtTime(glide, t + dur);
+        g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + .012); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+        o.connect(g); g.connect(dest); o.start(t); o.stop(t + dur + .05);
+    }
+    function noise(t, dur, vol, freq, type, dest) {
+        const c = AU.ctx, s = c.createBufferSource(), f = c.createBiquadFilter(), g = c.createGain();
+        s.buffer = AU.noise; f.type = type || 'highpass'; f.frequency.value = freq || 6000;
+        g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+        s.connect(f); f.connect(g); g.connect(dest); s.start(t); s.stop(t + dur + .02);
+    }
+    const _ = null;
+    const MEL = [12, _, 16, _, 19, _, 16, _, 21, _, 19, _, 16, _, 14, _, 12, _, 14, _, 16, _, 19, _, 16, _, _, _, 9, _, 12, _,
+        19, _, 21, _, 24, _, 21, _, 19, _, 16, _, 19, _, _, _, 21, _, 19, _, 16, _, 14, _, 12, _, _, _, 14, _, 16, _];
+    const ROOT = [-12, -15, -7, -5];
+    const CH = [[0, 4, 7], [-3, 0, 4], [-7, -3, 0], [-5, -1, 2]];
+    function schedStep(i, t) {
+        const bar = Math.floor(i / 16) % 4, s = i % 16, tr = AU.tr, M = AU.mus, sp = 60 / AU.bpm / 4;
+        const m = MEL[i % 64]; if (m != null) tone(t, hz(m + tr), sp * 1.8, G && G.lv === 100 ? 'sine' : 'triangle', .22, M);
+        if (s === 0 || s === 6 || s === 8 || s === 14) tone(t, hz(ROOT[bar] + tr), sp * 1.6, 'triangle', .3, M);
+        if (s === 0 || s === 8) tone(t, 120, .16, 'sine', .45, M, 45);
+        if (s === 4 || s === 12) noise(t, .09, .18, 1800, 'bandpass', M);
+        if (s % 2 === 1) noise(t, .03, .06, 7000, 'highpass', M);
+        if (s === 0) CH[bar].forEach(n => tone(t, hz(n + tr), sp * 7, 'sine', .05, M));
+    }
+    function musicTick() { const c = AU.ctx; if (!c || !AU.playing) return; while (AU.next < c.currentTime + .15) { schedStep(AU.step, AU.next); AU.step++; AU.next += 60 / AU.bpm / 4; } }
+    function musicStart(bpm, tr) {
+        AU.bpm = bpm || 116; AU.tr = tr || 0;
+        if (!on('music')) return;
+        const c = actx(); if (!c) return;
+        if (!AU.playing) { AU.playing = true; AU.step = 0; AU.next = c.currentTime + .08; clearInterval(AU.timer); AU.timer = setInterval(musicTick, 30); }
+        AU.mus.gain.cancelScheduledValues(c.currentTime); AU.mus.gain.setTargetAtTime(SPK ? .1 : .3, c.currentTime, .3);
+    }
+    function musicStop() { AU.playing = false; clearInterval(AU.timer); AU.timer = 0; if (AU.ctx && AU.mus) AU.mus.gain.setTargetAtTime(0, AU.ctx.currentTime, .05); }
+    function duck(d) { if (AU.ctx && AU.mus && AU.playing) AU.mus.gain.setTargetAtTime(d ? .1 : .3, AU.ctx.currentTime, .15); }
+    const SFX = {
+        pop() { const t = AU.ctx.currentTime; noise(t, .12, .7, 1200, 'highpass', AU.sfx); tone(t, 500, .12, 'sine', .4, AU.sfx, 1400); },
+        ok() { const t = AU.ctx.currentTime;[0, 4, 7, 12].forEach((n, i) => tone(t + .07 + i * .07, hz(n + 12), .22, 'triangle', .35, AU.sfx)); },
+        combo() { const t = AU.ctx.currentTime;[0, 4, 7, 12, 16, 19, 24].forEach((n, i) => tone(t + i * .05, hz(n + 12), .2, 'square', .12, AU.sfx)); },
+        no() { const t = AU.ctx.currentTime; tone(t, 330, .35, 'sawtooth', .16, AU.sfx, 110); tone(t + .02, 220, .3, 'sine', .3, AU.sfx, 90); },
+        tap() { const t = AU.ctx.currentTime; tone(t, 880, .06, 'sine', .25, AU.sfx); },
+        tick() { const t = AU.ctx.currentTime; tone(t, 1500, .05, 'square', .08, AU.sfx); },
+        whoosh() { const t = AU.ctx.currentTime; noise(t, .35, .25, 900, 'bandpass', AU.sfx); },
+        heart() { const t = AU.ctx.currentTime;[7, 4, 0, -5].forEach((n, i) => tone(t + i * .12, hz(n), .2, 'triangle', .25, AU.sfx)); },
+        boing() { const t = AU.ctx.currentTime; tone(t, 200, .35, 'sine', .4, AU.sfx, 600); },
+        win() { const t = AU.ctx.currentTime;[[0, 4, 7], [5, 9, 12], [7, 11, 14], [12, 16, 19, 24]].forEach((ch, i) => ch.forEach(n => tone(t + i * .18, hz(n + 12), i === 3 ? .9 : .2, 'triangle', .16, AU.sfx))); }
+    };
+    function sfx(k) { if (!on('sfx')) return; const c = actx(); if (!c) return; try { SFX[k](); } catch (e) { } }
+
+    /* ===================== THE 3D FRIEND (ray-marched in a tiny WebGL2 shader) ===================== */
+    const BFS = `#version 300 es
+precision highp float;
+uniform vec2 R;uniform float T,JU,SQ,YA,AL,AR,TI,MO,BL,HA,SAD,K,HT;
+out vec4 o;
+mat2 rot(float a){float c=cos(a),s=sin(a);return mat2(c,s,-s,c);}
+float sdE(vec3 p,vec3 r){float k0=length(p/r);float k1=length(p/(r*r));return k0*(k0-1.)/max(k1,1e-4);}
+float sdC(vec3 p,vec3 a,vec3 b,float r){vec3 pa=p-a,ba=b-a;float h=clamp(dot(pa,ba)/dot(ba,ba),0.,1.);return length(pa-ba*h)-r;}
+float smin(float a,float b,float k){float h=clamp(.5+.5*(b-a)/k,0.,1.);return mix(b,a,h)-k*h*(1.-h);}
+vec3 loc(vec3 p){p.y-=JU-.06;p.xy=rot(TI)*p.xy;p.xz=rot(YA)*p.xz;p.y/=(1.-SQ);return p;}
+vec3 hsp(vec3 p){vec3 h=p-vec3(0.,.36,0.);h.xy=rot(HT)*h.xy;return h;}
+vec2 map(vec3 w){
+  vec3 p=loc(w);vec3 h=hsp(p);
+  float body=sdE(p-vec3(0.,-.36,0.),vec3(.43,.44,.38));
+  float head=sdE(h,vec3(.45,.40,.40));
+  vec2 r=vec2(smin(body,head,.06),1.);
+  float es=K>1.5?.2:.14;
+  vec3 eq=vec3(abs(h.x),h.y,h.z)-vec3(.34,.31,-.03);
+  float ear=sdE(eq,vec3(es,es,es*.55));if(ear<r.x)r=vec2(ear,2.);
+  if(K<1.5){float mz=sdE(h-vec3(0.,-.11,.32),vec3(.19,.13,.12));if(mz<r.x)r=vec2(mz,5.);}
+  vec3 ey=vec3(abs(h.x),h.y,h.z)-vec3(.16,.05,.355);
+  float eye=length(ey)-.068;if(eye<r.x)r=vec2(eye,3.);
+  float nose=K>1.5?sdE(h-vec3(0.,-.05,.40),vec3(.085,.11,.075)):sdE(h-vec3(0.,-.05,.435),vec3(.065,.045,.04));
+  if(nose<r.x)r=vec2(nose,4.);
+  vec3 sl=vec3(-.36,-.16,.05),sr=vec3(.36,-.16,.05);
+  vec3 al=sl+vec3(-sin(AL),-cos(AL),.25)*.3,ar=sr+vec3(sin(AR),-cos(AR),.25)*.3;
+  float arm=min(sdC(p,sl,al,.105),sdC(p,sr,ar,.105));if(arm<r.x)r=vec2(arm,2.);
+  vec3 lq=vec3(abs(p.x),p.y,p.z)-vec3(.22,-.78,.1);
+  float leg=sdE(lq,vec3(.15,.12,.18));if(leg<r.x)r=vec2(leg,2.);
+  return r;
+}
+vec3 nor(vec3 p){vec2 e=vec2(.002,0.);return normalize(vec3(map(p+e.xyy).x-map(p-e.xyy).x,map(p+e.yxy).x-map(p-e.yxy).x,map(p+e.yyx).x-map(p-e.yyx).x));}
+void main(){
+  vec2 uv=(gl_FragCoord.xy-.5*R)/R.y;
+  vec3 ro=vec3(0.,.05,3.6),rd=normalize(vec3(uv,-1.5));
+  float t=2.2;vec2 hh=vec2(0.);bool hit=false;
+  for(int i=0;i<80;i++){hh=map(ro+rd*t);if(hh.x<.0015){hit=true;break;}t+=hh.x*.9;if(t>5.)break;}
+  if(!hit){o=vec4(0.);return;}
+  vec3 p=ro+rd*t,n=nor(p),lp=loc(p),hp=hsp(lp);float m=hh.y;
+  vec3 C1=K<.5?vec3(.96,.96,.94):K<1.5?vec3(.66,.42,.24):vec3(.62,.64,.70);
+  vec3 C2=K<.5?vec3(.13,.13,.16):K<1.5?vec3(.50,.30,.16):vec3(.50,.52,.58);
+  vec3 C3=K<.5?vec3(.97,.97,.95):K<1.5?vec3(.92,.74,.54):vec3(.94,.94,.97);
+  vec3 col=C1;
+  if(m<1.5){
+    if(K>.5){float bl=sdE(lp-vec3(0.,-.42,.22),vec3(.28,.3,.2));col=mix(col,C3,1.-smoothstep(-.02,.02,bl));}
+    if(K<.5){vec3 q=vec3(abs(hp.x),hp.y,hp.z)-vec3(.16,.035,.33);q.xy=rot(.55)*q.xy;float pd=length(q.xy/vec2(.1,.135));col=mix(col,C2,(1.-smoothstep(.93,1.05,pd))*step(.1,hp.z));}
+    vec3 cq=vec3(abs(hp.x),hp.y,hp.z)-vec3(.27,-.11,.3);col=mix(col,vec3(1.,.55,.62),(1.-smoothstep(0.,.09,length(cq)))*.75*step(0.,hp.z));
+  }else if(m<2.5){col=C2;
+    if(K>.5){vec3 q=vec3(abs(hp.x),hp.y,hp.z)-vec3(.34,.31,-.03);if(q.z>0.&&length(q.xy)<(K>1.5?.13:.085))col=C3;}
+  }else if(m<3.5){
+    vec3 e=vec3(abs(hp.x),hp.y,hp.z)-vec3(.16,.05,.355);
+    col=vec3(.04,.03,.05);
+    col=mix(col,vec3(1.),1.-smoothstep(.016,.026,length(e.xy-vec2(.022,.026))));
+    col=mix(col,vec3(.6,.75,1.),.6*(1.-smoothstep(.006,.012,length(e.xy-vec2(-.02,-.03)))));
+    float lid=max(step(mix(.075,-.075,max(BL,SAD*.3)),e.y),step(e.y,-.075+.075*HA));col=mix(col,K<.5?C2:C1,lid);
+  }else if(m<4.5){col=vec3(.08,.06,.07);}
+  else col=C3;
+  if(m>4.5||(K>1.5&&m<1.5)){
+    vec3 mq=K>1.5?hp-vec3(0.,-.21,.36):hp-vec3(0.,-.17,.415);
+    float mh=.012+.065*MO;float d=length(mq.xy/vec2(.07,mh));
+    if(mq.z>-.07&&d<1.){col=vec3(.36,.06,.1);if(mq.y<-mh*.25&&MO>.25)col=vec3(.98,.47,.52);}
+    float sm=abs(length(mq.xy-vec2(0.,.07))-.08);
+    if(MO<.2&&sm<.009&&mq.y<0.&&mq.z>-.07&&abs(mq.x)<.06)col=SAD>.5?col:vec3(.22,.08,.08);
+    float fr=abs(length(mq.xy-vec2(0.,-.1))-.08);
+    if(SAD>.5&&MO<.2&&fr<.009&&mq.y>-.04&&mq.z>-.07&&abs(mq.x)<.055)col=vec3(.22,.08,.08);
+  }
+  vec3 L=normalize(vec3(.5,.8,.9));
+  float dif=clamp(dot(n,L),0.,1.)*.72+.36;
+  float rim=pow(1.-max(dot(n,-rd),0.),3.);
+  float sp=pow(max(dot(reflect(-L,n),-rd),0.),24.)*((m>2.5&&m<4.5)?.9:.1);
+  vec3 c=col*dif+rim*vec3(.55,.7,1.)*.32+sp;
+  o=vec4(pow(c,vec3(.92)),1.);
+}`;
+    class Buddy {
+        constructor() {
+            this.cv = D.createElement('canvas'); this.cv.className = 'mg-cv'; this.ok = false; this.t0 = performance.now();
+            this.mood = 'idle'; this.mt = 0; this.ms = 0; this.k = { ju: 0, sq: 0, ya: 0, al: .35, ar: .35, ti: 0, ha: 0, sad: 0, ht: 0, mo: 0 }; this.nb = 2; this.bt = -1; this.raf = 0; this.K = 0; this.talk = 0;
+            let gl = null; try { gl = this.cv.getContext('webgl2', { alpha: true, premultipliedAlpha: false, antialias: true }); } catch (e) { }
+            if (!gl) return;
+            const sh = (t, src) => { const s = gl.createShader(t); gl.shaderSource(s, src); gl.compileShader(s); return gl.getShaderParameter(s, gl.COMPILE_STATUS) ? s : null; };
+            const v = sh(gl.VERTEX_SHADER, '#version 300 es\nin vec2 p;void main(){gl_Position=vec4(p,0.,1.);}'), f = sh(gl.FRAGMENT_SHADER, BFS); if (!v || !f) return;
+            const pr = gl.createProgram(); gl.attachShader(pr, v); gl.attachShader(pr, f); gl.linkProgram(pr); if (!gl.getProgramParameter(pr, gl.LINK_STATUS)) return; gl.useProgram(pr);
+            const b = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, b); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+            const l = gl.getAttribLocation(pr, 'p'); gl.enableVertexAttribArray(l); gl.vertexAttribPointer(l, 2, gl.FLOAT, false, 0, 0);
+            this.gl = gl; this.u = {}; ['R', 'T', 'JU', 'SQ', 'YA', 'AL', 'AR', 'TI', 'MO', 'BL', 'HA', 'SAD', 'K', 'HT'].forEach(n => this.u[n] = gl.getUniformLocation(pr, n)); this.ok = true;
+            this.buf = new Uint8Array(512);
+        }
+        mount(h) { h.appendChild(this.cv); this.loop(); }
+        set(m, ms) { this.mood = m; this.ms = performance.now(); this.mt = ms ? performance.now() + ms : 0; }
+        loop() { if (!this.ok || this.raf) return; const f = (now) => { this.raf = 0; if (!this.cv.isConnected) return; if (!D.hidden) this.frame(now); this.raf = requestAnimationFrame(f); }; this.raf = requestAnimationFrame(f); }
+        level(t) {
+            if (this.talk === 2 && AU.an) { AU.an.getByteTimeDomainData(this.buf); let s = 0; for (let i = 0; i < this.buf.length; i++) { const x = (this.buf[i] - 128) / 128; s += x * x; } return Math.min(1, Math.sqrt(s / this.buf.length) * 5.5); }
+            if (this.talk === 1) return Math.max(0, .45 + .45 * Math.sin(t * 17) * Math.sin(t * 5.3 + 1));
+            return 0;
+        }
+        frame(now) {
+            const gl = this.gl, t = (now - this.t0) / 1000, k = this.k, r = this.cv.getBoundingClientRect(), dpr = Math.min(2, devicePixelRatio || 1);
+            const w = Math.max(60, Math.round(r.width * dpr)), h = Math.max(60, Math.round(r.height * dpr)); if (this.cv.width !== w || this.cv.height !== h) { this.cv.width = w; this.cv.height = h; }
+            if (this.mt && now > this.mt) { this.mt = 0; this.mood = 'idle'; }
+            const m = this.mood, s = (now - this.ms) / 1000, M = REDUCED ? .3 : 1, tk = this.talk ? 1 : 0;
+            let T = { ju: Math.abs(Math.sin(t * 2)) * .03, sq: 0, ya: Math.sin(t * .6) * .3, al: .35 + .08 * Math.sin(t * 2) + tk * (.35 + .3 * Math.sin(t * 5)), ar: .35 + .08 * Math.sin(t * 2 + 1) + tk * (.3 + .3 * Math.sin(t * 4 + 2)), ti: Math.sin(t * .9) * .05, ha: 0, sad: 0, ht: Math.sin(t * .8) * .08 + tk * Math.sin(t * 3) * .08 };
+            if (m === 'happy') { const j = Math.abs(Math.sin(s * 7)); T = { ju: j * .3, sq: (1 - j) * .1 - .03, ya: Math.sin(s * 5) * .4, al: 2.6 + .3 * Math.sin(s * 16), ar: 2.6 + .3 * Math.sin(s * 16 + 1), ti: 0, ha: 1, sad: 0, ht: 0 }; }
+            if (m === 'dance') T = { ju: Math.abs(Math.sin(t * 6)) * .12, sq: 0, ya: Math.sin(t * 3) * .8, al: 1.5 + 1.2 * Math.sin(t * 6), ar: 1.5 - 1.2 * Math.sin(t * 6), ti: Math.sin(t * 6) * .18, ha: 1, sad: 0, ht: Math.sin(t * 6) * .15 };
+            if (m === 'sad') T = { ju: 0, sq: .05, ya: Math.sin(s * 12) * .3 * Math.max(0, 1 - s), al: .1, ar: .1, ti: .06, ha: 0, sad: 1, ht: .22 };
+            if (m === 'think') T = Object.assign(T, { ar: 2.1, ht: .2, ti: .05 });
+            if (m === 'wave') T = Object.assign(T, { ar: 2.5 + .45 * Math.sin(t * 14), ya: .2, ha: .6 });
+            if (m === 'boing') { const j = Math.abs(Math.sin(s * 9)) * Math.max(0, 1 - s * .8); T = Object.assign(T, { ju: j * .25, sq: -j * .1, ha: 1 }); }
+            Object.keys(T).forEach(n => { k[n] += (T[n] * M - k[n]) * .18; });
+            k.mo += (this.level(t) - k.mo) * .45;
+            if (this.bt < 0 && t > this.nb) { this.bt = t; this.nb = t + 2 + Math.random() * 3; }
+            let bl = 0; if (this.bt >= 0) { const x = (t - this.bt) / .15; bl = x < 1 ? Math.sin(x * Math.PI) : 0; if (x >= 1) this.bt = -1; }
+            const u = this.u; gl.viewport(0, 0, w, h); gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT);
+            gl.uniform2f(u.R, w, h); gl.uniform1f(u.T, t); gl.uniform1f(u.JU, k.ju); gl.uniform1f(u.SQ, k.sq); gl.uniform1f(u.YA, k.ya); gl.uniform1f(u.AL, k.al); gl.uniform1f(u.AR, k.ar); gl.uniform1f(u.TI, k.ti);
+            gl.uniform1f(u.MO, k.mo); gl.uniform1f(u.BL, bl); gl.uniform1f(u.HA, k.ha); gl.uniform1f(u.SAD, k.sad); gl.uniform1f(u.K, this.K); gl.uniform1f(u.HT, k.ht);
+            gl.drawArrays(gl.TRIANGLES, 0, 3);
+        }
+        stop() { cancelAnimationFrame(this.raf); this.raf = 0; }
+    }
+    let BD = null;
+    const mood = (m, ms) => { if (BD && BD.ok) BD.set(m, ms); else { const e = $('mg-emo'); if (e) { e.className = 'mg-emo ' + m; clearTimeout(e._t); e._t = setTimeout(() => e.className = 'mg-emo', ms || 900); } } };
+
+    /* ===================== THE FRIEND'S VOICE ===================== */
+    /* a cartoon AI voice (one request per sentence, kept on the device), else the phone's own voice */
+    const VC = new Map(), VP = new Map(), AB = new Map(); let VT = 0, SRC = null, SPK = false, BT = 0, NUDGE = 0;
+    async function ttsNet(text, fr) {
+        if (!aiOk() || typeof lrAIFetch !== 'function') return null;
+        for (const [model, voice] of [['gpt-4o-mini-tts', fr.voice], ['tts-1', 'nova']]) {
+            try {
+                const body = { model, voice, input: text, response_format: 'mp3' };
+                if (model === 'gpt-4o-mini-tts') body.instructions = fr.instr; else body.speed = 1.05;
+                const r = await lrAIFetch('https://api.openai.com/v1/audio/speech', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + aiK() }, body: JSON.stringify(body) });
+                if (r.ok) { const ab = await r.arrayBuffer(); if (ab.byteLength > 400) return new Blob([ab], { type: 'audio/mpeg' }); }
+            } catch (e) { }
+        }
+        return null;
+    }
+    function ttsBlob(text) {
+        const f = fid(), key = 'mgv1_' + f + '_' + text;
+        if (VC.has(key)) return Promise.resolve(VC.get(key));
+        if (VP.has(key)) return VP.get(key);
+        const p = (async () => {
+            try { const x = typeof lrIDB !== 'undefined' && lrIDB && await lrIDB.get(key); if (x && x.size) return x; } catch (e) { }
+            const b = await ttsNet(text, FR[f]); if (b) { try { typeof lrIDB !== 'undefined' && lrIDB && lrIDB.set(key, b); } catch (e) { } } return b;
+        })();
+        VP.set(key, p); p.then(b => { VP.delete(key); if (b) { VC.set(key, b); if (VC.size > 300) VC.delete(VC.keys().next().value); } });
+        return p;
+    }
+    let VOICES = [];
+    function loadVoices() { try { VOICES = speechSynthesis.getVoices().filter(v => /^en/i.test(v.lang)); } catch (e) { } }
+    try { loadVoices(); speechSynthesis.addEventListener && speechSynthesis.addEventListener('voiceschanged', loadVoices); } catch (e) { }
+    function sysVoice(text, tok) {
+        return new Promise(res => {
+            try {
+                if (!VOICES.length) loadVoices(); const fr = F();
+                const u = new SpeechSynthesisUtterance(text), v = fr.K === 1 ? (VOICES.find(v => /daniel|alex|fred|aaron|guy|david|male/i.test(v.name)) || VOICES[0]) : (VOICES.find(v => /samantha|karen|aria|jenny|libby|google us english|zira|moira|tessa|female/i.test(v.name)) || VOICES[0]);
+                if (v) { u.voice = v; u.lang = v.lang; } else u.lang = 'en-US'; u.rate = fr.rate; u.pitch = fr.pitch;
+                u.onstart = () => { if (tok === VT && BD) BD.talk = 1; };
+                u.onend = u.onerror = () => res(); speechSynthesis.speak(u); setTimeout(res, (text.split(' ').length * 520 + 1800));
+            } catch (e) { res(); }
+        });
+    }
+    async function playBlob(b, tok) {
+        const c = actx(); if (!c) return false;
+        let buf = AB.get(b);
+        if (!buf) { try { const ab = await b.arrayBuffer(); buf = await new Promise((res, rej) => c.decodeAudioData(ab, res, rej)); AB.set(b, buf); if (AB.size > 120) AB.delete(AB.keys().next().value); } catch (e) { return false; } }
+        if (tok !== VT) return true;
+        if (c.state !== 'running') { try { await Promise.race([c.resume(), sleep(600)]); } catch (e) { } }
+        if (c.state !== 'running') return false;
+        return new Promise(res => {
+            const s = c.createBufferSource(); s.buffer = buf; s.connect(AU.voice); SRC = s; if (BD) BD.talk = 2;
+            let done = false; const fin = () => { if (done) return; done = true; res(true); };
+            s.onended = fin; s.start(); setTimeout(fin, buf.duration * 1000 + 600);
+        });
+    }
+    function bubble(text) { const b = $('mg-bub'); if (!b) return; b.textContent = text; b.classList.add('on'); clearTimeout(BT); BT = setTimeout(() => b.classList.remove('on'), Math.max(2400, text.length * 75)); }
+    async function say(text, o) {
+        o = o || {}; if (!EL) return; bubble(text); const tok = ++VT; stopVoice(true);
+        if (!on('voice')) { if (BD) { BD.talk = 1; setTimeout(() => { if (tok === VT && BD) BD.talk = 0; }, Math.min(2500, 300 + text.length * 40)); } return; }
+        SPK = true; duck(1);
+        try {
+            const b = await Promise.race([ttsBlob(text), sleep(o.wait || 1700).then(() => null)]);
+            if (tok !== VT || !EL) return;
+            let ok = false; if (b) ok = await playBlob(b, tok);
+            if (!ok && tok === VT) await sysVoice(text, tok);
+        } finally { if (tok === VT) { SPK = false; duck(0); if (BD) BD.talk = 0; } }
+    }
+    function stopVoice(keepTok) { if (!keepTok) VT++; try { if (SRC) SRC.stop(); } catch (e) { } SRC = null; try { speechSynthesis.cancel(); } catch (e) { } if (BD) BD.talk = 0; }
+    function hush() { stopVoice(); SPK = false; duck(0); }
+    /* fetch the most used sentences in the background so later they play at once */
+    let WARM = 0;
+    async function warm() {
+        const my = ++WARM, f = fid(); if (!aiOk()) return;
+        const list = [F().intro].concat(F().catch, L.ok, L.no, L.start, L.combo3, L.combo5, L.combo8, L.nudge, L.tap, L.story, L.wise, L.joke, L.hurry, L.timeup, L.e3, L.e2, L.e1, L.e0, L.sticker, L.best);
+        for (const t of list) { if (my !== WARM || !EL || fid() !== f) return; await ttsBlob(t); await sleep(250); }
+    }
+
+    /* ===================== SCREEN ===================== */
+    let EL = null, G = null, RET = null, closedAt = 0, TMR = 0;
+    const SET = {
+        mode: LS.get('mg_mode', 'solo'), ops: (LS.get('mg_ops', 'add,sub') || 'add').split(',').filter(o => SG[o]), types: (LS.get('mg_types', Object.keys(TYPES).join(',')) || 'sums').split(',').filter(t => TYPES[t]),
+        tA: LS.get('mg_tA', 'Boys'), tB: LS.get('mg_tB', 'Girls'), turns: +LS.get('mg_turns', '5') || 5
+    };
+    if (!SET.ops.length) SET.ops = ['add']; if (!SET.types.length) SET.types = ['sums']; if (!MODES.some(m => m[0] === SET.mode)) SET.mode = 'solo';
+    function icon(n) {
+        const P = { back: 'M15 5l-7 7 7 7', music: 'M9 18V6l10-2v12M9 18a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0zM19 16a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z', nomusic: 'M9 18V6l10-2v12M9 18a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0zM3 3l18 18', vol: 'M4 9.5h3.5L12 5.5v13l-4.5-4H4zM16 9a4 4 0 0 1 0 6M18.5 6.5a7.5 7.5 0 0 1 0 11', mute: 'M4 9.5h3.5L12 5.5v13l-4.5-4H4zM16 9.5l5 5M21 9.5l-5 5', talk: 'M4 5h16v11H9l-5 4z', notalk: 'M4 5h16v11H9l-5 4zM3 3l18 18', ear: 'M7 10a5 5 0 0 1 10 0c0 3-3 4-3 7a3 3 0 0 1-6 0M10 10a2 2 0 0 1 4 0', half: 'M12 3v18M5 7h4M5 12h4M15 9l4 4M19 9l-4 4', book: 'M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2zM4 19V5', star: 'M12 3.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L12 16.8l-5.2 2.7 1-5.8L3.6 9.6l5.8-.8z', skip: 'M5 5l8 7-8 7zM15 5v14' };
+        return '<svg viewBox="0 0 24 24" aria-hidden="true" fill="' + (n === 'star' ? 'currentColor' : 'none') + '" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="' + P[n] + '"/></svg>';
+    }
+    function open() {
+        if (EL) return;
+        if (!D.getElementById('lf-font') && !D.getElementById('mg-font')) { const l = D.createElement('link'); l.id = 'mg-font'; l.rel = 'stylesheet'; l.href = 'https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&display=swap'; D.head.appendChild(l); }
+        RET = D.activeElement; unlock();
+        EL = D.createElement('div'); EL.id = 'mg'; EL.setAttribute('role', 'dialog'); EL.setAttribute('aria-modal', 'true'); EL.setAttribute('aria-label', 'Math Sky Pop');
+        EL.innerHTML = '<div class="mg-sky" id="mg-sky" data-sky="day" aria-hidden="true"><i class="mg-sun"></i><i class="mg-cl c1"></i><i class="mg-cl c2"></i><i class="mg-cl c3"></i><i class="mg-hill h1"></i><i class="mg-hill h2"></i><b class="mg-stars"></b></div>' +
+            '<div class="mg-top"><button type="button" class="mg-ib" data-a="back" aria-label="Back">' + icon('back') + '</button><div class="mg-tt" id="mg-tt">Math Sky Pop</div>' +
+            '<button type="button" class="mg-ib" data-a="music" id="mg-music" aria-pressed="' + on('music') + '" aria-label="Music on or off">' + icon(on('music') ? 'music' : 'nomusic') + '</button>' +
+            '<button type="button" class="mg-ib" data-a="sfx" id="mg-sfx" aria-pressed="' + on('sfx') + '" aria-label="Sounds on or off">' + icon(on('sfx') ? 'vol' : 'mute') + '</button>' +
+            '<button type="button" class="mg-ib" data-a="voice" id="mg-voice" aria-pressed="' + on('voice') + '" aria-label="Your friend talks: on or off">' + icon(on('voice') ? 'talk' : 'notalk') + '</button></div>' +
+            '<div class="mg-main" id="mg-main"></div>' +
+            '<div class="mg-pal" id="mg-pal"><div class="mg-bub" id="mg-bub" aria-hidden="true"></div><button type="button" class="mg-bd" id="mg-bd" data-a="buddy" aria-label="Tap your friend"></button></div>' +
+            '<div class="mg-fx" id="mg-fx" aria-hidden="true"></div><div class="mg-sr" id="mg-sr" aria-live="polite"></div>';
+        D.body.appendChild(EL); D.documentElement.classList.add('mg-lock');
+        if (!BD) BD = new Buddy(); BD.K = F().K;
+        if (BD.ok) BD.mount($('mg-bd')); else $('mg-bd').innerHTML = '<span class="mg-emo" id="mg-emo">' + F().e + '</span>';
+        EL.addEventListener('click', onClick); EL.addEventListener('input', onInput); D.addEventListener('keydown', onKey); addEventListener('popstate', onPop);
+        try { history.pushState({ mg: 1 }, ''); } catch (e) { }
+        requestAnimationFrame(() => requestAnimationFrame(() => EL && EL.classList.add('on'))); setTimeout(() => EL && EL.classList.add('on'), 60);
+        home(true); setTimeout(warm, 2500);
+    }
+    function close() {
+        if (!EL) return; stopGame(); hush(); musicStop(); WARM++; if (BD) BD.stop();
+        EL.classList.remove('on'); D.documentElement.classList.remove('mg-lock'); D.removeEventListener('keydown', onKey); removeEventListener('popstate', onPop);
+        const el = EL; EL = null; setTimeout(() => el.remove(), REDUCED ? 0 : 320);
+        try { if (history.state && history.state.mg) { closedAt = Date.now(); history.back(); } } catch (e) { }
+        if (RET && RET.focus) try { RET.focus({ preventScroll: true }); } catch (e) { }
+        paintCard();
+    }
+    const sub = () => G || $('mg-book');
+    function onPop() { if (!EL || Date.now() - closedAt < 1500) return; try { history.pushState({ mg: 1 }, ''); } catch (e) { } if (sub()) home(); else close(); }
+    function onKey(e) {
+        if (!EL) return;
+        if (e.key === 'Escape') { if (sub()) home(); else close(); return; }
+        if (G && G.q && !G.lock && /^[1-8]$/.test(e.key)) { const b = EL.querySelectorAll('.mg-b:not(.gone)')[+e.key - 1]; if (b) b.click(); }
+    }
+    function sky(k) { const s = $('mg-sky'); if (s) s.dataset.sky = k; }
+    function sr(t) { const s = $('mg-sr'); if (s) s.textContent = t; }
+    const starRow = (n, cls) => '<span class="' + (cls || 'mg-lvs') + '">' + [1, 2, 3].map(i => '<i class="' + (i <= n ? 'on' : '') + '">' + icon('star') + '</i>').join('') + '</span>';
+
+    /* ---------- HOME ---------- */
+    function home(first) {
+        stopGame(); sky('day'); EL.classList.add('athome'); place(false); const s = ST(); const m = $('mg-main'); if (!m) return;
+        $('mg-tt').textContent = 'Math Sky Pop'; const md = SET.mode, d = s.daily;
+        const lvT = (k) => {
+            const st = md === 'daily' ? (d[k] === today() ? 3 : 0) : (s.best['s' + k] || 0);
+            const sub2 = md === 'time' ? (s.ta[k] ? 'Best race: ' + s.ta[k] + ' pts' : 'No race yet') : md === 'surv' ? (s.sv[k] ? 'Best: ' + s.sv[k] + ' right' : 'Not played yet') : md === 'daily' ? (d[k] === today() ? 'Done today 👑' : 'Today\'s challenge is ready') : (s.best[k] ? 'Best: ' + s.best[k] + ' pts' : 'Not played yet');
+            return '<button type="button" class="mg-lv" data-a="go" data-lv="' + k + '" style="--lc:' + ({ 10: '#3ddc84', 20: '#ff9f1c', 100: '#9b5de5' })[k] + '"><span class="mg-lvn">' + k + '</span><span class="mg-lvt"><b>' + LV[k].name + '</b><em>' + LV[k].nick + '</em>' + (md === 'daily' ? '' : starRow(st)) + '<small>' + sub2 + '</small></span></button>';
+        };
+        const tables = '<div class="mg-blk"><div class="mg-lab">Choose a times table</div><div class="mg-tbs">' + [2, 3, 4, 5, 6, 7, 8, 9, 10].map(t => '<button type="button" class="mg-tbb" data-a="table" data-t="' + t + '"><b>×' + t + '</b>' + starRow(s.tb[t] || 0, 'mg-lvs sm') + '</button>').join('') + '<button type="button" class="mg-tbb mix" data-a="table" data-t="0"><b>Mix</b><small>2 to 10</small></button></div></div>';
+        m.innerHTML = '<div class="mg-home">' +
+            '<div class="mg-hero"><div class="mg-logo"><span style="--c:#ff5a5f">M</span><span style="--c:#ff9f1c">a</span><span style="--c:#ffd23f">t</span><span style="--c:#3ddc84">h</span> <span style="--c:#4d96ff">S</span><span style="--c:#9b5de5">k</span><span style="--c:#f15bb5">y</span> <span style="--c:#2ec4b6">P</span><span style="--c:#ff5a5f">o</span><span style="--c:#ff9f1c">p</span></div>' +
+            '<p class="mg-sub">Find the hidden number and pop the right balloon!</p></div><div class="mg-hslot" id="mg-hslot"></div>' +
+            '<div class="mg-blk"><div class="mg-lab">Your math friend</div><div class="mg-frs">' + Object.keys(FR).map(k => '<button type="button" class="mg-fr' + (fid() === k ? ' on' : '') + '" data-a="friend" data-f="' + k + '" aria-pressed="' + (fid() === k) + '"><span>' + FR[k].e + '</span><b>' + FR[k].name + '</b><small>the ' + FR[k].what + '</small></button>').join('') + '</div></div>' +
+            '<div class="mg-blk"><div class="mg-lab">How do you want to play?</div><div class="mg-seg" role="radiogroup">' +
+            MODES.map(x => '<button type="button" role="radio" aria-checked="' + (md === x[0]) + '" class="mg-sg' + (md === x[0] ? ' on' : '') + '" data-a="mode" data-m="' + x[0] + '"><span class="mg-sge">' + x[1] + '</span><b>' + x[2] + '</b><small>' + x[3] + '</small></button>').join('') + '</div>' +
+            (md === 'team' ? '<div class="mg-team"><label class="mg-tn a"><span>👦</span><input id="mg-ta" maxlength="14" value="' + esc(SET.tA) + '" aria-label="Team one name"></label><span class="mg-vs">VS</span><label class="mg-tn b"><span>👧</span><input id="mg-tb" maxlength="14" value="' + esc(SET.tB) + '" aria-label="Team two name"></label>' +
+                '<div class="mg-turns">Turns for each team: ' + [3, 5, 10].map(n => '<button type="button" class="mg-chip' + (SET.turns === n ? ' on' : '') + '" data-a="turns" data-n="' + n + '" aria-pressed="' + (SET.turns === n) + '">' + n + '</button>').join('') + '</div></div>' : '') +
+            '</div>' +
+            (md === 'tables' ? tables :
+                (md === 'daily' ? '' : '<div class="mg-blk"><div class="mg-lab">Pick your signs</div><div class="mg-ops">' + Object.keys(SG).map(o => '<button type="button" class="mg-op' + (SET.ops.includes(o) ? ' on' : '') + '" data-a="op" data-o="' + o + '" aria-pressed="' + SET.ops.includes(o) + '"><b>' + SG[o] + '</b><small>' + OPN[o] + '</small></button>').join('') + '</div>' +
+                    '<div class="mg-lab mt">Puzzle types</div><div class="mg-tys">' + Object.keys(TYPES).map(t => '<button type="button" class="mg-ty' + (SET.types.includes(t) ? ' on' : '') + '" data-a="type" data-t="' + t + '" aria-pressed="' + SET.types.includes(t) + '"><span>' + TYPES[t].e + '</span>' + TYPES[t].n + (TYPES[t].lv.length < 3 ? '<small>' + TYPES[t].lv.map(x => 'to ' + x).join(', ') + '</small>' : '') + '</button>').join('') + '</div></div>') +
+                '<div class="mg-blk"><div class="mg-lab">' + (md === 'daily' ? 'Today\'s challenge: pick a level' : 'Choose a level to start') + '</div><div class="mg-lvs3">' + lvT(10) + lvT(20) + lvT(100) + '</div></div>') +
+            '<div class="mg-stats"><span>🧮 ' + s.solved + ' solved</span><span>🔥 Best streak ' + s.combo + '</span><button type="button" class="mg-chip" data-a="book">' + icon('book') + ' Stickers & badges ' + (s.stk.length + s.bdg.length) + '</button></div>' +
+            '</div>';
+        place(true); musicStart(112, 0); if (BD) { BD.K = F().K; }
+        if (first) setTimeout(() => { mood('wave', 1800); say(F().intro); }, 500);
+    }
+    /* on the menu the friend stands under the title; in a game it moves to the corner */
+    function place(h) { const t = h ? $('mg-hslot') : $('mg-pal'), b = $('mg-bd'), u = $('mg-bub'); if (!t || !b) return; if (b.parentNode !== t) { t.appendChild(u); t.appendChild(b); } }
+    function book() {
+        place(false); const s = ST(), m = $('mg-main');
+        m.innerHTML = '<div class="mg-home" id="mg-book"><h2 class="mg-h2">My badges</h2><div class="mg-bdg">' +
+            BADGES.map(b => { const got = s.bdg.includes(b[0]); return '<div class="mg-bg' + (got ? '' : ' off') + '"><span>' + (got ? b[1] : '🔒') + '</span><b>' + b[2] + '</b><small>' + b[3] + '</small></div>'; }).join('') + '</div>' +
+            '<h2 class="mg-h2">My sticker book</h2><p class="mg-sub">Win a sticker every time you get 2 or 3 stars.</p><div class="mg-bookg">' +
+            STICKERS.map(e => s.stk.includes(e) ? '<span class="mg-stk">' + e + '</span>' : '<span class="mg-stk off">?</span>').join('') + '</div><button type="button" class="mg-btn" data-a="home">Back</button></div>';
+    }
+
+    /* ---------- GAME ---------- */
+    function stopGame() { clearInterval(TMR); TMR = 0; clearTimeout(NUDGE); G = null; }
+    function start(lv, tb) {
+        lv = +lv || 100; if (!LV[lv]) return; unlock(); EL.classList.remove('athome'); place(false);
+        const md = SET.mode, team = md === 'team', time = md === 'time', surv = md === 'surv', tables = md === 'tables', daily = md === 'daily';
+        G = { lv, ops: SET.ops.slice(), types: SET.types.slice(), mode: md, used: new Set(), q: null, i: 0, tries: 0, lock: false, n: LV[lv].n,
+            total: team ? SET.turns * 2 : (time || surv ? 9999 : 10), tb: tables ? +tb || 0 : 0, bucket: tables ? 'tb' + (+tb || 0) : String(lv),
+            teams: team ? [{ name: SET.tA || 'Boys', e: '👦', pts: 0, ok: 0, streak: 0, hint: 1 }, { name: SET.tB || 'Girls', e: '👧', pts: 0, ok: 0, streak: 0, hint: 1 }] : [{ name: 'You', pts: 0, ok: 0, streak: 0, hint: time ? 3 : 2 }],
+            turn: 0, best: 0, right: 0, asked: 0, left: 60, hurried: false, hearts: 3 };
+        if (tables) { G.n = 5; G.types = ['sums']; G.ops = ['mul', 'div']; }
+        if (daily) { G.types = avail(lv); G.ops = lv === 10 ? ['add', 'sub'] : ['add', 'sub', 'mul', 'div']; G.pre = dailySet(lv); }
+        sky(tables ? 'dusk' : LV[lv].sky); musicStart((tables ? 122 : LV[lv].bpm) + (time ? 14 : 0), LV[lv].tr);
+        const m = $('mg-main');
+        m.innerHTML = '<div class="mg-game">' +
+            '<div class="mg-hud"><div class="mg-prog" id="mg-prog"></div><div class="mg-score" id="mg-score"></div></div>' +
+            (team ? '<div class="mg-tb2" id="mg-tbar"></div>' : '') + (time ? '<div class="mg-timer"><i id="mg-tbarf"></i></div>' : '') +
+            '<div class="mg-qc" id="mg-qc"></div><div class="mg-combo" id="mg-combo"></div>' +
+            '<div class="mg-field" id="mg-field"></div>' +
+            '<div class="mg-tools"><button type="button" class="mg-tool" data-a="hint" id="mg-hint">' + icon('half') + '<span>50 : 50</span><b id="mg-hn"></b></button><button type="button" class="mg-tool" data-a="hear">' + icon('ear') + '<span>Hear it</span></button></div></div>';
+        $('mg-tt').textContent = tables ? (G.tb ? 'Times table ×' + G.tb : 'Times tables mix') : LV[lv].name + (team ? ' 👦👧' : time ? ' ⏱️' : surv ? ' ❤️' : daily ? ' 📅' : '');
+        mood('happy', 1200);
+        say(team ? 'Boys and girls, get ready! ' + G.teams[0].name + ' go first!' : time ? 'You have sixty seconds. Pop as many as you can. Go!' : surv ? 'Survival! You have three hearts. How far can you go?' : tables ? (G.tb ? 'Let\'s practise the ' + G.tb + ' times table!' : 'Times tables mix! Let\'s go!') : daily ? 'Here is today\'s special challenge! Ten puzzles. Let\'s go!' : line('start'));
+        if (time) TMR = setInterval(tickTime, 1000);
+        setTimeout(() => next(), team ? 1500 : 1000);
+    }
+    function tickTime() {
+        if (!G || G.mode !== 'time') return; G.left--;
+        const f = $('mg-tbarf'); if (f) { f.style.width = (G.left / 60 * 100) + '%'; f.classList.toggle('low', G.left <= 10); }
+        paintHud();
+        if (G.left === 10 && !G.hurried) { G.hurried = true; say(line('hurry')); AU.bpm += 16; }
+        if (G.left <= 10 && G.left > 0) sfx('tick');
+        if (G.left <= 0) { clearInterval(TMR); TMR = 0; G.lock = true; say(line('timeup')); setTimeout(end, 1500); }
+    }
+    const P = () => G.teams[G.mode === 'team' ? G.turn : 0];
+    function paintHud() {
+        if (!G) return; const p = P();
+        const pr = $('mg-prog'); if (pr) pr.innerHTML = G.mode === 'time' ? '⏱️ <b>' + Math.max(0, G.left) + '</b>s' : G.mode === 'surv' ? '<span class="mg-hearts">' + [0, 1, 2].map(i => '<i class="' + (i < G.hearts ? 'on' : '') + '">❤️</i>').join('') + '</span> <b>' + G.right + '</b>' : (G.mode === 'team' ? 'Turn <b>' + Math.min(G.i, G.total) + '</b> / ' + G.total : 'Puzzle <b>' + Math.min(G.i, G.total) + '</b> / ' + G.total);
+        const sc = $('mg-score'); if (sc) sc.innerHTML = G.mode === 'team' ? '' : '⭐ <b>' + p.pts + '</b>';
+        const tb = $('mg-tbar'); if (tb) tb.innerHTML = G.teams.map((t, i) => '<div class="mg-tp ' + (i ? 'b' : 'a') + (i === G.turn ? ' on' : '') + '"><span>' + t.e + '</span><b>' + esc(t.name) + '</b><em>' + t.pts + '</em></div>').join('');
+        const hn = $('mg-hn'); if (hn) hn.textContent = p.hint; const h = $('mg-hint'); if (h) h.disabled = !p.hint;
+    }
+    async function next() {
+        if (!G || !EL) return;
+        if (G.mode !== 'time' && G.mode !== 'surv' && G.i >= G.total) return end();
+        if (G.mode === 'time' && G.left <= 0) return;
+        if (G.mode === 'surv' && G.hearts <= 0) return end();
+        G.i++; G.tries = 0; G.lock = true; clearTimeout(NUDGE);
+        if (G.mode === 'surv') G.n = Math.min(8, LV[G.lv].n + Math.floor(G.right / 6));
+        if (G.mode === 'team') {
+            G.turn = (G.i - 1) % 2; paintHud();
+            const t = P(), bn = D.createElement('div'); bn.className = 'mg-banner ' + (G.turn ? 'b' : 'a'); bn.innerHTML = '<span>' + t.e + '</span>' + esc(t.name) + '\'s turn!';
+            $('mg-fx').appendChild(bn); sfx('whoosh'); if (G.i > 1) say(pick([t.name + ', your turn!', 'Go, ' + t.name + '!', t.name + ', show us your power!', 'Come on, ' + t.name + '!', 'All eyes on the ' + t.name + '!']));
+            await sleep(REDUCED ? 300 : 1100); bn.remove(); if (!G) return;
+        }
+        const q = G.q = nextQ(); G.asked++;
+        paintHud(); paintQ(q);
+        const f = $('mg-field'), cols = shuf(COLS), sg = /^[+−×÷<>=]$/.test(q.ans);
+        f.innerHTML = q.opts.map((v, i) => '<button type="button" class="mg-b p-' + pick(PATS) + '" data-a="b" data-v="' + esc(v) + '" style="--c:' + cols[i % cols.length] + ';--d:' + (i * .08).toFixed(2) + 's;--bd:' + (2.4 + Math.random() * 1.6).toFixed(2) + 's;--bo:' + (-Math.random() * 2).toFixed(2) + 's;--rt:' + R(-6, 6) + 'deg" aria-label="Answer ' + esc(SAYSIGN[v] || v) + '"><span class="mg-bb"><span class="mg-bn' + (sg ? ' sg' : v.length > 2 ? ' sm' : '') + '">' + esc(v) + '</span></span><i class="mg-str"></i></button>').join('');
+        f.classList.toggle('many', q.opts.length > 6);
+        sr('New puzzle: ' + q.say);
+        setTimeout(() => { if (G && G.q === q) G.lock = false; }, REDUCED ? 50 : 350);
+        mood('think', 900);
+        if (q.story && G.mode !== 'time') say(q.say, { wait: 3500 });
+        else if (G.mode !== 'time' && G.mode !== 'daily' && G.i > 1 && G.i % 4 === 0) setTimeout(() => { if (G && G.q === q) say(line(Math.random() < .5 ? 'wise' : 'joke')); }, 400);
+        if (G.mode !== 'time') NUDGE = setTimeout(() => { if (G && G.q === q && !G.lock) { say(line('nudge')); mood('wave', 1500); } }, 16000);
+    }
+    function paintQ(q) {
+        const c = $('mg-qc'); if (!c) return;
+        c.className = 'mg-qc k-' + q.kind; c.innerHTML = q.html + '<div class="mg-qh">' + esc(q.hint) + '</div>';
+        void c.offsetWidth; c.classList.add('in');
+    }
+    function burst(el, col, n) {
+        const fx = $('mg-fx'); if (!fx || REDUCED) return; const r = el.getBoundingClientRect(), x = r.left + r.width / 2, y = r.top + r.height * .35;
+        for (let i = 0; i < (n || 14); i++) { const p = D.createElement('i'); p.className = 'mg-pt'; const a = Math.random() * Math.PI * 2, d = 50 + Math.random() * 90; p.style.cssText = 'left:' + x + 'px;top:' + y + 'px;--x:' + (Math.cos(a) * d).toFixed(0) + 'px;--y:' + (Math.sin(a) * d).toFixed(0) + 'px;background:' + (Math.random() < .5 ? col : pick(COLS)); fx.appendChild(p); setTimeout(() => p.remove(), 800); }
+    }
+    function confetti(n) {
+        const fx = $('mg-fx'); if (!fx || REDUCED) return;
+        for (let i = 0; i < (n || 80); i++) { const p = D.createElement('i'); p.className = 'mg-cf'; p.style.cssText = 'left:' + (Math.random() * 100) + '%;background:' + pick(COLS) + ';--dl:' + (Math.random() * .8).toFixed(2) + 's;--du:' + (2 + Math.random() * 1.6).toFixed(2) + 's;--sx:' + R(-80, 80) + 'px;--r:' + R(0, 360) + 'deg'; fx.appendChild(p); setTimeout(() => p.remove(), 4600); }
+    }
+    function floatText(el, t) { const fx = $('mg-fx'); if (!fx) return; const r = el.getBoundingClientRect(), s = D.createElement('b'); s.className = 'mg-ft'; s.textContent = t; s.style.left = (r.left + r.width / 2) + 'px'; s.style.top = (r.top + 10) + 'px'; fx.appendChild(s); setTimeout(() => s.remove(), 1100); }
+    function fillHole(v, cls) { const hole = $('mg-qc') && $('mg-qc').querySelector('.mg-hole'); if (hole) { hole.textContent = v; hole.classList.add('fill'); if (cls) hole.classList.add(cls); } }
+    function choose(btn) {
+        if (!G || G.lock || !G.q || btn.classList.contains('gone')) return;
+        const q = G.q, v = btn.dataset.v, right = q.ans === v, p = P(); clearTimeout(NUDGE);
+        if (right) {
+            G.lock = true; btn.classList.add('pop'); burst(btn, btn.style.getPropertyValue('--c')); sfx('pop'); setTimeout(() => sfx('ok'), 60);
+            p.streak++; p.ok++; G.right++; G.best = Math.max(G.best, p.streak);
+            const mult = p.streak >= 6 ? 3 : p.streak >= 3 ? 2 : 1, gain = (G.tries ? 5 : 10) * mult; p.pts += gain;
+            floatText(btn, '+' + gain + (mult > 1 ? ' ×' + mult : '')); fillHole(v);
+            const cb = $('mg-combo'); if (cb) { cb.innerHTML = p.streak >= 3 ? '🔥 ' + p.streak + ' in a row! <b>×' + mult + '</b>' : ''; cb.classList.toggle('on', p.streak >= 3); }
+            let t = null; if (p.streak === 3) t = line('combo3'); else if (p.streak === 5) t = line('combo5'); else if (p.streak === 8 || (p.streak > 8 && p.streak % 5 === 0)) t = line('combo8');
+            if (t) { sfx('combo'); if (p.streak >= 5) { confetti(30); mood('dance', 2600); } else mood('happy', 1400); } else mood('happy', 1200);
+            if (G.mode === 'time') { if (t) say(t); else if (G.right % 3 === 0) say(okLine()); }
+            else say(t || (G.mode === 'team' ? pick(['Point for the ' + p.name + '! ', 'Go ' + p.name + '! ', '', '']) + okLine() : okLine()));
+            sr('Correct! ' + v);
+            ST().solved++; paintHud();
+            setTimeout(next, G.mode === 'time' ? 650 : 1400);
+        } else {
+            G.tries++; p.streak = 0; btn.classList.add('gone', 'no'); sfx('no'); mood('sad', 1100); try { navigator.vibrate && navigator.vibrate(60); } catch (e) { }
+            const cb = $('mg-combo'); if (cb) cb.classList.remove('on');
+            if (G.mode === 'time') { G.left = Math.max(1, G.left - 2); floatText(btn, '−2s'); paintHud(); return; }
+            if (G.mode === 'surv' || G.tries >= 2) {
+                G.lock = true; const ok = [...EL.querySelectorAll('.mg-b')].find(b => b.dataset.v === q.ans);
+                if (ok) ok.classList.add('glow'); fillHole(q.ans, 'shown'); sr('The answer is ' + q.ans);
+                if (G.mode === 'surv') { G.hearts--; sfx('heart'); paintHud(); say(line('heart', SAYSIGN[q.ans] || q.ans)); }
+                else say(line('reveal', SAYSIGN[q.ans] || q.ans));
+                setTimeout(() => { if (ok) { ok.classList.add('pop'); burst(ok, ok.style.getPropertyValue('--c'), 8); sfx('pop'); } }, 1500);
+                setTimeout(next, 2700);
+            } else { say(line('no')); sr('Not this one. Try again.'); }
+        }
+    }
+    function hint() {
+        if (!G || G.lock || !G.q) return; const p = P(); if (!p.hint) return;
+        const wrong = shuf([...EL.querySelectorAll('.mg-b:not(.gone)')].filter(b => b.dataset.v !== G.q.ans));
+        const k = Math.floor((wrong.length + 1) / 2); if (!k) return;
+        p.hint--; wrong.slice(0, k).forEach((b, i) => setTimeout(() => { b.classList.add('gone', 'fly'); }, i * 120)); sfx('whoosh'); mood('happy', 900); say(pick(['Poof! Some balloons flew away.', 'Magic! Fewer balloons now.', 'There you go, a little help!', 'Abracadabra! Now it\'s easier.'])); paintHud();
+    }
+    function badgesCheck(s) { const got = []; BADGES.forEach(b => { if (!s.bdg.includes(b[0]) && b[4](s)) { s.bdg.push(b[0]); got.push(b); } }); return got; }
+    function end() {
+        if (!G) return; clearInterval(TMR); TMR = 0; clearTimeout(NUDGE); const g = G; G = null; hush();
+        const s = ST(); s.games++; const m = $('mg-main'); let html = '', speech = '';
+        s.combo = Math.max(s.combo, g.best);
+        if (g.mode === 'team') {
+            const [A, B] = g.teams, win = A.pts === B.pts ? -1 : A.pts > B.pts ? 0 : 1; s.team++;
+            html = '<div class="mg-end"><div class="mg-cup">🏆</div><h2 class="mg-h2">' + (win < 0 ? 'It\'s a tie!' : esc(g.teams[win].name) + ' win!') + '</h2>' +
+                '<div class="mg-pod">' + g.teams.map((t, i) => '<div class="mg-pc ' + (i ? 'b' : 'a') + (i === win ? ' win' : '') + '"><span>' + t.e + '</span><b>' + esc(t.name) + '</b><em>' + t.pts + ' pts</em><small>' + t.ok + ' / ' + (g.total / 2) + ' right</small>' + (i === win ? '<i>👑</i>' : '') + '</div>').join('') + '</div>';
+            speech = win < 0 ? 'It\'s a tie! Everyone is a winner! Great teamwork!' : 'The ' + g.teams[win].name + ' win! What a team! ' + g.teams[1 - win].name + ', you were super too. Let\'s play again!';
+        } else {
+            const p = g.teams[0], acc = g.asked ? g.right / (g.mode === 'time' || g.mode === 'surv' ? g.asked : g.total) : 0;
+            const stars = g.mode === 'time' ? (p.pts >= 200 ? 3 : p.pts >= 110 ? 2 : p.pts >= 40 ? 1 : 0) : g.mode === 'surv' ? (g.right >= 25 ? 3 : g.right >= 12 ? 2 : g.right >= 5 ? 1 : 0) : (acc >= .9 ? 3 : acc >= .7 ? 2 : acc >= .4 ? 1 : 0);
+            let isBest = false;
+            if (g.mode === 'time') { isBest = p.pts > (s.ta[g.lv] || 0) && p.pts > 0; if (isBest) s.ta[g.lv] = p.pts; }
+            else if (g.mode === 'surv') { isBest = g.right > (s.sv[g.lv] || 0) && g.right > 0; if (isBest) s.sv[g.lv] = g.right; }
+            else if (g.mode === 'tables') { if (g.tb) s.tb[g.tb] = Math.max(s.tb[g.tb] || 0, stars); }
+            else if (g.mode === 'daily') { if (s.daily[g.lv] !== today()) { s.daily[g.lv] = today(); s.daily.n = (s.daily.n || 0) + 1; } }
+            else { isBest = p.pts > (s.best[g.lv] || 0) && p.pts > 0; if (isBest) s.best[g.lv] = p.pts; s.best['s' + g.lv] = Math.max(s.best['s' + g.lv] || 0, stars); }
+            let stk = null; if (stars >= 2) { const free = STICKERS.filter(e => !s.stk.includes(e)); if (free.length) { stk = pick(free); s.stk.push(stk); } }
+            const sv = g.mode === 'surv';
+            html = '<div class="mg-end"><div class="mg-bigst">' + [1, 2, 3].map(i => '<i class="' + (i <= stars ? 'on' : '') + '" style="--i:' + i + '">' + icon('star') + '</i>').join('') + '</div>' +
+                '<h2 class="mg-h2">' + (g.mode === 'daily' ? 'Challenge done! 👑' : stars === 3 ? 'Superstar!' : stars === 2 ? 'Great job!' : stars === 1 ? 'Good try!' : 'Keep going!') + '</h2>' +
+                '<div class="mg-res"><span><b>' + p.pts + '</b>points</span><span><b>' + g.right + (g.mode === 'time' || sv ? '' : '/' + g.total) + '</b>' + (g.mode === 'time' ? 'popped' : 'right') + '</span><span><b>' + g.best + '</b>best streak</span></div>' +
+                (isBest ? '<div class="mg-new">New best!</div>' : '') + (stk ? '<div class="mg-gotstk"><span>' + stk + '</span>New sticker for your book!</div>' : '');
+            speech = (g.mode === 'daily' ? 'Daily challenge complete! You earned a golden crown! ' : '') + line('e' + stars) + (isBest ? ' ' + line('best') : '') + (stk ? ' ' + line('sticker') : '');
+        }
+        const nb = badgesCheck(s);
+        if (nb.length) { html += '<div class="mg-newb">' + nb.map(b => '<span><i>' + b[1] + '</i>New badge: ' + b[2] + '</span>').join('') + '</div>'; speech += ' And you got a new badge: ' + nb.map(b => b[2]).join(' and ') + '!'; }
+        const pts = g.teams.reduce((a, t) => a + t.pts, 0); try { const u = U(); u.gamePts = (u.gamePts || 0) + Math.round(pts / 10); } catch (e) { }
+        save();
+        html += '<div class="mg-endb"><button type="button" class="mg-btn" data-a="again" data-lv="' + g.lv + '" data-t="' + (g.tb || 0) + '">Play again</button><button type="button" class="mg-btn ghost" data-a="home">Back to menu</button></div></div>';
+        m.innerHTML = html; sfx('win'); confetti(g.mode === 'team' ? 120 : 70); mood('dance', 4000); setTimeout(() => say(speech), 500);
+    }
+
+    /* ---------- clicks ---------- */
+    function onInput(e) { if (e.target.id === 'mg-ta') { SET.tA = e.target.value.trim() || 'Boys'; LS.set('mg_tA', SET.tA); } if (e.target.id === 'mg-tb') { SET.tB = e.target.value.trim() || 'Girls'; LS.set('mg_tB', SET.tB); } }
+    function onClick(e) {
+        const b = e.target.closest('[data-a]'); if (!b || !EL) return; const a = b.dataset.a; unlock();
+        if (a === 'b') return choose(b);
+        if (a !== 'back' && a !== 'buddy') sfx('tap');
+        if (a === 'back') { if (sub()) home(); else close(); }
+        else if (a === 'music') { tog('music'); b.innerHTML = icon(on('music') ? 'music' : 'nomusic'); b.setAttribute('aria-pressed', on('music')); if (on('music')) musicStart(AU.bpm, AU.tr); else musicStop(); }
+        else if (a === 'sfx') { tog('sfx'); b.innerHTML = icon(on('sfx') ? 'vol' : 'mute'); b.setAttribute('aria-pressed', on('sfx')); }
+        else if (a === 'voice') { tog('voice'); b.innerHTML = icon(on('voice') ? 'talk' : 'notalk'); b.setAttribute('aria-pressed', on('voice')); if (!on('voice')) hush(); else say('Yay! I can talk again!'); }
+        else if (a === 'friend') { LS.set('mg_friend', b.dataset.f); if (BD) BD.K = F().K; const em = $('mg-emo'); if (em) em.textContent = F().e; home(); mood('wave', 1800); say(F().intro); setTimeout(warm, 1500); }
+        else if (a === 'buddy') { sfx('boing'); mood('boing', 1200); say(Math.random() < .5 ? line('tap') : line('joke')); }
+        else if (a === 'mode') { SET.mode = b.dataset.m; LS.set('mg_mode', SET.mode); home(); }
+        else if (a === 'turns') { SET.turns = +b.dataset.n; LS.set('mg_turns', SET.turns); home(); }
+        else if (a === 'op') { const o = b.dataset.o, i = SET.ops.indexOf(o); if (i >= 0) { if (SET.ops.length > 1) SET.ops.splice(i, 1); else say('Pick at least one sign!'); } else SET.ops.push(o); LS.set('mg_ops', SET.ops.join(',')); home(); }
+        else if (a === 'type') { const t = b.dataset.t, i = SET.types.indexOf(t); if (i >= 0) { if (SET.types.length > 1) SET.types.splice(i, 1); else say('Pick at least one puzzle type!'); } else SET.types.push(t); LS.set('mg_types', SET.types.join(',')); home(); }
+        else if (a === 'go') start(b.dataset.lv);
+        else if (a === 'table') start(100, b.dataset.t);
+        else if (a === 'again') start(b.dataset.lv, b.dataset.t);
+        else if (a === 'home') home();
+        else if (a === 'book') book();
+        else if (a === 'hint') hint();
+        else if (a === 'hear') { if (G && G.q) say(G.q.say, { wait: 4000 }); }
+    }
+
+    function paintCard() { try { const el = D.getElementById('gm-mg-live'); if (el) { const s = ST(); el.textContent = s.solved ? s.solved + ' puzzles solved' : ''; } } catch (e) { } }
+    setTimeout(paintCard, 1500);
+    window.LRMG = { open, close, _t: { numQ, signQ, threeQ, storyQ, seqQ, cmpQ, countQ, tensQ, eoQ, dblQ, tableQ, finish, nextQ: () => nextQ(), dailySet, seen, LV, TYPES, avail, set G(v) { G = v; }, get G() { return G; }, get BD() { return BD; } } };
 })();
 </script>
 <!--/lc:js-->
