@@ -2,7 +2,7 @@
    and the page itself kept for offline use (this also lets the browser offer "Install app").
    A call alert rings (sound + vibration) every few seconds until the call is answered, ends or times out.
    A reminder is one friendly notification; it is skipped if LunaRise is already open on screen. */
-const VERSION = 'lr-sw-21';
+const VERSION = 'lr-sw-22';
 const PAGES = 'lr-pages-1';
 const ICON = './icon-192.png';
 const BADGE = './badge-96.png';   // the small white moon in the phone's status bar
@@ -31,7 +31,20 @@ self.addEventListener('fetch', (e) => {
     if (url.origin !== self.location.origin) return;
     e.respondWith((async () => {
         try {
-            const res = (await e.preloadResponse) || await fetch(req);
+            const net = (async () => (await e.preloadResponse) || await fetch(req))();
+            let res;
+            if (MAIN(url.pathname)) {
+                /* a slow connection: the copy saved last time opens after 3.5 s, the fresh page is still saved for next time */
+                const hit = await caches.open(PAGES).then(c => c.match(new URL('./', self.registration.scope).href)).catch(() => null);
+                if (hit) {
+                    res = await Promise.race([net.catch(() => null), sleep(3500).then(() => 'slow')]);
+                    if (res === 'slow' || !res) {
+                        e.waitUntil(net.then(r => { if (r && r.ok && r.type === 'basic') return caches.open(PAGES).then(c => c.put(new URL('./', self.registration.scope).href, r.clone())); }).catch(() => { }));
+                        return hit;
+                    }
+                }
+            }
+            if (!res) res = await net;
             if (res && res.ok && res.type === 'basic' && MAIN(url.pathname)) {
                 const copy = res.clone();
                 caches.open(PAGES).then(c => c.put(new URL('./', self.registration.scope).href, copy)).catch(() => { });

@@ -26,5 +26,12 @@
       "purpose": "maskable"
     }
   ],
-  "id": "./"
+  "id": "./",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "https://lunarise-app.github.io/manifest.json"
+    }
+  ],
+  "prefer_related_applications": false
 }
