@@ -6214,6 +6214,25 @@ html.ax-lock,html.ax-lock body{overflow:hidden}
 .mv-chn i{font-size:22px;color:#ff3b3b}
 .mv-chn b{font-size:14px;font-weight:700}
 .mv-chn:active{transform:scale(.97)}
+
+/* v73: free full films */
+.mv-fc{flex:none;width:236px;display:flex;flex-direction:column;gap:8px;padding:0;border:0;background:none;color:#f1f5f9;text-align:left;cursor:pointer}
+.mv-ft{position:relative;display:block;aspect-ratio:16/9;border-radius:14px;overflow:hidden;background:#111827;box-shadow:0 10px 24px -14px rgba(0,0,0,.8)}
+.mv-ft img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .3s}
+.mv-fc:hover .mv-ft img{transform:scale(1.04)}
+.mv-ft em{position:absolute;right:7px;bottom:7px;padding:2px 7px;border-radius:6px;background:rgba(0,0,0,.78);font:700 11.5px/1.4 system-ui,sans-serif;font-style:normal;color:#fff}
+.mv-ft>i{position:absolute;left:50%;top:50%;width:46px;height:46px;margin:-23px 0 0 -23px;display:grid;place-items:center;border-radius:50%;background:rgba(34,197,94,.92);color:#04210f;font-size:17px;padding-left:3px;box-shadow:0 6px 18px rgba(0,0,0,.45);transition:transform .2s}
+.mv-fc:hover .mv-ft>i,.mv-fc:active .mv-ft>i{transform:scale(1.12)}
+.mv-fx{display:flex;flex-direction:column;gap:2px;padding:0 2px}
+.mv-fx b{font-size:14px;font-weight:700;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.mv-fx small{font-size:12px;color:#86efac}
+.mv-sk.w{flex:none;width:236px;aspect-ratio:16/9;height:auto}
+.mv-frow .mv-rh h3 i{color:#22c55e;margin-right:4px}
+.mv-eps{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
+.mv-eps button{display:flex;align-items:center;gap:10px;padding:6px;border-radius:12px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.05);color:#f1f5f9;text-align:left;cursor:pointer}
+.mv-eps img{flex:none;width:96px;aspect-ratio:16/9;border-radius:8px;object-fit:cover}
+.mv-eps b{display:block;font-size:13.5px}.mv-eps small{font-size:12px;color:rgba(199,210,254,.7)}
+@media (max-width:640px){.mv-fc,.mv-sk.w{width:72vw;max-width:280px}}
 </style><style id="mv-art-css" data-th-skip>
 /* Movies: the big pictures stay cinematic (dark shade, white writing) in every theme and in Light mode */
 .mv-hero{position:relative;min-height:420px;border-radius:26px;overflow:hidden;display:flex;align-items:flex-end;background:#0b0d1a var(--bd) center 20%/cover no-repeat;box-shadow:0 30px 60px -30px rgba(0,0,0,.9);isolation:isolate}
@@ -38461,6 +38480,76 @@ ${p.p}`;
         return { reg, me, w, best, here: reg === me };
     }
 
+    /* ---------- free full films from official YouTube channels (LunaRise movies server) ---------- */
+    const FREE_URL = 'https://script.google.com/macros/s/AKfycbwstSzGoMO1o4QPb9xk_b4l_6dJMTRZ4LqL8t1i24Xa3UV-ureBI_bpvl_vNlnosSg0gA/exec';
+    let FC = null, fcP = null, fcDone = false;
+    const FKIND = { movies: [['movie', 'Free full movies', 'Whole films from their studios · tap and watch'], ['doc', 'Free documentaries', 'Real English about the real world']], drama: [['drama', 'Free drama episodes', 'Full episodes from TV channels, English subtitles']], series: [['drama', 'Free full episodes', 'Series from TV channels, English subtitles'], ['doc', 'Free documentary films', '']], cartoons: [['kids', 'Free cartoons', 'Full episodes from the official channels']], anime: [['anime', 'Free anime episodes', 'From the studios, English subtitles or dub']], sport: [['sport', 'Full matches & Olympic events', 'From FIFA and the Olympics']] };
+    const clean = (t) => String(t || '').replace(/[《》【】]/g, ' ').replace(/#\w+/g, ' ').replace(/\[(english|eng)[^\]]*\]|\((english|eng)[^)]*\)/ig, ' ').replace(/\|?\s*(free\s+)?full\s+(movie|film|episode)s?\b.*$/i, '').replace(/\s*\|\s*$/, '').replace(/\s+/g, ' ').trim();
+    function prepCat(j) {
+        const me = region(), ch = j.ch || [], out = [];
+        for (const x of j.list || []) {
+            const [v, t, m, ci, a, b, dt] = x;
+            if (a && (' ' + a + ' ').indexOf(' ' + me + ' ') < 0) continue;
+            if (b && (' ' + b + ' ').indexOf(' ' + me + ' ') >= 0) continue;
+            if (/#shorts|highlight|trailer|teaser|\bpv\b|promo|now available|in cinemas/i.test(t)) continue;
+            const c = ch[ci] || ['', ''], ct = clean(String(t).replace(/\s*[|\-–]\s*([^|]+)$/, (w, z) => nm(z) === nm(c[0]) ? '' : w)), ep = /^(.*?)\s*[-–|:]?\s*(?:season\s*(\d+)\s*)?(?:episode|ep\.?)\s*(\d+)/i.exec(ct);
+            const yr = (/\b(19[2-9]\d|20[0-4]\d)\b/.exec(t) || [])[1];
+            out.push({ v, t: ct || t, m, ch: c[0], k: c[1], d: dt || '', yr: yr ? +yr : 0, n: nm(ct.replace(/\(\s*(19|20)\d\d\s*\)/, '')), s: ep ? nm(ep[1].replace(/\(.*?\)/g, '')) : '', se: ep && ep[2] ? +ep[2] : 0, e: ep ? +ep[3] : 0 });
+        }
+        return out;
+    }
+    async function freeCat() {
+        if (FC) return FC; if (!FREE_URL || FREE_URL.indexOf('__') === 0) return null; if (fcP) return fcP;
+        fcP = (async () => {
+            const load = async () => { const ctl = new AbortController(), to = setTimeout(() => ctl.abort(), 20000); try { const r = await fetch(FREE_URL, { signal: ctl.signal }); if (!r.ok) throw 0; const tx = await r.text(); const j = JSON.parse(tx); if (j && j.list && j.list.length) try { const c = await caches.open('lr-free'); await c.put('/lr-free-cat', new Response(tx, { headers: { 'x-t': String(Date.now()) } })); } catch (e) { } return j; } finally { clearTimeout(to); } };
+            let j = null;
+            try { const c = await caches.open('lr-free'), r = await c.match('/lr-free-cat'); if (r) { const t = +(r.headers.get('x-t') || 0); j = await r.json(); if (Date.now() - t > 12 * 36e5) load().then((n) => { if (n) FC = prepCat(n); }).catch(() => { }); } } catch (e) { }
+            if (!j) { try { j = await load(); } catch (e) { j = null; } }
+            FC = j ? prepCat(j) : null; fcP = null; fcDone = true;
+            return FC;
+        })();
+        return fcP;
+    }
+    /* a title on TMDB -> the same film / the episodes of the same show on the free channels */
+    function freeMatch(d) {
+        if (!FC || !d || !d.title) return null;
+        const want = nm(d.title), y = parseInt(year(d), 10) || 0; if (want.length < 2) return null;
+        if (d.mt === 'movie') {
+            const rt = d.runtime || 0;
+            const c = FC.filter((x) => !x.s && x.k !== 'sport' && x.n === want && (!x.yr || !y || Math.abs(x.yr - y) <= 1) && (!rt || Math.abs(x.m - rt) <= 30));
+            c.sort((a, b) => (rt ? Math.abs(a.m - rt) - Math.abs(b.m - rt) : b.m - a.m));
+            return c[0] ? { one: c[0] } : null;
+        }
+        const eps = FC.filter((x) => x.s && (x.s === want || (want.length > 5 && x.s.indexOf(want + ' ') === 0)));
+        if (!eps.length) return null;
+        const seen = new Set(), u = eps.filter((x) => { const k = x.se + ':' + x.e; if (seen.has(k)) return false; seen.add(k); return true; });
+        u.sort((a, b) => (a.se - b.se) || (a.e - b.e));
+        return { eps: u.slice(0, 60) };
+    }
+    const thumb = (v) => 'https://i.ytimg.com/vi/' + encodeURIComponent(v) + '/mqdefault.jpg';
+    const hm = (m) => m >= 60 ? Math.floor(m / 60) + 'h ' + (m % 60) + 'm' : m + ' min';
+    function fcard(x) {
+        return `<button type="button" class="mv-fc" onclick="MV.fp('${E(x.v)}')" aria-label="Watch ${E(x.t)}"><span class="mv-ft"><img src="${thumb(x.v)}" alt="" loading="lazy" decoding="async"><em>${hm(x.m)}</em><i class="fa-solid fa-play"></i></span><span class="mv-fx"><b>${E(x.t)}</b><small>${E(x.ch)} · free</small></span></button>`;
+    }
+    function freeRowsHtml(c) {
+        const ks = FKIND[c] || []; if (!ks.length || !FREE_URL || FREE_URL.indexOf('__') === 0) return '';
+        if (!FC) return `<div id="mv-free-${c}">${!fcDone ? `<section class="mv-row"><div class="mv-rh"><h3><i class="fa-solid fa-circle-play"></i> ${E(ks[0][1])}</h3></div><div class="mv-sc">${'<span class="mv-sk w"></span>'.repeat(5)}</div></section>` : ''}</div>`;
+        return `<div id="mv-free-${c}">` + ks.map(([k, t, sub]) => {
+            const L = FC.filter((x) => x.k === k); if (!L.length) return '';
+            const seed = new Date().toISOString().slice(0, 10) + k, pick = L.slice(0, 400);
+            let h = 0; for (const ch of seed) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
+            const sh = pick.map((x, i) => [((h ^ (i * 2654435761)) >>> 0) % 1000, x]).sort((a, b) => a[0] - b[0]).map((p) => p[1]).slice(0, 30);
+            return `<section class="mv-row mv-frow"><div class="mv-rh"><h3><i class="fa-solid fa-circle-play"></i> ${E(t)}</h3><small>${E(sub || L.length + ' to watch')}</small></div><div class="mv-sc">${sh.map(fcard).join('')}</div></section>`;
+        }).join('') + '</div>';
+    }
+    function paintFree() { const c = S.c, el = $('mv-free-' + c); if (el && !S.q) el.outerHTML = freeRowsHtml(c); const r = $('mv-fres'); if (r && S.q) r.outerHTML = freeResHtml(); }
+    function freeResHtml() {
+        if (!FC || !S.q || S.q.length < 2) return '<div id="mv-fres"></div>';
+        const q = nm(S.q), ks = (FKIND[S.c] || []).map((x) => x[0]);
+        const L = FC.filter((x) => ks.indexOf(x.k) >= 0 && (x.n.indexOf(q) >= 0)).slice(0, 24);
+        return `<div id="mv-fres">${L.length ? `<section class="mv-row mv-frow"><div class="mv-rh"><h3><i class="fa-solid fa-circle-play"></i> Free to watch now</h3><small>${L.length} found</small></div><div class="mv-sc">${L.map(fcard).join('')}</div></section>` : ''}</div>`;
+    }
+
     /* ---------- pieces ---------- */
     const myList = () => { const u = state.user; if (!Array.isArray(u.mvList)) u.mvList = []; return u.mvList; };
     const inList = (d) => myList().some((x) => x.id === d.id && (x.mt || 'movie') === d.mt);
@@ -38498,8 +38587,9 @@ ${p.p}`;
             <label class="mv-search"><i class="fa-solid fa-magnifying-glass"></i><input id="mv-q" class="lq-raw" type="search" placeholder="Search in ${E(C.n)}…" value="${E(S.q)}" oninput="MV.find(this.value)" enterkeyhint="search" autocomplete="off"><button type="button" class="${S.q ? '' : 'hide'}" onclick="MV.find('');document.getElementById('mv-q').value=''" aria-label="Clear"><i class="fa-solid fa-xmark"></i></button></label></div>` + catsBar();
         if (C.note) h += `<p class="mv-note"><i class="fa-solid fa-closed-captioning"></i> ${E(C.note)}</p>`;
         if (S.err) h += `<div class="mv-err"><i class="fa-solid fa-wifi"></i> Could not load. Check your internet connection. <button type="button" onclick="MV.reload()">Try again</button></div>`;
-        if (S.q) h += `<div id="mv-res">${resHtml()}</div>`;
+        if (S.q) h += freeResHtml() + `<div id="mv-res">${resHtml()}</div>`;
         else {
+            h += freeRowsHtml(S.c);
             h += heroHtml();
             if (C.ch) h += `<section class="mv-row mv-chs"><div class="mv-rh"><h3><i class="fa-brands fa-youtube"></i> ${E(C.ch.t)}</h3><small>${E(C.ch.s)}</small></div><div class="mv-sc">${C.ch.l.map(([n, u]) => `<a class="mv-chn" href="${E(u[0] === '?' ? 'https://www.youtube.com/results?search_query=' + encodeURIComponent(u.slice(3)) : 'https://www.youtube.com/' + u)}" target="_blank" rel="noopener"><i class="fa-brands fa-youtube"></i><b>${E(n)}</b></a>`).join('')}</div></section>`;
             const mine = mineFor(S.c);
@@ -38602,6 +38692,7 @@ ${p.p}`;
             if (ia) d.ia = ia; else if (base && base.ia) d.ia = base.ia;
             d.cat = S.c; S.cur = d;
             if (YT_KEY && !d.ia) { try { const c = JSON.parse(localStorage.getItem('mv:yt:' + d.mt + d.id) || 'null'); if (c && Date.now() - c.t < 14 * 864e5) d.yt = c.v || 0; } catch (e) { } }
+            if (!d.ia) { const f = freeMatch(d); if (f) d.fy = f; else if (!FC) freeCat().then(() => { if (S.cur === d && !d.ia) { const g = freeMatch(d); if (g) { d.fy = g; repaint(); } } }); }
             repaint();
             if (!d.ia && mt === 'movie') freeFor(d).then((x) => { if (x && S.cur === d) { d.ia = x; repaint(); } });
         } catch (e) { const s2 = $('mv-sheet'); if (s2 && S.want === want) s2.querySelector('.mv-dbody').insertAdjacentHTML('afterbegin', '<div class="mv-err"><i class="fa-solid fa-wifi"></i> Could not load this title. Check your internet.</div>'); }
@@ -38625,6 +38716,8 @@ ${p.p}`;
         const W = d._base ? null : watchInfo(d), saved = inList(d), what = tvs ? 'series' : 'movie';
         let watch = '';
         if (d.ia) watch = `<button type="button" class="mv-btn free big" onclick="MV.full()"><i class="fa-solid fa-circle-play"></i><span>Watch the full movie<small>Free · public domain · plays right here</small></span></button>`;
+        else if (d.fy && d.fy.one) watch = `<button type="button" class="mv-btn free big" onclick="MV.fp('${E(d.fy.one.v)}')"><i class="fa-solid fa-circle-play"></i><span>Watch the full movie<small>Free · plays right here · ${E(d.fy.one.ch)} · ${hm(d.fy.one.m)}</small></span></button>`;
+        else if (d.fy && d.fy.eps) watch = `<button type="button" class="mv-btn free big" onclick="MV.fp('${E(d.fy.eps[0].v)}')"><i class="fa-solid fa-circle-play"></i><span>Watch ${d.fy.eps[0].se ? 'season ' + d.fy.eps[0].se + ', ' : ''}episode ${d.fy.eps[0].e}<small>Free · plays right here · ${d.fy.eps.length} episode${d.fy.eps.length > 1 ? 's' : ''} from ${E(d.fy.eps[0].ch)}</small></span></button>`;
         else if (d.yt) watch = `<button type="button" class="mv-btn free big" onclick="MV.ytPlay()"><i class="fa-brands fa-youtube"></i><span>Watch the full ${tvs ? 'episode' : 'movie'}<small>Free · from ${E(d.yt.ch)} on YouTube · ${d.yt.min} min</small></span></button>`;
         else if (!d._base) {
             const O = options(d), pr = O.list[0]; d._prim = pr;
@@ -38644,6 +38737,7 @@ ${p.p}`;
                 <button type="button" class="mv-btn ${saved ? 'on' : ''}" onclick="MV.save()"><i class="fa-${saved ? 'solid' : 'regular'} fa-bookmark"></i> ${saved ? 'In my list' : 'My list'}</button>
                 <button type="button" class="mv-btn" onclick="MV.learn()"><i class="fa-solid fa-graduation-cap"></i> Learn words from it</button></div>
               ${d.yt === 0 ? '<p class="mv-np">Its owner has not put a free full version on YouTube.</p>' : ''}
+              ${d.fy && d.fy.eps && d.fy.eps.length > 1 ? `<div class="mv-sec"><h4>Free episodes</h4><div class="mv-eps">${d.fy.eps.map((x) => `<button type="button" onclick="MV.fp('${E(x.v)}')"><img src="${thumb(x.v)}" alt="" loading="lazy"><span><b>${x.se ? 'S' + x.se + ' · ' : ''}Episode ${x.e}</b><small>${hm(x.m)}</small></span></button>`).join('')}</div></div>` : ''}
               <div class="mv-sec"><h4>The story</h4><p class="mv-story">${E(d.overview || (d._base ? '' : 'No description yet.'))}</p>${dir.length ? `<p class="mv-dir">${tvs ? 'Created by' : 'Directed by'} <b>${E(dir.join(', '))}</b></p>` : ''}</div>
               ${d._base ? '' : `<div class="mv-sec"><h4>${d.ia || d.yt ? 'Also on' : 'More places to watch'}</h4>${providersHtml(d, W)}${d.ia ? '<p class="mv-np">This film is in the public domain, so you can watch the whole film free with the button above.</p>' : ''}</div>`}
               ${cast.length ? `<div class="mv-sec"><h4>Cast</h4><div class="mv-cast">${cast.map((c) => `<div class="mv-ca">${c.profile_path ? `<img src="${P(c.profile_path, 'w185')}" alt="" loading="lazy">` : '<span class="mv-cai"><i class="fa-solid fa-user"></i></span>'}<b>${E(c.name)}</b><small>${E(c.character || '')}</small></div>`).join('')}</div></div>` : ''}
@@ -38703,12 +38797,17 @@ ${p.p}`;
             if (v === undefined) { showToast('Could not reach YouTube. Try again later.'); repaint(); return; }
             d.yt = v || 0; repaint(); if (v) MV.ytPlay(); else showToast('No free full version on YouTube');
         },
+        fp(v) { const x = (FC || []).find((y) => y.v === v); playYT(v, x ? x.t + ' · free from ' + x.ch + ' on YouTube. English subtitles are on when the video has them.' : ''); },
         ytPlay() { const d = S.cur; if (d && d.yt) playYT(d.yt.id, d.title + ', from ' + d.yt.ch + ' on YouTube. English subtitles are on when the video has them.'); },
         save() { const d = S.cur; if (!d) return; const L = myList(), i = L.findIndex((x) => x.id === d.id && (x.mt || 'movie') === d.mt); if (i >= 0) { L.splice(i, 1); showToast('Removed from My list'); } else { L.unshift({ id: d.id, mt: d.mt, c: d.cat || S.c, t: d.title, p: d.poster_path, y: d.release_date, v: d.vote_average, ia: d.ia || '' }); if (L.length > 100) L.length = 100; showToast('🔖 Added to My list'); } pfSave(); repaint(); const v = $('view-movies'); if (!S.q && root() && v && !v.classList.contains('hidden')) render(); },
         learn() { const d = S.cur; if (!d) return; const lv = (state.user && state.user.target) || 'IELTS'; const what = d.mt === 'tv' ? (d.original_language === JA ? 'anime series' : 'TV series') : (d.original_language === JA ? 'anime film' : 'movie'); const msg = `Teach me 12 useful English words and phrases from the ${what} "${d.title}" (${year(d)}). For each: meaning in simple English, translation, and a short example line like the characters might say. Then give 3 questions about the story to practise speaking. My goal: ${lv}.`; closeSheet(false); navigateTo('ai-chat'); setTimeout(() => { try { sendChatMessage(msg); } catch (e) { } }, 450); },
         _api: api, _free: freeList, _kw: sportKW, _region: region, _S: S
     };
     try { const c = sessionStorage.getItem('mv:cat'); if (CATS[c]) S.c = c; } catch (e) { }
+    MV._fc = () => FC; MV._fm = freeMatch;
+    /* the free list is loaded the first time Movies opens */
+    const mvView = document.getElementById('view-movies');
+    if (mvView) new MutationObserver(() => { if (!mvView.classList.contains('hidden') && !FC && !fcP) freeCat().then(paintFree); }).observe(mvView, { attributes: true, attributeFilter: ['class'] });
 })();
 </script><!--/mv:js-->
 <!--sg:js--><script id="sg-js">
