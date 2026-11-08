@@ -74,6 +74,7 @@ async function handle(d) {
     if (d.type === 'remind' && d.news) return news(d);
     if (d.type === 'remind') return remind(d);
     if (d.type === 'adm') return admAlert(d);
+    if (d.type === 'teach') return teach(d);
     return self.registration.showNotification(d.title || 'LunaRise', { body: d.body || '', icon: ICON, badge: ICON, tag: d.tag || 'lr' });
 }
 /* a new message for the owner: LunaRise on screen shows its own banner with a chime; otherwise the phone's notification with sound */
@@ -81,6 +82,11 @@ async function admAlert(d) {
     const vis = await visibleClient();
     if (vis) { vis.postMessage({ type: 'lr-adm', title: d.title, body: d.body, tag: d.tag }); if (!APPLE) return; }
     return self.registration.showNotification(d.title || 'LunaRise', { body: d.body || '', icon: ICON, badge: BADGE, tag: d.tag || 'lr-adm', renotify: true, silent: false, requireInteraction: false, vibrate: [200, 100, 200], timestamp: Date.now(), data: { type: 'adm' } });
+}
+/* a teacher is live, or posted a new video: a tap opens the stream (the bell in LunaRise turns these off) */
+async function teach(d) {
+    try { const r = await (await caches.open('lr-prefs')).match('/lr-ta'); if (r && (await r.json()).on === 0) return; } catch (e) { }
+    return self.registration.showNotification(d.title || 'LunaRise', { body: d.body || '', icon: d.img || ICON, badge: BADGE, tag: 'lr-teach', renotify: true, silent: false, vibrate: [160, 80, 160], timestamp: Date.now(), data: { type: 'teach', url: d.url || '' } });
 }
 async function remind(d) {
     // already studying in LunaRise: no need to nudge (a test from Settings always shows)
@@ -157,6 +163,7 @@ function onClick(e) {
         e.waitUntil(fetch(d.srv, { method: 'POST', body: JSON.stringify({ op: 'decline', cid: d.cid, to: d.to, dk: d.dk }) }).catch(() => { }));
         return;
     }
+    if (d.type === 'teach' && /^https:\/\/(www\.youtube\.com|youtu\.be|t\.me)\//.test(d.url || '')) { e.waitUntil(self.clients.openWindow(d.url)); return; }
     const url = new URL('./', self.registration.scope);
     if (d.type === 'call') { url.searchParams.set('call', d.cid); url.searchParams.set('from', d.from || ''); if (e.action === 'answer') url.searchParams.set('ans', '1'); }
     else if (d.type === 'missed' && d.from) url.searchParams.set('chat', d.from);

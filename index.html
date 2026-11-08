@@ -6415,6 +6415,38 @@ html.hs-lock{overflow:hidden}
 .lra-x:hover{color:#fff}
 @media (prefers-reduced-motion:reduce){.lra,.lra.in,.lra.out{transition:opacity .2s;transform:none}.lra::before{animation:none}}
 .adm-ch.grn{background:rgba(34,197,94,.16);color:#86efac}
+/* ===== Live teachers row ===== */
+.lv{display:flex;flex-direction:column;gap:12px;padding:16px 16px 12px;border-radius:24px;background:linear-gradient(180deg,rgba(15,18,40,.78),rgba(15,18,40,.55));border:1px solid rgba(255,255,255,.08)}
+.lv-h{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.lv-h h3{margin:0;display:flex;align-items:center;gap:9px;font:800 16px/1.2 'Plus Jakarta Sans',system-ui,sans-serif;color:#fff}
+.lv-dot{width:10px;height:10px;border-radius:50%;background:#64748b}
+.lv-dot.on{background:#ef4444;box-shadow:0 0 0 0 rgba(239,68,68,.6);animation:lvPulse 1.6s ease-out infinite}
+@keyframes lvPulse{70%{box-shadow:0 0 0 9px rgba(239,68,68,0)}100%{box-shadow:0 0 0 0 rgba(239,68,68,0)}}
+.lv-bell{display:inline-flex;align-items:center;gap:7px;height:34px;padding:0 13px;border-radius:999px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);color:#cbd5e1;font:700 12.5px system-ui,sans-serif;cursor:pointer}
+.lv-bell.on{background:rgba(250,204,21,.14);border-color:rgba(250,204,21,.4);color:#fde68a}
+.lv-row{display:flex;gap:16px;overflow-x:auto;padding:4px 2px 6px;scrollbar-width:none;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch}
+.lv-row::-webkit-scrollbar{display:none}
+.lv-b{position:relative;flex:none;width:84px;display:flex;flex-direction:column;align-items:center;gap:3px;text-decoration:none;color:#f1f5f9;scroll-snap-align:start;transition:transform .15s}
+.lv-b:active{transform:scale(.95)}
+.lv-b:focus-visible{outline:2px solid #a5b4fc;outline-offset:3px;border-radius:14px}
+.lv-ring{display:block;width:76px;height:76px;padding:3px;border-radius:50%;background:conic-gradient(from 210deg,#f59e0b,#ef4444,#ec4899,#a855f7,#f59e0b)}
+.lv-b.on .lv-ring{background:conic-gradient(from 0deg,#ff1f4b,#ff7a00,#ff1f4b,#ff2fb0,#ff1f4b);animation:lvSpin 3.5s linear infinite}
+@keyframes lvSpin{to{transform:rotate(360deg)}}
+.lv-ph{position:relative;display:grid;place-items:center;width:100%;height:100%;border-radius:50%;overflow:hidden;border:3px solid #0d1024;background:hsl(var(--h) 45% 38%)}
+.lv-b.on .lv-ph{animation:lvSpin 3.5s linear infinite reverse}
+.lv-ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.lv-ph em{font:800 24px 'Plus Jakarta Sans',system-ui,sans-serif;font-style:normal;color:#fff}
+.lv-tag{margin-top:-14px;position:relative;z-index:1;padding:2px 7px;border-radius:6px;border:2px solid #0d1024;background:linear-gradient(135deg,#ff1f4b,#ff5a2e);color:#fff;font:900 9.5px/1.2 system-ui,sans-serif;letter-spacing:.08em}
+.lv-b.nw .lv-tag{background:linear-gradient(135deg,#6366f1,#a855f7)}
+.lv-b b{max-width:84px;margin-top:2px;font-size:12.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lv-b small{max-width:84px;font-size:10.5px;color:#94a3b8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lv-b.on small{color:#fca5a5}
+.lv-none{display:flex;align-items:center;gap:9px;margin:0;font-size:13.5px;color:#94a3b8}
+.lv-sk{flex:none;width:84px;display:flex;flex-direction:column;align-items:center;gap:8px}
+.lv-sk i{width:76px;height:76px;border-radius:50%;background:rgba(255,255,255,.07);animation:lvSk 1.4s ease-in-out infinite}
+.lv-sk b{width:56px;height:10px;border-radius:5px;background:rgba(255,255,255,.07)}
+@keyframes lvSk{50%{opacity:.5}}
+@media (prefers-reduced-motion:reduce){.lv-ring,.lv-ph,.lv-dot.on{animation:none!important}}
 </style><style id="mv-art-css" data-th-skip>
 /* Movies: the big pictures stay cinematic (dark shade, white writing) in every theme and in Light mode */
 .mv-hero{position:relative;min-height:420px;border-radius:26px;overflow:hidden;display:flex;align-items:flex-end;background:#0b0d1a var(--bd) center 20%/cover no-repeat;box-shadow:0 30px 60px -30px rgba(0,0,0,.9);isolation:isolate}
@@ -8622,6 +8654,7 @@ void main(){
                     <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
+            <div id="lv-yt" class="lv" aria-live="polite"></div>
             <div id="mentor-count" class="text-xs text-slate-500"></div>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-5" id="mentors-grid">
             </div>
@@ -8640,6 +8673,7 @@ void main(){
                     <input id="tg-search" type="text" oninput="renderTgGrid()" placeholder="Search channels, teachers or topics..." class="w-full glass bg-slate-900/90 text-white placeholder-slate-500 rounded-2xl pl-11 pr-4 py-3.5 text-sm border border-slate-800 focus:border-sky-500 outline-none shadow-xl">
                 </div>
                 <div id="tg-filters" class="flex flex-wrap gap-2"></div>
+                <div id="lv-tg" class="lv" aria-live="polite"></div>
                 <div id="tg-count" class="text-xs text-slate-500"></div>
                 <div id="tg-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-5"></div>
                 <p class="text-[11px] text-slate-500">Channel details come from public listings and may change. If a link does not open, the channel may have moved — tell us and we will update it.</p>
@@ -23281,6 +23315,7 @@ const mentorAvatarCache = {};
 
             // Explicit verified real photo (when provided for this mentor).
             if (m.photo && await tryImage(m.photo)) return;
+            { const lp = window.LRLIVE && LRLIVE.pic('yt', handle); if (lp && await tryImage(lp)) return; }
 
             // Cached real photo.
             try {
@@ -23526,7 +23561,7 @@ const mentorAvatarCache = {};
         let tgFilter = 'all';
         const TG_TAGS = [['all', 'All'], ['fav', '❤ Saved'], ['IELTS', 'IELTS'], ['CEFR', 'CEFR / Multilevel'], ['TOEFL', 'TOEFL'], ['SAT', 'SAT'], ['Grammar', 'Grammar'], ['Vocabulary', 'Vocabulary'], ['Speaking', 'Speaking'], ['Uzbek', 'Uzbek']];
         function tgAll() { pfPrefs(); return (state.user.tgCustom || []).map(c => Object.assign({ mine: true }, c)).concat(topTelegram); }
-        function tgAvatar(h, name) { return 'https://t.me/i/userpic/320/' + encodeURIComponent(h) + '.jpg'; }
+        function tgAvatar(h, name) { return (window.LRLIVE && LRLIVE.pic('tg', h)) || 'https://t.me/i/userpic/320/' + encodeURIComponent(h) + '.jpg'; }
         function tgFallback(img) {
             if (img.dataset.f) return; img.dataset.f = '1'; const n = img.dataset.n || '?'; let hs = 0; for (const c of n) hs = (hs * 31 + c.charCodeAt(0)) % 360;
             img.src = makeAvatar(n.trim().charAt(0).toUpperCase() || '?', 'hsl(' + hs + ',70%,45%)', 'hsl(' + ((hs + 50) % 360) + ',75%,55%)');
@@ -23551,7 +23586,7 @@ const mentorAvatarCache = {};
                 <div class="tg-card">
                     <button class="tg-fav ${on ? 'on' : ''}" onclick="tgToggleFav('${escapeHTML(h)}')" aria-label="Save"><i class="fa-${on ? 'solid' : 'regular'} fa-heart"></i></button>
                     <a href="https://t.me/${encodeURIComponent(h)}" target="_blank" rel="noopener noreferrer" style="display:flex;flex-direction:column;flex:1" title="Open ${escapeHTML(m.channel)} on Telegram">
-                        <div class="ph"><img src="${tgAvatar(h)}" alt="${escapeHTML(m.name)}" referrerpolicy="no-referrer" loading="lazy" data-n="${escapeHTML(m.name)}" onerror="tgFallback(this)" onload="if(this.naturalWidth<40)tgFallback(this)"><i class="fa-brands fa-telegram bd"></i></div>
+                        <div class="ph"><img src="${tgAvatar(h)}" data-tgh="${escapeHTML(h)}" alt="${escapeHTML(m.name)}" referrerpolicy="no-referrer" loading="lazy" data-n="${escapeHTML(m.name)}" onerror="tgFallback(this)" onload="if(this.naturalWidth<40)tgFallback(this)"><i class="fa-brands fa-telegram bd"></i></div>
                         <div class="text-center mt-3"><h4 class="font-bold text-white text-base leading-tight">${escapeHTML(m.name)}</h4><p class="text-xs font-semibold text-sky-400 mt-1">@${escapeHTML(h)}${m.subs ? ' · <span class="text-slate-400">' + escapeHTML(m.subs) + ' subs</span>' : ''}</p>
                         <span class="inline-block mt-2 px-2 py-0.5 rounded-full bg-slate-800 text-[10px] text-slate-300 border border-slate-700">${escapeHTML(m.focus)}</span></div>
                         <p class="text-[11px] text-slate-400 mt-3 leading-relaxed flex-1">${escapeHTML(m.bio)}</p>
@@ -40509,6 +40544,98 @@ ${p.p}`;
     }
     if ('serviceWorker' in navigator) navigator.serviceWorker.addEventListener('message', (e) => { if (e.data && e.data.type === 'lr-adm') show(e.data); });
     window.LRALERT = { show, chime };
+})();
+</script><script id="lv-js">
+/* ===== Live teachers: who is streaming now on YouTube and Telegram, and who posted a new video today =====
+   A row of round photos (like stories) under the search box of each tab. A tap opens the stream or the video.
+   The LunaRise server checks the teachers every 10 minutes and sends phone alerts; the bell here turns them on or off.
+   The server also gives every teacher's real photo, used in the cards below too. */
+(function () {
+    'use strict';
+    if (window.LRLIVE) return;
+    const $ = (id) => document.getElementById(id);
+    const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const LS = { get: (k, d) => { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } }, set: (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { } } };
+    const DB = String((window.LR_FB || {}).databaseURL || '').replace(/\/$/, '');
+    let D = LS.get('lr_live', null), busy = false;
+    const pics = { yt: {}, tg: {} };
+    function index() { pics.yt = {}; pics.tg = {}; if (!D) return; (D.yt || []).forEach(x => { if (x.img) pics.yt[x.h.toLowerCase()] = x.img; }); (D.tg || []).forEach(x => { if (x.img) pics.tg[x.h.toLowerCase()] = x.img; }); }
+    index();
+    const ago = (t) => { const m = Math.max(1, Math.round((Date.now() - t) / 60000)); return m < 60 ? m + ' min' : Math.round(m / 60) + ' h'; };
+    const k = (n) => n >= 1e6 ? (n / 1e6).toFixed(1).replace(/\.0$/, '') + 'M' : n >= 1e3 ? (n / 1e3).toFixed(1).replace(/\.0$/, '') + 'K' : String(n);
+    const ini = (n) => String(n || '?').trim().charAt(0).toUpperCase();
+    const hue = (s) => { let h = 0; for (const c of String(s)) h = (h * 31 + c.charCodeAt(0)) % 360; return h; };
+
+    /* ---------- alerts on / off (the service worker reads this before showing a teacher alert) ---------- */
+    const alertsOn = () => LS.get('lr_ta', 1) !== 0;
+    async function setAlerts(on) {
+        LS.set('lr_ta', on ? 1 : 0);
+        try { const c = await caches.open('lr-prefs'); await c.put('/lr-ta', new Response(JSON.stringify({ on: on ? 1 : 0 }))); } catch (e) { }
+        paint();
+        try { showToast(on ? '🔔 You will get an alert when a teacher goes live or posts a new video' : '🔕 Teacher alerts are off'); } catch (e) { }
+        if (on && 'Notification' in window && Notification.permission === 'default') { try { if (typeof window.lrRemindOpen === 'function') window.lrRemindOpen(); } catch (e) { } }
+    }
+
+    /* ---------- the row ---------- */
+    function items(kind) {
+        if (!D) return null;
+        const L = (kind === 'yt' ? D.yt : D.tg) || [], out = [];
+        L.filter(x => x.live).sort((a, b) => (b.live.w || 0) - (a.live.w || 0)).forEach(x => out.push({ x, live: 1 }));
+        if (kind === 'yt') L.filter(x => !x.live && x.nv).sort((a, b) => b.nv.t - a.nv.t).forEach(x => out.push({ x, live: 0 }));
+        return out;
+    }
+    function bubble(kind, it) {
+        const x = it.x, url = kind === 'tg' ? 'https://t.me/' + encodeURIComponent(x.h) + '?livestream' : 'https://www.youtube.com/watch?v=' + encodeURIComponent(it.live ? x.live.v : x.nv.v);
+        const sub = it.live ? (kind === 'yt' && x.live.w ? k(x.live.w) + ' watching' : 'Live · ' + ago(x.live.t)) : 'New video · ' + ago(x.nv.t);
+        const what = it.live ? (x.live.s || 'Live stream') : x.nv.s;
+        return `<a class="lv-b${it.live ? ' on' : ' nw'}" href="${esc(url)}" target="_blank" rel="noopener" title="${esc(x.n + ' — ' + what)}">
+            <span class="lv-ring"><span class="lv-ph" style="--h:${hue(x.h)}">${x.img ? `<img src="${esc(x.img)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">` : ''}<em>${esc(ini(x.n))}</em></span></span>
+            <span class="lv-tag">${it.live ? 'LIVE' : 'NEW'}</span>
+            <b>${esc(x.n)}</b><small>${esc(sub)}</small></a>`;
+    }
+    function rowHTML(kind) {
+        const L = items(kind), on = alertsOn(), brand = kind === 'yt' ? 'YouTube' : 'Telegram';
+        const bell = `<button type="button" class="lv-bell${on ? ' on' : ''}" data-lvbell aria-pressed="${on}" title="${on ? 'Alerts are on' : 'Alerts are off'}"><i class="fa-solid ${on ? 'fa-bell' : 'fa-bell-slash'}"></i><span>${on ? 'Alerts on' : 'Alerts off'}</span></button>`;
+        if (!L) return `<div class="lv-h"><h3><i class="lv-dot"></i>Live now on ${brand}</h3>${bell}</div><div class="lv-row">${'<span class="lv-sk"><i></i><b></b></span>'.repeat(6)}</div>`;
+        const nl = L.filter(i => i.live).length;
+        const head = `<div class="lv-h"><h3><i class="lv-dot${nl ? ' on' : ''}"></i>${nl ? nl + ' teacher' + (nl > 1 ? 's' : '') + ' live now' : 'Live now on ' + brand}</h3>${bell}</div>`;
+        if (!L.length) return head + `<p class="lv-none"><i class="fa-regular fa-moon"></i>No one is live right now. ${on ? "We'll send you an alert when a teacher starts a stream" + (kind === 'yt' ? ' or posts a new video.' : '.') : 'Turn on alerts to hear when a teacher goes live.'}</p>`;
+        return head + `<div class="lv-row" role="list">${L.map(i => bubble(kind, i)).join('')}</div>`;
+    }
+    function paint() {
+        ['yt', 'tg'].forEach(kind => { const el = $('lv-' + kind); if (el) el.innerHTML = rowHTML(kind); });
+    }
+    document.addEventListener('click', (e) => { const b = e.target.closest('[data-lvbell]'); if (b) setAlerts(!alertsOn()); });
+
+    /* ---------- the teachers' photos in the cards ---------- */
+    function photos() {
+        document.querySelectorAll('img[data-mentor-handle]').forEach(img => { const p = pics.yt[String(img.dataset.mentorHandle).toLowerCase()]; if (p && img.getAttribute('src') !== p) { img.referrerPolicy = 'no-referrer'; img.src = p; delete img.dataset.photoMissing; img.classList.add('lv-real'); } });
+        document.querySelectorAll('img[data-tgh]').forEach(img => { const p = pics.tg[String(img.dataset.tgh).toLowerCase()]; if (p && img.getAttribute('src') !== p) img.src = p; });
+    }
+
+    /* ---------- data from the LunaRise server ---------- */
+    let srv = null;
+    async function load(force) {
+        if (busy) return; if (!force && D && Date.now() - (D.at || 0) < 180000) { paint(); photos(); return; }
+        busy = true;
+        try {
+            if (!srv) srv = await fetch(DB + '/club/cfg/push/server.json').then(r => r.ok ? r.json() : null).catch(() => null);
+            if (typeof srv !== 'string' || !/^https:\/\//.test(srv)) throw 0;
+            const ctl = new AbortController(), to = setTimeout(() => ctl.abort(), 20000);
+            const j = await fetch(srv + '?live=1', { signal: ctl.signal }).then(r => r.json()).finally(() => clearTimeout(to));
+            if (j && j.ok) { D = { at: Date.now(), yt: j.yt || [], tg: j.tg || [] }; LS.set('lr_live', D); index(); }
+        } catch (e) { if (!D) D = { at: Date.now(), yt: [], tg: [] }; }
+        busy = false; paint(); photos();
+    }
+    /* refresh while the Mentors page is open */
+    const visible = () => { const v = $('view-mentors') || ($('lv-yt') && $('lv-yt').closest('section')); return v && !v.classList.contains('hidden') && v.offsetParent !== null; };
+    setInterval(() => { if (!document.hidden && visible()) load(); }, 60000);
+    const view = $('lv-yt') && $('lv-yt').closest('section');
+    if (view) new MutationObserver(() => { if (visible()) { paint(); load(); } }).observe(view, { attributes: true, attributeFilter: ['class', 'style'] });
+    ['mentors-grid', 'tg-grid'].forEach(id => { const g = $(id); if (g) new MutationObserver(() => photos()).observe(g, { childList: true }); });
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', () => { paint(); setTimeout(load, 2500); }); else { paint(); setTimeout(load, 2500); }
+    try { caches.open('lr-prefs').then(c => c.put('/lr-ta', new Response(JSON.stringify({ on: alertsOn() ? 1 : 0 })))); } catch (e) { }
+    window.LRLIVE = { pic: (kind, h) => pics[kind][String(h || '').replace(/^@/, '').toLowerCase()] || '', load, paint, _d: () => D };
 })();
 </script><!--/hs:js-->
 <!--cz:js--><script id="cz-js">
