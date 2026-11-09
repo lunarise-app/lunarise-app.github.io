@@ -6705,6 +6705,10 @@ html.gv-open,html.gv-open body{overflow:hidden!important}
 .gv-ok.in{animation:gvGlow 1.2s .2s both}
 @keyframes gvGlow{40%{box-shadow:0 0 0 6px rgba(52,211,153,.25),0 0 40px rgba(52,211,153,.45)}}
 @media (prefers-reduced-motion:reduce){.gv-scene>.gv-s,.gv-bg::after,.gv-flag,.gv-num,.gv-wr.in,.gv-ok.in{animation:none}.gv-w{transition:none}}
+
+/* v77: no progress bars anywhere in the videos */
+.gv-bar,.gv-meter{display:none!important}
+.gv-ctl{padding-top:12px}
 </style><style id="mv-art-css" data-th-skip>
 /* Movies: the big pictures stay cinematic (dark shade, white writing) in every theme and in Light mode */
 .mv-hero{position:relative;min-height:420px;border-radius:26px;overflow:hidden;display:flex;align-items:flex-end;background:#0b0d1a var(--bd) center 20%/cover no-repeat;box-shadow:0 30px 60px -30px rgba(0,0,0,.9);isolation:isolate}
@@ -49711,16 +49715,43 @@ html.mg-lock, html.mg-lock body { overflow: hidden !important; }
 #mg .mg-hslot .mg-bd { flex: none; }
 #mg .mg-hslot .mg-bub { position: static; order: 2; margin: 0; max-width: min(52vw, 340px); opacity: 1; transform: none; border-radius: 20px 20px 20px 6px; }
 #mg .mg-hslot .mg-bub:empty { visibility: hidden; }
+
+/* ===== v77: premium look ===== */
+#mg .mg-sky { background: radial-gradient(120% 70% at 85% 0%, rgba(255, 244, 190, .75), transparent 55%), linear-gradient(#4fb8ff 0%, #8fd8ff 48%, #d6f3ff 82%, #f2fcff 100%); }
+#mg .mg-sky[data-sky=dusk] { background: radial-gradient(120% 70% at 80% 30%, rgba(255, 220, 150, .8), transparent 55%), linear-gradient(#7b6cff 0%, #ff8fb1 46%, #ffc98a 80%, #ffe9bd 100%); }
+#mg .mg-sky[data-sky=night] { background: radial-gradient(100% 60% at 80% 10%, rgba(120, 110, 255, .35), transparent 60%), linear-gradient(#070d3a 0%, #1f1568 55%, #4a2688 100%); }
+#mg .mg-sky::after { content: ''; position: absolute; inset: 0; background: radial-gradient(1.5px 1.5px at 20% 70%, rgba(255, 255, 255, .8), transparent), radial-gradient(2px 2px at 65% 62%, rgba(255, 255, 255, .7), transparent), radial-gradient(1.5px 1.5px at 40% 40%, rgba(255, 255, 255, .6), transparent); animation: mg-tw 4s ease-in-out infinite alternate; pointer-events: none; }
+#mg .mg-hill.h1 { background: radial-gradient(120% 100% at 50% 0%, #86e8a6, #4cc57f 70%); box-shadow: inset 0 10px 30px rgba(255, 255, 255, .25); }
+#mg .mg-hill.h2 { background: radial-gradient(120% 100% at 50% 0%, #4fd184, #2fae66 75%); box-shadow: inset 0 10px 30px rgba(255, 255, 255, .15); }
+#mg .mg-cl { filter: drop-shadow(0 8px 10px rgba(60, 120, 200, .18)); }
+#mg .mg-ib, #mg .mg-tool { backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); background: linear-gradient(#fff, #f1f5ff) !important; box-shadow: 0 5px 0 rgba(35, 32, 74, .16), 0 10px 20px rgba(35, 32, 74, .12), inset 0 1px 0 #fff; }
+#mg .mg-qc { background: linear-gradient(#fffefa, #fff7e6); border-radius: 34px; box-shadow: 0 10px 0 rgba(35, 32, 74, .14), 0 22px 40px rgba(35, 32, 74, .18), inset 0 2px 0 #fff; border: 3px solid rgba(255, 255, 255, .9); padding: 18px 26px 14px; }
+#mg .mg-hud > div:not(:empty) { background: linear-gradient(#fff, #f1f5ff); box-shadow: 0 4px 0 rgba(35, 32, 74, .12), 0 8px 16px rgba(35, 32, 74, .1); }
+#mg .mg-blk { background: rgba(255, 253, 246, .94); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); box-shadow: 0 8px 0 rgba(35, 32, 74, .1), 0 18px 34px rgba(35, 32, 74, .12); border: 2px solid rgba(255, 255, 255, .8); }
+#mg .mg-lv { background: linear-gradient(#fff, #fbfbff) !important; }
+#mg .mg-bb { background: radial-gradient(ellipse 26% 20% at 30% 22%, rgba(255, 255, 255, .95), rgba(255, 255, 255, 0) 100%), radial-gradient(ellipse 60% 40% at 50% 100%, rgba(255, 255, 255, .28), transparent 70%), radial-gradient(circle at 72% 82%, rgba(0, 0, 0, .26), transparent 62%), radial-gradient(circle at 36% 30%, color-mix(in srgb, var(--c) 78%, #fff), var(--c) 55%, color-mix(in srgb, var(--c) 72%, #000)); box-shadow: inset -8px -12px 18px rgba(0, 0, 0, .12), inset 6px 8px 14px rgba(255, 255, 255, .25), 0 14px 18px rgba(35, 32, 74, .12); }
+#mg .p-stripes .mg-bb { background: radial-gradient(ellipse 26% 20% at 30% 22%, rgba(255, 255, 255, .95), rgba(255, 255, 255, 0) 100%), repeating-linear-gradient(115deg, rgba(255, 255, 255, .2) 0 10px, transparent 10px 22px), radial-gradient(circle at 72% 82%, rgba(0, 0, 0, .26), transparent 62%), radial-gradient(circle at 36% 30%, color-mix(in srgb, var(--c) 78%, #fff), var(--c) 55%, color-mix(in srgb, var(--c) 72%, #000)); }
+#mg .p-dots .mg-bb { background: radial-gradient(ellipse 26% 20% at 30% 22%, rgba(255, 255, 255, .95), rgba(255, 255, 255, 0) 100%), radial-gradient(circle, rgba(255, 255, 255, .28) 0 4px, transparent 5px) 0 0 / 20px 20px, radial-gradient(circle at 72% 82%, rgba(0, 0, 0, .26), transparent 62%), radial-gradient(circle at 36% 30%, color-mix(in srgb, var(--c) 78%, #fff), var(--c) 55%, color-mix(in srgb, var(--c) 72%, #000)); }
+#mg .mg-bb::after { background: color-mix(in srgb, var(--c) 70%, #000); filter: none; }
+#mg .mg-str { background: repeating-linear-gradient(rgba(255, 255, 255, .85) 0 7px, rgba(255, 255, 255, .45) 7px 14px); width: 2.5px; box-shadow: 0 0 0 .5px rgba(35, 32, 74, .15); }
+#mg .mg-bd { width: clamp(150px, 22vw, 230px); height: clamp(164px, 24vw, 252px); }
+#mg.athome .mg-bd { width: clamp(150px, 26vw, 250px); height: clamp(164px, 28vw, 270px); }
+#mg .mg-cv { filter: drop-shadow(0 10px 8px rgba(35, 32, 74, .18)); }
+#mg .mg-bub { margin-bottom: clamp(110px, 16vw, 170px); background: linear-gradient(#fff, #f6f8ff); box-shadow: 0 6px 0 rgba(35, 32, 74, .12), 0 14px 26px rgba(35, 32, 74, .14); }
+#mg .mg-ty.dim { opacity: .35; }
+#mg .mg-ty.dim.on { opacity: .45; box-shadow: inset 0 0 0 2.5px #b8b5cc; background: #f1f1f6 !important; }
+#mg .mg-hint { font-weight: 600; font-size: 13px; text-align: center; opacity: .7; margin-top: 8px; }
 </style>
 <!--mg:js--><script id="mg-js">
 /* ===== Math Sky Pop: a maths game for children.
    A puzzle sits at the top with one number (or a sign) hidden; balloons float below, each with a different answer,
    and only one is right.
    Levels: up to 10, up to 20, up to 100. Signs: + − × ÷.
-   Puzzle types: sums, story sums (simple English), patterns, bigger/smaller, counting, tens & ones, odd & even, double & half.
+   Puzzle types: sums, patterns, bigger/smaller, counting, tens & ones, odd & even, double & half (no word problems).
+   Every puzzle follows the signs the child picked: only + gives only adding puzzles, only − only take-away, and so on.
    Modes: Solo, Boys vs Girls, Time attack, Survival (3 hearts), Times tables, Daily challenge.
    Puzzles never repeat: every puzzle is remembered on this device until all puzzles of that kind have been used.
-   A 3D animal friend (Bao the panda, Coco the bear or Kiki the koala) talks in English with a cartoon AI voice
+   A 3D animal friend (Bao the panda, Coco the bear or Kiki the koala) talks in English with the calm "Sage" AI voice
    (cached on the device; the phone's own voice is the fallback). Music and sounds are made by the code. ===== */
 (function () {
     'use strict';
@@ -49749,7 +49780,7 @@ html.mg-lock, html.mg-lock body { overflow: hidden !important; }
     const OPN = { add: 'Add', sub: 'Take away', mul: 'Times', div: 'Share' };
     const SAYSIGN = { '+': 'plus', '−': 'minus', '×': 'times', '÷': 'divided by', '>': 'greater than', '<': 'less than', '=': 'equals' };
     const TYPES = {
-        sums: { n: 'Sums', e: '🧮', lv: [10, 20, 100] }, story: { n: 'Story sums', e: '📖', lv: [10, 20, 100] }, seq: { n: 'Patterns', e: '🔢', lv: [10, 20, 100] },
+        sums: { n: 'Sums', e: '🧮', lv: [10, 20, 100] }, seq: { n: 'Patterns', e: '🔢', lv: [10, 20, 100] },
         cmp: { n: 'Bigger or smaller', e: '⚖️', lv: [10, 20, 100] }, count: { n: 'Counting', e: '🍎', lv: [10, 20] }, tens: { n: 'Tens & ones', e: '🧱', lv: [100] },
         eo: { n: 'Odd & even', e: '🎲', lv: [10, 20, 100] }, dbl: { n: 'Double & half', e: '✌️', lv: [20, 100] }
     };
@@ -49765,15 +49796,16 @@ html.mg-lock, html.mg-lock body { overflow: hidden !important; }
     ];
 
     /* ===================== THE FRIENDS ===================== */
+    const SERENE = 'Voice Affect: Soft, gentle and soothing; a calm, kind English teacher who talks to children aged 4 to 10. Tone: Calm, reassuring, warm and quietly encouraging; a happy little smile in the voice when praising. Pacing: Slow and unhurried, with a clear pause after every sentence; say numbers and signs slowly and very clearly. Pronunciation: Crisp and simple, every word easy to understand. Emotion: Patient and kind, never loud, never scary.';
     const FR = {
-        bao: { name: 'Bao', what: 'panda', e: '🐼', K: 0, voice: 'coral', pitch: 1.45, rate: 1.02,
-            instr: 'Voice: Bao, a lovable cartoon panda from a children\'s TV show. Tone: bubbly, warm and playful, smiling all the time, with little giggles and big excited ups and downs. Pacing: lively but very clear for children aged 4 to 10. Simple, crisp English.',
+        bao: { name: 'Bao', what: 'panda', e: '🐼', K: 0, voice: 'sage', pitch: 1.05, rate: .92,
+            instr: SERENE,
             intro: 'Hi, I\'m Bao the panda! Let\'s have a pan-tastic time with numbers!', catch: ['Pan-tastic!', 'Bamboo-tastic!', 'That\'s black-and-white brilliant!', 'Even my bamboo is clapping for you!', 'Panda power!'] },
-        coco: { name: 'Coco', what: 'bear', e: '🐻', K: 1, voice: 'ash', pitch: 1.0, rate: 1,
-            instr: 'Voice: Coco, a big-hearted, funny cartoon bear from a children\'s TV show. Tone: energetic, cheeky and charismatic like a sports coach who loves kids, full of fun and big laughs. Pacing: bouncy but clear for children aged 4 to 10. Simple, crisp English.',
+        coco: { name: 'Coco', what: 'bear', e: '🐻', K: 1, voice: 'sage', pitch: 1.05, rate: .92,
+            instr: SERENE,
             intro: 'Hey hey! I\'m Coco the bear. Ready for a beary fun game?', catch: ['Beary good!', 'Un-bear-lievable!', 'That\'s beary clever!', 'Big bear hug for you!', 'Roar-some!'] },
-        kiki: { name: 'Kiki', what: 'koala', e: '🐨', K: 2, voice: 'shimmer', pitch: 1.7, rate: 1.05,
-            instr: 'Voice: Kiki, a cute, sparkly cartoon koala from a children\'s TV show. Tone: sweet, cheerful and super excited, like a best friend cheering at a party, with happy squeals and giggles. Pacing: light and quick but clear for children aged 4 to 10. Simple, crisp English.',
+        kiki: { name: 'Kiki', what: 'koala', e: '🐨', K: 2, voice: 'sage', pitch: 1.05, rate: .92,
+            instr: SERENE,
             intro: 'Hello hello! I\'m Kiki the koala. Let\'s climb the number tree together!', catch: ['Koala-ty work!', 'Eucalyp-tastic!', 'You\'re tree-mendous!', 'Koala-fied genius!', 'Hugs and high fives!'] }
     };
     const fid = () => { const f = LS.get('mg_friend', 'bao'); return FR[f] ? f : 'bao'; };
@@ -49800,8 +49832,7 @@ html.mg-lock, html.mg-lock body { overflow: hidden !important; }
         sticker: ['You won a new sticker!', 'A new sticker for your book!'],
         best: ['New best score! Hooray!', 'That\'s your best ever!'],
         nudge: ['Psst! Pop the right balloon!', 'Take your time. I\'m right here.', 'Hmm, which balloon could it be?', 'You can tap Hear it if you want me to read it.', 'I\'m waiting... and doing a little dance!', 'Think, think, think!'],
-        tap: ['Hee hee! That tickles!', 'Boop! You found my nose!', 'Hi there, friend!', 'Want to hear a joke? Pop a balloon first!', 'I love doing math with you!', 'Wheee! Do that again!', 'You are my favorite math buddy!'],
-        story: ['Listen to the story.', 'Here is a story sum.', 'Story time! Listen carefully.']
+        tap: ['Hee hee! That tickles!', 'Boop! You found my nose!', 'Hi there, friend!', 'Want to hear a joke? Pop a balloon first!', 'I love doing math with you!', 'Wheee! Do that again!', 'You are my favorite math buddy!']
     };
     const BAG = {};
     function line(k, x) { let b = BAG[k]; if (!b || !b.length) { const prev = b && b.last; b = BAG[k] = shuf(L[k]); if (b.length > 1 && b[b.length - 1] === prev) b.unshift(b.pop()); } const t = b.pop(); b.last = t; return x == null ? t : t.replace('{x}', x); }
@@ -49840,63 +49871,32 @@ html.mg-lock, html.mg-lock body { overflow: hidden !important; }
         return { kind: 'num', e, pos, ans: [e.a, e.b, e.c][pos], key, hi: lim, html: '<div class="mg-eq' + eqLong(inner) + '">' + inner + '</div>', hint: 'Which number is hiding?', say: p[0] + ' ' + SW[e.op] + ' ' + p[1] + ' equals ' + p[2] + '?' };
     }
     function numQ(op, lv) { const e = eq(op, lv); if (!e) return null; const pos = Math.random() < .45 ? 2 : (Math.random() < .5 ? 0 : 1); return eqQ(e, pos, e.op + e.a + '_' + e.b + '_' + pos, LV[lv].max); }
-    function signQ(lv) {
-        const e = eq(pick(['add', 'sub', 'mul', 'div']), lv); if (!e) return null;
-        const ok = Object.keys(SG).filter(o => sat(o, e.a, e.b, e.c)); if (ok.length !== 1) return null;
-        return { kind: 'sign', e, ans: SG[e.op], opts: ['+', '−', '×', '÷'], key: 's' + e.a + '_' + e.b + '_' + e.c, html: '<div class="mg-eq">' + N(e.a) + H + N(e.b) + O('=') + N(e.c) + '</div>', hint: 'Which sign is hiding?', say: e.a + ', what sign, ' + e.b + ', makes ' + e.c + '? Find the sign!' };
+    /* "which sign is hiding": only the signs the child picked are used (and offered on the balloons) */
+    function signQ(lv, ops) {
+        if (!ops || ops.length < 2) return null;
+        const e = eq(pick(ops), lv); if (!e) return null;
+        const ok = ops.filter(o => sat(o, e.a, e.b, e.c)); if (ok.length !== 1) return null;
+        return { kind: 'sign', e, ans: SG[e.op], opts: Object.keys(SG).filter(o => ops.includes(o)).map(o => SG[o]), key: 's' + e.a + '_' + e.b + '_' + e.c + ops.join(''), html: '<div class="mg-eq">' + N(e.a) + H + N(e.b) + O('=') + N(e.c) + '</div>', hint: 'Which sign is hiding?', say: e.a + ', what sign, ' + e.b + ', makes ' + e.c + '? Find the sign!' };
     }
-    function threeQ(lv) {
-        const max = LV[lv].max, top = max >= 100 ? 40 : 9;
-        const a = R(1, top), b = R(1, top), minus = Math.random() < .4;
-        let c, d; if (minus) { if (a + b < 2) return null; c = R(1, Math.min(top, a + b - 1)); d = a + b - c; } else { c = R(1, top); d = a + b + c; }
+    /* three numbers: all adding, all taking away, or one of each, depending on the signs picked */
+    function threeQ(lv, ops) {
+        const max = LV[lv].max, top = max >= 100 ? 40 : 9, A = ops.includes('add'), S = ops.includes('sub'); if (!A && !S) return null;
+        const kinds = []; if (A) kinds.push('pp'); if (S) kinds.push('mm'); if (A && S) kinds.push('pm'); const kd = pick(kinds);
+        let a, b, c, d, s1 = '+', s2 = '+';
+        if (kd === 'pp') { a = R(1, top); b = R(1, top); c = R(1, top); d = a + b + c; }
+        else if (kd === 'pm') { a = R(1, top); b = R(1, top); if (a + b < 2) return null; c = R(1, Math.min(top, a + b - 1)); d = a + b - c; s2 = '−'; }
+        else { s1 = '−'; s2 = '−'; a = R(4, Math.min(max, max >= 100 ? 99 : 10)); b = R(1, Math.max(1, Math.floor((a - 1) / 2))); c = R(1, a - b - 1); d = a - b - c; if (c < 1 || d < 1) return null; }
         if (d > max || d < 0) return null;
         const pos = Math.random() < .7 ? 3 : 1, v = [a, b, c, d].map((x, i) => i === pos ? H : N(x));
-        const inner = v[0] + O('+') + v[1] + O(minus ? '−' : '+') + v[2] + O('=') + v[3];
+        const inner = v[0] + O(s1) + v[1] + O(s2) + v[2] + O('=') + v[3];
         const p = [a, b, c, d].map((x, i) => i === pos ? 'what' : x);
-        return { kind: 'three', v: [a, b, c, d], minus, pos, ans: [a, b, c, d][pos], key: 'h' + a + '_' + b + '_' + c + (minus ? 'm' : 'p') + pos, hi: max, html: '<div class="mg-eq' + eqLong(inner) + '">' + inner + '</div>', hint: 'Three numbers! Which one is hiding?', say: p[0] + ' plus ' + p[1] + (minus ? ' minus ' : ' plus ') + p[2] + ' equals ' + p[3] + '?' };
+        return { kind: 'three', v: [a, b, c, d], pos, ans: [a, b, c, d][pos], key: 'h' + a + '_' + b + '_' + c + kd + pos, hi: max, html: '<div class="mg-eq' + eqLong(inner) + '">' + inner + '</div>', hint: 'Three numbers! Which one is hiding?', say: p[0] + ' ' + SAYSIGN[s1] + ' ' + p[1] + ' ' + SAYSIGN[s2] + ' ' + p[2] + ' equals ' + p[3] + '?' };
     }
-    /* story sums in simple English */
-    const NAMES = [['Tom', 'he'], ['Lily', 'she'], ['Sam', 'he'], ['Mia', 'she'], ['Max', 'he'], ['Zoe', 'she'], ['Ben', 'he'], ['Emma', 'she'], ['Leo', 'he'], ['Ava', 'she'], ['Aziz', 'he'], ['Malika', 'she'], ['Timur', 'he'], ['Nilufar', 'she'], ['Jack', 'he'], ['Sara', 'she'], ['Omar', 'he'], ['Nina', 'she']];
-    const OBJ = [['apple', 'apples', '🍎'], ['balloon', 'balloons', '🎈'], ['sticker', 'stickers', '⭐'], ['sweet', 'sweets', '🍬'], ['cookie', 'cookies', '🍪'], ['book', 'books', '📘'], ['toy car', 'toy cars', '🚗'], ['fish', 'fish', '🐟'], ['flower', 'flowers', '🌸'], ['pencil', 'pencils', '✏️'], ['egg', 'eggs', '🥚'], ['ball', 'balls', '⚽'], ['duck', 'ducks', '🦆'], ['cupcake', 'cupcakes', '🧁'], ['shell', 'shells', '🐚'], ['kite', 'kites', '🪁'], ['banana', 'bananas', '🍌'], ['star', 'stars', '🌟'], ['crayon', 'crayons', '🖍️'], ['robot', 'robots', '🤖']];
-    const cap = (s) => s[0].toUpperCase() + s.slice(1);
-    const ST_T = {
-        add: [
-            (n, m, o, a, b) => `${n[0]} has ${a} ${o(a)}. ${cap(n[1])} gets ${b} more. How many ${o(2)} does ${n[1]} have now?`,
-            (n, m, o, a, b) => `There ${a === 1 ? 'is' : 'are'} ${a} ${o(a)} in a box. Mum puts in ${b} more. How many ${o(2)} are in the box now?`,
-            (n, m, o, a, b) => `${n[0]} has ${a} ${o(a)}. ${m[0]} has ${b} ${o(b)}. How many ${o(2)} do they have together?`,
-            (n, m, o, a, b) => `${a} ${o(a)} ${a === 1 ? 'is' : 'are'} on the table and ${b} ${o(b)} ${b === 1 ? 'is' : 'are'} on the chair. How many ${o(2)} are there in all?`,
-            (n, m, o, a, b) => `${n[0]} found ${a} ${o(a)} in the morning and ${b} ${o(b)} in the afternoon. How many ${o(2)} did ${n[1]} find?`,
-            (n, m, o, a, b) => `On Monday ${n[0]} made ${a} ${o(a)}. On Tuesday ${n[1]} made ${b} more. How many ${o(2)} did ${n[1]} make?`
-        ],
-        sub: [
-            (n, m, o, a, b) => `${n[0]} has ${a} ${o(a)}. ${cap(n[1])} gives ${b} to ${m[0]}. How many ${o(2)} are left?`,
-            (n, m, o, a, b) => `There are ${a} ${o(a)} in the bag. ${n[0]} takes out ${b}. How many ${o(2)} are still in the bag?`,
-            (n, m, o, a, b) => `${n[0]} had ${a} ${o(a)}. ${cap(n[1])} lost ${b}. How many ${o(2)} does ${n[1]} have now?`,
-            (n, m, o, a, b) => `${n[0]} has ${a} ${o(a)}. ${m[0]} has ${b}. How many more ${o(2)} does ${n[0]} have?`,
-            (n, m, o, a, b) => `${a} ${o(a)} were in the shop. The shop sold ${b}. How many ${o(2)} are left in the shop?`
-        ],
-        mul: [
-            (n, m, o, a, b) => `There ${a === 1 ? 'is' : 'are'} ${a} ${a === 1 ? 'bag' : 'bags'}. Each bag has ${b} ${o(b)}. How many ${o(2)} are there?`,
-            (n, m, o, a, b) => `${n[0]} has ${a} ${a === 1 ? 'box' : 'boxes'} with ${b} ${o(b)} in each box. How many ${o(2)} does ${n[1]} have in all?`,
-            (n, m, o, a, b) => `${a} ${a === 1 ? 'friend' : 'friends'} each bring ${b} ${o(b)} to the party. How many ${o(2)} are at the party?`,
-            (n, m, o, a, b) => `There ${a === 1 ? 'is' : 'are'} ${a} ${a === 1 ? 'row' : 'rows'} of ${o(2)}. Each row has ${b}. How many ${o(2)} are there?`
-        ],
-        div: [
-            (n, m, o, a, b) => `${n[0]} has ${a} ${o(a)}. ${cap(n[1])} shares them equally between ${b} ${b === 1 ? 'friend' : 'friends'}. How many ${o(2)} does each friend get?`,
-            (n, m, o, a, b) => `${a} ${o(a)} are put into ${b} equal ${b === 1 ? 'group' : 'groups'}. How many ${o(2)} are in each group?`,
-            (n, m, o, a, b) => `The teacher has ${a} ${o(a)} for ${b} ${b === 1 ? 'child' : 'children'}. Each child gets the same number. How many ${o(2)} does each child get?`
-        ]
-    };
-    function storyQ(op, lv) {
-        const e = eq(op, lv); if (!e || ((op === 'mul' || op === 'div') && (e.a < 2 || e.b < 2))) return null;
-        const ti = R(0, ST_T[op].length - 1), n = pick(NAMES); let m = pick(NAMES); if (m[0] === n[0]) m = NAMES[(NAMES.indexOf(n) + 1) % NAMES.length];
-        const ob = pick(OBJ), o = (k) => k === 1 ? ob[0] : ob[1];
-        const text = ST_T[op][ti](n, m, o, e.a, e.b);
-        return { kind: 'story', e, ans: e.c, key: 'y' + op + ti + '_' + e.a + '_' + e.b + ob[0], hi: LV[lv].max, story: 1,
-            html: '<p class="mg-st"><span class="mg-ste" aria-hidden="true">' + ob[2] + '</span>' + esc(text) + '</p><div class="mg-eq sm">' + W('Answer:') + H + '</div>', hint: 'Listen, think, then pop the answer!', say: text };
-    }
-    function seqQ(lv) {
-        const max = LV[lv].max, steps = lv === 10 ? [1, 2, -1] : lv === 20 ? [1, 2, 3, 5, -1, -2, 4] : [2, 3, 4, 5, 10, -10, -5, -2, 11, 20];
+    const OBJ = [['apple', 'apples', '🍎'], ['balloon', 'balloons', '🎈'], ['star', 'stars', '🌟'], ['sweet', 'sweets', '🍬'], ['cookie', 'cookies', '🍪'], ['book', 'books', '📘'], ['toy car', 'toy cars', '🚗'], ['fish', 'fish', '🐟'], ['flower', 'flowers', '🌸'], ['pencil', 'pencils', '✏️'], ['egg', 'eggs', '🥚'], ['ball', 'balls', '⚽'], ['duck', 'ducks', '🦆'], ['cupcake', 'cupcakes', '🧁'], ['shell', 'shells', '🐚'], ['kite', 'kites', '🪁'], ['banana', 'bananas', '🍌'], ['crayon', 'crayons', '🖍️'], ['robot', 'robots', '🤖']];
+    function seqQ(lv, ops) {
+        const max = LV[lv].max, all = lv === 10 ? [1, 2, -1] : lv === 20 ? [1, 2, 3, 5, -1, -2, 4] : [2, 3, 4, 5, 10, -10, -5, -2, 11, 20];
+        const A = !ops || ops.includes('add'), S = !ops || ops.includes('sub'); if (!A && !S) return null;
+        const steps = all.filter(d => d > 0 ? A : S);
         const d = pick(steps), len = 5, span = Math.abs(d) * (len - 1); if (span > max) return null;
         const s = d > 0 ? R(0, max - span) : R(span, max), t = []; for (let i = 0; i < len; i++) t.push(s + d * i);
         const h = Math.random() < .5 ? len - 1 : R(0, len - 2);
@@ -49905,16 +49905,16 @@ html.mg-lock, html.mg-lock body { overflow: hidden !important; }
     }
     function cmpQ(lv, ops) {
         const max = LV[lv].max; let lh, ls, lv2, key;
-        if (lv === 10 || Math.random() < .45) { lv2 = R(0, max); lh = N(lv2); ls = String(lv2); key = 'c' + lv2; }
-        else { const o = pick(ops.filter(x => x === 'add' || x === 'sub').concat(['add'])), e = eq(o, lv); if (!e) return null; lv2 = e.c; lh = N(e.a) + O(SG[o]) + N(e.b); ls = e.a + ' ' + SW[o] + ' ' + e.b; key = 'c' + e.a + o + e.b; }
+        if (lv === 10 || Math.random() < .4) { lv2 = R(0, max); lh = N(lv2); ls = String(lv2); key = 'c' + lv2; }
+        else { const o = pick(ops), e = eq(o, lv); if (!e) return null; lv2 = e.c; lh = N(e.a) + O(SG[o]) + N(e.b); ls = e.a + ' ' + SW[o] + ' ' + e.b; key = 'c' + e.a + o + e.b; }
         let r = Math.random() < .2 ? lv2 : Math.max(0, Math.min(max, lv2 + pick([-3, -2, -1, 1, 2, 3, 5, -5])));
         if (r === lv2 && Math.random() < .5 && lh.indexOf('mg-o') < 0) r = Math.min(max, lv2 + 1);
         const ans = lv2 > r ? '>' : lv2 < r ? '<' : '=';
         return { kind: 'cmp', l: lv2, r, ans, opts: ['>', '<', '='], key: key + '_' + r, html: '<div class="mg-eq' + eqLong(lh + r) + '">' + lh + H + N(r) + '</div>', hint: 'Bigger, smaller or the same?', say: 'Is ' + ls + ' greater than, less than, or equal to ' + r + '? Pop the right sign!' };
     }
-    function countQ(lv) {
+    function countQ(lv, ops) {
         const ob = pick(OBJ);
-        if (Math.random() < .45) { const n = R(3, lv === 10 ? 10 : 15); return { kind: 'count', n, ans: n, lo: 1, hi: LV[lv].max, key: 'n' + ob[0] + n, html: '<div class="mg-cnt"><span class="g">' + ob[2].repeat(n) + '</span></div><div class="mg-eq sm">' + W('How many?') + H + '</div>', hint: 'Count the ' + ob[1] + '!', say: 'How many ' + ob[1] + ' can you count?' }; }
+        if (!ops.includes('add') || Math.random() < .45) { const n = R(3, lv === 10 ? 10 : 15); return { kind: 'count', n, ans: n, lo: 1, hi: LV[lv].max, key: 'n' + ob[0] + n, html: '<div class="mg-cnt"><span class="g">' + ob[2].repeat(n) + '</span></div><div class="mg-eq sm">' + W('How many?') + H + '</div>', hint: 'Count the ' + ob[1] + '!', say: 'How many ' + ob[1] + ' can you count?' }; }
         const a = R(1, lv === 10 ? 6 : 9), b = R(1, Math.min(9, (lv === 10 ? 10 : 18) - a));
         return { kind: 'count', a, b, ans: a + b, lo: 1, hi: LV[lv].max, key: 'g' + ob[0] + a + '_' + b, html: '<div class="mg-cnt"><span class="g">' + ob[2].repeat(a) + '</span><b>+</b><span class="g">' + ob[2].repeat(b) + '</span><b>=</b>' + H + '</div>', hint: 'Count them all together!', say: a + ' ' + (a === 1 ? ob[0] : ob[1]) + ' and ' + b + ' more. How many altogether?' };
     }
@@ -49933,8 +49933,10 @@ html.mg-lock, html.mg-lock body { overflow: hidden !important; }
         const w = want ? 'odd' : 'even';
         return { kind: 'eo', want, ans, opts, key: 'e' + w + ans, html: '<div class="mg-eo">Pop the <b>' + w + '</b> number!</div>', hint: want ? 'Odd numbers end in 1, 3, 5, 7 or 9.' : 'Even numbers end in 0, 2, 4, 6 or 8.', say: 'Pop the ' + w + ' number!' };
     }
-    function dblQ(lv) {
-        const max = LV[lv].max, x = R(1, Math.floor(max / 2)), half = Math.random() < .45;
+    function dblQ(lv, ops) {
+        const max = LV[lv].max, x = R(1, Math.floor(max / 2));
+        const canD = ops.includes('add') || ops.includes('mul'), canH = ops.includes('sub') || ops.includes('div'); if (!canD && !canH) return null;
+        const half = canD && canH ? Math.random() < .45 : canH;
         return half ? { kind: 'dbl', half, x: 2 * x, ans: x, hi: max, key: 'b' + (2 * x), html: '<div class="mg-eq">' + W('Half of') + N(2 * x) + O('=') + H + '</div>', hint: 'Half means two equal parts.', say: 'What is half of ' + (2 * x) + '?' }
             : { kind: 'dbl', half, x, ans: 2 * x, hi: max, key: 'd' + x, html: '<div class="mg-eq">' + W('Double') + N(x) + O('=') + H + '</div>', hint: 'Double means two times.', say: 'What is double ' + x + '?' };
     }
@@ -49945,16 +49947,22 @@ html.mg-lock, html.mg-lock body { overflow: hidden !important; }
         return eqQ(e, pos, 'T' + e.op + e.a + '_' + e.b + '_' + pos, 100);
     }
     function avail(lv) { return Object.keys(TYPES).filter(k => TYPES[k].lv.includes(lv)); }
+    /* which puzzle types can be built from the signs the child picked */
+    function typeOk(t, ops) {
+        const has = (o) => ops.includes(o);
+        if (t === 'seq') return has('add') || has('sub');
+        if (t === 'tens') return has('add');
+        return true;
+    }
     function genOne() {
         if (G.mode === 'tables') return tableQ(G.tb);
-        const lv = G.lv, av = avail(lv).filter(t => G.types.includes(t)); const list = av.length ? av : ['sums'];
-        const w = list.map(t => t === 'sums' ? 4 : t === 'story' ? 1.6 : 1.2), sum = w.reduce((a, b) => a + b, 0); let r = Math.random() * sum, ty = list[0];
+        const lv = G.lv, ops = G.ops, av = avail(lv).filter(t => G.types.includes(t) && typeOk(t, ops)); const list = av.length ? av : ['sums'];
+        const w = list.map(t => t === 'sums' ? 4 : 1.2), sum = w.reduce((a, b) => a + b, 0); let r = Math.random() * sum, ty = list[0];
         for (let i = 0; i < list.length; i++) { r -= w[i]; if (r <= 0) { ty = list[i]; break; } }
-        if (ty === 'sums') { const x = Math.random(); if (G.ops.length > 1 && x < .1) return signQ(lv); if (lv >= 20 && x < .24 && (G.ops.includes('add') || G.ops.includes('sub'))) return threeQ(lv); return numQ(pick(G.ops), lv); }
-        if (ty === 'story') return storyQ(pick(G.ops), lv);
-        if (ty === 'seq') return seqQ(lv); if (ty === 'cmp') return cmpQ(lv, G.ops); if (ty === 'count') return countQ(lv);
-        if (ty === 'tens') return tensQ(); if (ty === 'eo') return eoQ(lv); if (ty === 'dbl') return dblQ(lv);
-        return numQ('add', lv);
+        if (ty === 'sums') { const x = Math.random(); if (ops.length > 1 && x < .12) return signQ(lv, ops); if (lv >= 20 && x < .26 && (ops.includes('add') || ops.includes('sub'))) return threeQ(lv, ops); return numQ(pick(ops), lv); }
+        if (ty === 'seq') return seqQ(lv, ops); if (ty === 'cmp') return cmpQ(lv, ops); if (ty === 'count') return countQ(lv, ops);
+        if (ty === 'tens') return tensQ(); if (ty === 'eo') return eoQ(lv); if (ty === 'dbl') return dblQ(lv, ops);
+        return numQ(pick(ops), lv);
     }
     function numOpts(x, n, lo, hi, q) {
         const set = new Set([x]), out = [x];
@@ -49987,7 +49995,7 @@ html.mg-lock, html.mg-lock body { overflow: hidden !important; }
             /* every puzzle of this kind has been used: start the list again (but never repeat inside this game) */
             S.clear(); G.used.forEach(k => S.add(k));
         }
-        return finish(numQ('add', G.lv));
+        return finish(numQ(pick(G.ops), G.lv) || numQ(G.ops[0], G.lv) || numQ('add', G.lv));
     }
     /* a daily challenge is the same for everyone on the same day */
     function seeded(seed) { let a = seed >>> 0; return () => { a = (a + 0x6D2B79F5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
@@ -50067,120 +50075,274 @@ html.mg-lock, html.mg-lock body { overflow: hidden !important; }
     };
     function sfx(k) { if (!on('sfx')) return; const c = actx(); if (!c) return; try { SFX[k](); } catch (e) { } }
 
-    /* ===================== THE 3D FRIEND (ray-marched in a tiny WebGL2 shader) ===================== */
+    /* ===================== THE 3D FRIEND (ray-marched in a WebGL2 shader) =====================
+       A chubby, soft animal: fur (noise bumps, fuzzy rim light, warm terminator), soft shadow and ambient occlusion, glossy wet eyes with
+       catch-lights, brows, moving ears, two-bone arms (the shader solves the elbows, the code only says where the paws go) and a ground shadow.
+       The code animates it with springs, so every move overshoots and settles like a real body: blink, breathing, weight shift, ear flicks,
+       eyes and head that follow your finger, a crouch before every jump, a squash when it lands, and a mouth that follows the voice. */
     const BFS = `#version 300 es
 precision highp float;
-uniform vec2 R;uniform float T,JU,SQ,YA,AL,AR,TI,MO,BL,HA,SAD,K,HT;
+uniform vec2 R,EAR,LK;
+uniform float T,JU,SQ,YA,TI,LN,HT,HY,HN,BL,HA,SAD,BRL,BRR,BA,MO,SM,CH,BR,K;
+uniform vec3 HL,HR;
 out vec4 o;
+vec3 SLp,ELp,HLp,SRp,ERp,HRp,BIL,BOL,BIR,BOR;
 mat2 rot(float a){float c=cos(a),s=sin(a);return mat2(c,s,-s,c);}
 float sdE(vec3 p,vec3 r){float k0=length(p/r);float k1=length(p/(r*r));return k0*(k0-1.)/max(k1,1e-4);}
 float sdC(vec3 p,vec3 a,vec3 b,float r){vec3 pa=p-a,ba=b-a;float h=clamp(dot(pa,ba)/dot(ba,ba),0.,1.);return length(pa-ba*h)-r;}
 float smin(float a,float b,float k){float h=clamp(.5+.5*(b-a)/k,0.,1.);return mix(b,a,h)-k*h*(1.-h);}
-vec3 loc(vec3 p){p.y-=JU-.06;p.xy=rot(TI)*p.xy;p.xz=rot(YA)*p.xz;p.y/=(1.-SQ);return p;}
-vec3 hsp(vec3 p){vec3 h=p-vec3(0.,.36,0.);h.xy=rot(HT)*h.xy;return h;}
+float hash(vec3 p){p=fract(p*.3183099+.1);p*=17.;return fract(p.x*p.y*p.z*(p.x+p.y+p.z));}
+float nz(vec3 x){vec3 i=floor(x),f=fract(x);f=f*f*(3.-2.*f);
+  return mix(mix(mix(hash(i),hash(i+vec3(1,0,0)),f.x),mix(hash(i+vec3(0,1,0)),hash(i+vec3(1,1,0)),f.x),f.y),
+             mix(mix(hash(i+vec3(0,0,1)),hash(i+vec3(1,0,1)),f.x),mix(hash(i+vec3(0,1,1)),hash(i+vec3(1,1,1)),f.x),f.y),f.z);}
+vec3 loc(vec3 p){
+  p.y-=JU-.06;
+  p.yz=rot(LN)*p.yz;p.xy=rot(TI)*p.xy;p.xz=rot(YA)*p.xz;
+  p.y+=.93;p.y/=(1.-SQ);p.xz/=(1.+.55*SQ);p.y-=.93;
+  return p;
+}
+vec3 hsp(vec3 p){vec3 h=p-vec3(0.,.02,0.);h.xy=rot(HT)*h.xy;h.xz=rot(HY)*h.xz;h.yz=rot(HN)*h.yz;return h-vec3(0.,.34+.008*BR,0.);}
+vec3 earq(vec3 h){float ea=h.x<0.?EAR.x:EAR.y;vec3 q=vec3(abs(h.x),h.y,h.z)-vec3(.335,.30+.035*ea,-.04);q.xy=rot(-ea*.5)*q.xy;return q;}
+vec3 elbow(vec3 S,vec3 Tg,vec3 pole,float l1,float l2){
+  vec3 d=Tg-S;float L=max(length(d),1e-3);vec3 dir=d/L;L=min(L,l1+l2-.01);
+  float a=(l1*l1-l2*l2+L*L)/(2.*L);float h=sqrt(max(l1*l1-a*a,0.));
+  vec3 pp=pole-dot(pole,dir)*dir;pp=normalize(pp+vec3(1e-4));
+  return S+dir*a+pp*h;
+}
+vec3 brw(float x,float y,float br,float ba,float sg,float inner){
+  float yy=inner>.5?.205+.05*br-.04*ba:.19+.05*br+.03*ba;
+  float xx=sg*(inner>.5?.085:.245);
+  float zz=.41*sqrt(max(.02,1.-(xx*xx)/(.46*.46)-(yy*yy)/(.4*.4)))-.012;
+  return vec3(xx,yy,zz);
+}
 vec2 map(vec3 w){
   vec3 p=loc(w);vec3 h=hsp(p);
-  float body=sdE(p-vec3(0.,-.36,0.),vec3(.43,.44,.38));
-  float head=sdE(h,vec3(.45,.40,.40));
-  vec2 r=vec2(smin(body,head,.06),1.);
-  float es=K>1.5?.2:.14;
-  vec3 eq=vec3(abs(h.x),h.y,h.z)-vec3(.34,.31,-.03);
-  float ear=sdE(eq,vec3(es,es,es*.55));if(ear<r.x)r=vec2(ear,2.);
-  if(K<1.5){float mz=sdE(h-vec3(0.,-.11,.32),vec3(.19,.13,.12));if(mz<r.x)r=vec2(mz,5.);}
-  vec3 ey=vec3(abs(h.x),h.y,h.z)-vec3(.16,.05,.355);
+  float body=sdE(p-vec3(0.,-.38,0.),vec3(.43+.012*BR,.45,.38+.012*BR));
+  body=smin(body,sdE(p-vec3(0.,-.47,.1),vec3(.34,.34,.32)),.1);
+  float head=sdE(h,vec3(.46,.40,.41));
+  if(K<1.5)head=smin(head,sdE(h-vec3(0.,-.115,.31),vec3(.2,.145,.15)),.07);
+  vec2 r=vec2(smin(body,head,.08),1.);
+  float es=K>1.5?.21:.155;
+  float ear=sdE(earq(h),vec3(es,es,es*.55));if(ear<r.x)r=vec2(ear,2.);
+  vec3 ey=vec3(abs(h.x),h.y,h.z)-vec3(.165,.06,.352);
   float eye=length(ey)-.068;if(eye<r.x)r=vec2(eye,3.);
-  float nose=K>1.5?sdE(h-vec3(0.,-.05,.40),vec3(.085,.11,.075)):sdE(h-vec3(0.,-.05,.435),vec3(.065,.045,.04));
+  float nose=K>1.5?sdE(h-vec3(0.,-.045,.40),vec3(.09,.115,.08)):sdE(h-vec3(0.,-.045,.437),vec3(.068,.047,.042));
   if(nose<r.x)r=vec2(nose,4.);
-  vec3 sl=vec3(-.36,-.16,.05),sr=vec3(.36,-.16,.05);
-  vec3 al=sl+vec3(-sin(AL),-cos(AL),.25)*.3,ar=sr+vec3(sin(AR),-cos(AR),.25)*.3;
-  float arm=min(sdC(p,sl,al,.105),sdC(p,sr,ar,.105));if(arm<r.x)r=vec2(arm,2.);
-  vec3 lq=vec3(abs(p.x),p.y,p.z)-vec3(.22,-.78,.1);
-  float leg=sdE(lq,vec3(.15,.12,.18));if(leg<r.x)r=vec2(leg,2.);
+  float bw=h.x<0.?sdC(h,BIL,BOL,.021):sdC(h,BIR,BOR,.021);
+  if(bw<r.x+.02){float bb=smin(r.x,bw,.03);if(bw<r.x+.005)r.y=7.;r.x=bb;}
+  float lim=min(min(sdC(p,SLp,ELp,.105),sdC(p,ELp,HLp,.097)),min(sdC(p,SRp,ERp,.105),sdC(p,ERp,HRp,.097)));
+  float pawL=sdE(p-HLp,vec3(.118,.112,.118)),pawR=sdE(p-HRp,vec3(.118,.112,.118));
+  lim=min(lim,min(pawL,pawR));
+  if(lim<r.x+.07){float sm=smin(r.x,lim,.07);if(lim<r.x+.02)r.y=6.;r.x=sm;}
+  vec3 lq=vec3(abs(p.x),p.y,p.z)-vec3(.23,-.80,.08);
+  float leg=sdE(lq,vec3(.17,.14,.21));if(leg<r.x)r=vec2(leg,6.);
   return r;
 }
-vec3 nor(vec3 p){vec2 e=vec2(.002,0.);return normalize(vec3(map(p+e.xyy).x-map(p-e.xyy).x,map(p+e.yxy).x-map(p-e.yxy).x,map(p+e.yyx).x-map(p-e.yyx).x));}
+vec3 nor(vec3 p){vec2 e=vec2(.0025,0.);return normalize(vec3(map(p+e.xyy).x-map(p-e.xyy).x,map(p+e.yxy).x-map(p-e.yxy).x,map(p+e.yyx).x-map(p-e.yyx).x));}
 void main(){
   vec2 uv=(gl_FragCoord.xy-.5*R)/R.y;
-  vec3 ro=vec3(0.,.05,3.6),rd=normalize(vec3(uv,-1.5));
-  float t=2.2;vec2 hh=vec2(0.);bool hit=false;
-  for(int i=0;i<80;i++){hh=map(ro+rd*t);if(hh.x<.0015){hit=true;break;}t+=hh.x*.9;if(t>5.)break;}
-  if(!hit){o=vec4(0.);return;}
-  vec3 p=ro+rd*t,n=nor(p),lp=loc(p),hp=hsp(lp);float m=hh.y;
-  vec3 C1=K<.5?vec3(.96,.96,.94):K<1.5?vec3(.66,.42,.24):vec3(.62,.64,.70);
-  vec3 C2=K<.5?vec3(.13,.13,.16):K<1.5?vec3(.50,.30,.16):vec3(.50,.52,.58);
-  vec3 C3=K<.5?vec3(.97,.97,.95):K<1.5?vec3(.92,.74,.54):vec3(.94,.94,.97);
-  vec3 col=C1;
-  if(m<1.5){
-    if(K>.5){float bl=sdE(lp-vec3(0.,-.42,.22),vec3(.28,.3,.2));col=mix(col,C3,1.-smoothstep(-.02,.02,bl));}
-    if(K<.5){vec3 q=vec3(abs(hp.x),hp.y,hp.z)-vec3(.16,.035,.33);q.xy=rot(.55)*q.xy;float pd=length(q.xy/vec2(.1,.135));col=mix(col,C2,(1.-smoothstep(.93,1.05,pd))*step(.1,hp.z));}
-    vec3 cq=vec3(abs(hp.x),hp.y,hp.z)-vec3(.27,-.11,.3);col=mix(col,vec3(1.,.55,.62),(1.-smoothstep(0.,.09,length(cq)))*.75*step(0.,hp.z));
-  }else if(m<2.5){col=C2;
-    if(K>.5){vec3 q=vec3(abs(hp.x),hp.y,hp.z)-vec3(.34,.31,-.03);if(q.z>0.&&length(q.xy)<(K>1.5?.13:.085))col=C3;}
-  }else if(m<3.5){
-    vec3 e=vec3(abs(hp.x),hp.y,hp.z)-vec3(.16,.05,.355);
-    col=vec3(.04,.03,.05);
-    col=mix(col,vec3(1.),1.-smoothstep(.016,.026,length(e.xy-vec2(.022,.026))));
-    col=mix(col,vec3(.6,.75,1.),.6*(1.-smoothstep(.006,.012,length(e.xy-vec2(-.02,-.03)))));
-    float lid=max(step(mix(.075,-.075,max(BL,SAD*.3)),e.y),step(e.y,-.075+.075*HA));col=mix(col,K<.5?C2:C1,lid);
-  }else if(m<4.5){col=vec3(.08,.06,.07);}
-  else col=C3;
-  if(m>4.5||(K>1.5&&m<1.5)){
-    vec3 mq=K>1.5?hp-vec3(0.,-.21,.36):hp-vec3(0.,-.17,.415);
-    float mh=.012+.065*MO;float d=length(mq.xy/vec2(.07,mh));
-    if(mq.z>-.07&&d<1.){col=vec3(.36,.06,.1);if(mq.y<-mh*.25&&MO>.25)col=vec3(.98,.47,.52);}
-    float sm=abs(length(mq.xy-vec2(0.,.07))-.08);
-    if(MO<.2&&sm<.009&&mq.y<0.&&mq.z>-.07&&abs(mq.x)<.06)col=SAD>.5?col:vec3(.22,.08,.08);
-    float fr=abs(length(mq.xy-vec2(0.,-.1))-.08);
-    if(SAD>.5&&MO<.2&&fr<.009&&mq.y>-.04&&mq.z>-.07&&abs(mq.x)<.055)col=vec3(.22,.08,.08);
+  SLp=vec3(-.33,-.15,.02);SRp=vec3(.33,-.15,.02);
+  HLp=HL;HRp=HR;
+  ELp=elbow(SLp,HLp,vec3(-.7,-.5,-.35),.27,.25);ERp=elbow(SRp,HRp,vec3(.7,-.5,-.35),.27,.25);
+  BIL=brw(0.,0.,BRL,BA,-1.,1.);BOL=brw(0.,0.,BRL,BA,-1.,0.);BIR=brw(0.,0.,BRR,BA,1.,1.);BOR=brw(0.,0.,BRR,BA,1.,0.);
+  vec3 ro=vec3(0.,.02,3.7),rd=normalize(vec3(uv,-1.55));
+  vec3 oc=ro-vec3(0.,-.1,0.);float bq=dot(oc,rd),cq=dot(oc,oc)-2.1,ds=bq*bq-cq;
+  float t=0.;vec2 hh=vec2(1.);bool hit=false;
+  if(ds>0.){
+    t=max(-bq-sqrt(ds),1.8);float tmax=-bq+sqrt(ds);
+    for(int i=0;i<72;i++){hh=map(ro+rd*t);if(hh.x<.0015){hit=true;break;}t+=hh.x*.88;if(t>tmax)break;}
   }
-  vec3 L=normalize(vec3(.5,.8,.9));
-  float dif=clamp(dot(n,L),0.,1.)*.72+.36;
-  float rim=pow(1.-max(dot(n,-rd),0.),3.);
-  float sp=pow(max(dot(reflect(-L,n),-rd),0.),24.)*((m>2.5&&m<4.5)?.9:.1);
-  vec3 c=col*dif+rim*vec3(.55,.7,1.)*.32+sp;
-  o=vec4(pow(c,vec3(.92)),1.);
+  if(!hit){
+    if(rd.y<-.01){float tg=(-1.0-ro.y)/rd.y;vec3 g=ro+rd*tg;vec2 q=g.xz/vec2(.62,.34);float a=exp(-dot(q,q)*1.7)*mix(.42,.14,clamp(JU*3.,0.,1.));o=vec4(.14,.09,.28,a);}
+    else o=vec4(0.);
+    return;
+  }
+  vec3 p=ro+rd*t,n0=nor(p),lp=loc(p),hp=hsp(lp);float m=hh.y;
+  vec3 C1=K<.5?vec3(.97,.97,.95):K<1.5?vec3(.60,.37,.20):vec3(.60,.62,.68);
+  vec3 C2=K<.5?vec3(.09,.09,.11):K<1.5?vec3(.40,.24,.13):vec3(.42,.44,.50);
+  vec3 C3=K<.5?vec3(.98,.98,.96):K<1.5?vec3(.93,.77,.57):vec3(.95,.95,.98);
+  vec3 PK=vec3(1.,.55,.62);
+  vec3 col=C1;float gl=0.;
+  float eye=0.;
+  if(m<1.5){
+    if(K>.5){float bl=length((lp-vec3(0.,-.46,.3))/vec3(.3,.3,.18));col=mix(col,C3,1.-smoothstep(.85,1.1,bl));}
+    if(K>.5&&K<1.5){float mz=length((hp-vec3(0.,-.12,.33))/vec3(.25,.19,.22));col=mix(col,C3,(1.-smoothstep(.8,1.05,mz))*step(.15,hp.z));}
+    if(K<.5){vec3 q=vec3(abs(hp.x),hp.y,hp.z)-vec3(.16,.035,.33);q.xy=rot(.55)*q.xy;float pd=length(q.xy/vec2(.1,.135));col=mix(col,C2,(1.-smoothstep(.9,1.05,pd))*step(.1,hp.z));}
+    vec3 cq2=vec3(abs(hp.x),hp.y,hp.z)-vec3(.28,-.1,.28);
+    col=mix(col,PK,(1.-smoothstep(0.,.1,length(cq2)))*(.3+.55*CH)*step(0.,hp.z));
+    if(K<1.5){
+      float my=-.185;vec2 mq=hp.xy-vec2(0.,my);float w=.095+.02*MO,ax=mq.x/w;
+      if(hp.z>.3&&abs(ax)<1.){
+        float cy=SM*.06*ax*ax-SM*.03,hg=.0035+MO*.07*(1.-ax*ax*.6);
+        if(mq.y>cy-hg*1.7&&mq.y<cy+hg*.3+.0035){col=vec3(.33,.05,.09);if(MO>.2&&mq.y<cy-hg*.55)col=mix(col,vec3(.95,.45,.5),smoothstep(.2,.5,MO));gl=.3;}
+      }
+      if(hp.z>.3&&hp.y<-.095&&hp.y>my-.03&&abs(hp.x)<.006)col=vec3(.2,.07,.08);
+    }else{
+      float my=-.205;vec2 mq=hp.xy-vec2(0.,my);float w=.085+.02*MO,ax=mq.x/w;
+      if(hp.z>.25&&abs(ax)<1.){
+        float cy=SM*.055*ax*ax-SM*.025,hg=.0035+MO*.065*(1.-ax*ax*.6);
+        if(mq.y>cy-hg*1.7&&mq.y<cy+hg*.3+.0035){col=vec3(.25,.05,.08);if(MO>.2&&mq.y<cy-hg*.55)col=mix(col,vec3(.95,.45,.5),smoothstep(.2,.5,MO));gl=.3;}
+      }
+    }
+  }else if(m<2.5){
+    col=C2;vec3 q=earq(hp);
+    if(K>.5&&q.z>0.&&length(q.xy)<(K>1.5?.15:.095))col=K>1.5?C3:mix(C3,vec3(.8,.5,.4),.4);
+  }else if(m<3.5){
+    vec3 e=hp-vec3(hp.x<0.?-.165:.165,.06,.352);eye=1.;
+    float la=max(BL,SAD*.35);
+    float lidY=mix(.082,-.08,la);
+    vec2 ic=LK*vec2(.016,.014);
+    float rd2=length(e.xy-ic);
+    vec3 sc=vec3(.95,.92,.9);
+    vec3 ir=mix(vec3(.45,.24,.09),vec3(.15,.07,.03),smoothstep(.015,.05,rd2));
+    vec3 ec=mix(sc,ir,1.-smoothstep(.046,.052,rd2));
+    ec=mix(ec,vec3(.01,.008,.01),1.-smoothstep(.02,.027,rd2));
+    col=ec;
+    col=mix(col,vec3(1.),1.-smoothstep(.013,.019,length(e.xy-vec2(.022,.028))));
+    col=mix(col,vec3(.65,.8,1.),.7*(1.-smoothstep(.005,.011,length(e.xy-vec2(-.02,-.03)))));
+    float lid=step(lidY,e.y);
+    float cu=-.075+HA*.17-e.x*e.x*HA*20.;
+    lid=max(lid,max(step(e.y,cu),smoothstep(.5,.62,HA)));
+    vec3 fc=K<.5?C2:C1;
+    float arc=.006+.05*(1.-clamp(e.x*e.x/.0049,0.,1.));
+    float stroke=step(abs(e.y-arc),.0085)*step(abs(e.x),.07)*smoothstep(.5,.65,HA);
+    col=mix(col,fc,lid);
+    col=mix(col,vec3(.12,.06,.05),stroke);
+    gl=1.;
+  }else if(m<4.5){col=vec3(.07,.05,.06);gl=1.;}
+  else if(m<6.5){
+    col=C1;
+    if(m>5.5){
+      if(K<.5)col=C2;
+      vec3 lq=vec3(abs(lp.x),lp.y,lp.z)-vec3(.23,-.80,.08);
+      if(lp.y<-.55&&lq.z>0.){float pad=length(lq.xy*vec2(1./.105,1./.085)-vec2(0.,.1));col=mix(col,K<.5?vec3(.2,.2,.22):C2*.8,1.-smoothstep(.85,1.,pad));}
+    }
+  }else col=K<.5?C2:C2*1.05;
+  vec3 n=n0;
+  bool fur=(m<2.5)||(m>5.5);
+  if(fur){vec3 q=lp*46.;n=normalize(n0+.34*(vec3(nz(q),nz(q+4.3),nz(q+8.1))-.5));col*=.9+.2*nz(lp*30.+2.);}
+  vec3 Lk=normalize(vec3(.55,.8,.9));
+  float ndl=dot(n,Lk);
+  float sh=1.,tt=.05;
+  for(int i=0;i<12;i++){float d=map(p+n0*.004+Lk*tt).x;sh=min(sh,7.*d/tt);tt+=clamp(d,.03,.18);if(sh<.03||tt>1.6)break;}
+  sh=clamp(sh,0.,1.);
+  float ao=0.,sa=1.;
+  for(int i=0;i<4;i++){float hh2=.03+.075*float(i);ao+=(hh2-map(p+n0*hh2).x)*sa;sa*=.72;}
+  ao=clamp(1.-2.8*ao,0.,1.);
+  float dif=clamp((ndl+.4)/1.4,0.,1.);dif*=dif;
+  vec3 amb=mix(vec3(.42,.36,.40),vec3(.62,.74,.95),n.y*.5+.5)*.64;
+  vec3 c=col*(amb*ao+vec3(1.,.93,.84)*1.08*dif*mix(.42,1.,sh));
+  c+=col*vec3(.9,.34,.2)*.24*smoothstep(-.25,.2,ndl)*(1.-smoothstep(.2,.55,ndl))*ao;
+  float ndv=max(dot(n,-rd),0.);float fr=pow(1.-ndv,2.6);
+  c+=fr*(vec3(.75,.85,1.)*.34+col*.22)*(fur?.7+.6*nz(lp*38.):.6)*(.5+.5*ao);
+  c+=pow(clamp(dot(n,normalize(vec3(-.7,.3,-.8))),0.,1.),2.)*vec3(.7,.5,1.)*.16;
+  float shn=(m>2.5&&m<4.5)?(m<3.5?70.:36.):(gl>.2?20.:12.);
+  float sps=(m>2.5&&m<4.5)?(m<3.5?1.5:.9):(gl>.2?.25:.045);
+  c+=pow(max(dot(reflect(-Lk,n),-rd),0.),shn)*sps*mix(.3,1.,sh);
+  if(m>2.5&&m<4.5){vec3 rf=reflect(rd,n);c+=mix(vec3(.12,.16,.26),vec3(.75,.88,1.),rf.y*.5+.5)*.32*pow(1.-ndv,2.)*ao;}
+  c=c/(1.+c*.1);
+  o=vec4(pow(clamp(c,0.,1.),vec3(.93)),1.);
 }`;
+    const UN = ['R', 'T', 'JU', 'SQ', 'YA', 'TI', 'LN', 'HT', 'HY', 'HN', 'BL', 'HA', 'SAD', 'BRL', 'BRR', 'BA', 'MO', 'SM', 'CH', 'BR', 'K', 'EAR', 'LK', 'HL', 'HR'];
+    const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
     class Buddy {
         constructor() {
-            this.cv = D.createElement('canvas'); this.cv.className = 'mg-cv'; this.ok = false; this.t0 = performance.now();
-            this.mood = 'idle'; this.mt = 0; this.ms = 0; this.k = { ju: 0, sq: 0, ya: 0, al: .35, ar: .35, ti: 0, ha: 0, sad: 0, ht: 0, mo: 0 }; this.nb = 2; this.bt = -1; this.raf = 0; this.K = 0; this.talk = 0;
-            let gl = null; try { gl = this.cv.getContext('webgl2', { alpha: true, premultipliedAlpha: false, antialias: true }); } catch (e) { }
+            this.cv = D.createElement('canvas'); this.cv.className = 'mg-cv'; this.ok = false; this.t0 = performance.now(); this.last = this.t0;
+            this.mood = 'idle'; this.mt = 0; this.ms = 0; this.K = 0; this.talk = 0; this.raf = 0; this.S = {}; this.bt = -1; this.nb = 2; this.dbl = 0; this.earT = [3, 6]; this.q = 1; this.ftA = 0; this.ftN = 0; this.mo = 0;
+            this.lk = { x: 0, y: 0, tx: 0, ty: 0, until: 0, wt: 0 };
+            let gl = null; try { gl = this.cv.getContext('webgl2', { alpha: true, premultipliedAlpha: false, antialias: false, powerPreference: 'low-power' }); } catch (e) { }
             if (!gl) return;
-            const sh = (t, src) => { const s = gl.createShader(t); gl.shaderSource(s, src); gl.compileShader(s); return gl.getShaderParameter(s, gl.COMPILE_STATUS) ? s : null; };
+            const sh = (t, src) => { const s = gl.createShader(t); gl.shaderSource(s, src); gl.compileShader(s); if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) { try { console.warn('buddy shader', gl.getShaderInfoLog(s)); } catch (e) { } return null; } return s; };
             const v = sh(gl.VERTEX_SHADER, '#version 300 es\nin vec2 p;void main(){gl_Position=vec4(p,0.,1.);}'), f = sh(gl.FRAGMENT_SHADER, BFS); if (!v || !f) return;
             const pr = gl.createProgram(); gl.attachShader(pr, v); gl.attachShader(pr, f); gl.linkProgram(pr); if (!gl.getProgramParameter(pr, gl.LINK_STATUS)) return; gl.useProgram(pr);
             const b = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, b); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
             const l = gl.getAttribLocation(pr, 'p'); gl.enableVertexAttribArray(l); gl.vertexAttribPointer(l, 2, gl.FLOAT, false, 0, 0);
-            this.gl = gl; this.u = {}; ['R', 'T', 'JU', 'SQ', 'YA', 'AL', 'AR', 'TI', 'MO', 'BL', 'HA', 'SAD', 'K', 'HT'].forEach(n => this.u[n] = gl.getUniformLocation(pr, n)); this.ok = true;
+            this.gl = gl; this.u = {}; UN.forEach(n => this.u[n] = gl.getUniformLocation(pr, n)); this.ok = true;
             this.buf = new Uint8Array(512);
         }
         mount(h) { h.appendChild(this.cv); this.loop(); }
         set(m, ms) { this.mood = m; this.ms = performance.now(); this.mt = ms ? performance.now() + ms : 0; }
-        loop() { if (!this.ok || this.raf) return; const f = (now) => { this.raf = 0; if (!this.cv.isConnected) return; if (!D.hidden) this.frame(now); this.raf = requestAnimationFrame(f); }; this.raf = requestAnimationFrame(f); }
+        /* the eyes and the head follow a point on the screen (your finger, or the balloon you tapped) */
+        lookPt(x, y, ms) {
+            const r = this.cv.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height * .35;
+            this.lk.tx = clamp((x - cx) / (innerWidth * .5), -1, 1); this.lk.ty = clamp((cy - y) / (innerHeight * .5), -1, 1); this.lk.until = performance.now() + (ms || 2600);
+        }
+        lookEl(el, ms) { try { const r = el.getBoundingClientRect(); this.lookPt(r.left + r.width / 2, r.top + r.height / 2, ms); } catch (e) { } }
+        loop() { if (!this.ok || this.raf) return; this.last = performance.now(); const f = (now) => { this.raf = 0; if (!this.cv.isConnected) return; if (!D.hidden) this.frame(now); this.raf = requestAnimationFrame(f); }; this.raf = requestAnimationFrame(f); }
         level(t) {
             if (this.talk === 2 && AU.an) { AU.an.getByteTimeDomainData(this.buf); let s = 0; for (let i = 0; i < this.buf.length; i++) { const x = (this.buf[i] - 128) / 128; s += x * x; } return Math.min(1, Math.sqrt(s / this.buf.length) * 5.5); }
             if (this.talk === 1) return Math.max(0, .45 + .45 * Math.sin(t * 17) * Math.sin(t * 5.3 + 1));
             return 0;
         }
+        /* a spring that overshoots a little and settles: this is what makes the moves look alive */
+        sp(n, tg, k, c, dt) { const s = this.S[n] || (this.S[n] = { x: tg, v: 0 }); s.v += ((tg - s.x) * k - s.v * c) * dt; s.x += s.v * dt; return s.x; }
         frame(now) {
-            const gl = this.gl, t = (now - this.t0) / 1000, k = this.k, r = this.cv.getBoundingClientRect(), dpr = Math.min(2, devicePixelRatio || 1);
+            const gl = this.gl, dt = clamp((now - this.last) / 1000 || .016, .004, .04), t = (now - this.t0) / 1000; this.last = now;
+            /* keep it smooth on slow phones: lower the picture size a little when frames take too long */
+            this.ftA += dt; this.ftN++; if (this.ftN >= 40) { const a = this.ftA / this.ftN; if (a > .034 && this.q > .55) this.q *= .86; else if (a < .021 && this.q < 1) this.q = Math.min(1, this.q * 1.06); this.ftA = 0; this.ftN = 0; }
+            const r = this.cv.getBoundingClientRect(), dpr = Math.max(1.4, Math.min(2, devicePixelRatio || 1)) * this.q;
             const w = Math.max(60, Math.round(r.width * dpr)), h = Math.max(60, Math.round(r.height * dpr)); if (this.cv.width !== w || this.cv.height !== h) { this.cv.width = w; this.cv.height = h; }
-            if (this.mt && now > this.mt) { this.mt = 0; this.mood = 'idle'; }
-            const m = this.mood, s = (now - this.ms) / 1000, M = REDUCED ? .3 : 1, tk = this.talk ? 1 : 0;
-            let T = { ju: Math.abs(Math.sin(t * 2)) * .03, sq: 0, ya: Math.sin(t * .6) * .3, al: .35 + .08 * Math.sin(t * 2) + tk * (.35 + .3 * Math.sin(t * 5)), ar: .35 + .08 * Math.sin(t * 2 + 1) + tk * (.3 + .3 * Math.sin(t * 4 + 2)), ti: Math.sin(t * .9) * .05, ha: 0, sad: 0, ht: Math.sin(t * .8) * .08 + tk * Math.sin(t * 3) * .08 };
-            if (m === 'happy') { const j = Math.abs(Math.sin(s * 7)); T = { ju: j * .3, sq: (1 - j) * .1 - .03, ya: Math.sin(s * 5) * .4, al: 2.6 + .3 * Math.sin(s * 16), ar: 2.6 + .3 * Math.sin(s * 16 + 1), ti: 0, ha: 1, sad: 0, ht: 0 }; }
-            if (m === 'dance') T = { ju: Math.abs(Math.sin(t * 6)) * .12, sq: 0, ya: Math.sin(t * 3) * .8, al: 1.5 + 1.2 * Math.sin(t * 6), ar: 1.5 - 1.2 * Math.sin(t * 6), ti: Math.sin(t * 6) * .18, ha: 1, sad: 0, ht: Math.sin(t * 6) * .15 };
-            if (m === 'sad') T = { ju: 0, sq: .05, ya: Math.sin(s * 12) * .3 * Math.max(0, 1 - s), al: .1, ar: .1, ti: .06, ha: 0, sad: 1, ht: .22 };
-            if (m === 'think') T = Object.assign(T, { ar: 2.1, ht: .2, ti: .05 });
-            if (m === 'wave') T = Object.assign(T, { ar: 2.5 + .45 * Math.sin(t * 14), ya: .2, ha: .6 });
-            if (m === 'boing') { const j = Math.abs(Math.sin(s * 9)) * Math.max(0, 1 - s * .8); T = Object.assign(T, { ju: j * .25, sq: -j * .1, ha: 1 }); }
-            Object.keys(T).forEach(n => { k[n] += (T[n] * M - k[n]) * .18; });
-            k.mo += (this.level(t) - k.mo) * .45;
-            if (this.bt < 0 && t > this.nb) { this.bt = t; this.nb = t + 2 + Math.random() * 3; }
-            let bl = 0; if (this.bt >= 0) { const x = (t - this.bt) / .15; bl = x < 1 ? Math.sin(x * Math.PI) : 0; if (x >= 1) this.bt = -1; }
+            if (this.mt && now > this.mt) { this.mt = 0; this.mood = 'idle'; this.ms = now; }
+            const m = this.mood, s = (now - this.ms) / 1000, M = REDUCED ? .35 : 1, lv = this.level(t), talk = this.talk ? 1 : 0, sn = Math.sin, PI = Math.PI;
+            /* where the eyes look */
+            const L = this.lk; if (now > L.until) { if (t > L.wt) { L.wt = t + 2.2 + Math.random() * 2.5; L.tx = (Math.random() - .5) * .7; L.ty = (Math.random() - .3) * .35; } }
+            L.x += (L.tx - L.x) * Math.min(1, dt * 7); L.y += (L.ty - L.y) * Math.min(1, dt * 7);
+            const br = sn(t * (talk ? 2.6 : 1.9)) * .5 + .5;
+            let T = { ju: 0, sq: 0, ya: sn(t * .55) * .13 + L.x * .12, ti: sn(t * .8) * .03, ln: 0, ht: sn(t * .7) * .05, hy: L.x * .5, hn: -L.y * .24,
+                hl: [-.43, -.56, .1 + .01 * sn(t * 1.3)], hr: [.43, -.56, .1 + .01 * sn(t * 1.3 + 1)], lkx: L.x, lky: L.y, ha: 0, sad: 0, brl: 0, brr: 0, ba: 0, mo: 0, sm: .4, ch: 0, el: 0, er: 0 };
+            const cam = () => { T.lkx = 0; T.lky = .05; T.hy = 0; T.hn = -.04; };
+            if (m === 'happy') {
+                const u = s % 1.25; let ju = 0, sq = 0;
+                if (u < .14) sq = .15 * sn(u / .14 * PI / 2); else if (u < .66) { const k = (u - .14) / .52; ju = .36 * 4 * k * (1 - k); sq = -.09 * sn(k * PI); } else if (u < .9) { const k = (u - .66) / .24; sq = .13 * sn(k * PI); }
+                T.ju = ju; T.sq = sq; cam(); T.hn = -.14; T.ln = -.06; T.ya = sn(s * 5) * .3;
+                const fl = .04 * sn(s * 17); T.hl = [-.55, .6 + fl, .2]; T.hr = [.55, .6 - fl, .2];
+                T.ha = 1; T.mo = .5 + .25 * sn(s * 13); T.sm = 1; T.brl = T.brr = .8; T.ch = 1; T.el = T.er = .7;
+            } else if (m === 'clap') {
+                const c = Math.abs(sn(s * 10)); cam(); T.ju = .05 * c; T.hl = [-(.04 + .14 * c), -.03, .5]; T.hr = [.04 + .14 * c, -.03, .5]; T.ya = sn(s * 3) * .2;
+                T.ha = .9; T.mo = .45; T.sm = 1; T.brl = T.brr = .6; T.ch = 1; T.el = T.er = .4; T.ln = .06;
+            } else if (m === 'dance') {
+                const b = sn(t * 6); T.ju = Math.abs(b) * .13; T.sq = (1 - Math.abs(b)) * .04; T.ya = sn(t * 3) * .7; T.ti = b * .14; T.ht = b * .14; T.hn = sn(t * 12) * .05 - .06; T.hy = sn(t * 3) * .3;
+                T.hl = [-.5, .1 + .5 * b, .14]; T.hr = [.5, .1 - .5 * b, .14]; T.lkx = 0; T.lky = .1;
+                T.ha = .9; T.mo = .4 + .15 * sn(t * 9); T.sm = 1; T.brl = T.brr = .5; T.ch = 1; T.el = b * .5; T.er = -b * .5;
+            } else if (m === 'sad') {
+                const sk = Math.exp(-s * 2.4) * sn(s * 15); T.hy = sk * .42; T.sq = .05; T.ln = .1; T.hn = .22; T.ht = .05; T.lkx = sk * .6; T.lky = -.55;
+                T.hl = [-.4, -.62, .06]; T.hr = [.4, -.62, .06]; T.sad = 1; T.ba = -1; T.brl = T.brr = .4; T.sm = -.85; T.mo = .12; T.el = T.er = -.9;
+            } else if (m === 'think') {
+                T.ht = .22; T.hn = -.06; T.hy = -.1; T.lkx = -.75; T.lky = .85; T.ln = .03; T.ya = -.12;
+                T.hr = [.13 + .006 * sn(s * 9), .0 + .008 * sn(s * 11), .5]; T.hl = [-.3, -.42, .26];
+                T.brl = .7; T.brr = -.1; T.ba = .25; T.sm = .05; T.mo = .06 + .03 * sn(s * 3); T.el = .3; T.er = 0;
+            } else if (m === 'wave') {
+                T.hr = [.54 + .13 * sn(t * 13), .5, .1]; T.ht = .1; T.ya = .15; cam(); T.ju = .01 * Math.abs(sn(t * 6)); T.ha = .25; T.mo = .3; T.sm = 1; T.brl = T.brr = .3; T.ch = .6;
+            } else if (m === 'boing') {
+                const e = Math.exp(-s * 3.2); T.ju = .08 * Math.abs(sn(s * 9)) * e; T.ya = sn(s * 14) * .1 * e; cam(); T.hl = [-.34, .12, .46]; T.hr = [.34, .12, .46];
+                T.ha = .95; T.mo = .5 + .2 * sn(s * 20); T.sm = 1; T.ch = 1; T.brl = T.brr = .5; T.el = T.er = .5;
+            }
+            /* talking: the mouth follows the voice, small nods and one paw talks with the words */
+            if (talk) {
+                const g = Math.max(0, sn(t * 1.25)); if (m === 'idle') { T.hr = [.37 + .06 * g, -.22 + .26 * g, .34 + .06 * g]; T.hl = [-.43, -.56 + .03 * g, .1]; T.hn += .05 * sn(t * 5.2) * lv; T.ln += .03 * lv; T.ju += .006 * lv; T.sm = .5; }
+                T.brl += lv * .35; T.brr += lv * .35;
+                T.mo = Math.max(T.mo, Math.min(1, lv * 1.05 + .05)); T.sm = Math.min(T.sm, .6 - .35 * lv);
+            }
+            /* blink (sometimes twice), ear flicks */
+            if (this.bt < 0 && t > this.nb) { this.bt = t; this.nb = t + 2 + Math.random() * 3.2; this.dbl = Math.random() < .22 ? 1 : 0; }
+            let bl = 0; if (this.bt >= 0) { const x = (t - this.bt) / .15; bl = x < 1 ? sn(x * PI) : 0; if (x >= 1) { if (this.dbl) { this.dbl = 0; this.bt = t + .02; } else this.bt = -1; } }
+            for (let i = 0; i < 2; i++) if (t > this.earT[i]) { this.earT[i] = t + 3 + Math.random() * 6; (this.S['e' + i] || (this.S['e' + i] = { x: 0, v: 0 })).v += 9 + Math.random() * 5; }
+            /* springs */
+            const B = (n, k, c) => this.sp(n, T[n] * M, k, c, dt), Bx = (n, v, k, c) => this.sp(n, v * M, k, c, dt);
+            const o = {
+                ju: T.ju * M, sq: m === 'boing' ? (.17 * Math.exp(-s * 4.2) * Math.cos(s * 23)) * M : T.sq * M,
+                ya: B('ya', 90, 12), ti: B('ti', 90, 12), ln: B('ln', 90, 12), ht: B('ht', 110, 13), hy: B('hy', 130, 15), hn: B('hn', 130, 15),
+                ha: B('ha', 160, 22), sad: B('sad', 130, 18), brl: B('brl', 200, 22), brr: B('brr', 200, 22), ba: B('ba', 180, 22), sm: B('sm', 160, 20), ch: B('ch', 80, 14)
+            };
+            const hl = T.hl.map((v, i) => this.sp('hl' + i, v, 95, 10.5, dt)), hr = T.hr.map((v, i) => this.sp('hr' + i, v, 95, 10.5, dt));
+            const lkx = this.sp('lkx', T.lkx, 280, 30, dt), lky = this.sp('lky', T.lky, 280, 30, dt);
+            this.mo += (T.mo * M - this.mo) * Math.min(1, dt * 26);
+            const e0 = this.sp('e0', T.el * .5, 150, 7, dt), e1 = this.sp('e1', T.er * .5, 150, 7, dt);
             const u = this.u; gl.viewport(0, 0, w, h); gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT);
-            gl.uniform2f(u.R, w, h); gl.uniform1f(u.T, t); gl.uniform1f(u.JU, k.ju); gl.uniform1f(u.SQ, k.sq); gl.uniform1f(u.YA, k.ya); gl.uniform1f(u.AL, k.al); gl.uniform1f(u.AR, k.ar); gl.uniform1f(u.TI, k.ti);
-            gl.uniform1f(u.MO, k.mo); gl.uniform1f(u.BL, bl); gl.uniform1f(u.HA, k.ha); gl.uniform1f(u.SAD, k.sad); gl.uniform1f(u.K, this.K); gl.uniform1f(u.HT, k.ht);
+            gl.uniform2f(u.R, w, h); gl.uniform1f(u.T, t); gl.uniform1f(u.JU, o.ju); gl.uniform1f(u.SQ, clamp(o.sq, -.2, .25)); gl.uniform1f(u.YA, o.ya); gl.uniform1f(u.TI, o.ti); gl.uniform1f(u.LN, o.ln); gl.uniform1f(u.HT, o.ht); gl.uniform1f(u.HY, o.hy); gl.uniform1f(u.HN, o.hn);
+            gl.uniform1f(u.BL, bl); gl.uniform1f(u.HA, clamp(o.ha, 0, 1)); gl.uniform1f(u.SAD, clamp(o.sad, 0, 1)); gl.uniform1f(u.BRL, clamp(o.brl, -1, 1.2)); gl.uniform1f(u.BRR, clamp(o.brr, -1, 1.2)); gl.uniform1f(u.BA, clamp(o.ba, -1, 1));
+            gl.uniform1f(u.MO, clamp(this.mo, 0, 1)); gl.uniform1f(u.SM, clamp(o.sm, -1, 1)); gl.uniform1f(u.CH, clamp(o.ch, 0, 1)); gl.uniform1f(u.BR, br); gl.uniform1f(u.K, this.K);
+            gl.uniform2f(u.EAR, e0, e1); gl.uniform2f(u.LK, clamp(lkx, -1, 1), clamp(lky, -1, 1)); gl.uniform3f(u.HL, hl[0], hl[1], hl[2]); gl.uniform3f(u.HR, hr[0], hr[1], hr[2]);
             gl.drawArrays(gl.TRIANGLES, 0, 3);
         }
         stop() { cancelAnimationFrame(this.raf); this.raf = 0; }
@@ -50189,14 +50351,14 @@ void main(){
     const mood = (m, ms) => { if (BD && BD.ok) BD.set(m, ms); else { const e = $('mg-emo'); if (e) { e.className = 'mg-emo ' + m; clearTimeout(e._t); e._t = setTimeout(() => e.className = 'mg-emo', ms || 900); } } };
 
     /* ===================== THE FRIEND'S VOICE ===================== */
-    /* a cartoon AI voice (one request per sentence, kept on the device), else the phone's own voice */
+    /* the calm "Sage" AI voice (one request per sentence, kept on the device), else the phone's own voice */
     const VC = new Map(), VP = new Map(), AB = new Map(); let VT = 0, SRC = null, SPK = false, BT = 0, NUDGE = 0;
     async function ttsNet(text, fr) {
         if (!aiOk() || typeof lrAIFetch !== 'function') return null;
-        for (const [model, voice] of [['gpt-4o-mini-tts', fr.voice], ['tts-1', 'nova']]) {
+        for (const [model, voice] of [['gpt-4o-mini-tts', 'sage'], ['tts-1', 'sage']]) {
             try {
                 const body = { model, voice, input: text, response_format: 'mp3' };
-                if (model === 'gpt-4o-mini-tts') body.instructions = fr.instr; else body.speed = 1.05;
+                if (model === 'gpt-4o-mini-tts') body.instructions = SERENE; else body.speed = .92;
                 const r = await lrAIFetch('https://api.openai.com/v1/audio/speech', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + aiK() }, body: JSON.stringify(body) });
                 if (r.ok) { const ab = await r.arrayBuffer(); if (ab.byteLength > 400) return new Blob([ab], { type: 'audio/mpeg' }); }
             } catch (e) { }
@@ -50204,7 +50366,7 @@ void main(){
         return null;
     }
     function ttsBlob(text) {
-        const f = fid(), key = 'mgv1_' + f + '_' + text;
+        const f = fid(), key = 'mgv2_sage_' + text;
         if (VC.has(key)) return Promise.resolve(VC.get(key));
         if (VP.has(key)) return VP.get(key);
         const p = (async () => {
@@ -50259,7 +50421,7 @@ void main(){
     let WARM = 0;
     async function warm() {
         const my = ++WARM, f = fid(); if (!aiOk()) return;
-        const list = [F().intro].concat(F().catch, L.ok, L.no, L.start, L.combo3, L.combo5, L.combo8, L.nudge, L.tap, L.story, L.wise, L.joke, L.hurry, L.timeup, L.e3, L.e2, L.e1, L.e0, L.sticker, L.best);
+        const list = [F().intro].concat(F().catch, L.ok, L.no, L.start, L.combo3, L.combo5, L.combo8, L.nudge, L.tap, L.wise, L.joke, L.hurry, L.timeup, L.e3, L.e2, L.e1, L.e0, L.sticker, L.best);
         for (const t of list) { if (my !== WARM || !EL || fid() !== f) return; await ttsBlob(t); await sleep(250); }
     }
 
@@ -50290,14 +50452,14 @@ void main(){
         D.body.appendChild(EL); D.documentElement.classList.add('mg-lock');
         if (!BD) BD = new Buddy(); BD.K = F().K;
         if (BD.ok) BD.mount($('mg-bd')); else $('mg-bd').innerHTML = '<span class="mg-emo" id="mg-emo">' + F().e + '</span>';
-        EL.addEventListener('click', onClick); EL.addEventListener('input', onInput); D.addEventListener('keydown', onKey); addEventListener('popstate', onPop);
+        D.addEventListener('pointermove', onPtr, { passive: true }); EL.addEventListener('click', onClick); EL.addEventListener('input', onInput); D.addEventListener('keydown', onKey); addEventListener('popstate', onPop);
         try { history.pushState({ mg: 1 }, ''); } catch (e) { }
         requestAnimationFrame(() => requestAnimationFrame(() => EL && EL.classList.add('on'))); setTimeout(() => EL && EL.classList.add('on'), 60);
         home(true); setTimeout(warm, 2500);
     }
     function close() {
         if (!EL) return; stopGame(); hush(); musicStop(); WARM++; if (BD) BD.stop();
-        EL.classList.remove('on'); D.documentElement.classList.remove('mg-lock'); D.removeEventListener('keydown', onKey); removeEventListener('popstate', onPop);
+        EL.classList.remove('on'); D.documentElement.classList.remove('mg-lock'); D.removeEventListener('keydown', onKey); D.removeEventListener('pointermove', onPtr); removeEventListener('popstate', onPop);
         const el = EL; EL = null; setTimeout(() => el.remove(), REDUCED ? 0 : 320);
         try { if (history.state && history.state.mg) { closedAt = Date.now(); history.back(); } } catch (e) { }
         if (RET && RET.focus) try { RET.focus({ preventScroll: true }); } catch (e) { }
@@ -50305,6 +50467,7 @@ void main(){
     }
     const sub = () => G || $('mg-book');
     function onPop() { if (!EL || Date.now() - closedAt < 1500) return; try { history.pushState({ mg: 1 }, ''); } catch (e) { } if (sub()) home(); else close(); }
+    function onPtr(e) { if (BD && BD.lookPt) BD.lookPt(e.clientX, e.clientY, 2600); }
     function onKey(e) {
         if (!EL) return;
         if (e.key === 'Escape') { if (sub()) home(); else close(); return; }
@@ -50335,7 +50498,7 @@ void main(){
             '</div>' +
             (md === 'tables' ? tables :
                 (md === 'daily' ? '' : '<div class="mg-blk"><div class="mg-lab">Pick your signs</div><div class="mg-ops">' + Object.keys(SG).map(o => '<button type="button" class="mg-op' + (SET.ops.includes(o) ? ' on' : '') + '" data-a="op" data-o="' + o + '" aria-pressed="' + SET.ops.includes(o) + '"><b>' + SG[o] + '</b><small>' + OPN[o] + '</small></button>').join('') + '</div>' +
-                    '<div class="mg-lab mt">Puzzle types</div><div class="mg-tys">' + Object.keys(TYPES).map(t => '<button type="button" class="mg-ty' + (SET.types.includes(t) ? ' on' : '') + '" data-a="type" data-t="' + t + '" aria-pressed="' + SET.types.includes(t) + '"><span>' + TYPES[t].e + '</span>' + TYPES[t].n + (TYPES[t].lv.length < 3 ? '<small>' + TYPES[t].lv.map(x => 'to ' + x).join(', ') + '</small>' : '') + '</button>').join('') + '</div></div>') +
+                    '<p class="mg-hint">Every puzzle uses only the signs you pick.</p><div class="mg-lab mt">Puzzle types</div><div class="mg-tys">' + Object.keys(TYPES).map(t => '<button type="button" class="mg-ty' + (SET.types.includes(t) ? ' on' : '') + (typeOk(t, SET.ops) ? '' : ' dim') + '" data-a="type" data-t="' + t + '" aria-pressed="' + SET.types.includes(t) + '"><span>' + TYPES[t].e + '</span>' + TYPES[t].n + (!typeOk(t, SET.ops) ? '<small>needs ' + (t === 'tens' ? '+' : '+ or −') + '</small>' : TYPES[t].lv.length < 3 ? '<small>' + TYPES[t].lv.map(x => 'to ' + x).join(', ') + '</small>' : '') + '</button>').join('') + '</div></div>') +
                 '<div class="mg-blk"><div class="mg-lab">' + (md === 'daily' ? 'Today\'s challenge: pick a level' : 'Choose a level to start') + '</div><div class="mg-lvs3">' + lvT(10) + lvT(20) + lvT(100) + '</div></div>') +
             '<div class="mg-stats"><span>🧮 ' + s.solved + ' solved</span><span>🔥 Best streak ' + s.combo + '</span><button type="button" class="mg-chip" data-a="book">' + icon('book') + ' Stickers & badges ' + (s.stk.length + s.bdg.length) + '</button></div>' +
             '</div>';
@@ -50407,15 +50570,14 @@ void main(){
             await sleep(REDUCED ? 300 : 1100); bn.remove(); if (!G) return;
         }
         const q = G.q = nextQ(); G.asked++;
-        paintHud(); paintQ(q);
+        paintHud(); paintQ(q); if (BD && BD.lookEl) BD.lookEl($('mg-qc'), 3000);
         const f = $('mg-field'), cols = shuf(COLS), sg = /^[+−×÷<>=]$/.test(q.ans);
         f.innerHTML = q.opts.map((v, i) => '<button type="button" class="mg-b p-' + pick(PATS) + '" data-a="b" data-v="' + esc(v) + '" style="--c:' + cols[i % cols.length] + ';--d:' + (i * .08).toFixed(2) + 's;--bd:' + (2.4 + Math.random() * 1.6).toFixed(2) + 's;--bo:' + (-Math.random() * 2).toFixed(2) + 's;--rt:' + R(-6, 6) + 'deg" aria-label="Answer ' + esc(SAYSIGN[v] || v) + '"><span class="mg-bb"><span class="mg-bn' + (sg ? ' sg' : v.length > 2 ? ' sm' : '') + '">' + esc(v) + '</span></span><i class="mg-str"></i></button>').join('');
         f.classList.toggle('many', q.opts.length > 6);
         sr('New puzzle: ' + q.say);
         setTimeout(() => { if (G && G.q === q) G.lock = false; }, REDUCED ? 50 : 350);
         mood('think', 900);
-        if (q.story && G.mode !== 'time') say(q.say, { wait: 3500 });
-        else if (G.mode !== 'time' && G.mode !== 'daily' && G.i > 1 && G.i % 4 === 0) setTimeout(() => { if (G && G.q === q) say(line(Math.random() < .5 ? 'wise' : 'joke')); }, 400);
+        if (G.mode !== 'time' && G.mode !== 'daily' && G.i > 1 && G.i % 4 === 0) setTimeout(() => { if (G && G.q === q) say(line(Math.random() < .5 ? 'wise' : 'joke')); }, 400);
         if (G.mode !== 'time') NUDGE = setTimeout(() => { if (G && G.q === q && !G.lock) { say(line('nudge')); mood('wave', 1500); } }, 16000);
     }
     function paintQ(q) {
@@ -50435,7 +50597,7 @@ void main(){
     function fillHole(v, cls) { const hole = $('mg-qc') && $('mg-qc').querySelector('.mg-hole'); if (hole) { hole.textContent = v; hole.classList.add('fill'); if (cls) hole.classList.add(cls); } }
     function choose(btn) {
         if (!G || G.lock || !G.q || btn.classList.contains('gone')) return;
-        const q = G.q, v = btn.dataset.v, right = q.ans === v, p = P(); clearTimeout(NUDGE);
+        const q = G.q, v = btn.dataset.v, right = q.ans === v, p = P(); clearTimeout(NUDGE); if (BD && BD.lookEl) BD.lookEl(btn, 1500);
         if (right) {
             G.lock = true; btn.classList.add('pop'); burst(btn, btn.style.getPropertyValue('--c')); sfx('pop'); setTimeout(() => sfx('ok'), 60);
             p.streak++; p.ok++; G.right++; G.best = Math.max(G.best, p.streak);
@@ -50443,7 +50605,7 @@ void main(){
             floatText(btn, '+' + gain + (mult > 1 ? ' ×' + mult : '')); fillHole(v);
             const cb = $('mg-combo'); if (cb) { cb.innerHTML = p.streak >= 3 ? '🔥 ' + p.streak + ' in a row! <b>×' + mult + '</b>' : ''; cb.classList.toggle('on', p.streak >= 3); }
             let t = null; if (p.streak === 3) t = line('combo3'); else if (p.streak === 5) t = line('combo5'); else if (p.streak === 8 || (p.streak > 8 && p.streak % 5 === 0)) t = line('combo8');
-            if (t) { sfx('combo'); if (p.streak >= 5) { confetti(30); mood('dance', 2600); } else mood('happy', 1400); } else mood('happy', 1200);
+            if (t) { sfx('combo'); if (p.streak >= 5) { confetti(30); mood('dance', 2600); } else mood('clap', 1500); } else mood('happy', 1200);
             if (G.mode === 'time') { if (t) say(t); else if (G.right % 3 === 0) say(okLine()); }
             else say(t || (G.mode === 'team' ? pick(['Point for the ' + p.name + '! ', 'Go ' + p.name + '! ', '', '']) + okLine() : okLine()));
             sr('Correct! ' + v);
@@ -50531,7 +50693,7 @@ void main(){
 
     function paintCard() { try { const el = D.getElementById('gm-mg-live'); if (el) { const s = ST(); el.textContent = s.solved ? s.solved + ' puzzles solved' : ''; } } catch (e) { } }
     setTimeout(paintCard, 1500);
-    window.LRMG = { open, close, _t: { numQ, signQ, threeQ, storyQ, seqQ, cmpQ, countQ, tensQ, eoQ, dblQ, tableQ, finish, nextQ: () => nextQ(), dailySet, seen, LV, TYPES, avail, set G(v) { G = v; }, get G() { return G; }, get BD() { return BD; } } };
+    window.LRMG = { open, close, _t: { numQ, signQ, threeQ, seqQ, cmpQ, countQ, tensQ, eoQ, dblQ, tableQ, finish, nextQ: () => nextQ(), dailySet, seen, LV, TYPES, avail, set G(v) { G = v; }, get G() { return G; }, get BD() { return BD; } } };
 })();
 </script>
 <!--/lc:js-->
