@@ -6740,7 +6740,7 @@ html.gv-open,html.gv-open body{overflow:hidden!important}
 .lp-o:focus-visible,.lp-b:focus-visible{outline:2px solid #fbbf24;outline-offset:2px}
 .gl-chips:has(.lp-b),.ai-chips:has(.lp-b),.rl-chips:has(.lp-b){display:block!important;overflow:visible!important;-webkit-mask-image:none!important;mask-image:none!important}
 .mwfc-langs:has(.lp-b),.lrw-strip:has(.lp-b){overflow:visible!important;-webkit-mask-image:none!important;mask-image:none!important}
-.gl-head:has(+ .gl-chips .lp-b) .gl-now{display:none}@media (prefers-reduced-motion:reduce){.lp-sheet,.lp-card{transition:none}}
+.gl-head:has(+ .gl-chips .lp-b) .gl-now{display:none}.lp-row{margin:12px 0 0}.pf-lpb .lp-b{width:auto;min-width:150px}@media (prefers-reduced-motion:reduce){.lp-sheet,.lp-card{transition:none}}
 </style><style id="mv-art-css" data-th-skip>
 /* Movies: the big pictures stay cinematic (dark shade, white writing) in every theme and in Light mode */
 .mv-hero{position:relative;min-height:420px;border-radius:26px;overflow:hidden;display:flex;align-items:flex-end;background:#0b0d1a var(--bd) center 20%/cover no-repeat;box-shadow:0 30px 60px -30px rgba(0,0,0,.9);isolation:isolate}
@@ -19287,7 +19287,7 @@ Respond ONLY with minified JSON: {"title":string,"topic":string (1-2 English wor
             $('pf-targets').innerHTML = PF_TARGETS.map(t => `<button class="pf-opt ${u.target === t ? 'on' : ''}" onclick="pfSetTarget('${t}')">${t.replace(' Target', '').replace(/^(CEFR [ABC]\d).*/, '$1')}</button>`).join('');
             $('pf-exam').value = u.examDate || '';
             document.querySelectorAll('[data-acc]').forEach(b => b.classList.toggle('on', b.dataset.acc === pr.accent));
-            document.querySelectorAll('[data-lang]').forEach(b => b.classList.toggle('on', b.dataset.lang === pr.lang));
+            LRLP.reg('pf', { title: 'Dictionary languages', sub: 'Which translations the dictionary shows.', items: () => [{ c: 'both', f: '🌐', n: 'Uzbek + Russian', nat: '' }, { c: 'ru', f: '🇷🇺', n: 'Russian', nat: 'Русский' }, { c: 'uz', f: '🇺🇿', n: 'Uzbek', nat: 'Oʻzbekcha' }], cur: () => pr.lang || 'both', pick: (c) => pfSetLang(c) }); const lbx = document.getElementById('pf-lang-btn'); if (lbx) lbx.innerHTML = LRLP.btn('pf', 1);
             $('pf-goal-set').textContent = pr.dailyGoal; $('pf-rate').value = pr.rate; $('pf-rate-v').textContent = pr.rate.toFixed(1) + '×';
             ['autoSpeak', 'anim', 'shapes', 'tilt'].forEach(k => { const b = $('pf-sw-' + k); b.classList.toggle('on', !!pr[k]); b.setAttribute('aria-checked', !!pr[k]); });
             $('pf-sort').textContent = pfSortNew ? 'Newest' : 'A–Z';
@@ -20100,7 +20100,7 @@ Respond ONLY with minified JSON: {"title":string,"topic":string (1-2 English wor
         function trClose() { document.getElementById('tr-sheet').classList.add('hidden'); }
         function trFilter() {
             const q = document.getElementById('tr-lq').value.trim().toLowerCase(), cur = trWhich === 'src' ? trSrc : trTgt;
-            const list = (trWhich === 'src' ? [TR_AUTO] : []).concat(TR_LANGS).filter(l => !q || l.n.toLowerCase().includes(q) || l.nat.toLowerCase().includes(q));
+            const list = (trWhich === 'src' ? [TR_AUTO] : []).concat(TR_LANGS.slice().sort((x, y) => String(x.n).localeCompare(String(y.n), 'en'))).filter(l => !q || l.n.toLowerCase().includes(q) || l.nat.toLowerCase().includes(q));
             document.getElementById('tr-langs').innerHTML = list.map(l => '<button class="tr-l' + (l.c === cur ? ' on' : '') + '" onclick="trChoose(\'' + l.c + '\')"><span class="fl">' + l.f + '</span><span><b>' + escHtml(l.n) + (l.bonus ? '<span class="bn">bonus</span>' : '') + '</b><small>' + escHtml(l.nat) + '</small></span></button>').join('') || '<div style="color:#94a3b8;padding:10px">No language found</div>';
         }
         function trChoose(c) {
@@ -24766,7 +24766,7 @@ nextGrammarQuestion=function(){ _oldNextGrammar(); setTimeout(updateGrammarAnaly
                 <div class="pf-card">
                     <div class="pf-sec">Study</div>
                     <div class="pf-row"><div><b>Daily goal</b><small>Words to look up each day</small></div><div class="flex items-center gap-3"><button class="pf-btn" onclick="pfGoalStep(-1)" aria-label="Less"><i class="fa-solid fa-minus"></i></button><b id="pf-goal-set" class="text-white text-lg w-8 text-center">5</b><button class="pf-btn" onclick="pfGoalStep(1)" aria-label="More"><i class="fa-solid fa-plus"></i></button></div></div>
-                    <div class="pf-row"><div><b>Translation languages</b><small>Shown in the dictionary</small></div><div class="flex gap-2"><button class="pf-opt" data-lang="both" onclick="pfSetLang('both')">UZ + RU</button><button class="pf-opt" data-lang="uz" onclick="pfSetLang('uz')">🇺🇿 UZ</button><button class="pf-opt" data-lang="ru" onclick="pfSetLang('ru')">🇷🇺 RU</button></div></div>
+                    <div class="pf-row"><div><b>Translation languages</b><small>Shown in the dictionary</small></div><div id="pf-lang-btn" class="pf-lpb"></div></div></div>
                     <div class="pf-row"><div><b>Pronunciation accent</b></div><div class="flex gap-2"><button class="pf-opt" data-acc="en-US" onclick="pfSetAccent('en-US')">🇺🇸 US</button><button class="pf-opt" data-acc="en-GB" onclick="pfSetAccent('en-GB')">🇬🇧 UK</button></div></div>
                     <div class="pf-row"><div><b>Speech speed</b><small id="pf-rate-v">1.0×</small></div><div class="flex items-center gap-2"><input id="pf-rate" class="pf-range" type="range" min="0.6" max="1.3" step="0.1" oninput="pfRate(this.value)"><button class="pf-btn" onclick="speakText('Hello, welcome to LunaRise!')" aria-label="Test voice"><i class="fa-solid fa-volume-high"></i></button></div></div>
                     <div class="pf-row"><div><b>Auto-pronounce</b><small>Say each word aloud after a lookup</small></div><button id="pf-sw-autoSpeak" class="pf-switch" role="switch" aria-label="Auto-pronounce" onclick="pfToggle('autoSpeak')"><i></i></button></div>
@@ -34953,9 +34953,9 @@ var LR_TURN = null;    // optional TURN servers for voice on strict networks, e.
         paintDict();
     }
     function paintDict() {
-        const sec = $('lrw-dx'); if (!sec) return; const w = sec.dataset.w, M = mainLang(), others = W.langs.filter(l => l.c !== M.c);
+        const sec = $('lrw-dx'); if (!sec) return; const w = sec.dataset.w, M = mainLang(), others = W.langs.filter(l => l.c !== M.c).sort((x, y) => String(x.n).localeCompare(String(y.n), 'en'));
         sec.innerHTML = `<div class="dx-bh"><h4>${IC.globe}Translations</h4><small>${W.langs.length} languages · tap one to show it first</small></div>
-            <div class="lrw-out" id="lrw-dx-out" aria-live="polite"></div>
+            ${(LRLP.reg('lrwx2', { title: 'Translation language', sub: 'The word shows in this language first.', items: () => W.langs.map(l => ({ c: l.c, f: l.f, n: l.n, nat: l.nat, rtl: l.rtl })), cur: () => M.c, pick: (c) => LRWX.pick(c, 'dx') }), '')}<div class="lp-row">${LRLP.btn('lrwx2', 1)}</div><div class="lrw-out" id="lrw-dx-out" aria-live="polite"></div>
             <div class="lrw-list" role="list">${others.map(l => `<button class="lrw-row" role="listitem" data-c="${l.c}" onclick="LRWX.pick('${l.c}','dx')" aria-label="${esc(l.n)}"><i class="fl">${l.f}</i><span class="nm"><b>${esc(l.n)}</b><small>${esc(l.nat)}</small></span><span class="tx" lang="${l.c}"${l.rtl ? ' dir="rtl"' : ''}><em class="lrw-sk sm"></em></span></button>`).join('')}</div>`;
         fill($('lrw-dx-out'), w, M);
         others.forEach(l => {
@@ -37044,13 +37044,13 @@ void main(){
         let ov = $('ntk-sh'); if (!ov) { ov = document.createElement('div'); ov.id = 'ntk-sh'; ov.className = 'ntk-sh-ov'; ov.addEventListener('click', (e) => { if (e.target === ov) closeSheet(); }); ov.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeSheet(); }); document.body.appendChild(ov); try { history.pushState({ ntsh: 1 }, ''); } catch (e) { } }
         const re = new RegExp('(^|[^A-Za-zÀ-ÿ’\'])(' + w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')(?![A-Za-zÀ-ÿ])', 'i');
         const ctx = sent ? E(sent).replace(re, (m0, a, b) => a + '<mark>' + b + '</mark>') : '';
-        const others = LANGS.filter((l) => l.c !== main);
+        const others = LANGS.filter((l) => l.c !== main).sort((x, y) => String(x.n).localeCompare(String(y.n), 'en'));
         ov.innerHTML = `<div class="ntk-sh" role="dialog" aria-modal="true" aria-label="Translation of ${E(w)}"><i class="ntk-grab" aria-hidden="true"></i>
             <div class="ntk-sh-top"><div class="ntk-sh-w"><h3>${E(w)}</h3><p id="ntk-ipa">&nbsp;</p></div>
                 <div class="ntk-sh-b"><button onclick="NT.say()" aria-label="Pronounce"><svg class="ntk-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9z" fill="currentColor"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg></button>${!isNaN(r) && S.id ? `<button onclick="NT.hear(${r})" aria-label="Hear it in the recording" title="Hear it in the recording"><svg class="ntk-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15v-3a8 8 0 0 1 16 0v3"/><rect x="3" y="14" width="5" height="7" rx="2"/><rect x="16" y="14" width="5" height="7" rx="2"/></svg></button>` : ''}<button onclick="NT.closeSheet()" aria-label="Close"><svg class="ntk-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div></div>
             <p class="ntk-def" id="ntk-def"></p>
             ${ctx ? `<div class="ntk-ctx"><p>“${ctx}”</p><small id="ntk-ctxt"${M.rtl ? ' dir="rtl"' : ''}>${M.f} …</small></div>` : ''}
-            <div class="ntk-main"><span class="f">${M.f}</span><span class="n">${M.nat}</span><b id="ntk-tm"${M.rtl ? ' dir="rtl"' : ''}><i class="ntk-dots3"></i></b><small id="ntk-ta"></small></div>
+            ${(LRLP.reg('nt', { title: 'Translation language', sub: 'Meanings show first in this language.', items: () => LANGS.map(l => ({ c: l.c, f: l.f, n: l.n, nat: l.nat, rtl: l.rtl })), cur: () => main, pick: (c) => NT.setLang(c) }), '')}<div class="lp-row">${LRLP.btn('nt', 1)}</div><div class="ntk-main"><span class="f">${M.f}</span><span class="n">${M.nat}</span><b id="ntk-tm"${M.rtl ? ' dir="rtl"' : ''}><i class="ntk-dots3"></i></b><small id="ntk-ta"></small></div>
             <div class="ntk-sh-lab">In ${LANGS.length - 1} more languages <small>tap one to make it your main language</small></div>
             <div class="ntk-langs">${others.map((l) => `<button class="ntk-lang" onclick="NT.setLang('${l.c}')"><span class="f">${l.f}</span><span class="n">${l.nat}</span><b data-l="${l.c}"${l.rtl ? ' dir="rtl"' : ''}><i class="ntk-dots3"></i></b></button>`).join('')}</div></div>`;
         requestAnimationFrame(() => ov.classList.add('in'));
@@ -37772,7 +37772,7 @@ Reply ONLY with JSON: {"paras": [${L.p} paragraph strings]}`;
     }
     function paintSheet(speak) {
         const S = R.sheet; if (!S) return;
-        const main = mainLang(), M = LN(main), others = LANGS.filter((l) => l.c !== main), me = S;
+        const main = mainLang(), M = LN(main), others = LANGS.filter((l) => l.c !== main).sort((x, y) => String(x.n).localeCompare(String(y.n), 'en')), me = S;
         let ov = $('bk-sh');
         if (!ov) { ov = document.createElement('div'); ov.id = 'bk-sh'; ov.className = 'bk-sh-ov th-' + P.th; ov.addEventListener('click', (e) => { if (e.target === ov) goBack(); }); document.body.appendChild(ov); requestAnimationFrame(() => ov.classList.add('in')); }
         ov.className = 'bk-sh-ov th-' + P.th + (ov.classList.contains('in') ? ' in' : '');
@@ -37785,7 +37785,7 @@ Reply ONLY with JSON: {"paras": [${L.p} paragraph strings]}`;
               <div class="bk-sh-b"><button type="button" class="bk-say" onclick="BK.say()" aria-label="Listen">${ic('play')}</button><button type="button" class="bk-say slow" onclick="BK.say(1)" aria-label="Listen slowly">${ic('slow')}<small>slow</small></button><button type="button" class="bk-ib" onclick="BK.back()" aria-label="Close">${ic('x')}</button></div></div>
             <p class="bk-def" id="bk-def"></p>
             ${ctx ? `<div class="bk-ctx"><p>${ctx}</p><small id="bk-ctxt"${sd(M)}>${M.f} …</small></div>` : ''}
-            <div class="bk-main"><span class="f">${M.f}</span><span class="n">${E(M.nat)}</span><b id="bk-tm"${sd(M)} lang="${M.c}"><i class="bk-dots"></i></b><small id="bk-ta"${sd(M)}></small></div>
+            ${(LRLP.reg('bk', { title: 'Translation language', sub: 'Meanings show first in this language.', items: () => LANGS.map(l => ({ c: l.c, f: l.f, n: l.n, nat: l.nat, rtl: l.rtl })), cur: () => main, pick: (c) => BK.pick(c) }), '')}<div class="lp-row">${LRLP.btn('bk', 1)}</div><div class="bk-main"><span class="f">${M.f}</span><span class="n">${E(M.nat)}</span><b id="bk-tm"${sd(M)} lang="${M.c}"><i class="bk-dots"></i></b><small id="bk-ta"${sd(M)}></small></div>
             <div class="bk-sh-lab">In ${LANGS.length - 1} more languages <small>tap one to make it your main language</small></div>
             <div class="bk-langs">${others.map((l) => `<button type="button" class="bk-lang" onclick="BK.pick('${l.c}')"><span class="f">${l.f}</span><span class="n">${E(l.nat)}</span><b data-l="${l.c}"${sd(l)} lang="${l.c}"><i class="bk-dots"></i></b></button>`).join('')}</div>
             <button type="button" class="bk-btn bk-save${saved ? ' on' : ''}" id="bk-save" onclick="BK.save()">${ic(saved ? 'marked' : 'mark')}${saved ? 'Saved to My words' : 'Save to My words'}</button></div>`;
