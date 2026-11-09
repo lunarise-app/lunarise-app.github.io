@@ -6709,6 +6709,38 @@ html.gv-open,html.gv-open body{overflow:hidden!important}
 /* v77: no progress bars anywhere in the videos */
 .gv-bar,.gv-meter{display:none!important}
 .gv-ctl{padding-top:12px}
+
+.lp-b{display:flex;align-items:center;gap:12px;width:100%;max-width:420px;padding:11px 14px;border-radius:16px;background:rgba(255,255,255,.07);border:1px solid rgba(143,125,255,.55);color:#fff;text-align:left;cursor:pointer;transition:transform .15s,background .2s;font-family:inherit}
+.lp-b:active{transform:scale(.98)}
+.lp-b>i{font-style:normal;font-size:26px;line-height:1;flex:none}
+.lp-b>span{display:flex;flex-direction:column;flex:1;min-width:0;line-height:1.2}
+.lp-b small{font-size:11.5px;font-weight:600;color:#a5a3c9}
+.lp-b b{font-size:16px;font-weight:800;color:#fff}
+.lp-b.sm{width:auto;max-width:100%;padding:7px 11px;gap:8px;border-radius:12px}
+.lp-b.sm>i{font-size:18px}.lp-b.sm small{display:none}.lp-b.sm b{font-size:14px}
+.lp-chev{width:9px;height:9px;border:solid rgba(255,255,255,.7);border-width:0 2px 2px 0;transform:rotate(45deg);margin:0 4px 3px 2px;flex:none}
+.lp-sheet{position:fixed;inset:0;z-index:100000;display:flex;align-items:flex-end;justify-content:center;opacity:0;transition:opacity .2s}
+.lp-sheet.in{opacity:1}
+.lp-bd{position:absolute;inset:0;background:rgba(5,4,20,.62);backdrop-filter:blur(4px)}
+.lp-card{position:relative;width:min(560px,100%);max-height:86vh;overflow:auto;padding:10px 16px max(18px,env(safe-area-inset-bottom));border-radius:26px 26px 0 0;background:#171335;border:1px solid rgba(255,255,255,.12);color:#fff;transform:translateY(30px);transition:transform .25s cubic-bezier(.2,.9,.3,1)}
+.lp-sheet.in .lp-card{transform:none}
+@media (min-width:700px){.lp-sheet{align-items:center}.lp-card{border-radius:26px}}
+.lp-grab{width:44px;height:5px;border-radius:9px;background:rgba(255,255,255,.2);margin:0 auto 12px}
+.lp-card h3{margin:0 0 4px;font-size:20px;font-weight:800;color:#fff}
+.lp-card p{margin:0 0 14px;font-size:13.5px;color:#a5a3c9}
+.lp-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.lp-o{position:relative;display:flex;align-items:center;gap:10px;padding:10px 34px 10px 12px;min-height:54px;border-radius:14px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:#fff;text-align:left;cursor:pointer;font-family:inherit}
+.lp-o>i{font-style:normal;font-size:24px;line-height:1;flex:none}
+.lp-o>span{display:flex;flex-direction:column;min-width:0;line-height:1.2}
+.lp-o b{font-size:14.5px;font-weight:700}.lp-o small{font-size:12px;color:#a5a3c9}
+.lp-ck{position:absolute;right:11px;top:50%;width:20px;height:20px;margin-top:-10px;border-radius:50%;border:2px solid rgba(255,255,255,.22)}
+.lp-o[aria-checked=true]{background:rgba(124,106,255,.22);border-color:#8f7dff}
+.lp-o[aria-checked=true] .lp-ck{background:#8f7dff;border-color:#8f7dff}
+.lp-o[aria-checked=true] .lp-ck::after{content:"";position:absolute;left:5px;top:2px;width:5px;height:9px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
+.lp-o:focus-visible,.lp-b:focus-visible{outline:2px solid #fbbf24;outline-offset:2px}
+.gl-chips:has(.lp-b),.ai-chips:has(.lp-b),.rl-chips:has(.lp-b){display:block!important;overflow:visible!important;-webkit-mask-image:none!important;mask-image:none!important}
+.mwfc-langs:has(.lp-b),.lrw-strip:has(.lp-b){overflow:visible!important;-webkit-mask-image:none!important;mask-image:none!important}
+.gl-head:has(+ .gl-chips .lp-b) .gl-now{display:none}@media (prefers-reduced-motion:reduce){.lp-sheet,.lp-card{transition:none}}
 </style><style id="mv-art-css" data-th-skip>
 /* Movies: the big pictures stay cinematic (dark shade, white writing) in every theme and in Light mode */
 .mv-hero{position:relative;min-height:420px;border-radius:26px;overflow:hidden;display:flex;align-items:flex-end;background:#0b0d1a var(--bd) center 20%/cover no-repeat;box-shadow:0 30px 60px -30px rgba(0,0,0,.9);isolation:isolate}
@@ -18744,17 +18776,13 @@ Respond ONLY with minified JSON: {"title":string,"topic":string (1-2 English wor
         const RL_LANGS = () => (window.LRW ? LRW.langs.map(l => l.c) : GL_ORDER);
         function rlLang() { const L = RL_LANGS(); return L.includes(rl.lang) ? rl.lang : L.includes(gLang()) ? gLang() : 'uz'; }
         function rlLM() { return trL(rlLang()); }
-        function rlLangChips() { return RL_LANGS().map(c => { const l = trL(c); return `<button class="rl-chip lg ${c === rlLang() ? 'on' : ''}" onclick="rlSetLang('${c}')"><span>${l.f}</span> ${escHtml(l.nat)}</button>`; }).join(''); }
+        function rlLangChips() { LRLP.reg('rl', { title: 'Translate words into', sub: 'Tap any word in a passage to see it in this language.', items: () => RL_LANGS().map(c => { const l = trL(c); return { c, f: l.f, n: l.n, nat: l.nat, rtl: l.rtl }; }), cur: () => rlLang(), pick: rlSetLang }); return LRLP.btn('rl'); }
         function rlSetLang(c) {
             if (!RL_LANGS().includes(c)) return; rl.lang = c; rlPrefsSave();
             document.querySelectorAll('.rl-langbar').forEach(e => e.innerHTML = rlLangChips()); const b = document.getElementById('rl-langbtn'); if (b) b.textContent = rlLM().f;
             const sh = document.getElementById('rl-sheet'); if (sh && sh.classList.contains('open') && rl.sheetWord) rlWordSheet(rl.sheetWord, null, rl.sheetCtx); else showToast(rlLM().f + ' ' + rlLM().n);
         }
-        function rlLangPick() {
-            const sh = document.getElementById('rl-sheet'); if (!sh) return; rl.sheetWord = null;
-            sh.innerHTML = `<div class="flex items-start justify-between gap-3"><h4>Translate words into…</h4><button class="rl-ib" onclick="document.getElementById('rl-sheet').classList.remove('open')" aria-label="Close"><i class="fa-solid fa-xmark"></i></button></div><div class="rl-langgrid rl-langbar">${rlLangChips()}</div><div class="text-xs text-slate-400 mt-3">Then tap any word in the passage — its meaning appears here in ${escHtml(rlLM().n)}.</div>`;
-            sh.classList.add('open');
-        }
+        function rlLangPick() { rlLangChips(); LRLP.open('rl'); }
         function rlSentence(el, w) {
             try { const box = el && el.closest('.rl-text'); if (!box) return ''; const t = box.textContent.replace(/\s+/g, ' ').trim(); const parts = t.split(/(?<=[.!?])\s+/); const lw = w.toLowerCase(); return (parts.find(x => x.toLowerCase().includes(lw)) || '').trim(); } catch (e) { return ''; }
         }
@@ -23348,7 +23376,7 @@ function gSetLang(c) {
 function gRenderBar() {
     const el = document.getElementById('grammar-lang-bar'); if (!el) return; const cur = gLang(), m = gMeta();
     el.innerHTML = `<div class="gl-head"><div><div class="gl-eyebrow"><i class="fa-solid fa-earth-asia"></i> Learn in your language</div><div class="gl-sub">Every rule, example and tip appears in <b>English + ${escapeHTML(m.n)}</b></div></div><div class="gl-now">${m.f}<span>${escapeHTML(m.nat)}</span></div></div>
-        <div class="gl-chips">${GL_ORDER.map(c => { const l = gMeta(c); return `<button class="gl-chip ${c === cur ? 'on' : ''}" onclick="gSetLang('${c}')" aria-pressed="${c === cur}"><span class="f">${l.f}</span><span class="n">${escapeHTML(l.nat)}</span></button>`; }).join('')}</div>`;
+        <div class="gl-chips">${(LRLP.reg('g', { title: 'Translation language', sub: 'Every rule and example shows in English + this language.', items: () => GL_ORDER.map(c => { const l = gMeta(c); return { c, f: l.f, n: l.n, nat: l.nat, rtl: l.rtl }; }), cur: () => gLang(), pick: gSetLang }), LRLP.btn('g'))}</div>`;
 }
 /* ---------- translation engines ---------- */
 async function gGtx(text, tl, sl) {
@@ -24430,9 +24458,8 @@ const mentorAvatarCache = {};
         function aiLang() { const c = state.user && state.user.aiLang; return AI_LANGS.includes(c) ? c : 'en'; }
         function aiLangBar() {
             const el = document.getElementById('ai-langbar'); if (!el) return; const cur = aiLang(), L = AI_LANGS;
-            if (el.children.length !== L.length) el.innerHTML = L.map(c => { const l = trL(c); return `<button class="ai-chip" data-c="${c}" onclick="aiSetLang('${c}')"><span>${l.f}</span> ${escHtml(l.nat)}</button>`; }).join('');
-            let act = null; Array.from(el.children).forEach(b => { const on = b.dataset.c === cur; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on ? 'true' : 'false'); if (on) act = b; });
-            if (act) { try { const x = act.offsetLeft - (el.clientWidth - act.offsetWidth) / 2; el.scrollTo({ left: Math.max(0, x), behavior: 'smooth' }); } catch (e) { } }
+            LRLP.reg('ai', { title: 'AI answers in', sub: 'The AI replies only in this language.', items: () => L.map(c => { const l = trL(c); return { c, f: l.f, n: l.n, nat: l.nat, rtl: l.rtl }; }), cur: () => cur, pick: aiSetLang });
+            el.innerHTML = LRLP.btn('ai');
             const sb = document.getElementById('ai-lsub'); if (sb) sb.textContent = trL(cur).n + ' only';
             const i = document.getElementById('ai-chat-input'); if (i) i.dir = trL(cur).rtl ? 'rtl' : 'auto';
         }
@@ -34758,8 +34785,8 @@ var LR_TURN = null;    // optional TURN servers for voice on strict networks, e.
     }
     function fcStrip() {
         const L = fcLang(), box = $('fc2-langs'); if (!box) return;
-        box.innerHTML = FCL.map(l => { const on = l.c === L.c; return `<button role="radio" aria-checked="${on}" class="${on ? 'on' : ''}" onclick="FCX.lang('${l.c}')" aria-label="${l.n}" title="${l.n}"><i>${l.f}</i><span>${on ? esc(l.n) : lcode(l)}</span></button>`; }).join('');
-        const on = box.querySelector('.on'); if (on) box.scrollLeft = Math.max(0, on.offsetLeft - (box.clientWidth - on.offsetWidth) / 2);
+        LRLP.reg('fc', { title: 'Translation language', sub: 'Cards show the meaning in this language.', items: () => FCL.map(l => ({ c: l.c, f: l.f, n: l.n, nat: l.nat, rtl: l.rtl })), cur: () => fcLang().c, pick: (c) => FCX.lang(c) });
+        box.innerHTML = LRLP.btn('fc', 1);
         fcFade(box);
     }
     function fcFade(box) { const x = box.scrollLeft, l = x > 4, r = x + box.clientWidth < box.scrollWidth - 4; box.dataset.f = (l ? 'l' : '') + (r ? 'r' : ''); }
@@ -34898,6 +34925,7 @@ var LR_TURN = null;    // optional TURN servers for voice on strict networks, e.
     const own = (t) => t && t.main ? { m: String(t.main).trim(), a: (t.alts || []).filter(x => typeof x === 'string' && x.toLowerCase() !== String(t.main).toLowerCase()).slice(0, 4) } : null;
     const hitOf = (w, c) => (KN.w === w && KN[c]) || W.hit(w, c);
     const trOf = (w, c) => { const k = hitOf(w, c); return k ? Promise.resolve(k) : W.tr(w, c); };
+    function qkBtn() { LRLP.reg('lrwx', { title: 'Translation language', sub: 'The word shows in this language first.', items: () => W.langs.map(l => ({ c: l.c, f: l.f, n: l.n, nat: l.nat, rtl: l.rtl })), cur: () => mainLang().c, pick: (c) => LRWX.pick(c, 'qk') }); return LRLP.btn('lrwx', 1); }
     function chip(l, on, ctx) { return `<button role="radio" aria-checked="${on}" class="${on ? 'on' : ''}" onclick="LRWX.pick('${l.c}','${ctx}')" aria-label="${l.n}" title="${l.n}"><i>${l.f}</i><span>${on ? esc(l.n) : W.code(l)}</span></button>`; }
     function center(strip) { if (!strip) return; const on = strip.querySelector('.on'); if (on) strip.scrollLeft = Math.max(0, on.offsetLeft - (strip.clientWidth - on.offsetWidth) / 2); fade(strip); }
     function fade(strip) { const x = strip.scrollLeft; strip.dataset.f = (x > 4 ? 'l' : '') + (x + strip.clientWidth < strip.scrollWidth - 4 ? 'r' : ''); }
@@ -34943,7 +34971,7 @@ var LR_TURN = null;    // optional TURN servers for voice on strict networks, e.
         res.querySelectorAll(':scope > div.text-sm').forEach(e => { if (/^\s*(🇺🇿|🇷🇺)/.test(e.textContent)) e.remove(); });   // Uzbek / Russian join the list below
         const L = mainLang(), card = res.closest('.hb-card'); if (card) card.style.minWidth = '0';
         const d = document.createElement('div'); d.id = 'lrw-qk'; d.className = 'lrw-qk'; d.dataset.w = w;
-        d.innerHTML = `<div class="lrw-strip sm" role="radiogroup" aria-label="Translation language">${W.langs.map(l => chip(l, l.c === L.c, 'qk')).join('')}</div><div class="lrw-out sm" id="lrw-qk-out" aria-live="polite"></div>`;
+        d.innerHTML = `<div class="lrw-strip sm" role="radiogroup" aria-label="Translation language">${qkBtn()}</div><div class="lrw-out sm" id="lrw-qk-out" aria-live="polite"></div>`;
         const acts = res.querySelector('.flex.flex-wrap.gap-2.mt-3'); if (acts) acts.before(d); else res.appendChild(d);
         if (acts && !acts.querySelector('.lrw-allb')) acts.insertAdjacentHTML('beforeend', `<button class="pf-btn lrw-allb" onclick="LRWX.all(document.getElementById('lrw-qk').dataset.w)">${IC.globe}All ${W.langs.length}</button>`);
         const st = d.querySelector('.lrw-strip'); st.addEventListener('scroll', () => fade(st), { passive: true }); center(st);
@@ -34951,7 +34979,7 @@ var LR_TURN = null;    // optional TURN servers for voice on strict networks, e.
     }
     function refresh(ctx) {
         if (ctx !== 'qk' && $('lrw-dx')) paintDict();
-        if (ctx !== 'dx' && $('lrw-qk')) { const d = $('lrw-qk'), L = mainLang(); d.querySelector('.lrw-strip').innerHTML = W.langs.map(l => chip(l, l.c === L.c, 'qk')).join(''); center(d.querySelector('.lrw-strip')); fill($('lrw-qk-out'), d.dataset.w, L); }
+        if (ctx !== 'dx' && $('lrw-qk')) { const d = $('lrw-qk'), L = mainLang(); d.querySelector('.lrw-strip').innerHTML = qkBtn(); center(d.querySelector('.lrw-strip')); fill($('lrw-qk-out'), d.dataset.w, L); }
     }
     /* ---------- "All 14" sheet ---------- */
     let sheetWord = '', sheetOpen = false;
@@ -41682,6 +41710,37 @@ ${p.p}`;
     if (!hook()) { let n = 0; const iv = setInterval(() => { if (hook() || ++n > 40) clearInterval(iv); }, 500); }
     window.LRGV = { open, close, build, _p: () => P, _sfx: SFX };
 })();
+</script><script id="lp-js">
+
+window.LRLP = (function () {
+    const D = document, R = {};
+    const esc = (s) => String(s == null ? '' : s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+    const items = (k) => { try { return (R[k] && R[k].items()) || []; } catch (e) { return []; } };
+    const curOf = (k) => { const l = items(k), c = R[k] && R[k].cur(); return l.find((x) => x.c === c) || l[0] || { f: '', n: '' }; };
+    function reg(k, c) { R[k] = c; }
+    function btn(k, small) {
+        const c = R[k], it = curOf(k);
+        return '<button type="button" class="lp-b' + (small ? ' sm' : '') + '" data-k="' + k + '" onclick="LRLP.open(\'' + k + '\')" aria-haspopup="dialog" aria-label="' + esc(c.title) + ': ' + esc(it.n) + '"><i>' + it.f + '</i><span><small>' + esc(c.title) + '</small><b>' + esc(it.n) + '</b></span><em class="lp-chev" aria-hidden="true"></em></button>';
+    }
+    function sync(k) { D.querySelectorAll('.lp-b[data-k="' + k + '"]').forEach((b) => { const t = D.createElement('div'); t.innerHTML = btn(k, b.classList.contains('sm')); b.replaceWith(t.firstChild); }); }
+    function close() { const el = D.getElementById('lp-sheet'); if (!el) return; el.classList.remove('in'); setTimeout(() => el.remove(), 220); D.removeEventListener('keydown', onKey); }
+    function onKey(e) { if (e.key === 'Escape') close(); }
+    function open(k) {
+        const c = R[k]; if (!c) return; const old = D.getElementById('lp-sheet'); if (old) old.remove();
+        const cur = curOf(k).c, list = items(k).slice().sort((x, y) => String(x.n).localeCompare(String(y.n), 'en'));
+        const el = D.createElement('div'); el.id = 'lp-sheet'; el.className = 'lp-sheet'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-modal', 'true'); el.setAttribute('aria-label', c.title);
+        el.innerHTML = '<div class="lp-bd"></div><div class="lp-card"><div class="lp-grab"></div><h3>' + esc(c.title) + '</h3><p>' + esc(c.sub || 'English stays the main language.') + '</p><div class="lp-grid" role="radiogroup">' +
+            list.map((l) => '<button type="button" class="lp-o" role="radio" aria-checked="' + (l.c === cur) + '" data-c="' + esc(l.c) + '"><i>' + l.f + '</i><span><b>' + esc(l.n) + '</b>' + (l.nat && l.nat !== l.n ? '<small' + (l.rtl ? ' dir="rtl"' : '') + '>' + esc(l.nat) + '</small>' : '') + '</span><em class="lp-ck" aria-hidden="true"></em></button>').join('') + '</div></div>';
+        el.addEventListener('click', (e) => {
+            if (e.target.classList.contains('lp-bd')) { close(); return; }
+            const o = e.target.closest('.lp-o'); if (!o) return;
+            const code = o.dataset.c; close(); try { c.pick(code); } catch (x) { } setTimeout(() => sync(k), 0);
+        });
+        D.body.appendChild(el); D.addEventListener('keydown', onKey);
+        requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('in')));
+    }
+    return { reg, btn, sync, open, close };
+})();
 </script><!--/hs:js-->
 <!--cz:js--><script id="cz-js">
 /* ===== Chess Arena 2: a real wooden board, classic pieces, smooth sliding moves, drag or tap, wooden sounds =====
@@ -43491,6 +43550,43 @@ void main(){
 }
 @media (prefers-reduced-motion:reduce){#dw,.dw-fcard,.dw-tile,.dw-cap{transition:none!important;animation:none!important}}
 html.dw-lock,html.dw-lock body{overflow:hidden!important}
+/* v77: language picker, A to Z grid */
+.dw-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;overflow:visible;padding:0}
+@media (min-width:560px){.dw-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (min-width:900px){.dw-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.dw-grid .dw-lg{position:relative;gap:10px;padding:10px 12px;border-radius:14px;min-height:54px;text-align:left;white-space:normal;transition:transform .15s,background .2s,border-color .2s}
+.dw-grid .dw-lg:active{transform:scale(.97)}
+.dw-grid .dw-lg i{font-style:normal;font-size:24px;line-height:1}
+.dw-ln{display:flex;flex-direction:column;min-width:0;line-height:1.2}
+.dw-ln b{font-weight:700;font-size:14px;color:inherit}
+.dw-ln small{font-size:12px;font-weight:500;color:var(--ink3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dw-lg[aria-checked="true"] .dw-ln small{color:rgba(255,255,255,.75)}
+.dw-ck{position:absolute;right:10px;top:50%;width:18px;height:18px;margin-top:-9px;border-radius:50%;border:1.5px solid rgba(255,255,255,.22);box-sizing:border-box}
+.dw-lg[aria-checked="true"] .dw-ck{background:#8f7dff;border-color:#8f7dff}
+.dw-lg[aria-checked="true"] .dw-ck::after{content:'';position:absolute;left:5px;top:2px;width:4px;height:8px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
+.dw-grid .dw-lg{padding-right:34px}
+/* v77: one language button + sheet */
+.dw-lb{display:flex;align-items:center;gap:12px;width:100%;max-width:420px;padding:12px 14px;border-radius:16px;background:rgba(255,255,255,.07);border:1px solid rgba(143,125,255,.55)!important;color:#fff;text-align:left;cursor:pointer;transition:transform .15s,background .2s}
+.dw-lb:active{transform:scale(.98)}
+.dw-lb i{font-style:normal;font-size:28px;line-height:1}
+.dw-lb span{display:flex;flex-direction:column;flex:1;min-width:0;line-height:1.2}
+.dw-lb small{font-size:11.5px;font-weight:600;color:var(--ink3)}
+.dw-lb b{font-size:16px;font-weight:800}
+.dw-lb.sm{width:auto;max-width:62%;padding:7px 11px;gap:8px;border-radius:12px}
+.dw-lb.sm i{font-size:18px}.dw-lb.sm small{display:none}.dw-lb.sm b{font-size:14px}
+.dw-chev{width:9px;height:9px;border:solid rgba(255,255,255,.7);border-width:0 2px 2px 0;transform:rotate(45deg);margin:0 4px 3px 2px;flex:none}
+.dw-sheet{position:fixed;inset:0;z-index:60;display:flex;align-items:flex-end;justify-content:center;opacity:0;transition:opacity .2s}
+.dw-sheet.in{opacity:1}
+.dw-sbd{position:absolute;inset:0;background:rgba(5,4,20,.62);backdrop-filter:blur(4px)}
+.dw-scard{position:relative;width:min(560px,100%);max-height:86vh;overflow:auto;padding:10px 16px max(18px,env(safe-area-inset-bottom));border-radius:26px 26px 0 0;background:#171335;border:1px solid var(--line);transform:translateY(30px);transition:transform .25s cubic-bezier(.2,.9,.3,1)}
+.dw-sheet.in .dw-scard{transform:none}
+@media (min-width:700px){.dw-sheet{align-items:center}.dw-scard{border-radius:26px}}
+.dw-grab{width:44px;height:5px;border-radius:9px;background:rgba(255,255,255,.2);margin:0 auto 12px}
+.dw-scard h3{margin:0 0 4px;font-size:20px;font-weight:800;color:#fff}
+.dw-scard p{margin:0 0 14px;font-size:13.5px;color:var(--ink3)}
+.dw-sgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.dw-sgrid .dw-lg{position:relative;gap:10px;padding:10px 34px 10px 12px;border-radius:14px;min-height:54px;text-align:left;white-space:normal}
+.dw-sgrid .dw-lg i{font-style:normal;font-size:24px;line-height:1}
 </style>
 <!--dw:js--><script id="dwt-js">
 /* ===== Luna the teacher: a 3D person drawn live on the graphics chip (ray-marched, no downloads).
@@ -44147,10 +44243,19 @@ Reply with JSON only: {"words":[{"w":"","pos":"","ipa":"","def":"","ex":""}],"gr
     }
     const mini = (t) => '<div class="dw-mini"><div class="dw-tea"></div><p class="dw-bub" id="dw-bub">' + esc(t || '') + '</p></div>';
     const backBtn = () => '<button type="button" class="dw-back" data-a="path">' + I('back') + 'Lesson plan</button>';
-    function langStrip() {
-        const s = S();
-        return '<div class="dw-langs" role="radiogroup" aria-label="Translation language">' + LANGS().map(l => '<button type="button" class="dw-lg" role="radio" aria-checked="' + (l.c === s.lang) + '" data-a="lang" data-l="' + l.c + '"><i>' + l.f + '</i>' + esc(l.n) + '</button>').join('') + '</div>';
+    /* the translation languages, A to Z by English name */
+    const sortedLangs = () => LANGS().slice().sort((x, y) => String(x.n).localeCompare(String(y.n), 'en'));
+    /* one button; tap it and the 14 languages open (A to Z) */
+    const lbHtml = () => { const L = langOf(S().lang); return '<i>' + L.f + '</i><span><small>Translation language</small><b>' + esc(L.n) + '</b></span><em class="dw-chev" aria-hidden="true"></em>'; };
+    function langStrip(grid) { return '<button type="button" class="dw-lb' + (grid ? '' : ' sm') + '" data-a="langmenu" aria-haspopup="dialog" aria-label="Translation language">' + lbHtml() + '</button>'; }
+    function langSheetDW() {
+        const old = $('dw-ls'); if (old) old.remove(); const cur = S().lang;
+        const el = D.createElement('div'); el.id = 'dw-ls'; el.className = 'dw-sheet'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-modal', 'true'); el.setAttribute('aria-label', 'Translation language');
+        el.innerHTML = '<div class="dw-sbd" data-a="langclose"></div><div class="dw-scard"><div class="dw-grab"></div><h3>Translation language</h3><p>English stays the main language. Meanings show in:</p><div class="dw-sgrid" role="radiogroup">' +
+            sortedLangs().map(l => '<button type="button" class="dw-lg" role="radio" aria-checked="' + (l.c === cur) + '" data-a="lang" data-l="' + l.c + '"><i>' + l.f + '</i><span class="dw-ln"><b>' + esc(l.n) + '</b>' + (l.nat && l.nat !== l.n ? '<small' + (l.rtl ? ' dir="rtl"' : '') + '>' + esc(l.nat) + '</small>' : '') + '</span><em class="dw-ck" aria-hidden="true"></em></button>').join('') + '</div></div>';
+        EL.appendChild(el); requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('in')));
     }
+    function langSheetClose() { const el = $('dw-ls'); if (!el) return; el.classList.remove('in'); setTimeout(() => el.remove(), 220); }
     function refreshTr() {
         if (VIEW === 'intro') { const c = $('dw-wl'); if (c) c.innerHTML = wordChips(); }
         if (VIEW === 'cards') paintCard(true);
@@ -44165,7 +44270,7 @@ Reply with JSON only: {"words":[{"w":"","pos":"","ipa":"","def":"","ex":""}],"gr
             '<h1 class="dw-h1">' + (CTX ? esc(CTX.title || 'Words from your teacher') : ready ? W().length + ' new words for today' : 'Luna is choosing your words') + '</h1>' +
             '<p class="dw-p">Learn them with Luna, play with them, then say each one to her. Level ' + esc(level()) + '.</p>' +
             '<div class="dw-card"><p class="dw-lab">Today’s words</p><div class="dw-chips" id="dw-wl">' + wordChips() + '</div></div>' +
-            '<div class="dw-card"><p class="dw-lab">Translations in ' + esc(L.n) + ' · English stays the main language</p>' + langStrip() + '</div>' +
+            '<div class="dw-card"><p class="dw-lab">Translations in ' + esc(L.n) + ' · English stays the main language</p>' + langStrip(true) + '</div>' +
             '<div class="dw-row">' + (ready ? '<button type="button" class="dw-btn pri" data-a="start">' + I('cards') + 'Start learning</button>' : '<p class="dw-think"><i></i>Luna is preparing the lesson…</p>') + '</div>' +
             '</div></section>';
     };
@@ -44178,7 +44283,7 @@ Reply with JSON only: {"words":[{"w":"","pos":"","ipa":"","def":"","ex":""}],"gr
     VIEWS.cards = () => {
         if (!FC.q.length) FC.q = W().map((x, i) => i);
         return mini('Tap the card to see the meaning. Say the word with me.') +
-            '<div class="dw-fcn"><span id="dw-fcn"></span>' + langStrip().replace('class="dw-langs"', 'class="dw-langs" style="max-width:62%"') + '</div>' +
+            '<div class="dw-fcn"><span id="dw-fcn"></span>' + langStrip() + '</div>' +
             '<div class="dw-fc"><div class="dw-fcard" id="dw-card" data-a="flip"><div class="dw-face" id="dw-f1"></div><div class="dw-face b" id="dw-f2"></div></div></div>' +
             '<div class="dw-fcact"><button type="button" class="dw-btn no" data-a="again">' + I('retry') + 'Again</button><button type="button" class="dw-btn yes" data-a="know">' + I('check') + 'Got it</button></div>';
     };
@@ -44562,9 +44667,11 @@ Reply with JSON only: {"words":[{"w":"","pos":"","ipa":"","def":"","ex":""}],"gr
         const a = b.dataset.a, s = S();
         switch (a) {
             case 'close': close(); break;
+            case 'langmenu': langSheetDW(); break;
+            case 'langclose': langSheetClose(); break;
             case 'lang': {
                 s.lang = b.dataset.l; save(); try { const u = U(); u.fcLang = s.lang; } catch (x) { }
-                EL.querySelectorAll('.dw-lg').forEach(x => x.setAttribute('aria-checked', String(x.dataset.l === s.lang)));
+                EL.querySelectorAll('.dw-lg').forEach(x => x.setAttribute('aria-checked', String(x.dataset.l === s.lang))); EL.querySelectorAll('.dw-lb').forEach(x => x.innerHTML = lbHtml()); langSheetClose();
                 fillTr(s.lang); if (VIEW === 'intro') { const p = EL.querySelector('.dw-card:nth-of-type(2) .dw-lab'); if (p) p.textContent = 'Translations in ' + langOf(s.lang).n + ' · English stays the main language'; } if (VIEW === 'cards') paintCard(true); break;
             }
             case 'start': s.stage = 'learn'; save(); FC.q = []; go('cards'); break;
@@ -47442,7 +47549,7 @@ Reply with JSON only: {"intro":"","mins":20,"secs":[...]}`;
         KEEP = CUR; closeCard(); const L = lang();
         const el = D.createElement('div'); el.id = 'lrg-ls'; el.className = 'lrg-sheet'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-modal', 'true'); el.setAttribute('aria-label', 'Translation language');
         el.innerHTML = '<div class="lrg-bd" data-lrg="close"></div><div class="lrg-card"><div class="lrg-grab"></div><h3 class="lrg-h">Translation language</h3><p class="lrg-sub">English stays the main language. Meanings show in:</p><div class="lrg-grid">' +
-            LANGS().map(l => '<button type="button" class="lrg-lng' + (l.c === L.c ? ' on' : '') + '" data-lrg="pick" data-c="' + l.c + '" aria-pressed="' + (l.c === L.c) + '"><i>' + l.f + '</i><span>' + esc(l.n) + '</span></button>').join('') + '</div></div>';
+            LANGS().slice().sort((x, y) => String(x.n).localeCompare(String(y.n), 'en')).map(l => '<button type="button" class="lrg-lng' + (l.c === L.c ? ' on' : '') + '" data-lrg="pick" data-c="' + l.c + '" aria-pressed="' + (l.c === L.c) + '"><i>' + l.f + '</i><span>' + esc(l.n) + '</span></button>').join('') + '</div></div>';
         D.body.appendChild(el); pauseGame(); requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('in')));
     }
 
