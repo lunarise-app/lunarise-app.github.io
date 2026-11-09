@@ -6447,6 +6447,103 @@ html.hs-lock{overflow:hidden}
 .lv-sk b{width:56px;height:10px;border-radius:5px;background:rgba(255,255,255,.07)}
 @keyframes lvSk{50%{opacity:.5}}
 @media (prefers-reduced-motion:reduce){.lv-ring,.lv-ph,.lv-dot.on{animation:none!important}}
+/* ===== XP rewards ===== */
+.xpw{--xg:#f6c56f;--xi:#f4f2ff;--xi2:#c9c4ea;--xi3:#8f8ab8;--xl:rgba(196,186,255,.14);position:relative;display:flex;flex-direction:column;gap:14px;padding:20px;border-radius:26px;color:var(--xi);background:radial-gradient(120% 90% at 100% 0,rgba(246,197,111,.16),transparent 55%),linear-gradient(180deg,#191536,#110f24);border:1px solid rgba(246,197,111,.28);box-shadow:0 26px 60px -36px rgba(0,0,0,.9);overflow:hidden}
+.xpw[hidden]{display:none}
+.xp-head{display:flex;gap:14px;align-items:center}
+.xp-gem{flex:none;width:48px;height:48px;border-radius:16px;display:grid;place-items:center;font-size:20px;color:#3a2600;background:linear-gradient(145deg,#fff3c4,#f6c56f 42%,#b8822b 80%);box-shadow:inset 0 2px 1px rgba(255,255,255,.7),0 12px 26px -12px rgba(246,197,111,.8)}
+.xp-head h3{margin:0;font-size:19px;font-weight:800;letter-spacing:-.01em;color:#fff}
+.xp-head p{margin:3px 0 0;font-size:14px;line-height:1.45;color:var(--xi2)}
+.xp-head p b{color:#e9edf2}
+.xp-main{display:flex;gap:18px;align-items:center}
+.xp-ring{position:relative;flex:none;width:128px;height:128px}
+.xp-ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.xp-tr{fill:none;stroke:rgba(255,255,255,.08);stroke-width:10}
+.xp-fg{fill:none;stroke:var(--xg);stroke-width:10;stroke-linecap:round;transition:stroke-dashoffset .9s cubic-bezier(.2,.8,.2,1);filter:drop-shadow(0 0 6px rgba(246,197,111,.45))}
+.xp-ring>div{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.xp-ring b{font-size:26px;font-weight:800;letter-spacing:-.03em;color:#fff;font-variant-numeric:tabular-nums}
+.xp-ring small{font-size:11.5px;font-weight:700;color:var(--xi3)}
+.xp-side{flex:1;display:grid;gap:8px;min-width:0}
+.xp-stat{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:9px 12px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid var(--xl)}
+.xp-stat span{font-size:13px;color:var(--xi2)}
+.xp-stat b{font-size:15px;font-weight:800;color:#fff;white-space:nowrap;font-variant-numeric:tabular-nums}
+.xp-stat small{font-size:12px;color:var(--xi3);font-weight:600}
+.xp-hint{margin:0;font-size:14px;line-height:1.5;color:var(--xi2)}
+.xp-hint b{color:#fff}
+.xp-hint.ok{color:#86efac;font-weight:700}
+.xp-btn{display:flex;align-items:center;justify-content:center;gap:9px;min-height:50px;padding:0 18px;border:0;border-radius:16px;font-family:inherit;font-size:15.5px;font-weight:800;color:#fff;cursor:pointer;background:linear-gradient(135deg,#6366f1,#8b5cf6);box-shadow:0 14px 28px -14px rgba(139,92,246,.8)}
+.xp-btn.gold{color:#2c1d00;background:linear-gradient(145deg,#fff3c4,#f6c56f 42%,#c38f33 90%);box-shadow:inset 0 2px 1px rgba(255,255,255,.6),0 16px 30px -14px rgba(246,197,111,.8)}
+.xp-btn:disabled{opacity:.6;cursor:default}
+.xp-btn:focus-visible,.xp-how summary:focus-visible{outline:2px solid var(--xg);outline-offset:3px}
+.xp-cta{display:grid;gap:12px}
+.xp-cta p{margin:0;font-size:14px;line-height:1.5;color:var(--xi2)}
+.xp-how{border-radius:16px;background:rgba(255,255,255,.03);border:1px solid var(--xl)}
+.xp-how summary{display:flex;align-items:center;justify-content:space-between;padding:13px 14px;font-size:14.5px;font-weight:800;color:#fff;cursor:pointer;list-style:none}
+.xp-how summary::-webkit-details-marker{display:none}
+.xp-how summary i{color:var(--xi3);transition:transform .2s}
+.xp-how[open] summary i{transform:rotate(180deg)}
+.xp-how ul{list-style:none;margin:0;padding:0 10px 4px;display:grid;gap:2px}
+.xp-how li{display:grid;grid-template-columns:22px minmax(0,1fr) auto 38px;align-items:center;gap:10px;padding:8px 4px;border-top:1px solid rgba(196,186,255,.07);font-size:13.5px;color:#ebe8ff}
+.xp-how li>i{color:var(--xg);text-align:center}
+.xp-how li span{display:flex;flex-direction:column;line-height:1.3}
+.xp-how li small{font-size:11.5px;color:var(--xi3)}
+.xp-how li b{font-weight:800;color:var(--xg);white-space:nowrap}
+.xp-how li em{font-style:normal;font-size:12px;font-weight:700;color:var(--xi3);text-align:right;font-variant-numeric:tabular-nums}
+.xp-how li.full{opacity:.5}
+.xp-how li.full em{color:#86efac}
+.xp-rules{margin:4px 14px 14px;font-size:12.5px;line-height:1.55;color:var(--xi3)}
+.xp-note{display:flex;gap:12px;align-items:flex-start}
+.xp-note>i{flex:none;width:40px;height:40px;border-radius:13px;display:grid;place-items:center;background:rgba(246,197,111,.14);color:var(--xg);font-size:17px}
+.xp-note div{display:flex;flex-direction:column;gap:3px}
+.xp-note b{font-size:15px;color:#fff}
+.xp-note span{font-size:13.5px;line-height:1.5;color:var(--xi2)}
+.xp-load{display:flex;gap:10px}
+.xp-load i{flex:1;height:58px;border-radius:14px;background:rgba(255,255,255,.06);animation:xpSk 1.4s ease-in-out infinite}
+@keyframes xpSk{50%{opacity:.5}}
+#pr-xp{margin:22px 0 4px}
+#xp-pop{position:fixed;left:50%;bottom:calc(92px + env(safe-area-inset-bottom));z-index:9998;display:grid;grid-template-columns:auto auto;align-items:center;gap:4px 12px;min-width:200px;padding:10px 16px 14px;border-radius:18px;color:#fff;background:linear-gradient(180deg,#221c45,#16132e);border:1px solid rgba(246,197,111,.45);box-shadow:0 18px 40px -16px rgba(0,0,0,.8);transform:translate(-50%,24px) scale(.96);opacity:0;pointer-events:none;transition:transform .35s cubic-bezier(.2,.9,.3,1.2),opacity .25s}
+#xp-pop.in{transform:translate(-50%,0) scale(1);opacity:1}
+#xp-pop b{font-size:18px;font-weight:900;color:#f6c56f}
+#xp-pop span{font-size:12.5px;font-weight:700;color:#c9c4ea;text-align:right;font-variant-numeric:tabular-nums}
+#xp-pop i{grid-column:1/-1;position:relative;height:4px;border-radius:4px;background:rgba(255,255,255,.1);overflow:hidden}
+#xp-pop i::after{content:'';position:absolute;inset:0;width:var(--w);border-radius:4px;background:linear-gradient(90deg,#5fe0a8,#f6c56f)}
+@media (max-width:480px){.xpw{padding:16px;border-radius:22px}.xp-main{gap:14px}.xp-ring{width:110px;height:110px}.xp-ring b{font-size:22px}}
+@media (prefers-reduced-motion:reduce){.xp-fg,#xp-pop,.xp-how summary i{transition:none}.xp-load i{animation:none}}
+@media (min-width:720px){.xp-side{grid-template-columns:repeat(3,minmax(0,1fr))}.xp-stat{flex-direction:column;align-items:flex-start;gap:4px;padding:14px}.xp-stat b{font-size:20px}}
+/* ===== Instagram teachers ===== */
+.mt-tabs{grid-template-columns:repeat(3,1fr)!important;max-width:520px!important}
+#mt-ind{width:calc(33.333% - 2.67px)!important}
+#mt-ind.tg{transform:translateX(100%)!important}
+#mt-ind.ig{transform:translateX(200%)!important;background:linear-gradient(135deg,#f58529,#dd2a7b 50%,#8134af)!important;box-shadow:0 8px 22px rgba(221,42,123,.5)!important}
+.ig-hero{position:relative;overflow:hidden;border-radius:28px;padding:24px 22px;background:radial-gradient(120% 120% at 0 0,rgba(245,133,41,.28),transparent 50%),radial-gradient(120% 120% at 100% 100%,rgba(129,52,175,.4),transparent 55%),linear-gradient(145deg,#1d0b1f,#2a0d2e 55%,#1a1238);border:1px solid rgba(221,42,123,.38)}
+.ig-hero .hb-date{color:#f9a8d4}
+.ig-dot{width:10px;height:10px;border-radius:50%;background:linear-gradient(135deg,#f58529,#dd2a7b);box-shadow:0 0 0 0 rgba(221,42,123,.6);animation:lvPulse 1.8s ease-out infinite}
+.ig-lvnote{margin:0;font-size:12.5px;line-height:1.5;color:#cbd5e1}
+.ig-ring{background:conic-gradient(from 200deg,#feda75,#fa7e1e,#d62976,#962fbf,#4f5bd5,#feda75)!important}
+.lv-ph em,.ig-in em{position:absolute;inset:0;display:grid;place-items:center;font:800 24px 'Plus Jakarta Sans',system-ui,sans-serif;font-style:normal;color:#fff}
+.ig-tag{background:linear-gradient(135deg,#dd2a7b,#8134af)!important;font-size:8.5px!important}
+.ig-card{position:relative;display:flex;flex-direction:column;padding:20px 16px 16px;border-radius:24px;background:linear-gradient(180deg,rgba(221,42,123,.08),rgba(15,18,40,.6) 45%),rgba(15,18,40,.75);border:1px solid rgba(221,42,123,.2);transition:transform .3s cubic-bezier(.2,.9,.3,1.2),border-color .3s,box-shadow .3s}
+@media(hover:hover){.ig-card:hover{transform:translateY(-5px);border-color:rgba(221,42,123,.55);box-shadow:0 22px 46px -20px rgba(221,42,123,.55)}}
+.ig-card>a{display:flex;flex-direction:column;align-items:center;flex:1;text-align:center;color:inherit;text-decoration:none}
+.ig-card>a:focus-visible{outline:2px solid #f9a8d4;outline-offset:4px;border-radius:16px}
+.ig-ph{position:relative;display:block;width:104px;height:104px}
+.ig-ring2{display:block;width:100%;height:100%;padding:3px;border-radius:50%;background:conic-gradient(from 200deg,#feda75,#fa7e1e,#d62976,#962fbf,#4f5bd5,#feda75)}
+.ig-in{position:relative;display:block;width:100%;height:100%;border-radius:50%;overflow:hidden;border:3px solid #120f24;background:#1e1b3a}
+.ig-in img,.lv-ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.ig-bd{position:absolute;right:2px;bottom:2px;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-size:15px;color:#fff;background:linear-gradient(135deg,#f58529,#dd2a7b 55%,#8134af);border:3px solid #120f24}
+.ig-card h4{margin:12px 0 0;font-size:16px;font-weight:800;line-height:1.25;color:#fff}
+.ig-h{margin:4px 0 0;font-size:12px;font-weight:700;color:#f9a8d4;word-break:break-all}
+.ig-h span{color:#94a3b8;font-weight:600}
+.ig-focus{display:inline-block;margin-top:8px;padding:3px 9px;border-radius:999px;font-size:10.5px;font-weight:700;color:#e2e8f0;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1)}
+.ig-bio{flex:1;margin:10px 0 0;font-size:12px;line-height:1.55;color:#a5b0c2}
+.ig-open{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin-top:14px;padding:11px 0;border-radius:14px;font-size:13px;font-weight:800;color:#fff;background:linear-gradient(135deg,#f58529,#dd2a7b 50%,#8134af);box-shadow:0 12px 24px -12px rgba(221,42,123,.8)}
+.ig-fav{position:absolute;top:12px;right:12px;z-index:2}
+.ig-rm{margin-top:8px;font-size:11px;color:#64748b;background:none;border:0;cursor:pointer}
+.ig-rm:hover{color:#fb7185}
+.ig-add{display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:12px 14px;border-radius:20px;background:rgba(15,18,40,.7);border:1px solid rgba(221,42,123,.22)}
+.ig-add input{flex:1 1 160px;min-width:0;padding:11px 14px;border-radius:14px;background:rgba(2,6,23,.6);border:1px solid rgba(148,163,184,.2);color:#fff;font-size:13px}
+.ig-add button{padding:11px 16px;border-radius:14px;border:0;font-weight:800;font-size:13px;color:#fff;cursor:pointer;background:linear-gradient(135deg,#dd2a7b,#8134af)}
+@media (prefers-reduced-motion:reduce){.ig-dot{animation:none}.ig-card{transition:none}}
 </style><style id="mv-art-css" data-th-skip>
 /* Movies: the big pictures stay cinematic (dark shade, white writing) in every theme and in Light mode */
 .mv-hero{position:relative;min-height:420px;border-radius:26px;overflow:hidden;display:flex;align-items:flex-end;background:#0b0d1a var(--bd) center 20%/cover no-repeat;box-shadow:0 30px 60px -30px rgba(0,0,0,.9);isolation:isolate}
@@ -8638,6 +8735,7 @@ void main(){
             <div class="mt-tabs"><span id="mt-ind"></span>
                 <button id="mt-b-yt" class="on" onclick="mentorsTab('yt')"><i class="fa-brands fa-youtube"></i> YouTube</button>
                 <button id="mt-b-tg" onclick="mentorsTab('tg')"><i class="fa-brands fa-telegram"></i> Telegram</button>
+                <button id="mt-b-ig" onclick="mentorsTab('ig')"><i class="fa-brands fa-instagram"></i> Instagram</button>
             </div>
             <div id="mt-yt" class="space-y-6">
             <div>
@@ -8677,6 +8775,25 @@ void main(){
                 <div id="tg-count" class="text-xs text-slate-500"></div>
                 <div id="tg-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-5"></div>
                 <p class="text-[11px] text-slate-500">Channel details come from public listings and may change. If a link does not open, the channel may have moved — tell us and we will update it.</p>
+            </div>
+            <div id="mt-ig" class="space-y-5" style="display:none">
+                <div class="ig-hero">
+                    <div style="position:relative">
+                        <div class="hb-date">Instagram</div>
+                        <h2 class="text-2xl lg:text-3xl font-extrabold text-white flex items-center gap-2 mt-1"><i class="fa-brands fa-instagram" style="color:#f472b6"></i> 100 top English teachers on Instagram</h2>
+                        <p class="text-xs lg:text-sm mt-2 max-w-2xl leading-relaxed" style="color:#fbcfe8cc">Short daily lessons on speaking, pronunciation, vocabulary, grammar and IELTS from 100 English teachers. Tap a card to open the teacher's Instagram.</p>
+                    </div>
+                </div>
+                <div class="relative max-w-3xl">
+                    <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-500"></i>
+                    <input id="ig-search" type="search" placeholder="Search teachers or topics..." aria-label="Search Instagram teachers" class="w-full glass bg-slate-900/90 text-white placeholder-slate-500 rounded-2xl pl-11 pr-4 py-3.5 text-sm border border-slate-800 outline-none shadow-xl">
+                </div>
+                <div id="ig-filters" class="flex flex-wrap gap-2"></div>
+                <div id="lv-ig" class="lv"></div>
+                <div id="ig-count" class="text-xs text-slate-500"></div>
+                <div id="ig-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-5"></div>
+                <div class="ig-add"><i class="fa-solid fa-user-plus" style="color:#f472b6"></i><input id="ig-add-h" type="text" placeholder="Add a teacher: @username or link" aria-label="Instagram username"><input id="ig-add-n" type="text" placeholder="Name (optional)" aria-label="Teacher name"><button type="button" id="ig-add-b">Add</button></div>
+                <p class="text-[11px] text-slate-500">Teacher details come from the teachers' own websites and public creator lists; follower numbers change over time. If a link does not open, the account may have moved: tell us in Support and we will update it.</p>
             </div>
         </section>
 
@@ -40656,6 +40773,354 @@ ${p.p}`;
     try { caches.open('lr-prefs').then(c => c.put('/lr-ta', new Response(JSON.stringify({ on: alertsOn() ? 1 : 0 })))); } catch (e) { }
     window.LRLIVE = { pic: (kind, h) => pics[kind][String(h || '').replace(/^@/, '').toLowerCase()] || '', load, paint, _d: () => D };
 })();
+</script><script id="xp-js">
+/* ===== LunaRise XP rewards =====
+   Learners earn XP for real study; 5,000 XP in one month can be swapped once for one month of Silver PRO.
+   Every number is counted by the LunaRise server; this file only reports what was done and shows the result.
+   One device = one XP account: the device keeps an id in four places, and a fingerprint of the device is sent too. */
+(function () {
+    'use strict';
+    if (window.LRXP) return;
+    const D = document, $ = (id) => D.getElementById(id);
+    const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const LS = { get: (k, d) => { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } }, set: (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { } } };
+    const fmt = (n) => Number(n || 0).toLocaleString('en-US');
+    const DB = String((window.LR_FB || {}).databaseURL || '').replace(/\/$/, '');
+    const GOAL = 5000;
+    const EVS = {
+        day: ['fa-calendar-check', 'Open LunaRise', 'once a day'],
+        words: ['fa-wand-magic-sparkles', 'Daily words with Luna', 'once a day'],
+        coach: ['fa-list-check', 'A Luna Coach task', 'up to 6 a day'],
+        coachall: ['fa-trophy', 'All of today’s tasks done', 'once a day'],
+        grammar: ['fa-spell-check', 'A grammar test', 'up to 4 a day'],
+        exam: ['fa-graduation-cap', 'Exam practice: reading, listening, writing, speaking', 'up to 4 a day'],
+        cards: ['fa-clone', 'A flashcard round', 'up to 3 a day'],
+        game: ['fa-gamepad', 'A game or chess', 'up to 3 a day'],
+        ai: ['fa-robot', 'Practice with the AI Tutor', 'up to 4 a day']
+    };
+
+    /* ---------- the device: one id kept in four places, plus a fingerprint ---------- */
+    const DID_RE = /^[a-z0-9]{16,48}$/;
+    function newId() { const a = new Uint8Array(16); crypto.getRandomValues(a); return Array.from(a, b => (b % 36).toString(36)).join('') + Date.now().toString(36); }
+    function cookieGet() { const m = D.cookie.match(/(?:^|;\s*)lr_did=([a-z0-9]+)/); return m ? m[1] : ''; }
+    function idb(op, v) {
+        return new Promise((res) => {
+            try {
+                const r = indexedDB.open('lr-keep', 1);
+                r.onupgradeneeded = () => r.result.createObjectStore('k');
+                r.onsuccess = () => { try { const tx = r.result.transaction('k', op === 'get' ? 'readonly' : 'readwrite'), st = tx.objectStore('k'); const q = op === 'get' ? st.get('did') : st.put(v, 'did'); q.onsuccess = () => res(q.result || ''); q.onerror = () => res(''); } catch (e) { res(''); } };
+                r.onerror = () => res('');
+            } catch (e) { res(''); }
+            setTimeout(() => res(''), 1500);
+        });
+    }
+    async function cacheGet() { try { const c = await caches.open('lr-prefs'); const r = await c.match('/lr-did'); return r ? (await r.text()) : ''; } catch (e) { return ''; } }
+    let didP = null;
+    function did() {
+        if (didP) return didP;
+        didP = (async () => {
+            const found = [LS.get('lr_did', ''), cookieGet(), await idb('get'), await cacheGet()].find(x => DID_RE.test(String(x || '')));
+            const d = found || newId();
+            LS.set('lr_did', d);
+            try { D.cookie = 'lr_did=' + d + ';max-age=63072000;path=/;SameSite=Lax;Secure'; } catch (e) { }
+            idb('put', d);
+            try { const c = await caches.open('lr-prefs'); await c.put('/lr-did', new Response(d)); } catch (e) { }
+            return d;
+        })();
+        return didP;
+    }
+    let fpP = null;
+    function fp() {
+        if (fpP) return fpP;
+        fpP = (async () => {
+            const p = [];
+            try { const w = screen.width, h = screen.height; p.push(Math.max(w, h) + 'x' + Math.min(w, h), screen.colorDepth, window.devicePixelRatio); } catch (e) { }
+            try { p.push(Intl.DateTimeFormat().resolvedOptions().timeZone); } catch (e) { }
+            p.push((navigator.languages || [navigator.language]).join(','), navigator.hardwareConcurrency || 0, navigator.deviceMemory || 0, navigator.platform || '', navigator.maxTouchPoints || 0);
+            try {
+                const c = D.createElement('canvas'), g = c.getContext('webgl') || c.getContext('experimental-webgl');
+                if (g) { const x = g.getExtension('WEBGL_debug_renderer_info'); p.push(x ? g.getParameter(x.UNMASKED_VENDOR_WEBGL) + '|' + g.getParameter(x.UNMASKED_RENDERER_WEBGL) : g.getParameter(g.RENDERER), g.getParameter(g.MAX_TEXTURE_SIZE)); }
+            } catch (e) { }
+            try {
+                const c = D.createElement('canvas'); c.width = 220; c.height = 40; const x = c.getContext('2d');
+                x.textBaseline = 'top'; x.font = '16px Arial'; x.fillStyle = '#f60'; x.fillRect(100, 1, 62, 20); x.fillStyle = '#069'; x.fillText('LunaRise ✨ 5000xp', 2, 15); x.fillStyle = 'rgba(102,204,0,.7)'; x.fillText('LunaRise ✨ 5000xp', 4, 17);
+                p.push(c.toDataURL().slice(-120));
+            } catch (e) { }
+            try { const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(p.join('~'))); return Array.from(new Uint8Array(b), x => x.toString(16).padStart(2, '0')).join('').slice(0, 32); } catch (e) { return ''; }
+        })();
+        return fpP;
+    }
+
+    /* ---------- the server ---------- */
+    let srv = null;
+    async function server() {
+        if (srv) return srv;
+        const u = await fetch(DB + '/club/cfg/push/server.json').then(r => r.ok ? r.json() : null).catch(() => null);
+        if (typeof u === 'string' && /^https:\/\//.test(u)) srv = u;
+        return srv;
+    }
+    /* only a Google account counts as registered (a guest account never collects XP) */
+    function fbUser() { try { const u = window.firebase && firebase.auth && firebase.auth().currentUser; return u && !u.isAnonymous && (u.providerData || []).some(p => p && p.providerId === 'google.com') ? u : null; } catch (e) { return null; } }
+    async function call(op, extra) {
+        const u = fbUser(); if (!u) throw new Error('signin');
+        const url = await server(); if (!url) throw new Error('nosrv');
+        const body = Object.assign({ op, idToken: await u.getIdToken(), did: await did(), fp: await fp() }, extra || {});
+        const ctl = new AbortController(), to = setTimeout(() => ctl.abort(), 25000);
+        try {
+            const r = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(body), signal: ctl.signal });
+            const j = await r.json(); if (!j || !j.ok) throw new Error((j && j.error) || 'server'); return j;
+        } finally { clearTimeout(to); }
+    }
+
+    /* ---------- state (a copy of what the server said, for a fast first paint) ---------- */
+    let S = LS.get('lr_xp', null);
+    const mine = () => { const u = fbUser(); return S && u && S.uid === u.uid ? S : null; };
+    function keep(j) { const u = fbUser(); if (!u || !j) return; S = Object.assign({}, j, { uid: u.uid, at: Date.now() }); delete S.add; LS.set('lr_xp', S); paint(); }
+
+    /* ---------- earning: study is reported, the server decides ---------- */
+    let Q = LS.get('lr_xpq', []); if (!Array.isArray(Q)) Q = [];
+    let flushing = false;
+    function earn(ev) {
+        if (!EVS[ev]) return;
+        const s = mine(); if (s && s.st && s.st !== 'on') return;
+        if (!fbUser()) return;
+        Q.push({ ev, t: Date.now() }); Q = Q.filter(x => Date.now() - x.t < 6 * 3600e3).slice(-20); LS.set('lr_xpq', Q);
+        flush();
+    }
+    async function flush() {
+        if (flushing || !Q.length || !navigator.onLine) return; flushing = true;
+        try {
+            while (Q.length) {
+                const it = Q[0]; let j = null;
+                try { j = await call('xp_earn', { ev: it.ev }); }
+                catch (e) { const m = String(e.message || e); if (m === 'busy') { await new Promise(r => setTimeout(r, 2500)); continue; } if (/bad event/.test(m)) { Q.shift(); continue; } break; }
+                Q.shift(); LS.set('lr_xpq', Q);
+                if (j) { keep(j); if (j.add > 0 && j.st === 'on') pop(j.add, j.x); }
+                await new Promise(r => setTimeout(r, 400));
+            }
+        } finally { flushing = false; }
+    }
+    window.addEventListener('online', () => setTimeout(flush, 1500));
+    function pop(add, x) {
+        let el = $('xp-pop');
+        if (!el) { el = D.createElement('div'); el.id = 'xp-pop'; el.setAttribute('role', 'status'); el.setAttribute('aria-live', 'polite'); D.body.appendChild(el); }
+        el.innerHTML = '<b>+' + add + ' XP</b><span>' + fmt(Math.min(x, GOAL)) + ' / ' + fmt(GOAL) + '</span><i style="--w:' + Math.min(100, x / GOAL * 100).toFixed(1) + '%"></i>';
+        el.classList.remove('in'); void el.offsetWidth; el.classList.add('in');
+        clearTimeout(pop.t); pop.t = setTimeout(() => el.classList.remove('in'), 3200);
+        try {
+            const ac = window.__lrxpAc || (window.__lrxpAc = new (window.AudioContext || window.webkitAudioContext)());
+            if (ac.state !== 'running') return;
+            const t = ac.currentTime;[784, 1175].forEach((f, i) => { const o = ac.createOscillator(), g = ac.createGain(); o.type = 'sine'; o.frequency.value = f; g.gain.setValueAtTime(0, t + i * .09); g.gain.linearRampToValueAtTime(.08, t + i * .09 + .015); g.gain.exponentialRampToValueAtTime(.0001, t + i * .09 + .35); o.connect(g).connect(ac.destination); o.start(t + i * .09); o.stop(t + i * .09 + .4); });
+        } catch (e) { }
+    }
+
+    /* ---------- what the app does → which XP ---------- */
+    const hooked = {};
+    function hook(name, wrap) { const f = window[name]; if (hooked[name] || typeof f !== 'function') return false; hooked[name] = 1; const w = wrap(f); Object.keys(f).forEach(k => { try { w[k] = f[k]; } catch (e) { } }); window[name] = w; return true; }
+    function fromFeed(k, x) {
+        if (k === 'exam') { if (/new AI passage|· book ·/.test(x) || !/\d+%/.test(x)) return; earn('exam'); }
+        else if (k === 'cards') earn('cards');
+        else if (k === 'game') earn('game');
+        else if (k === 'chess') { if (/^(Won|Lost|Drew|Puzzle Rush)/.test(x)) earn('game'); }
+        else if (k === 'ai') earn('ai');
+        else if (k === 'mission') { if (/^Luna Coach ·/.test(x)) earn('coach'); else if (/Completed all daily missions/.test(x)) earn('coachall'); }
+    }
+    function hookAll() {
+        hook('pfFeed', f => function (k, x) { const r = f.apply(this, arguments); try { fromFeed(String(k || ''), String(x || '')); } catch (e) { } return r; });
+        hook('nextGrammarQuestion', f => function () {
+            let fin = null;
+            try { const m = currentGrammarModule, qz = currentGrammarSet || m.quiz; if (currentGrammarQuizIndex >= qz.length - 1 && qz.length >= 5) fin = Math.round(currentGrammarScore / qz.length * 100); } catch (e) { }
+            const r = f.apply(this, arguments); if (fin != null && fin >= 40) earn('grammar'); return r;
+        });
+        // Daily words with Luna, and the coach's "all done" (its last task finished)
+        const lc = window.LC;
+        if (lc && typeof lc._done === 'function' && !lc._done.__xp) { const f = lc._done; lc._done = function (kind) { const r = f.apply(this, arguments); try { if (kind === 'words' && r) earn('words'); } catch (e) { } return r; }; lc._done.__xp = 1; }
+    }
+    let lastLeft = null;
+    function watchCoach() {
+        try { const c = (state.user || {}).coach; if (!c || !Array.isArray(c.tasks) || !c.tasks.length) return; const left = c.tasks.filter(t => !t.done).length; if (lastLeft != null && lastLeft > 0 && left === 0) earn('coachall'); lastLeft = left; } catch (e) { }
+    }
+
+    /* ---------- the cards ---------- */
+    function daysLeft(end) { return Math.max(0, Math.ceil(((end || 0) - Date.now()) / 864e5)); }
+    function ring(p) { const r = 52, c = 2 * Math.PI * r; return '<svg viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="' + r + '" class="xp-tr"/><circle cx="60" cy="60" r="' + r + '" class="xp-fg" stroke-dasharray="' + c.toFixed(1) + '" stroke-dashoffset="' + (c * (1 - p)).toFixed(1) + '"/></svg>'; }
+    function isPro() { try { return !!(state.user.isPro && (!state.user.proUntil || state.user.proUntil > Date.now())); } catch (e) { return false; } }
+    function cardHTML(where) {
+        const u = fbUser(), s = mine();
+        const head = '<div class="xp-head"><span class="xp-gem"><i class="fa-solid fa-bolt"></i></span><div><h3>Earn PRO with XP</h3><p>Collect ' + fmt(GOAL) + ' XP in one month and get 1 month of <b>Silver</b> free.</p></div></div>';
+        if (!u) return head + '<div class="xp-cta"><p>Sign in with Google to start collecting XP. Everyone starts at 0, and every day of study counts.</p><button type="button" class="xp-btn" data-xp="join">Sign in to start</button></div>';
+        if (!s) return head + '<div class="xp-load" aria-busy="true"><i></i><i></i><i></i></div>';
+        if (s.st === 'done') return '';
+        if (s.st === 'review') return Date.now() - (s.t || 0) < 7 * 864e5 ? '<div class="xp-note"><i class="fa-solid fa-hourglass-half"></i><div><b>We are checking your XP reward</b><span>You will get your free month of Silver within 24 hours.</span></div></div>' : '';
+        if (s.st === 'blk') return '<div class="xp-note"><i class="fa-solid fa-mobile-screen"></i><div><b>XP rewards: one account per device</b><span>This device already has an XP account, so this account does not collect XP. Write to Support if this is a mistake.</span></div></div>';
+        const x = s.x || 0, p = Math.min(1, x / GOAL), ready = x >= GOAL, left = daysLeft(s.end), need = Math.max(0, GOAL - x);
+        const perDay = left ? Math.ceil(need / left) : need;
+        const rows = Object.keys(EVS).map(k => { const R = (s.rules || {})[k] || [0, 0], n = (s.c || {})[k] || 0, full = n >= R[1]; return '<li class="' + (full ? 'full' : '') + '"><i class="fa-solid ' + EVS[k][0] + '"></i><span>' + esc(EVS[k][1]) + '<small>' + esc(EVS[k][2]) + '</small></span><b>+' + R[0] + '</b><em>' + n + '/' + R[1] + '</em></li>'; }).join('');
+        return head +
+            '<div class="xp-main"><div class="xp-ring" role="img" aria-label="' + fmt(x) + ' of ' + fmt(GOAL) + ' XP">' + ring(p) + '<div><b>' + fmt(x) + '</b><small>of ' + fmt(GOAL) + ' XP</small></div></div>' +
+            '<div class="xp-side"><div class="xp-stat"><span>Today</span><b>' + fmt(s.td || 0) + ' <small>/ ' + fmt(s.cap || 300) + '</small></b></div>' +
+            '<div class="xp-stat"><span>Days studied</span><b>' + (s.ad || 0) + '</b></div>' +
+            '<div class="xp-stat"><span>Back to 0 in</span><b>' + left + ' day' + (left === 1 ? '' : 's') + '</b></div></div></div>' +
+            (ready ? (isPro() ? '<p class="xp-hint ok">You did it! Your free month will be added after your current PRO.</p>' : '<p class="xp-hint ok">You did it! Swap your XP for a free month of Silver.</p>') + '<button type="button" class="xp-btn gold" data-xp="swap"><i class="fa-solid fa-gift"></i>Get 1 month of Silver free</button>'
+                : '<p class="xp-hint">' + (left ? fmt(need) + ' XP to go: about <b>' + fmt(perDay) + ' XP a day</b>' + (perDay > (s.cap || 300) ? '. That is more than one day allows, so the goal is out of reach this month. A new month starts from 0.' : ' until the month ends.') : 'A new month starts tomorrow.') + '</p>') +
+            '<details class="xp-how"' + (where === 'pr' ? '' : '') + '><summary>How to earn XP<i class="fa-solid fa-chevron-down"></i></summary><ul>' + rows + '</ul>' +
+            '<p class="xp-rules">+' + (s.wk || 100) + ' XP bonus for every 7 days you study in a month. At most ' + fmt(s.cap || 300) + ' XP a day. XP goes back to 0 on the 1st of every month. You can swap XP for PRO once per account, and only one account per device collects XP. After the swap, XP ends for that account.</p></details>';
+    }
+    function slots() {
+        const v = $('view-profile');
+        if (v && !$('xpw-prof')) { const h = v.querySelector('.pf-hero'), el = D.createElement('section'); el.id = 'xpw-prof'; el.className = 'xpw'; el.setAttribute('aria-label', 'XP rewards'); if (h && h.parentNode === v) h.after(el); else v.prepend(el); }
+        return [$('xpw-prof'), $('pr-xp')].filter(Boolean);
+    }
+    function paint() {
+        slots().forEach(el => { const h = cardHTML(el.id === 'pr-xp' ? 'pr' : 'prof'); el.hidden = !h; if (el.__h !== h) { el.__h = h; el.innerHTML = h; } });
+    }
+    let refreshing = false;
+    async function refresh(force) {
+        if (refreshing || !fbUser()) { paint(); return; }
+        const s = mine(); if (!force && s && Date.now() - (s.at || 0) < 60000) { paint(); return; }
+        refreshing = true;
+        try { keep(await call('xp_get')); } catch (e) { } finally { refreshing = false; paint(); }
+    }
+    async function swap(btn) {
+        const s = mine(); if (!s || (s.x || 0) < GOAL) return;
+        if (!confirm('Swap ' + fmt(s.x) + ' XP for 1 month of Silver PRO?\n\nYou can do this only once. After the swap, this account does not collect XP any more.')) return;
+        btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i>Swapping…';
+        try {
+            const j = await call('xp_redeem', { proUntil: isPro() ? (state.user.proUntil || 0) : 0 });
+            keep(j);
+            if (j.st === 'done') {
+                try { const u = state.user; u.isPro = true; u.proUntil = j.until || (Date.now() + 30 * 864e5); u.proPlan = 'Silver · XP reward'; pfSave(); } catch (e) { }
+                try { updateHeaderUI(); } catch (e) { } try { triggerConfetti(); } catch (e) { }
+                try { showToast('🎁 Silver PRO is on for 1 month. Well done!'); } catch (e) { }
+            } else if (j.st === 'review') { try { showToast('We are checking your reward. You will get it within 24 hours.'); } catch (e) { } }
+        } catch (e) {
+            const m = String(e.message || e);
+            try { showToast(m === 'notyet' ? 'You need ' + fmt(GOAL) + ' XP first' : m === 'blocked' ? 'This device already has an XP account' : 'Could not swap now. Check the internet and try again.'); } catch (x) { }
+            refresh(true);
+        }
+    }
+    D.addEventListener('click', (e) => {
+        const b = e.target.closest && e.target.closest('[data-xp]'); if (!b) return;
+        if (b.dataset.xp === 'swap') swap(b);
+        else if (b.dataset.xp === 'join') { try { closeModal('modal-subscription'); } catch (x) { } try { navigateTo('profile'); } catch (x) { } setTimeout(() => { const g = $('pf-gacc-b'); if (g && !g.disabled) { g.scrollIntoView({ block: 'center', behavior: 'smooth' }); g.click(); } else try { showToast('Sign in with Google in your profile'); } catch (x) { } }, 350); }
+    });
+
+    /* ---------- start ---------- */
+    function onSignIn() {
+        const u = fbUser(); if (!u) { paint(); return; }
+        refresh(true).then(() => {
+            const k = 'lr_xpday_' + u.uid, t = new Date().toDateString();
+            if (LS.get(k, '') !== t) { LS.set(k, t); earn('day'); }
+            flush();
+        });
+    }
+    function boot() {
+        did(); hookAll(); paint();
+        let n = 0; const iv = setInterval(() => { hookAll(); if (++n > 20) clearInterval(iv); }, 1500);
+        const wait = setInterval(() => { try { if (window.firebase && firebase.auth && firebase.apps && firebase.apps.length) { clearInterval(wait); firebase.auth().onAuthStateChanged(() => onSignIn()); } } catch (e) { } }, 1500);
+        setInterval(() => { watchCoach(); }, 4000);
+        D.addEventListener('visibilitychange', () => { if (!D.hidden) refresh(false); });
+        const pv = $('view-profile'); if (pv) new MutationObserver(() => { if (!pv.classList.contains('hidden')) { paint(); refresh(false); } }).observe(pv, { attributes: true, attributeFilter: ['class'] });
+        const ms = $('modal-subscription'); if (ms) new MutationObserver(() => { const el = $('pr-xp'); if (el && !el.__h) { paint(); refresh(false); } }).observe(ms, { childList: true, subtree: true });
+    }
+    if (D.readyState === 'loading') D.addEventListener('DOMContentLoaded', boot); else boot();
+    window.LRXP = { earn, refresh, paint, _s: () => S, _did: did, _fp: fp };
+})();
+</script><script id="ig-js">
+/* ===== Instagram teachers: 100 English teachers, a "watch live" row, saved favourites and your own additions =====
+   Every card opens the teacher's Instagram. Photos: the teacher's YouTube photo when we have it, otherwise their
+   Instagram photo through unavatar.io, otherwise a coloured letter. */
+(function () {
+    'use strict';
+    if (window.LRIG) return;
+    const D = document, $ = (id) => D.getElementById(id);
+    const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const LS = { get: (k, d) => { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } }, set: (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { } } };
+    const T = [["Lucy Earl", "englishwithlucy", "British English • Vocabulary • Pronunciation", "British teacher Lucy shares modern British English: natural phrases, vocabulary and clear pronunciation.", "1.9M", "EnglishwithLucy"], ["Vanessa", "englishwithvanessa", "American English • Speaking • Fluency", "Vanessa from Speak English with Vanessa helps you speak naturally with everyday American English.", "", "SpeakEnglishWithVanessa"], ["Emma · mmmEnglish", "mmmenglish_emma", "Pronunciation • Speaking • Fluency", "Australian teacher Emma coaches clear pronunciation, confident speaking and smooth fluency.", "", "mmmEnglish_Emma"], ["Rachel's English", "rachelsenglish", "American accent • Pronunciation", "Rachel breaks down the American accent sound by sound, with real conversations to copy.", "", "rachelsenglish"], ["Tiffani", "speakenglishwithtiffani", "American English • Speaking • Vocabulary", "Teacher Tiffani gives friendly speaking practice and vocabulary to help you speak with confidence.", "", "englishwithtiffani"], ["Anna Tyrie", "britishenglishpro", "British English • Business • Pronunciation", "Anna from English Like a Native teaches elegant British English for work and daily life.", "", "EnglishLikeANative"], ["Chris · IELTS Advantage", "ielts_advantage", "IELTS • Writing • Speaking", "IELTS Advantage shares band-score strategies for Writing and Speaking from experienced IELTS teachers.", "", "IELTSAdvantage"], ["Andrew · Papa Teach Me", "papateachme", "British English • Slang • Speaking", "Andrew teaches real British English, slang and expressions with humour.", "", "PapaTeachMe"], ["Anna · English Lessons", "englishlessonskype", "British English • Grammar • Vocabulary", "Anna explains British English grammar and vocabulary in short, clear lessons.", "", "EnglishwithAnna"], ["E2 Language", "e2language", "IELTS • PTE • TOEFL", "E2 prepares students for IELTS, PTE, TOEFL and OET with test tips and practice.", "", "E2IELTS"], ["Jennifer Lebedev", "englishwithjenniferlebedev", "American English • Grammar • Speaking", "Jennifer teaches grammar, pronunciation and everyday American English in calm, careful lessons.", "", "JenniferESL"], ["Jack · To Fluency", "tofluency", "Fluency • Grammar • Speaking", "Jack shares methods and grammar lessons to help you think and speak in English.", "", "ToFluency"], ["Tom · Eat Sleep Dream English", "eatsleepdreamenglish", "British English • Vocabulary • Phrasal verbs", "Tom teaches British vocabulary, phrasal verbs and idioms with simple examples.", "", ""], ["Drew · EnglishAnyone", "englishanyone", "Fluency • Speaking • Listening", "Drew Badger focuses on fluent speaking, natural listening and getting over the fear of speaking.", "", "EnglishAnyone"], ["Arnel", "arnelseverydayenglish", "Everyday English • Vocabulary", "Arnel teaches the English people really use every day, with clear examples.", "", ""], ["Sebastian · Canguro English", "canguroenglish", "British English • Vocabulary • Culture", "Sebastian explains vocabulary, pronunciation and British culture in fun, detailed videos.", "", "CanguroEnglish"], ["BBC Learning English", "bbclearningenglish", "British English • Grammar • Quizzes", "The BBC's English team posts grammar, vocabulary, idioms and quizzes every day.", "", "bbclearningenglish"], ["Cambridge English", "cambridgeenglish", "Exams • IELTS • Grammar", "Cambridge English shares exam tips, common mistakes, grammar and vocabulary for all levels.", "", ""], ["British Council English", "britishcouncilenglishonline", "Courses • IELTS • Speaking", "The British Council's English team shares lessons, speaking tips and IELTS help.", "567K", ""], ["Emma Walker", "pronunciationwithemma", "Pronunciation • Listening • British English", "Emma, a UK teacher with 14 years' experience, fixes tricky sounds and words in short videos.", "", ""], ["Hadar Shemesh", "hadar.accentsway", "American accent • Pronunciation", "Hadar coaches the American accent: sounds, intonation and connected speech.", "", "hadar.shemesh"], ["Nab Darell", "englishwithnab", "Common mistakes • Synonyms", "Nab corrects common English mistakes and gives better words for overused phrases.", "", "EnglishwithNab"], ["Maria · ZenFluent", "zenfluentmaria", "Speaking • Real-life English", "Maria acts out real situations with captions, so you learn how English is really spoken.", "", ""], ["In English With Love", "inenglishwithlove", "Phrases • Grammar • Pronunciation", "An English teacher shares tips, grammar and phrases through beautiful quote cards.", "", ""], ["Word of the Day", "english_vocabulary", "Vocabulary • Idioms", "Green Forest English school posts a new word, idiom or phrasal verb every day.", "", ""], ["Vocab For English", "vocabforenglish", "Vocabulary", "A daily word with a picture, meaning and example sentence.", "", ""], ["Pearson English", "pearsonenglishlearning", "Grammar • Vocabulary • Practice", "Pearson English posts grammar, useful vocabulary and practice questions.", "", ""], ["Clémence", "learnenglishwithclemence", "General English • Vocabulary", "Clémence shares everyday English vocabulary and phrases for learners.", "6M", ""], ["Abraham", "berberenglish", "British accent • RP • Speaking", "A British English voice and accent coach teaching the standard British (RP) accent.", "1M", ""], ["Claire", "englishteacherclaire", "American English • Speaking", "A native US teacher sharing practical, relaxed English for real life.", "788K", ""], ["Jack Alexander", "jackalexanderenglish", "British English • Speaking", "Jack teaches natural British English and how native speakers really talk.", "775K", ""], ["Danil", "teach_danich", "Speaking • Vocabulary", "Danil, an English teacher certified through Arizona State University, shares everyday English.", "772K", ""], ["Shannon McVey", "shannonenglishteacher", "Common mistakes • Scottish English", "Shannon from Glasgow fixes the mistakes students make most often.", "615K", ""], ["Evelyn", "improveyourenglishwithevelyn", "Vocabulary • Grammar", "Evelyn, with a PhD in English literature, helps you improve your English step by step.", "593K", ""], ["Aga", "english.with.aga", "Grammar • General English", "A London-based teacher explaining English grammar simply.", "468K", ""], ["Englii · Claire", "englii_insta", "Vocabulary", "Short vocabulary lessons to build your word power.", "660K", ""], ["Joanne Hayden", "joannehayden_englishfluency", "Fluency • Speaking", "An English teacher with 30 years of experience helping you speak fluently.", "281K", ""], ["Anna Shayeb", "annashayeb", "Vocabulary • Phrasal verbs • Grammar", "Anna teaches vocabulary, grammar and phrasal verbs in clear short lessons.", "117K", ""], ["Syeda Sadia", "easyenglishwithsadia", "Speaking • Public speaking", "A TEFL-certified teacher and public-speaking coach.", "144K", ""], ["Clem", "english_with_clem", "General English", "An online English teacher sharing everyday English.", "71K", ""], ["Jessica · Sunny Side", "englishsunnyside", "Idioms • Pronunciation • Phrasal verbs", "Daily themed lessons on idioms, homophones, phrasal verbs and conversation.", "", ""], ["Benjamin", "englishlifewithbenjamin", "British English • Speaking", "Benjamin teaches British English online with natural, everyday phrases.", "1.1M", ""], ["Ginseng English", "ginsenglish", "Visual lessons • Grammar", "Clear visual English lessons on grammar and vocabulary.", "", ""], ["My Little English Page", "mylittleenglishpage", "Live lessons • Quizzes • Speaking", "Scheduled live lessons, quizzes and conversation questions.", "", ""], ["Andreina Baroni", "baroniteacher", "Confusing words • Phrases", "Easily confused words and phrases for real situations.", "", ""], ["Save Me Teacher", "savemeteacher", "Everyday English • Live classes", "Practical everyday English tips, phrases and live classes.", "", ""], ["Englishism", "english.ism", "British slang • Quotes", "Casual British English, slang and quotes explained.", "", ""], ["Fun & Functional English", "master_your_english", "Idioms • Writing", "Idioms, quotes and writing tips on chalkboard-style cards.", "", ""], ["Language Teacher Family", "languageteacherfamily", "Learning tips • Grammar", "English learning tips and a step-by-step system for the language.", "1M", ""], ["Sasha Mayorik", "sasha_mayorik", "Accent • Speaking • In Russian", "A CELTA-certified teacher explaining English and accent in Russian.", "623K", ""], ["Arianna", "ariannitalagringa", "American English • Phrasal verbs", "Short reels on American English, grammar and phrasal verbs.", "3.1M", ""], ["Stew Sensei", "stew.sensei.english", "British English • Pronunciation", "A British English teacher and pronunciation coach with a podcast.", "281K", ""], ["Souhir", "english.with.souhir", "Business English • Soft skills", "Business English and communication coaching.", "263K", ""], ["Simi", "englishwithsimi", "Vocabulary • Grammar • Speaking", "Fun reels, vocabulary guides, grammar quizzes and speaking practice.", "240K", ""], ["Chloé", "chloedashines", "Listening • Grammar", "Listening exercises, mini podcasts and grammar tips.", "201K", ""], ["Teacher Ash", "ash_britishenglish", "British English • Vocabulary", "Teacher Ash shares British English words and phrases.", "1.4M", ""], ["Mariwan Abdalla", "englishwithrahel", "Vocabulary • Speaking", "Popular English lessons on words and speaking.", "1.7M", ""], ["Train English · Vocab", "learntrainenglish", "Vocabulary", "Daily English vocabulary posts.", "795K", ""], ["Smashing English", "smashing.english", "British English • Vocabulary", "Fun British English vocabulary and phrases.", "522K", ""], ["Regan", "englishwithregan", "British English • Speaking", "Regan, a British English teacher, shares natural phrases and pronunciation.", "480K", ""], ["Natalia Payne", "nat_london", "British English • Pronunciation", "Natalia teaches British English and accent from London.", "151K", ""], ["Griffin English", "griffinenglish.official", "British English • Vocabulary", "British English lessons and vocabulary.", "119K", ""], ["Richard · Grammar Goat", "thegrammargoat", "Grammar • Word origins", "Richard Venner explains English grammar and where words come from.", "2.3M", ""], ["Natalie Severin", "english_with.natalie", "General English • Vocabulary", "English lessons and vocabulary for learners.", "156K", ""], ["Jay Fujiwara", "jayfujiwara", "Slow English • Listening", "Slow-paced English vlogs that are easy to follow.", "6.8M", ""], ["Giovana Gogola", "englishbygiovana", "General English • Speaking", "An English teacher sharing everyday English.", "6.3M", ""], ["Thomas Finch", "englishenjoyed", "Speaking • Vocabulary", "English Enjoyed: natural English in short videos.", "2.2M", ""], ["Maria & William", "englishwmariandwilliam", "Conversation • American English", "A couple teaching English through everyday conversations.", "1.9M", ""], ["Umar Tursunmurodov", "umarchikk_001", "Speaking • TEFL", "A TEFL/TESOL-certified English speaker sharing English lessons.", "152K", ""], ["Dana Rogers", "teacher_danarogers", "Business English • Live lessons", "A certified teacher with 14 years' experience; gives free live lessons.", "182K", ""], ["Kelly Ferreira", "english.with.kelly", "IELTS • Business English • CV", "TEFL, IELTS and Business English teacher; also helps with CVs and interviews.", "101K", ""], ["Masoud Feiz", "ieltswinners", "IELTS", "A Cambridge-certified IELTS instructor.", "87K", ""], ["Khaled Alhasan", "english_with_alhasan", "IELTS • TOEFL • Speaking", "IELTS and TOEFL coaching and fluent speaking.", "412K", ""], ["Alisha", "grammargirl.in", "IELTS • Spoken English", "A certified IELTS trainer teaching spoken English and soft skills.", "144K", ""], ["Lorena Parker", "englishwithparker", "Idioms • Phrasal verbs", "A native teacher with 12 years' experience: idioms, expressions and phrasal verbs.", "142K", ""], ["Liliya Saburova", "english.lilia", "English for work abroad • In Russian", "A Cambridge-certified teacher with courses for people moving and working abroad.", "123K", ""], ["Julia Pashina", "english_juliapashina", "C2 vocabulary • British accent • In Russian", "A Cambridge-certified teacher: a C2 word every day and British accent training.", "80K", ""], ["Anya", "english.speakers", "Speaking B2–C1 • In Russian", "A Cambridge-certified teacher focused on conversation at B2–C1.", "78K", ""], ["Said Academy", "said.academy", "Speaking • CELTA", "A CELTA-certified teacher running English speaking sessions.", "88K", ""], ["Fouzia Erraihani", "fouziaerraihani", "IELTS • Business English", "An ELT-certified teacher: IELTS prep, conversation and business English.", "55K", ""], ["ELSA Speak", "elsa_speak", "Pronunciation • AI", "The AI pronunciation coach app shares speaking tips.", "1M", ""], ["Rahma Khazzani", "englishloovers", "Vocabulary • Speaking", "An English tutor sharing words and phrases.", "1.6M", ""], ["Shavy Jain", "shavy.englishhut", "Phonics • Speaking • CELTA", "A CELTA-certified trainer with English classes and phonics.", "680K", ""], ["Milap", "englishwithmilapsir", "Pronunciation • Phonetics", "Spoken English: reading rules, pronunciation and phonetics.", "676K", ""], ["Mitra Madani", "epdclassonline", "Vocabulary • Lessons", "A university lecturer giving focused English lessons and vocabulary.", "420K", ""], ["English in General", "english.ingeneral", "Mixed lessons", "A mix of English lessons from many teachers.", "", ""], ["Idiom Land", "idiom.land", "Idioms", "Idioms explained with meanings, origins and examples.", "", ""], ["Riti", "learnenglishwithriti", "Slang • Speaking", "Riti breaks down slang and gives better ways to say things.", "", ""], ["Meera", "englishwithmeera", "Speaking • Synonyms", "Meera shares natural phrases and better word choices.", "", ""], ["Geet", "englishwithgeet", "Spoken English", "Spoken English lessons and examples.", "", "EnglishwithGeet"], ["Prof Samah", "samdailyy_", "Exam prep • Grammar", "An English teacher with exam preparation resources.", "521K", ""], ["Only English", "only_english_fans", "Vocabulary • Phrasal verbs • Idioms", "An experienced teacher sharing vocabulary, phrasal verbs and idioms.", "174K", ""], ["Vocabulary Through Stories", "i_will_crack_english", "Vocabulary • Idioms", "Idioms and word challenges for non-native speakers.", "157K", ""], ["Jordan", "english_lingo", "British English • IELTS", "Jordan teaches British English with IELTS preparation content.", "624K", ""], ["Mina Boumaiza", "mina.inspires", "Languages • Learning tips", "A multilingual educator sharing language-learning tips.", "1.1M", ""], ["Victoria Khorosheva", "missvikiteaching", "Learning tips", "An English teacher sharing learning tips.", "153K", ""], ["Neetu Singh", "neetusinghkd", "Grammar • Exams", "A well-known English teacher, founder of KD Campus.", "1M", ""], ["Nancy Abdal", "linguanancy", "General English", "General English teaching.", "463K", ""], ["Arzu Guliyeva", "biringilizsokagi", "IELTS • TOEFL • CELTA", "A CELTA-certified teacher with IELTS and TOEFL classes.", "557K", ""], ["Amani Mohammad", "englishwith_mino", "English from zero", "English from scratch with varied methods; teaching since 2015.", "695K", ""]];
+    const LIST = T.map(r => ({ name: r[0], h: r[1], focus: r[2], bio: r[3], subs: r[4], yt: r[5] }));
+    const TAGS = [['all', 'All'], ['fav', '❤ Saved'], ['IELTS', 'IELTS'], ['Speaking', 'Speaking'], ['Pronunciation', 'Pronunciation'], ['Vocabulary', 'Vocabulary'], ['Grammar', 'Grammar'], ['British', 'British'], ['American', 'American'], ['Business', 'Business'], ['Live', 'Live lessons'], ['Russian', 'In Russian']];
+    let filter = 'all';
+    const H_RE = /^[A-Za-z0-9._]{2,30}$/;
+    const favs = () => LS.get('lr_igfav', []);
+    const mine = () => LS.get('lr_igmine', []).filter(m => m && H_RE.test(m.h || ''));
+    const all = () => mine().map(m => Object.assign({ mine: true, focus: 'Added by you', bio: '', subs: '' }, m)).concat(LIST);
+    const hue = (s) => { let h = 0; for (const c of String(s)) h = (h * 31 + c.charCodeAt(0)) % 360; return h; };
+    const url = (h) => 'https://www.instagram.com/' + encodeURIComponent(h) + '/';
+    const liveUrl = (h) => 'https://www.instagram.com/' + encodeURIComponent(h) + '/live/';
+
+    /* ---------- photos ---------- */
+    function ytPic(yt) {
+        if (!yt) return '';
+        try { const p = window.LRLIVE && LRLIVE.pic('yt', yt); if (p) return p; } catch (e) { }
+        try { const c = localStorage.getItem('lunarise_ytphoto_v2_' + yt.toLowerCase()); if (c && /^https:\/\//.test(c)) return c; if (c) { const j = JSON.parse(c); if (j && /^https:\/\//.test(j.url || '')) return j.url; } } catch (e) { }
+        return '';
+    }
+    function pic(m) { return ytPic(m.yt) || 'https://unavatar.io/instagram/' + encodeURIComponent(m.h) + '?fallback=false'; }
+    function letter(m) { const h = hue(m.h); return '<em style="background:linear-gradient(135deg,hsl(' + h + ' 70% 45%),hsl(' + ((h + 50) % 360) + ' 75% 55%))">' + esc(String(m.name || m.h).trim().charAt(0).toUpperCase()) + '</em>'; }
+    function img(m, cls) { return '<span class="' + cls + '">' + letter(m) + '<img src="' + esc(pic(m)) + '" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()" onload="if(this.naturalWidth<24)this.remove()"></span>'; }
+
+    /* ---------- the "watch live" row ---------- */
+    function liveRow() {
+        const f = favs(), list = all().slice().sort((a, b) => (f.includes(b.h.toLowerCase()) - f.includes(a.h.toLowerCase())) || (/Live/.test(b.focus) - /Live/.test(a.focus))).slice(0, 30);
+        return '<div class="lv-h"><h3><i class="ig-dot"></i>Watch live on Instagram</h3></div>' +
+            '<p class="ig-lvnote">Tap a teacher: if they are live right now, Instagram opens the stream. If not, you see their profile and can turn on their live alerts there.</p>' +
+            '<div class="lv-row" role="list">' + list.map(m => '<a class="lv-b ig-b" role="listitem" href="' + esc(liveUrl(m.h)) + '" target="_blank" rel="noopener" title="' + esc(m.name) + ' on Instagram"><span class="lv-ring ig-ring">' + img(m, 'lv-ph') + '</span>' + (f.includes(m.h.toLowerCase()) ? '<span class="lv-tag ig-tag">SAVED</span>' : /Live/.test(m.focus) ? '<span class="lv-tag ig-tag">LIVE CLASSES</span>' : '') + '<b>' + esc(m.name) + '</b><small>@' + esc(m.h) + '</small></a>').join('') + '</div>';
+    }
+
+    /* ---------- the grid ---------- */
+    function card(m) {
+        const on = favs().includes(m.h.toLowerCase());
+        return '<div class="ig-card">' +
+            '<button type="button" class="tg-fav ig-fav' + (on ? ' on' : '') + '" data-igfav="' + esc(m.h) + '" aria-pressed="' + on + '" aria-label="' + (on ? 'Remove from saved' : 'Save') + '"><i class="fa-' + (on ? 'solid' : 'regular') + ' fa-heart"></i></button>' +
+            '<a href="' + esc(url(m.h)) + '" target="_blank" rel="noopener noreferrer" title="Open ' + esc(m.name) + ' on Instagram">' +
+            '<span class="ig-ph"><span class="ig-ring2">' + img(m, 'ig-in') + '</span><i class="fa-brands fa-instagram ig-bd"></i></span>' +
+            '<h4>' + esc(m.name) + '</h4><p class="ig-h">@' + esc(m.h) + (m.subs ? ' · <span>' + esc(m.subs) + ' followers</span>' : '') + '</p>' +
+            '<span class="ig-focus">' + esc(m.focus) + '</span>' +
+            (m.bio ? '<p class="ig-bio">' + esc(m.bio) + '</p>' : '<p class="ig-bio"></p>') +
+            '<span class="ig-open"><i class="fa-brands fa-instagram"></i>Open on Instagram</span></a>' +
+            (m.mine ? '<button type="button" class="ig-rm" data-igrm="' + esc(m.h) + '">Remove</button>' : '') + '</div>';
+    }
+    function grid() {
+        const g = $('ig-grid'); if (!g) return;
+        const q = ($('ig-search') && $('ig-search').value || '').trim().toLowerCase(), f = favs();
+        let list = all();
+        if (filter === 'fav') list = list.filter(m => f.includes(m.h.toLowerCase()));
+        else if (filter !== 'all') list = list.filter(m => (m.focus + ' ' + m.bio).toLowerCase().includes(filter.toLowerCase()));
+        if (q) list = list.filter(m => [m.name, m.h, m.focus, m.bio].join(' ').toLowerCase().includes(q));
+        $('ig-count').textContent = list.length + ' teacher' + (list.length === 1 ? '' : 's') + ' shown';
+        if (!list.length) { g.innerHTML = '<div class="col-span-full glass-card p-8 rounded-2xl text-center text-slate-400"><i class="fa-brands fa-instagram text-3xl mb-3" style="color:#f472b6"></i><p class="font-semibold">Nothing here yet.</p><p class="text-xs mt-1">' + (filter === 'fav' ? 'Tap the heart on a teacher to save them here.' : 'Try another word, or add a teacher by their @username below.') + '</p></div>'; return; }
+        if (typeof window.lazyGrid === 'function') window.lazyGrid(g, list, (m) => card(m)); else g.innerHTML = list.map(card).join('');
+    }
+    function filters() { const el = $('ig-filters'); if (el) el.innerHTML = TAGS.map(t => '<button type="button" class="pf-opt ' + (filter === t[0] ? 'on' : '') + '" data-igf="' + t[0] + '">' + t[1] + '</button>').join(''); }
+    function paint() { filters(); grid(); const r = $('lv-ig'); if (r) r.innerHTML = liveRow(); }
+
+    D.addEventListener('click', (e) => {
+        const t = e.target.closest && e.target.closest('[data-igf],[data-igfav],[data-igrm],#ig-add-b'); if (!t) return;
+        if (t.dataset.igf) { filter = t.dataset.igf; paint(); return; }
+        if (t.dataset.igfav) { e.preventDefault(); const k = t.dataset.igfav.toLowerCase(), f = favs(); LS.set('lr_igfav', f.includes(k) ? f.filter(x => x !== k) : f.concat(k)); paint(); return; }
+        if (t.dataset.igrm) { LS.set('lr_igmine', mine().filter(m => m.h.toLowerCase() !== t.dataset.igrm.toLowerCase())); paint(); return; }
+        if (t.id === 'ig-add-b') {
+            const h = String($('ig-add-h').value || '').trim().replace(/^(https?:\/\/)?(www\.)?instagram\.com\//i, '').replace(/^@/, '').split(/[/?#]/)[0];
+            const n = String($('ig-add-n').value || '').trim().slice(0, 40);
+            if (!H_RE.test(h)) { try { showToast('Enter a valid Instagram @username'); } catch (x) { } return; }
+            if (all().some(m => m.h.toLowerCase() === h.toLowerCase())) { try { showToast('@' + h + ' is already in the list'); } catch (x) { } return; }
+            LS.set('lr_igmine', [{ h, name: n || h }].concat(mine()).slice(0, 50)); $('ig-add-h').value = ''; $('ig-add-n').value = '';
+            filter = 'all'; paint(); try { showToast('✅ @' + h + ' added'); } catch (x) { }
+        }
+    });
+    D.addEventListener('input', (e) => { if (e.target && e.target.id === 'ig-search') grid(); });
+
+    /* ---------- three tabs: YouTube · Telegram · Instagram ---------- */
+    window.mentorsTab = function (t) {
+        t = t === 'tg' || t === 'ig' ? t : 'yt';
+        [['yt', 'mt-yt'], ['tg', 'mt-tg'], ['ig', 'mt-ig']].forEach(([k, id]) => { const el = $(id); if (el) el.style.display = k === t ? '' : 'none'; const b = $('mt-b-' + k); if (b) { b.classList.toggle('on', k === t); b.setAttribute('aria-selected', k === t); } });
+        const ind = $('mt-ind'); if (ind) { ind.classList.toggle('tg', t === 'tg'); ind.classList.toggle('ig', t === 'ig'); }
+        try { if (t === 'tg') { renderTgFilters(); renderTgGrid(); } } catch (e) { }
+        if (t === 'ig') paint();
+        try { sessionStorage.setItem('lr_mt', t); } catch (e) { }
+    };
+    window.LRIG = { paint, list: () => LIST };
+})();
 </script><!--/hs:js-->
 <!--cz:js--><script id="cz-js">
 /* ===== Chess Arena 2: a real wooden board, classic pieces, smooth sliding moves, drag or tap, wooden sounds =====
@@ -43895,6 +44360,7 @@ Reply with JSON only: {"words":[{"w":"","pos":"","ipa":"","def":"","ex":""}],"gr
             '<div class="pr2-now"><span>' + (mine ? '<i class="fa-solid fa-gem"></i>Your plan: <b>' + esc(mine.name) + '</b>' + (u.proUntil ? ' · until ' + new Date(u.proUntil).toLocaleDateString('en-GB') : '') : '<i class="fa-solid fa-seedling"></i>You are on <b>Free</b>') + '</span>' +
             '<span class="pr2-use"><b>' + n + '</b>&nbsp;of ' + (lim.ai >= UNL ? 'unlimited' : lim.ai) + ' AI requests today<i style="--w:' + (lim.ai >= UNL ? 4 : Math.min(100, n / lim.ai * 100)).toFixed(0) + '%"></i></span></div>' +
             '<div class="pr2-grid">' + PLANS.map(p => card(p, mine && mine.id === p.id)).join('') + '</div>' +
+            '<div id="pr-xp" class="xpw" hidden></div>' +
             '<div class="pr2-why"><div><i class="fa-solid fa-mug-hot"></i><b>Less than a coffee a week</b><span>Gold VIP is $1.15 a week on sale.</span></div><div><i class="fa-solid fa-user-tie"></i><b>A tutor costs $10 an hour</b><span>Luna is there 24/7 and checks every answer.</span></div><div><i class="fa-solid fa-chart-line"></i><b>See your band score go up</b><span>Every check tells you your band and what to fix.</span></div></div>' +
             table() +
             '<section class="pr2-faq" aria-labelledby="pr2-faqh"><h3 id="pr2-faqh">Questions</h3>' + FAQ.map(q => '<details><summary>' + esc(q[0]) + '<i class="fa-solid fa-plus"></i></summary><p>' + esc(q[1]) + '</p></details>').join('') + '</section>' +
@@ -46864,7 +47330,7 @@ html,body{overflow-x:clip}
                 <div class="a2-cg"><select class="adm-in" id="a2-pd-${e(uid)}">${[['30', '30 days'], ['90', '3 months'], ['180', '6 months'], ['365', '1 year']].map(o => `<option value="${o[0]}"${iv('a2-pd-' + uid, '365') === o[0] ? ' selected' : ''}>${o[1]}</option>`).join('')}</select>
                     <button type="button" class="adm-btn sm gold" data-a2="ctl" data-w="pro" data-uid="${e(uid)}">${H.ICON.gift}Give PRO</button>
                     ${pro && pro.u > now ? `<button type="button" class="adm-btn sm${armed('unpro:' + uid)}" data-a2="ctl" data-w="unpro" data-uid="${e(uid)}">${ST.armed === 'unpro:' + uid ? 'Tap again' : 'Remove PRO'}</button>` : ''}</div>
-                <div class="a2-cg"><input class="adm-in" id="a2-gp-${e(uid)}" type="number" min="0" max="10000000" inputmode="numeric" value="${e(iv('a2-gp-' + uid, int(a.gp)))}" aria-label="Game points"><button type="button" class="adm-btn sm" data-a2="ctl" data-w="xp" data-uid="${e(uid)}">Set game points</button></div>
+                <div class="a2-cg"><input class="adm-in" id="a2-gp-${e(uid)}" type="number" min="0" max="10000000" inputmode="numeric" value="${e(iv('a2-gp-' + uid, int(a.gp)))}" aria-label="Game points"><button type="button" class="adm-btn sm" data-a2="ctl" data-w="xp" data-uid="${e(uid)}">Set game points</button><button type="button" class="adm-btn sm" data-a2="ctl" data-w="xpok" data-uid="${e(uid)}" title="If this account was stopped from collecting XP because of a shared device">Allow XP</button></div>
                 <div class="a2-cg col"><textarea class="adm-in" id="a2-msg-${e(uid)}" rows="2" maxlength="500" placeholder="A message for this learner">${e(iv('a2-msg-' + uid, ''))}</textarea><button type="button" class="adm-btn sm" data-a2="ctl" data-w="msg" data-uid="${e(uid)}">${H.ICON.bell || ''}Send message</button></div>
                 <div class="a2-cg"><button type="button" class="adm-btn sm" data-a2="ctl" data-w="dw" data-uid="${e(uid)}">New Daily words</button>
                     <button type="button" class="adm-btn sm${armed('reset:' + uid)}" data-a2="ctl" data-w="reset" data-uid="${e(uid)}">${ST.armed === 'reset:' + uid ? 'Tap again: progress goes to 0' : 'Reset progress'}</button></div>
@@ -46888,7 +47354,7 @@ html,body{overflow-x:clip}
         try {
             await H.adm('adm_ctl', extra);
             ['a2-msg-', 'a2-why-', 'a2-gp-'].forEach(k => delete ST.inp[k + uid]);
-            H.toast({ pro: '🎁 PRO given', unpro: 'PRO removed', xp: 'Game points set', msg: '✉️ Message sent', dw: 'New Daily words sent', reset: 'Progress reset', ban: '🔒 Account blocked', unban: 'Account unblocked' }[w] || 'Done');
+            H.toast({ pro: '🎁 PRO given', unpro: 'PRO removed', xp: 'Game points set', msg: '✉️ Message sent', dw: 'New Daily words sent', reset: 'Progress reset', ban: '🔒 Account blocked', unban: 'Account unblocked', xpok: '⚡ This account collects XP again' }[w] || 'Done');
             ST.accts = null; await loadAcct(uid, true); loadAccts(true);
         } catch (er) { H.toast('⚠ ' + (String(er.message) === 'unknown op' ? 'Update the server to version 8' : 'Could not do it (' + String(er.message || er).slice(0, 40) + ')')); x.disabled = false; }
     }
