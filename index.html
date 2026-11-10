@@ -49950,17 +49950,16 @@ html.mg-lite-lock #mg { visibility: visible !important; }
     /* The game checks the screen by itself and picks a level, with no button and no message:
        'full' = everything, the 3D friend at the best picture; 'mid' = the 3D friend, but fewer glass and glow effects and a lighter picture;
        'lite' = the plain emoji friend and the simplest page. A level chosen after slow frames is remembered for three days, then tried again. */
-    const TIER_KEY = 'mg_t', TIER_TTL = 3 * 864e5;
+    const TIER_KEY = 'mg_t2', TIER_TTL = 2 * 864e5;
     try { localStorage.removeItem('mg_lite'); } catch (e) { }
     function tier() {
         try { if (/[?&]lite\b/.test(location.search)) return 'lite'; if (/[?&]full\b/.test(location.search)) return 'full'; } catch (e) { }
         let t = 'full';
         try { const c = navigator.hardwareConcurrency || 8, m = navigator.deviceMemory || 8, d = window.devicePixelRatio || 1; if (m <= 2 || c <= 2) t = 'lite'; else if (c <= 4 || m <= 4 || screen.width * screen.height * d * d >= 6e6) t = 'mid'; } catch (e) { }
-        try { if (D.body.classList.contains('lite') || D.documentElement.classList.contains('lite')) t = 'lite'; } catch (e) { }
-        try { const o = JSON.parse(LS.get(TIER_KEY, 'null')); if (o && Date.now() - o.ts < TIER_TTL) { const rk = { full: 0, mid: 1, lite: 2 }; if (rk[o.v] > rk[t]) t = o.v; } } catch (e) { }
+        try { const o = JSON.parse(LS.get(TIER_KEY, 'null')); if (o && o.k >= 2 && Date.now() - o.ts < TIER_TTL) { const rk = { full: 0, mid: 1, lite: 2 }; if (rk[o.v] > rk[t]) t = o.v; } } catch (e) { }
         return t;
     }
-    function remember(v) { try { const o = JSON.parse(LS.get(TIER_KEY, 'null')); if (o && o.v === 'lite' && v === 'mid') return; LS.set(TIER_KEY, JSON.stringify({ v, ts: Date.now() })); } catch (e) { } }
+    function remember(v) { try { const o = JSON.parse(LS.get(TIER_KEY, 'null')); if (o && o.v === 'lite' && v === 'mid') return; const k = o && o.v === v && Date.now() - o.ts < TIER_TTL ? (o.k || 1) + 1 : 1; LS.set(TIER_KEY, JSON.stringify({ v, ts: Date.now(), k })); } catch (e) { } }
     const liteWanted = () => tier() === 'lite';
     const REDUCED = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { return false; } })();
     const U = () => { try { return state.user || {}; } catch (e) { return {}; } };
@@ -50450,20 +50449,20 @@ void main(){
             this.bad = 0; this.slow = 0; this.t1 = performance.now(); this.lastDraw = 0; this.mood = 'idle'; this.mt = 0; this.ms = 0; this.K = 0; this.talk = 0; this.raf = 0; this.S = {}; this.bt = -1; this.nb = 2; this.dbl = 0; this.earT = [3, 6]; this.q = 1; this.ftA = 0; this.ftN = 0; this.mo = 0;
             this.lk = { x: 0, y: 0, tx: 0, ty: 0, until: 0, wt: 0 };
             this.tier = tier(); if (this.tier === 'lite') return; if (this.tier === 'mid') this.q = .72;
-            let gl = null; try { gl = this.cv.getContext('webgl2', { alpha: true, premultipliedAlpha: false, antialias: false, powerPreference: 'low-power', failIfMajorPerformanceCaveat: true }); } catch (e) { }
+            let gl = null; try { gl = this.cv.getContext('webgl2', { alpha: true, premultipliedAlpha: false, antialias: false, powerPreference: 'low-power' }); } catch (e) { }
             if (!gl) return;
             this.cv.addEventListener('webglcontextlost', (e) => { try { e.preventDefault(); } catch (x) { } this.dead(); }, false);
             /* The 3D picture is a big shader. A browser that builds it on the main thread (old school panels, weak tablets) can freeze
                the whole page for many seconds or crash its graphics, which shows as a black and white flicker. So the shader is built in the
                background (KHR_parallel_shader_compile) and used only when it is ready in time; without that ability, the emoji friend is used. */
-            const ext = gl.getExtension('KHR_parallel_shader_compile'); if (!ext) return;
+            const ext = gl.getExtension('KHR_parallel_shader_compile'); if (!ext && this.tier !== 'full') return;
             const sh = (t, src) => { const s = gl.createShader(t); gl.shaderSource(s, src); gl.compileShader(s); return s; };
             const v = sh(gl.VERTEX_SHADER, '#version 300 es\nin vec2 p;void main(){gl_Position=vec4(p,0.,1.);}'), f = sh(gl.FRAGMENT_SHADER, BFS);
             const pr = gl.createProgram(); gl.attachShader(pr, v); gl.attachShader(pr, f); gl.linkProgram(pr);
             this.gl = gl; this.pending = true; const t0 = performance.now();
             const poll = () => {
                 if (this.gone || gl.isContextLost()) return;
-                let done = false; try { done = gl.getProgramParameter(pr, ext.COMPLETION_STATUS_KHR); } catch (e) { }
+                let done = false; try { done = ext ? gl.getProgramParameter(pr, ext.COMPLETION_STATUS_KHR) : true; } catch (e) { }
                 if (!done) { if (performance.now() - t0 > 6000) { this.pending = false; this.dead(true); return; } setTimeout(poll, 80); return; }
                 this.pending = false;
                 if (!gl.getProgramParameter(pr, gl.LINK_STATUS)) { try { console.warn('buddy shader', gl.getProgramInfoLog(pr)); } catch (e) { } this.dead(); return; }
