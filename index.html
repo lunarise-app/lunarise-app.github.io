@@ -49947,15 +49947,21 @@ html.mg-lite-lock #mg { visibility: visible !important; }
     const pick = (a) => a[Math.floor(Math.random() * a.length)];
     const shuf = (a) => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
     const sleep = (ms) => new Promise(r => setTimeout(r, ms));
-    /* Smooth mode: school panels, old tablets and weak phones cannot draw the 3D friend and every glow smoothly.
-       'mg_lite' = '1' (on), '0' (off), empty (the game decides: weak device, 4K screen, the site's Lite mode, or slow frames). */
-    function liteWanted() {
-        try { const v = LS.get('mg_lite', ''); if (v === '1') return true; if (v === '0') return false; } catch (e) { }
-        try { if (/[?&]lite\b/.test(location.search)) return true; } catch (e) { }
-        try { if (D.body.classList.contains('lite') || D.documentElement.classList.contains('lite')) return true; } catch (e) { }
-        try { const c = navigator.hardwareConcurrency || 8, m = navigator.deviceMemory || 8, d = window.devicePixelRatio || 1; if (m <= 2 || (c <= 4 && m <= 4) || screen.width * screen.height * d * d >= 6e6) return true; } catch (e) { }
-        return false;
+    /* The game checks the screen by itself and picks a level, with no button and no message:
+       'full' = everything, the 3D friend at the best picture; 'mid' = the 3D friend, but fewer glass and glow effects and a lighter picture;
+       'lite' = the plain emoji friend and the simplest page. A level chosen after slow frames is remembered for three days, then tried again. */
+    const TIER_KEY = 'mg_t', TIER_TTL = 3 * 864e5;
+    try { localStorage.removeItem('mg_lite'); } catch (e) { }
+    function tier() {
+        try { if (/[?&]lite\b/.test(location.search)) return 'lite'; if (/[?&]full\b/.test(location.search)) return 'full'; } catch (e) { }
+        let t = 'full';
+        try { const c = navigator.hardwareConcurrency || 8, m = navigator.deviceMemory || 8, d = window.devicePixelRatio || 1; if (m <= 2 || c <= 2) t = 'lite'; else if (c <= 4 || m <= 4 || screen.width * screen.height * d * d >= 6e6) t = 'mid'; } catch (e) { }
+        try { if (D.body.classList.contains('lite') || D.documentElement.classList.contains('lite')) t = 'lite'; } catch (e) { }
+        try { const o = JSON.parse(LS.get(TIER_KEY, 'null')); if (o && Date.now() - o.ts < TIER_TTL) { const rk = { full: 0, mid: 1, lite: 2 }; if (rk[o.v] > rk[t]) t = o.v; } } catch (e) { }
+        return t;
     }
+    function remember(v) { try { const o = JSON.parse(LS.get(TIER_KEY, 'null')); if (o && o.v === 'lite' && v === 'mid') return; LS.set(TIER_KEY, JSON.stringify({ v, ts: Date.now() })); } catch (e) { } }
+    const liteWanted = () => tier() === 'lite';
     const REDUCED = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { return false; } })();
     const U = () => { try { return state.user || {}; } catch (e) { return {}; } };
     const save = () => { try { pfSave(); } catch (e) { } };
@@ -50443,7 +50449,7 @@ void main(){
             this.cv = D.createElement('canvas'); this.cv.className = 'mg-cv'; this.ok = false; this.t0 = performance.now(); this.last = this.t0;
             this.bad = 0; this.slow = 0; this.t1 = performance.now(); this.lastDraw = 0; this.mood = 'idle'; this.mt = 0; this.ms = 0; this.K = 0; this.talk = 0; this.raf = 0; this.S = {}; this.bt = -1; this.nb = 2; this.dbl = 0; this.earT = [3, 6]; this.q = 1; this.ftA = 0; this.ftN = 0; this.mo = 0;
             this.lk = { x: 0, y: 0, tx: 0, ty: 0, until: 0, wt: 0 };
-            if (liteWanted()) return;
+            this.tier = tier(); if (this.tier === 'lite') return; if (this.tier === 'mid') this.q = .72;
             let gl = null; try { gl = this.cv.getContext('webgl2', { alpha: true, premultipliedAlpha: false, antialias: false, powerPreference: 'low-power', failIfMajorPerformanceCaveat: true }); } catch (e) { }
             if (!gl) return;
             this.cv.addEventListener('webglcontextlost', (e) => { try { e.preventDefault(); } catch (x) { } this.dead(); }, false);
@@ -50472,11 +50478,11 @@ void main(){
         }
         mount(h) { h.appendChild(this.cv); this.loop(); }
         /* the picture cannot go on (slow screen or lost graphics): swap it for the plain emoji friend, the game goes on */
-        dead(remember) {
+        dead(remember_) {
             this.ok = false; this.gone = true; cancelAnimationFrame(this.raf); this.raf = 0;
             try { this.cv.remove(); } catch (e) { }
             const bd = $('mg-bd'); if (bd && !$('mg-emo')) bd.innerHTML = '<span class="mg-emo" id="mg-emo">' + F().e + '</span>';
-            if (remember) { try { if (LS.get('mg_lite', '') === '') LS.set('mg_lite', '1'); } catch (e) { } }
+            if (remember_) remember('lite');
             try { if (EL) { EL.classList.add('mg-lite'); D.documentElement.classList.add('mg-lite-lock'); syncLite(); } } catch (e) { }
         }
         set(m, ms) { this.mood = m; this.ms = performance.now(); this.mt = ms ? performance.now() + ms : 0; }
@@ -50663,23 +50669,20 @@ void main(){
         D.documentElement.classList.toggle('mg-lite-lock', on);
         const b = $('mg-lite'); if (b) b.setAttribute('aria-pressed', on);
     }
-    function setLite(on, save) {
+    function setLite(on) {
         if (!EL) return;
-        EL.classList.toggle('mg-lite', !!on); if (save) LS.set('mg_lite', on ? '1' : '0');
-        if (on && BD && BD.ok) BD.dead();
-        if (!on && BD && !BD.ok && !BD.cv.isConnected) { /* the 3D friend comes back the next time the game opens */ }
-        syncLite();
+        EL.classList.toggle('mg-lite', !!on); syncLite();
     }
-    /* if the first seconds are slow, the game switches to smooth mode by itself (and remembers it on this device) */
+    /* a quiet check of the first seconds: if the screen is slow, the page gets lighter effects (the 3D friend keeps its own safety net) */
     function perfWatch() {
-        if (LS.get('mg_lite', '') !== '' || (EL && EL.classList.contains('mg-lite'))) return;
+        if (EL && EL.classList.contains('mg-lite')) return;
         const my = EL; let n = 0, last = 0, bad = 0, sum = 0;
         const f = (t) => {
             if (!EL || EL !== my) return;
             if (D.hidden) { last = 0; requestAnimationFrame(f); return; }
             if (last) { const d = t - last; n++; sum += d; if (d > 48) bad++; } last = t;
             if (n < 110) { requestAnimationFrame(f); return; }
-            if (sum / n > 40 || bad / n > .35) { setLite(true, true); try { const bb = $('mg-bub'); if (bb) { bb.textContent = 'Smooth mode is on, so the game runs better on this screen.'; bb.classList.add('on'); setTimeout(() => bb.classList.remove('on'), 4200); } } catch (e) { } }
+            if (sum / n > 40 || bad / n > .35) { setLite(true); remember('mid'); }
         };
         setTimeout(() => requestAnimationFrame(f), 2200);
     }
@@ -50693,12 +50696,12 @@ void main(){
             '<button type="button" class="mg-ib" data-a="music" id="mg-music" aria-pressed="' + on('music') + '" aria-label="Music on or off">' + icon(on('music') ? 'music' : 'nomusic') + '</button>' +
             '<button type="button" class="mg-ib" data-a="sfx" id="mg-sfx" aria-pressed="' + on('sfx') + '" aria-label="Sounds on or off">' + icon(on('sfx') ? 'vol' : 'mute') + '</button>' +
             '<button type="button" class="mg-ib" data-a="voice" id="mg-voice" aria-pressed="' + on('voice') + '" aria-label="Your friend talks: on or off">' + icon(on('voice') ? 'talk' : 'notalk') + '</button>' +
-            '<button type="button" class="mg-ib mg-lt" data-a="lite" id="mg-lite" aria-pressed="false" aria-label="Smooth mode for slow screens" title="Smooth mode for slow screens">⚡</button></div>' +
+            '</div>' +
             '<div class="mg-main" id="mg-main"></div>' +
             '<div class="mg-pal" id="mg-pal"><div class="mg-bub" id="mg-bub" aria-hidden="true"></div><button type="button" class="mg-bd" id="mg-bd" data-a="buddy" aria-label="Tap your friend"></button></div>' +
             '<div class="mg-fx" id="mg-fx" aria-hidden="true"></div><div class="mg-sr" id="mg-sr" aria-live="polite"></div>';
         D.body.appendChild(EL); D.documentElement.classList.add('mg-lock');
-        if (liteWanted()) EL.classList.add('mg-lite'); syncLite();
+        if (tier() !== 'full') EL.classList.add('mg-lite'); syncLite();
         if (!BD || (!BD.ok && !BD.pending && !EL.classList.contains('mg-lite') && !BD.cv.isConnected && BD.gl && BD.gl.isContextLost && BD.gl.isContextLost())) BD = new Buddy(); BD.K = F().K;
         if (BD.ok) BD.mount($('mg-bd')); else $('mg-bd').innerHTML = '<span class="mg-emo" id="mg-emo">' + F().e + '</span>';
         perfWatch();
@@ -50925,7 +50928,6 @@ void main(){
         if (a === 'back') { if (sub()) home(); else close(); }
         else if (a === 'music') { tog('music'); b.innerHTML = icon(on('music') ? 'music' : 'nomusic'); b.setAttribute('aria-pressed', on('music')); if (on('music')) musicStart(AU.bpm, AU.tr); else musicStop(); }
         else if (a === 'sfx') { tog('sfx'); b.innerHTML = icon(on('sfx') ? 'vol' : 'mute'); b.setAttribute('aria-pressed', on('sfx')); }
-        else if (a === 'lite') { const now = !EL.classList.contains('mg-lite'); setLite(now, true); if (!now && (!BD || !BD.ok)) { BD = new Buddy(); BD.K = F().K; const h = $('mg-bd'); if (h) { if (BD.ok) { h.innerHTML = ''; BD.mount(h); } else h.innerHTML = '<span class="mg-emo" id="mg-emo">' + F().e + '</span>'; } } }
         else if (a === 'voice') { tog('voice'); b.innerHTML = icon(on('voice') ? 'talk' : 'notalk'); b.setAttribute('aria-pressed', on('voice')); if (!on('voice')) hush(); else say('Yay! I can talk again!'); }
         else if (a === 'friend') { LS.set('mg_friend', b.dataset.f); if (BD) BD.K = F().K; const em = $('mg-emo'); if (em) em.textContent = F().e; home(); mood('wave', 1800); say(F().intro); setTimeout(warm, 1500); }
         else if (a === 'buddy') { sfx('boing'); mood('boing', 1200); say(Math.random() < .5 ? line('tap') : line('joke')); }
