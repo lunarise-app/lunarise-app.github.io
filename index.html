@@ -6780,7 +6780,91 @@ html.gv-open,html.gv-open body{overflow:hidden!important}
 .gl-chips:has(.lp-b),.ai-chips:has(.lp-b),.rl-chips:has(.lp-b){display:block!important;overflow:visible!important;-webkit-mask-image:none!important;mask-image:none!important}
 .mwfc-langs:has(.lp-b),.lrw-strip:has(.lp-b){overflow:visible!important;-webkit-mask-image:none!important;mask-image:none!important}
 .gl-head:has(+ .gl-chips .lp-b) .gl-now{display:none}.lp-row{margin:12px 0 0}.pf-lpb .lp-b{width:auto;min-width:150px}@media (prefers-reduced-motion:reduce){.lp-sheet,.lp-card{transition:none}}
-.sc-top{position:relative;isolation:isolate}.sc-top::before{content:"";position:absolute;inset:-12px -8px -4px;z-index:-1;background:linear-gradient(180deg,rgba(7,11,22,.66),rgba(7,11,22,0));border-radius:26px;pointer-events:none}.sc-ttl .sc-h,.sc-ttl .sc-sub{text-shadow:0 2px 14px rgba(5,8,24,.9)}</style><style id="mv-art-css" data-th-skip>
+.sc-top{position:relative;isolation:isolate}.sc-top::before{content:"";position:absolute;inset:-12px -8px -4px;z-index:-1;background:linear-gradient(180deg,rgba(7,11,22,.66),rgba(7,11,22,0));border-radius:26px;pointer-events:none}.sc-ttl .sc-h,.sc-ttl .sc-sub{text-shadow:0 2px 14px rgba(5,8,24,.9)}html.wf-lock,html.wf-lock body{overflow:hidden}
+#wf{overflow:hidden;--bg:#070a16;--s1:#10152a;--s2:#171d38;--ln:rgba(255,255,255,.09);--tx:#eef1ff;--mu:#9aa3c7;--ac:#8b7bff;--ac2:#35d6c0;--ok:#34d399;--bad:#fb7185;position:fixed;inset:0;z-index:99990;display:none;flex-direction:column;background:var(--bg);color:var(--tx);font-family:inherit;-webkit-tap-highlight-color:transparent}
+#wf.open{display:flex}
+#wf .wf-bg{position:absolute;inset:0;pointer-events:none;background:radial-gradient(600px 380px at 85% -5%,rgba(139,123,255,.28),transparent 70%),radial-gradient(520px 360px at -5% 105%,rgba(53,214,192,.16),transparent 70%)}
+#wf *{box-sizing:border-box}
+#wf button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+#wf button:focus-visible,#wf input:focus-visible,#wf textarea:focus-visible{outline:2px solid var(--ac2);outline-offset:2px}
+.wf-top{position:relative;display:flex;align-items:center;gap:12px;padding:calc(10px + env(safe-area-inset-top)) 14px 10px;flex-wrap:wrap}
+.wf-x{width:40px;height:40px;border-radius:14px;background:var(--s2);border:1px solid var(--ln)!important}
+.wf-brand b{display:block;font-size:18px;letter-spacing:.2px}.wf-brand small{color:var(--mu);font-size:12px}
+.wf-steps{display:flex;gap:6px;margin-left:auto;font-size:11px;color:var(--mu)}
+.wf-steps span{display:flex;align-items:center;gap:5px;padding:5px 9px;border-radius:99px;background:rgba(255,255,255,.04)}
+.wf-steps i{width:7px;height:7px;border-radius:50%;background:#3a4166}
+.wf-steps .on{color:var(--tx);background:rgba(139,123,255,.2)}.wf-steps .on i{background:var(--ac);box-shadow:0 0 8px var(--ac)}.wf-steps .done i{background:var(--ok)}
+@media(max-width:560px){.wf-steps span{font-size:0;padding:0;background:none}.wf-steps i{width:9px;height:9px}.wf-steps{gap:8px}}
+.wf-main{position:relative;flex:1;min-height:0;overflow:auto;padding:6px 14px calc(26px + env(safe-area-inset-bottom));max-width:720px;width:100%;margin:0 auto;display:flex;flex-direction:column;gap:14px;-webkit-overflow-scrolling:touch}
+.wf-card{background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.025));border:1px solid var(--ln);border-radius:22px;padding:18px;backdrop-filter:blur(6px)}
+.wf-hero{text-align:center;padding:22px 18px}.wf-hero h2{margin:8px 0 6px;font-size:24px}.wf-hero p{color:var(--mu);margin:0 auto;max-width:520px;line-height:1.5;font-size:14px}.wf-priv{margin-top:10px!important;font-size:12px!important}
+.wf-lab{font-weight:700;margin-bottom:10px;font-size:14px}.wf-lab small{color:var(--mu);font-weight:400;margin-left:6px}
+.wf-ta{width:100%;resize:vertical;min-height:150px;background:rgba(0,0,0,.25);border:1px solid var(--ln);border-radius:16px;padding:14px;color:var(--tx);font:inherit;font-size:16px;line-height:1.6}
+.wf-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:10px}.wf-row.c{justify-content:center}.wf-gap{flex:1}
+.wf-count{color:var(--mu);font-size:13px}
+.wf-ghost{padding:10px 14px;border-radius:14px;background:rgba(255,255,255,.06);border:1px solid var(--ln)!important;font-size:13px;font-weight:600}
+.wf-ghost[disabled]{opacity:.4}
+.wf-go{padding:15px 28px;border-radius:18px;font-weight:800;font-size:16px;color:#fff!important;background:linear-gradient(135deg,#7c5cff,#35d6c0);box-shadow:0 10px 30px rgba(124,92,255,.4)}
+.wf-go.sm{padding:11px 20px;font-size:14px;border-radius:14px}.wf-go[disabled]{opacity:.35;box-shadow:none;cursor:not-allowed}
+.wf-cta{text-align:center}.wf-cta .wf-go{width:100%;max-width:420px}.wf-hint{color:var(--mu);font-size:12px;margin:8px 0 0}
+.wf-langs{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:8px}
+.wf-langs button{display:flex;flex-direction:column;align-items:flex-start;gap:1px;padding:10px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid var(--ln)!important;text-align:left}
+.wf-langs i{font-style:normal;font-size:20px}.wf-langs b{font-size:13px}.wf-langs small{color:var(--mu);font-size:11px}
+.wf-langs .on{background:rgba(139,123,255,.22);border-color:var(--ac)!important;box-shadow:0 0 0 1px var(--ac) inset}
+.wf-orb{position:relative;width:78px;height:78px;margin:0 auto}.wf-teach.lg .wf-orb{width:92px;height:92px}
+.wf-orb i,.wf-orb u{position:absolute;inset:0;border-radius:50%;display:block}
+.wf-orb i:first-child{background:conic-gradient(from 0deg,#7c5cff,#35d6c0,#ff7ab6,#7c5cff);filter:blur(10px);opacity:.75;animation:wfSpin 6s linear infinite}
+.wf-orb i:nth-child(2){inset:10%;background:radial-gradient(circle at 30% 30%,#fff,#9fb0ff 40%,#5d4bd6);opacity:.95}
+.wf-orb u{inset:0;border:2px solid rgba(255,255,255,.25);text-decoration:none}
+.wf-teach.talk .wf-orb u{animation:wfPulse 1s ease-out infinite}
+@keyframes wfSpin{to{transform:rotate(360deg)}}@keyframes wfPulse{from{transform:scale(1);opacity:.9}to{transform:scale(1.5);opacity:0}}
+.wf-prep{text-align:center;padding:34px 18px}.wf-prep p{color:var(--mu)}
+.wf-ring{--p:0;width:112px;height:112px;border-radius:50%;margin:0 auto 14px;display:grid;place-items:center;background:conic-gradient(var(--ac2) calc(var(--p)*1%),rgba(255,255,255,.08) 0)}
+.wf-ring::before{content:"";position:absolute;width:92px;height:92px;border-radius:50%;background:var(--s1)}.wf-ring{position:relative}.wf-ring b{position:relative;font-size:22px}
+.wf-ring.big{width:132px;height:132px}.wf-ring.big::before{width:108px;height:108px}.wf-ring.big b{font-size:30px}
+.wf-bigic{font-size:40px;color:var(--mu);margin-bottom:8px}
+.wf-gh{display:flex;gap:12px;align-items:center}.wf-gh h2{margin:0;font-size:20px}.wf-gh p{margin:2px 0 0;color:var(--mu);font-size:13px}
+.wf-gn{min-width:42px;height:42px;border-radius:14px;display:grid;place-items:center;font-weight:800;font-size:13px;background:rgba(139,123,255,.2);color:#cfc8ff}
+.wf-bar{height:6px;border-radius:9px;background:rgba(255,255,255,.08);overflow:hidden}.wf-bar i{display:block;height:100%;border-radius:9px;background:linear-gradient(90deg,#7c5cff,#35d6c0);transition:width .4s}
+.wf-word{text-align:center}.wf-w{font-size:40px;font-weight:800;letter-spacing:.3px;word-break:break-word}
+.wf-p{display:flex;gap:10px;justify-content:center;align-items:center;margin:6px 0 12px;color:var(--mu);flex-wrap:wrap}.wf-ipa{font-size:18px;color:#cfd6ff;font-family:'Segoe UI','Noto Sans',system-ui,sans-serif}.wf-p em{font-size:12px;padding:2px 9px;border-radius:99px;background:rgba(255,255,255,.07)}
+.wf-sp{width:42px;height:42px;border-radius:50%;background:rgba(139,123,255,.25)!important;font-size:16px}.wf-sp.s{width:34px;height:34px;font-size:13px;float:right;margin-left:8px}
+.wf-tr{margin:8px 0;padding:14px;border-radius:18px;background:rgba(53,214,192,.09);border:1px solid rgba(53,214,192,.2)}.wf-tr small{display:block;color:var(--mu);font-size:12px;margin-bottom:4px}.wf-tr b{font-size:26px}.wf-tr>i{display:block;color:var(--mu);font-style:normal;margin-top:2px}
+.wf-alts{display:flex;gap:6px;justify-content:center;margin-top:8px;flex-wrap:wrap}.wf-alts span{font-size:12px;padding:3px 10px;border-radius:99px;background:rgba(255,255,255,.07);color:var(--mu)}
+.wf-def{color:var(--mu);font-size:14px;margin:10px 0}
+.wf-ex{margin:10px 0;padding:12px 14px;border-left:3px solid var(--ac);background:rgba(255,255,255,.04);border-radius:0 14px 14px 0;text-align:left;font-size:15px;line-height:1.5}.wf-ex small{display:block;color:var(--mu);margin-top:4px}
+.wf-say{display:flex;flex-direction:column;align-items:center;gap:8px;margin-top:10px}
+.wf-mic{padding:12px 22px;border-radius:99px;font-weight:700;background:linear-gradient(135deg,#ff5f8f,#ff8a5c);color:#fff!important;box-shadow:0 8px 22px rgba(255,95,143,.35)}
+.wf-mic.rec{animation:wfRec 1s ease-in-out infinite}@keyframes wfRec{50%{box-shadow:0 0 0 10px rgba(255,95,143,.18)}}
+.wf-heard{min-height:20px;font-size:13px;color:var(--mu)}.wf-heard .ok{color:var(--ok)}
+.wf-nav{display:flex;justify-content:space-between;gap:10px}
+.wf-pairs{display:grid;grid-template-columns:1fr 1fr;gap:12px}.wf-pairs>div{display:flex;flex-direction:column;gap:8px}
+.wf-pair{padding:14px 10px;border-radius:16px;background:rgba(255,255,255,.06);border:1px solid var(--ln)!important;font-size:15px;font-weight:600;min-height:54px;transition:transform .15s,opacity .3s}
+.wf-pair.on{background:rgba(139,123,255,.3);border-color:var(--ac)!important}.wf-pair.gone{opacity:.25;pointer-events:none;background:rgba(52,211,153,.2)}.wf-pair.bad{background:rgba(251,113,133,.3)}.wf-pair.shake{animation:wfSh .35s}
+@keyframes wfSh{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.wf-q{text-align:center}.wf-qp{color:var(--mu);margin:8px 0 14px}.wf-sent{font-size:20px;line-height:1.5;margin:8px 0 16px}
+.wf-bigplay{width:84px;height:84px;border-radius:50%;font-size:30px;background:linear-gradient(135deg,#7c5cff,#35d6c0)!important;color:#fff;box-shadow:0 10px 30px rgba(124,92,255,.45)}
+.wf-opts{display:grid;grid-template-columns:1fr 1fr;gap:10px}@media(max-width:420px){.wf-opts{grid-template-columns:1fr}}
+.wf-opt{padding:15px 10px;border-radius:16px;background:rgba(255,255,255,.06);border:1px solid var(--ln)!important;font-size:16px;font-weight:600}
+.wf-opt.ok{background:rgba(52,211,153,.28);border-color:var(--ok)!important}.wf-opt.bad{background:rgba(251,113,133,.28);border-color:var(--bad)!important}.wf-opt.off{pointer-events:none}.wf-opt.off:not(.ok):not(.bad){opacity:.5}
+.wf-fb{min-height:22px;margin-top:10px;font-size:14px;color:var(--mu)}.wf-fb .fa-circle-check{color:var(--ok)}.wf-fb .fa-circle-xmark{color:var(--bad)}
+.wf-built{min-height:60px;display:flex;flex-wrap:wrap;gap:8px;padding:10px;border-radius:16px;border:1px dashed rgba(255,255,255,.2);justify-content:center;align-items:center}.wf-ph{color:var(--mu);font-size:13px}
+.wf-bank{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:12px}
+.wf-chip{padding:9px 14px;border-radius:12px;background:rgba(139,123,255,.2);border:1px solid rgba(139,123,255,.45)!important;font-size:15px}
+.wf-in{width:100%;padding:13px 14px;border-radius:14px;background:rgba(0,0,0,.28);border:1px solid var(--ln);color:var(--tx);font:inherit;font-size:17px;text-align:center}
+.wf-stage{display:flex;gap:12px;align-items:center;justify-content:center}
+.wf-cam{width:min(46%,230px);aspect-ratio:4/3;border-radius:20px;overflow:hidden;background:#05070f;border:1px solid var(--ln);display:grid;place-items:center;color:var(--mu);font-size:12px}
+.wf-cam video{width:100%;height:100%;object-fit:cover;transform:scaleX(-1)}
+.wf-cnt{color:var(--mu);font-size:12px;text-align:center}.wf-ask{text-align:center}
+.wf-prompt{font-size:34px;font-weight:800;margin:8px 0;word-break:break-word}.wf-state{color:var(--ac2);font-size:13px;min-height:18px}
+.wf-typed{display:flex;gap:8px;margin-top:12px}.wf-typed .wf-in{text-align:left;font-size:15px}
+.wf-res{text-align:center}.wf-res h2{margin:8px 0 4px;font-size:26px}.wf-res p{color:var(--mu);margin:0}
+.wf-xp{display:inline-flex;gap:8px;align-items:center;margin:14px 0 4px;padding:10px 20px;border-radius:99px;font-weight:800;font-size:20px;color:#1b1400;background:linear-gradient(135deg,#ffd76a,#ffb020)}.wf-xp small{font-weight:600;font-size:11px}
+.wf-sc{display:flex;gap:10px;margin-top:12px}.wf-sc>div{flex:1;padding:12px;border-radius:16px;background:rgba(255,255,255,.05)}.wf-sc b{display:block;font-size:22px}.wf-sc small{color:var(--mu);font-size:11px}
+.wf-list{list-style:none;margin:0;padding:0}.wf-list li{display:flex;gap:10px;align-items:center;padding:9px 0;border-bottom:1px solid var(--ln)}.wf-list li:last-child{border:0}.wf-list b{flex:1}.wf-list span{color:var(--mu);flex:1;text-align:right}
+.wf-list i{width:14px;height:14px;border-radius:50%}.wf-list i.ok{background:var(--ok)}.wf-list i.bad{background:var(--bad)}
+@media(prefers-reduced-motion:reduce){#wf *{animation:none!important;transition:none!important}}
+</style><style id="mv-art-css" data-th-skip>
 /* Movies: the big pictures stay cinematic (dark shade, white writing) in every theme and in Light mode */
 .mv-hero{position:relative;min-height:420px;border-radius:26px;overflow:hidden;display:flex;align-items:flex-end;background:#0b0d1a var(--bd) center 20%/cover no-repeat;box-shadow:0 30px 60px -30px rgba(0,0,0,.9);isolation:isolate}
 .mv-hero.sk{background:linear-gradient(90deg,#141729,#1e2340,#141729);background-size:200% 100%;animation:mvSk 1.4s linear infinite}
@@ -18944,6 +19028,7 @@ Respond ONLY with minified JSON: {"title":string,"topic":string (1-2 English wor
             { id: 'mentors', icon: 'fa-graduation-cap', g: 'linear-gradient(135deg,#6366f1,#4338ca)', c: 'rgba(99,102,241,.28)', title: 'Top Mentors', desc: 'English teachers on YouTube & Telegram.', go: "navigateTo('mentors')" },
             { id: 'ai', icon: 'fa-robot', g: 'linear-gradient(135deg,#22d3ee,#6366f1)', c: 'rgba(34,211,238,.28)', title: 'AI Tutor', desc: 'Chat, speaking practice and homework help in 12 languages.', w2: 1, live: () => 'Ask anything', go: "navigateTo('ai-chat')" },
             { id: 'games', icon: 'fa-gamepad', g: 'linear-gradient(135deg,#7c3aed,#ec4899)', c: 'rgba(167,139,250,.3)', title: 'Game Zone', desc: 'Galaxy Rush class quiz + Chess Arena.', isNew: 1, live: () => ((state.user.gamePts || 0) + ' pts'), go: "navigateTo('games')" },
+            { id: 'wordforge', icon: 'fa-hammer', g: 'linear-gradient(135deg,#6d4aff,#19c3b1)', c: 'rgba(109,74,255,.32)', title: 'Word Forge', desc: 'Paste your own words. Learn them with your AI teacher, then say them on camera.', isNew: 1, live: () => 'Your words', go: "WF.open()" },
             { id: 'movies', icon: 'fa-film', g: 'linear-gradient(135deg,#ec4899,#7c3aed)', c: 'rgba(236,72,153,.28)', title: 'Movies', desc: 'Movies, drama, series, cartoons, anime and sport. HD trailers with subtitles and where to watch the full film.', w2: 1, isNew: 1, live: () => { const n = (state.user.mvList || []).length; return n ? n + ' in my list' : 'Trending now'; }, go: "navigateTo('movies')" }, /*club*/{ id: 'club', icon: 'fa-earth-asia', g: 'linear-gradient(135deg,#2c5cc5,#d9465a)', c: 'rgba(96,165,250,.3)', title: 'Speaking Club', desc: 'Make friends worldwide: chat, voice and video calls, AI help with your English.', w2: 1, isNew: 1, live: () => (window.CLUB && CLUB.liveText ? CLUB.liveText() : 'Chats, friends and calls'), go: "navigateTo('club')" },/*/club*/
                         { id: 'profile', icon: 'fa-user-astronaut', g: 'linear-gradient(135deg,#6366f1,#a855f7)', c: 'rgba(129,140,248,.3)', title: 'My Profile', desc: 'XP, badges, settings.', live: () => 'Level ' + pfStats().lvl, go: "navigateTo('profile')" },
             { id: 'reading', icon: 'fa-book-open-reader', g: 'linear-gradient(135deg,#f43f5e,#be123c)', c: 'rgba(244,63,94,.25)', title: 'Reading Lab', desc: 'Two parts: passages with exam questions, and Book Maker for whole illustrated books.', w2: 1, isNew: 1, live: () => { const s = rlStats(); return s.n ? s.n + ' read · ' + s.acc + '%' : rlAll().length + ' passages'; }, go: "navigateTo('reading')" }
@@ -34935,7 +35020,7 @@ var LR_TURN = null;    // optional TURN servers for voice on strict networks, e.
     });
 
     /* ================= Hub: clear groups ================= */
-    const GROUPS = [['Learn', 'Lessons and full exam practice', ['exams', 'grammar', 'reading']], ['Words', 'Look up, save and remember', ['dictionary', 'mywords', 'classroom']], ['Practise speaking', 'With AI and with real people', ['ai', 'club']], ['Play', 'Learn with games', ['games']], ['Watch', 'English movies — learn while you watch', ['movies']], ['More', '', ['mentors', 'profile']]];
+    const GROUPS = [['Learn', 'Lessons and full exam practice', ['exams', 'grammar', 'reading']], ['Words', 'Look up, save and remember', ['dictionary', 'mywords', 'classroom']], ['Practise speaking', 'With AI and with real people', ['ai', 'club']], ['Play', 'Learn with games', ['games', 'wordforge']], ['Watch', 'English movies — learn while you watch', ['movies']], ['More', '', ['mentors', 'profile']]];
     function tileList() {
         let T = []; try { T = HB_TILES.slice(); } catch (e) { }
         const sv = saved().length, kn = known().filter(w => isSaved(w)).length;
@@ -41849,6 +41934,353 @@ window.LRLP = (function () {
     }
     return { reg, btn, sync, open, close };
 })();
+</script><script id="wf-js">
+/* ===== Word Forge: paste or type your words, learn them with your AI teacher, then prove them on camera in two voice exams ===== */
+(function () {
+    'use strict';
+    const $ = (s, r) => (r || document).querySelector(s);
+    const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const LSg = (k, d) => { try { const v = localStorage.getItem(k); return v == null ? d : v; } catch (e) { return d; } };
+    const LSs = (k, v) => { try { localStorage.setItem(k, v); } catch (e) { } };
+    const U = () => { try { return state.user || {}; } catch (e) { return {}; } };
+    const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+    const shuf = (a) => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+    const MIN = 4, MAX = 30, DAY_CAP = 600;
+    const SAMPLE = ['curious', 'achieve', 'borrow', 'journey', 'reliable', 'improve', 'schedule', 'neighbour'];
+    const FALLBACK_LANGS = [{ c: 'uz', n: 'Uzbek', nat: 'Oʻzbekcha', f: '🇺🇿', sp: 'uz-UZ' }, { c: 'ru', n: 'Russian', nat: 'Русский', f: '🇷🇺', sp: 'ru-RU' }];
+    const langs = () => ((window.LRW && window.LRW.langs) || FALLBACK_LANGS).slice().sort((a, b) => a.n.localeCompare(b.n));
+    const langOf = (c) => langs().find(l => l.c === c) || langs()[0];
+    const S = { step: 'setup', text: '', lang: 'uz', items: [], tok: 0, cam: null, pts: 0, learnOk: 0, learnN: 0, e1: [], e2: [], seq: 0, noSR: false };
+    let root = null, speakTok = 0;
+
+    /* ---------- words: clean a pasted list ---------- */
+    function parseWords(t) {
+        const seen = new Set(), out = [];
+        String(t || '').split(/[\n\r;,\t]+/).forEach(x => {
+            x = x.replace(/^\s*(?:[-•*·]|\d+[.)])\s*/, '').split(/\s[-–—=:]\s|\s=\s/)[0].replace(/\s+/g, ' ').trim();
+            x = x.replace(/[^\p{L}\p{N}' \-]/gu, '').trim();
+            if (!x || x.length > 40) return; const k = x.toLowerCase(); if (seen.has(k)) return; seen.add(k); out.push(x);
+        });
+        return out;
+    }
+
+    /* ---------- speaking: the teacher's voice, the learner's language, and listening ---------- */
+    function sysSay(text, lang, done) {
+        try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(text); u.lang = lang; u.rate = .92; u.onend = done; u.onerror = done; speechSynthesis.speak(u); setTimeout(done, 1500 + text.length * 120); } catch (e) { done(); }
+    }
+    function sayEn(text, rate) {
+        return new Promise(res => {
+            let d = false; const fin = () => { if (!d) { d = true; res(); } }; setTimeout(fin, Math.min(9000, 1800 + text.length * 110)); const my = ++speakTok;
+            try { if (typeof VOICE !== 'undefined') VOICE.say(text, { st: 'coach', wait: 2200, end: fin }); else sysSay(text, 'en-US', fin); } catch (e) { fin(); }
+        });
+    }
+    function sayNative(text, L) {
+        return new Promise(res => {
+            let d = false; const fin = () => { if (!d) { d = true; res(); } }; setTimeout(fin, 1800 + text.length * 140);
+            try {
+                const vs = (window.speechSynthesis && speechSynthesis.getVoices()) || [], has = vs.some(v => v.lang && v.lang.toLowerCase().indexOf(String(L.sp).slice(0, 2).toLowerCase()) === 0);
+                if (has) sysSay(text, L.sp, fin); else if (typeof VOICE !== 'undefined') VOICE.say(text, { st: 'word', wait: 2200, end: fin }); else fin();
+            } catch (e) { fin(); }
+        });
+    }
+    function stopAll() { speakTok++; try { if (typeof VOICE !== 'undefined') VOICE.stop(); } catch (e) { } try { speechSynthesis.cancel(); } catch (e) { } try { if (S.rec) { S.rec.onend = null; S.rec.onresult = null; S.rec.onerror = null; S.rec.abort(); } } catch (e) { } S.rec = null; }
+    function listen(lang, ms) {
+        return new Promise(res => {
+            const SR = window.SpeechRecognition || window.webkitSpeechRecognition; if (!SR) { res({ na: 1, alts: [] }); return; }
+            let r; try { r = new SR(); } catch (e) { res({ na: 1, alts: [] }); return; }
+            let got = null, fin = false; const end = (v) => { if (fin) return; fin = true; clearTimeout(t); try { r.stop(); } catch (e) { } S.rec = null; res(v || { alts: [] }); };
+            const t = setTimeout(() => end(got), ms || 9000);
+            r.lang = lang; r.interimResults = false; r.maxAlternatives = 5; r.continuous = false;
+            r.onresult = (e) => { const a = []; try { for (let i = 0; i < e.results[0].length; i++) a.push(e.results[0][i].transcript); } catch (x) { } got = { alts: a }; end(got); };
+            r.onerror = (e) => end({ err: (e && e.error) || 'error', alts: [] });
+            r.onend = () => end(got);
+            S.rec = r; try { r.start(); } catch (e) { end({ err: 'start', alts: [] }); }
+        });
+    }
+
+    /* ---------- checking an answer ---------- */
+    const norm = (s) => String(s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[’'`´.,!?;:()"“”«»\-–—_\/\\]/g, ' ').replace(/\s+/g, ' ').trim();
+    function lev(a, b) { const m = a.length, n = b.length; if (!m) return n; if (!n) return m; let p = Array.from({ length: n + 1 }, (_, j) => j); for (let i = 1; i <= m; i++) { const c = [i]; for (let j = 1; j <= n; j++) c[j] = Math.min(p[j] + 1, c[j - 1] + 1, p[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1)); p = c; } return p[n]; }
+    function same(heard, targets) {
+        const H = norm(heard); if (!H) return false;
+        for (const t of targets) {
+            const T = norm(t); if (!T) continue; if (H === T) return true; if (T.length >= 3 && (' ' + H + ' ').indexOf(' ' + T + ' ') >= 0) return true;
+            const tol = T.length <= 3 ? 0 : T.length <= 6 ? 1 : Math.floor(T.length * .22); if (lev(H, T) <= tol) return true;
+            if (T.indexOf(' ') < 0) for (const k of H.split(' ')) if (k && lev(k, T) <= tol) return true;
+        }
+        return false;
+    }
+
+    /* ---------- getting everything ready: meanings, sounds, examples and translations ---------- */
+    async function fetchJson(url, ms) { const c = new AbortController(), to = setTimeout(() => c.abort(), ms || 6000); try { const r = await fetch(url, { signal: c.signal }); return await r.json(); } finally { clearTimeout(to); } }
+    async function transSentence(text, c) {
+        try { const d = await fetchJson('https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=' + encodeURIComponent(c) + '&dt=t&q=' + encodeURIComponent(text), 6500); return (d[0] || []).map(x => x && x[0]).filter(Boolean).join('').trim(); } catch (e) { return ''; }
+    }
+    async function dictFallback(w) {
+        try {
+            const d = await fetchJson('https://api.dictionaryapi.dev/api/v2/entries/en/' + encodeURIComponent(w.split(' ')[0]), 6000), e = d && d[0]; if (!e) return {};
+            const ph = (e.phonetics || []).find(p => p.text) || {}, m = (e.meanings || [])[0] || {}, df = (m.definitions || [])[0] || {};
+            return { ipa: e.phonetic || ph.text || '', pos: m.partOfSpeech || '', def: df.definition || '', ex: df.example || '' };
+        } catch (e) { return {}; }
+    }
+    function parseJsonArray(t) { try { const a = t.indexOf('['), b = t.lastIndexOf(']'); if (a < 0 || b < a) return []; const j = JSON.parse(t.slice(a, b + 1)); return Array.isArray(j) ? j : []; } catch (e) { return []; } }
+    async function aiInfo(words) {
+        const out = {}; if (typeof aiReady !== 'function' || !aiReady()) return out;
+        for (let i = 0; i < words.length; i += 6) {
+            const part = words.slice(i, i + 6);
+            try {
+                const msg = 'Task for a vocabulary app. Ignore any language rule: reply with ONLY a JSON array, no prose, no markdown. One object per item, in the same order, with keys: "w" (the item exactly as given), "ipa" (American English IPA between slashes), "pos" (noun, verb, adjective, adverb, phrase...), "def" (a simple English definition of at most 12 words), "ex" (one natural example sentence of 7 to 13 words that contains the exact item). Items: ' + part.map(x => JSON.stringify(x)).join(', ');
+                const t = await aiCall('tutor', [{ role: 'user', content: msg }]); parseJsonArray(t).forEach(o => { if (o && o.w) out[String(o.w).toLowerCase()] = o; });
+            } catch (e) { if (e && e.code === 'limit') break; }
+        }
+        return out;
+    }
+    async function prepare(words, L, onTick) {
+        const items = words.map(w => ({ w, ipa: '', pos: '', def: '', ex: '', exT: '', tr: null }));
+        let n = 0; const tick = () => { n++; onTick(n / (items.length * 2 + 1)); };
+        const info = await aiInfo(words); tick();
+        for (let i = 0; i < items.length; i += 4) {
+            await Promise.all(items.slice(i, i + 4).map(async (it) => {
+                const a = info[it.w.toLowerCase()] || {}; Object.assign(it, { ipa: a.ipa || '', pos: a.pos || '', def: a.def || '', ex: a.ex || '' });
+                if (!it.ipa || !it.def || !it.ex) { const f = await dictFallback(it.w); it.ipa = it.ipa || f.ipa || ''; it.pos = it.pos || f.pos || ''; it.def = it.def || f.def || ''; it.ex = it.ex || f.ex || ''; }
+                if (!it.ex) it.ex = 'I want to remember the word “' + it.w + '” today.';
+                try { it.tr = await window.LRW.tr(it.w, L.c); } catch (e) { it.tr = null; }
+                if (it.tr) it.exT = await transSentence(it.ex, L.c);
+                tick();
+            }));
+        }
+        return items;
+    }
+
+    /* ---------- screens ---------- */
+    const STEPS = [['setup', 'Words'], ['learn', 'Learn'], ['e1', 'Exam 1'], ['e2', 'Exam 2'], ['res', 'Results']];
+    function shell() {
+        if (root) return;
+        root = document.createElement('div'); root.id = 'wf'; root.setAttribute('role', 'dialog'); root.setAttribute('aria-label', 'Word Forge');
+        root.innerHTML = '<div class="wf-bg" aria-hidden="true"></div><div class="wf-top"><button class="wf-x" data-a="close" aria-label="Close"><i class="fa-solid fa-chevron-left"></i></button><div class="wf-brand"><b>Word Forge</b><small>Learn, then prove it</small></div><nav class="wf-steps" id="wf-steps" aria-label="Progress"></nav></div><div id="wf-main" class="wf-main" tabindex="-1"></div>';
+        document.body.appendChild(root); root.addEventListener('click', onClick); root.addEventListener('input', onInput); root.addEventListener('keydown', onKey);
+    }
+    function paintSteps() { const el = $('#wf-steps'); if (!el) return; const at = STEPS.findIndex(s => s[0] === S.step); el.innerHTML = STEPS.map((s, i) => '<span class="' + (i < at ? 'done' : i === at ? 'on' : '') + '"><i></i>' + s[1] + '</span>').join(''); }
+    function main(html) { const m = $('#wf-main'); if (!m) return; m.innerHTML = html; m.scrollTop = 0; paintSteps(); }
+    function langChips() { return '<div class="wf-langs" role="radiogroup" aria-label="Your language">' + langs().map(l => '<button type="button" role="radio" aria-checked="' + (l.c === S.lang) + '" class="' + (l.c === S.lang ? 'on' : '') + '" data-a="lang" data-c="' + esc(l.c) + '"><i>' + l.f + '</i><b>' + esc(l.n) + '</b><small>' + esc(l.nat) + '</small></button>').join('') + '</div>'; }
+    function setup() {
+        S.step = 'setup'; stopAll(); stopCam();
+        const ws = parseWords(S.text);
+        main('<section class="wf-card wf-hero"><div class="wf-teach"><div class="wf-orb"><i></i><i></i><u></u></div></div><h2>Your words, your lesson</h2><p>Type or paste the words you want to learn. Your AI teacher explains them, plays games with them, then listens to you on camera.</p></section>' +
+            '<section class="wf-card"><label class="wf-lab" for="wf-ta">Your words <small>one per line, or separated by commas</small></label><textarea id="wf-ta" class="wf-ta" rows="7" spellcheck="false" autocapitalize="off" placeholder="curious&#10;achieve&#10;borrow&#10;journey">' + esc(S.text) + '</textarea>' +
+            '<div class="wf-row"><span class="wf-count" id="wf-count" aria-live="polite">' + countText(ws.length) + '</span><span class="wf-gap"></span><button type="button" class="wf-ghost" data-a="sample"><i class="fa-solid fa-wand-magic-sparkles"></i> Try a sample</button><button type="button" class="wf-ghost" data-a="paste"><i class="fa-regular fa-clipboard"></i> Paste</button><button type="button" class="wf-ghost" data-a="clear"><i class="fa-regular fa-trash-can"></i> Clear</button></div></section>' +
+            '<section class="wf-card"><div class="wf-lab">Your language <small>meanings and the second exam use it</small></div>' + langChips() + '</section>' +
+            '<div class="wf-cta"><button type="button" class="wf-go" id="wf-start" data-a="start"' + (ws.length < MIN ? ' disabled' : '') + '><i class="fa-solid fa-play"></i> Start</button><p class="wf-hint" id="wf-hint">' + hintText(ws.length) + '</p></div>');
+    }
+    const countText = (n) => n + ' word' + (n === 1 ? '' : 's') + (n > MAX ? ' · the first ' + MAX + ' will be used' : '');
+    const hintText = (n) => n >= MIN ? 'About ' + Math.max(5, Math.round(Math.min(n, MAX) * 0.9) + 4) + ' minutes · works best with a microphone and camera' : 'Add at least ' + MIN + ' words to start';
+    function onInput(e) {
+        if (e.target.id === 'wf-ta') { S.text = e.target.value; LSs('wf_text', S.text); const n = parseWords(S.text).length; $('#wf-count').textContent = countText(n); $('#wf-hint').textContent = hintText(n); $('#wf-start').disabled = n < MIN; }
+        if (e.target.dataset && e.target.dataset.in === 'spell') { /* typing only */ }
+    }
+    function onKey(e) { if (e.key === 'Escape') close(); if (e.key === 'Enter' && e.target.dataset && e.target.dataset.in) { e.preventDefault(); const b = $('[data-a="check"]', root); if (b) b.click(); } }
+    function stopCam() { try { if (S.cam) S.cam.getTracks().forEach(t => t.stop()); } catch (e) { } S.cam = null; }
+
+    async function start() {
+        const ws = parseWords(S.text).slice(0, MAX); if (ws.length < MIN) return; LSs('wf_lang', S.lang); const L = langOf(S.lang), my = ++S.tok;
+        main('<section class="wf-card wf-prep"><div class="wf-ring" id="wf-ring" style="--p:0"><b id="wf-pct">0%</b></div><h2>Your teacher is preparing ' + ws.length + ' words</h2><p>Meanings, sounds, examples and ' + esc(L.n) + ' translations.</p></section>');
+        let items; try { items = await prepare(ws, L, (p) => { if (my !== S.tok) return; const r = $('#wf-ring'); if (r) { r.style.setProperty('--p', Math.round(p * 100)); $('#wf-pct').textContent = Math.round(p * 100) + '%'; } }); } catch (e) { items = []; }
+        if (my !== S.tok) return;
+        const ok = items.filter(i => i.tr); if (ok.length < Math.min(MIN, items.length) || ok.length < items.length / 2) {
+            main('<section class="wf-card wf-prep"><div class="wf-bigic"><i class="fa-solid fa-wifi"></i></div><h2>We need the internet for translations</h2><p>Check your connection and try again. Your words are saved.</p><div class="wf-row c"><button class="wf-go" data-a="start"><i class="fa-solid fa-rotate"></i> Try again</button><button class="wf-ghost" data-a="back">Edit words</button></div></section>'); return;
+        }
+        S.items = ok; S.pts = 0; S.learnOk = 0; S.learnN = 0; S.e1 = []; S.e2 = []; S.skipped = items.length - ok.length; learnFlow();
+    }
+
+    /* ---------- learning: meet the words, then games with them ---------- */
+    const GAMES = [['meet', 'Meet the words'], ['match', 'Match pairs'], ['listen', 'Listen and pick'], ['gap', 'Fill the gap'], ['build', 'Build the sentence'], ['spell', 'Spell it']];
+    async function learnFlow() {
+        S.step = 'learn'; const my = ++S.tok;
+        for (let g = 0; g < GAMES.length; g++) {
+            if (my !== S.tok) return; const id = GAMES[g][0]; const f = { meet, match, listen: hearPick, gap, build, spell }[id];
+            const done = await f(my, g); if (my !== S.tok) return; if (done === 'skip') continue;
+        }
+        if (my !== S.tok) return; camIntro();
+    }
+    const head = (g, sub, p) => '<div class="wf-gh"><span class="wf-gn">' + (g + 1) + '/' + GAMES.length + '</span><div><h2>' + GAMES[g][1] + '</h2><p>' + sub + '</p></div></div><div class="wf-bar"><i style="width:' + Math.round(p * 100) + '%"></i></div>';
+    const wait = (sel, ev) => new Promise(res => { const h = (e) => { const b = e.target.closest(sel); if (b) { root.removeEventListener('click', h, true); res(b); } }; root.addEventListener('click', h, true); });
+    function trLine(it, L) { const t = it.tr; return '<span dir="' + (L.rtl ? 'rtl' : 'ltr') + '" lang="' + esc(L.c) + '">' + esc(t.m) + '</span>'; }
+    function award(n) { S.pts += n; S.learnOk += n > 0 ? 1 : 0; S.learnN += 1; }
+    function ipaHtml(it) { return it.ipa ? '<span class="wf-ipa">' + esc(it.ipa) + '</span>' : ''; }
+
+    async function meet(my, g) {
+        const L = langOf(S.lang); let i = 0;
+        const paint = () => {
+            const it = S.items[i], t = it.tr;
+            main(head(g, 'Read, listen, then say each word aloud.', i / S.items.length) +
+                '<section class="wf-card wf-word"><div class="wf-w">' + esc(it.w) + '</div><div class="wf-p">' + ipaHtml(it) + (it.pos ? '<em>' + esc(it.pos) + '</em>' : '') + '<button class="wf-sp" data-a="hear" aria-label="Listen"><i class="fa-solid fa-volume-high"></i></button></div>' +
+                '<div class="wf-tr"><small>' + esc(L.f + ' ' + L.n) + '</small><b dir="' + (L.rtl ? 'rtl' : 'ltr') + '">' + esc(t.m) + '</b>' + (t.r && L.rom ? '<i>' + esc(t.r) + '</i>' : '') + (t.a && t.a.length ? '<div class="wf-alts">' + t.a.slice(0, 3).map(a => '<span>' + esc(a) + '</span>').join('') + '</div>' : '') + '</div>' +
+                (it.def ? '<p class="wf-def">' + esc(it.def) + '</p>' : '') + '<blockquote class="wf-ex">' + esc(it.ex) + (it.exT ? '<small dir="' + (L.rtl ? 'rtl' : 'ltr') + '">' + esc(it.exT) + '</small>' : '') + '<button class="wf-sp s" data-a="hearex" aria-label="Listen to the sentence"><i class="fa-solid fa-volume-low"></i></button></blockquote>' +
+                '<div class="wf-say"><button class="wf-mic" data-a="try"><i class="fa-solid fa-microphone"></i> Say it</button><span id="wf-heard" class="wf-heard" aria-live="polite"></span></div></section>' +
+                '<div class="wf-nav"><button class="wf-ghost" data-a="prev"' + (i ? '' : ' disabled') + '><i class="fa-solid fa-arrow-left"></i> Back</button><button class="wf-go sm" data-a="next">' + (i === S.items.length - 1 ? 'Games <i class="fa-solid fa-flag-checkered"></i>' : 'Next <i class="fa-solid fa-arrow-right"></i>') + '</button></div>');
+            sayEn(it.w);
+        };
+        paint();
+        for (; ;) {
+            const b = await wait('[data-a]'); if (my !== S.tok) return; const a = b.dataset.a, it = S.items[i];
+            if (a === 'hear') sayEn(it.w); else if (a === 'hearex') sayEn(it.ex);
+            else if (a === 'try') { const el = $('#wf-heard'), btn = b; btn.classList.add('rec'); if (el) el.textContent = 'Listening…'; const r = await listen('en-US', 7000); btn.classList.remove('rec'); if (my !== S.tok) return; if (r.na) el.textContent = 'Speech check is not available in this browser. Listen and repeat.'; else if (!r.alts.length) el.textContent = r.err === 'not-allowed' ? 'Allow the microphone to practise speaking.' : 'I did not catch that. Try again.'; else { const ok = same(r.alts[0], [it.w]) || r.alts.some(x => same(x, [it.w])); el.innerHTML = (ok ? '<i class="fa-solid fa-circle-check ok"></i> Clear! ' : '<i class="fa-solid fa-circle-info"></i> I heard “') + (ok ? '' : esc(r.alts[0]) + '”. Listen and try again.'); if (ok) award(1); } }
+            else if (a === 'next') { if (i === S.items.length - 1) return; i++; paint(); }
+            else if (a === 'prev') { if (i) { i--; paint(); } }
+            else if (a === 'close') { return; }
+        }
+    }
+    async function match(my, g) {
+        const L = langOf(S.lang), set = shuf(S.items).slice(0, 6), left = shuf(set.map((x, k) => k)), right = shuf(set.map((x, k) => k)); let sel = -1, found = 0, miss = 0;
+        main(head(g, 'Tap a word, then its meaning in ' + esc(L.n) + '.', 0) + '<div class="wf-pairs"><div id="wf-pl">' + left.map(k => '<button class="wf-pair" data-k="' + k + '" data-s="l">' + esc(set[k].w) + '</button>').join('') + '</div><div id="wf-pr">' + right.map(k => '<button class="wf-pair" data-k="' + k + '" data-s="r" dir="' + (L.rtl ? 'rtl' : 'ltr') + '">' + esc(set[k].tr.m) + '</button>').join('') + '</div></div>');
+        while (found < set.length) {
+            const b = await wait('.wf-pair:not(.gone)'); if (my !== S.tok) return; const side = b.dataset.s, k = +b.dataset.k;
+            if (side === 'l') { root.querySelectorAll('.wf-pair[data-s="l"]').forEach(x => x.classList.remove('on')); b.classList.add('on'); sel = k; sayEn(set[k].w); continue; }
+            if (sel < 0) { b.classList.add('shake'); setTimeout(() => b.classList.remove('shake'), 400); continue; }
+            if (sel === k) { root.querySelectorAll('.wf-pair[data-k="' + k + '"]').forEach(x => { x.classList.add('gone'); x.classList.remove('on'); }); found++; award(1); sel = -1; const bar = $('.wf-bar i'); if (bar) bar.style.width = Math.round(found / set.length * 100) + '%'; }
+            else { miss++; award(0); b.classList.add('bad'); setTimeout(() => b.classList.remove('bad'), 450); }
+        }
+        await sleep(500); return 'ok';
+    }
+    function options(it, pool, key, n) { const o = shuf(pool.filter(x => x !== it && x[key] && x[key] !== it[key])).slice(0, n - 1).map(x => x); return shuf([it].concat(o)); }
+    async function quiz(my, g, sub, list, build, spoken) {
+        for (let q = 0; q < list.length; q++) {
+            if (my !== S.tok) return; const it = list[q], d = build(it);
+            main(head(g, sub, q / list.length) + '<section class="wf-card wf-q">' + d.prompt + '<div class="wf-opts" id="wf-opts">' + d.opts.map((o, k) => '<button class="wf-opt" data-k="' + k + '" ' + (o.rtl ? 'dir="rtl"' : '') + '>' + esc(o.t) + '</button>').join('') + '</div><div id="wf-fb" class="wf-fb" aria-live="polite"></div></section>');
+            if (spoken) sayEn(it.w);
+            let done = false; while (!done) {
+                const b = await wait('.wf-opt:not(.off), [data-a="hear"]'); if (my !== S.tok) return; if (b.dataset.a === 'hear') { sayEn(it.w); continue; }
+                const k = +b.dataset.k, good = d.opts[k].ok; b.classList.add(good ? 'ok' : 'bad'); if (good) { done = true; award(1); root.querySelectorAll('.wf-opt').forEach(x => x.classList.add('off')); $('#wf-fb').innerHTML = '<i class="fa-solid fa-circle-check"></i> Correct'; await sleep(700); } else { b.classList.add('off'); award(0); }
+            }
+        }
+        return 'ok';
+    }
+    async function hearPick(my, g) {
+        const L = langOf(S.lang), list = shuf(S.items).slice(0, 8);
+        return quiz(my, g, 'Hear the word, then choose its meaning in ' + esc(L.n) + '.', list, (it) => ({ prompt: '<button class="wf-bigplay" data-a="hear" aria-label="Play the word"><i class="fa-solid fa-volume-high"></i></button><p class="wf-qp">What does this word mean?</p>', opts: options(it, S.items, 'tr', 4).map(o => ({ t: o.tr.m, ok: o === it, rtl: L.rtl })) }), true);
+    }
+    function blank(it) {
+        const w = it.w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); let re = new RegExp('\\b' + w + '\\b', 'i'); if (re.test(it.ex)) return it.ex.replace(re, '_____');
+        if (it.w.indexOf(' ') < 0 && it.w.length > 4) { re = new RegExp('\\b' + w.slice(0, -2) + '\\w*', 'i'); if (re.test(it.ex)) return it.ex.replace(re, '_____'); } return '';
+    }
+    async function gap(my, g) {
+        const list = shuf(S.items).filter(it => blank(it)).slice(0, 6); if (list.length < 2) return 'skip';
+        return quiz(my, g, 'Choose the word that fits the sentence.', list, (it) => ({ prompt: '<p class="wf-sent">' + esc(blank(it)) + '</p>', opts: options(it, S.items, 'w', 4).map(o => ({ t: o.w, ok: o === it })) }), false);
+    }
+    async function build(my, g) {
+        const list = shuf(S.items).filter(it => { const n = it.ex.split(' ').length; return n >= 4 && n <= 15; }).slice(0, 4); if (list.length < 2) return 'skip';
+        for (let q = 0; q < list.length; q++) {
+            const it = list[q], toks = it.ex.split(' '); let order = shuf(toks.map((x, k) => k)); if (order.join() === toks.map((x, k) => k).join()) order = order.reverse(); let got = [];
+            const paint = () => main(head(g, 'Tap the words in the right order.', q / list.length) + '<section class="wf-card wf-q">' + (it.exT ? '<p class="wf-qp">' + esc(it.exT) + '</p>' : '') + '<div class="wf-built" id="wf-built">' + (got.length ? got.map(k => '<button class="wf-chip" data-k="' + k + '" data-w="b">' + esc(toks[k]) + '</button>').join('') : '<span class="wf-ph">Your sentence</span>') + '</div><div class="wf-bank">' + order.filter(k => got.indexOf(k) < 0).map(k => '<button class="wf-chip" data-k="' + k + '" data-w="t">' + esc(toks[k]) + '</button>').join('') + '</div><div id="wf-fb" class="wf-fb"></div><div class="wf-row c"><button class="wf-ghost" data-a="reset">Reset</button><button class="wf-go sm" data-a="check">Check</button></div></section>');
+            paint(); let done = false, tries = 0;
+            while (!done) {
+                const b = await wait('.wf-chip, [data-a="check"], [data-a="reset"]'); if (my !== S.tok) return;
+                if (b.dataset.w === 't') { got.push(+b.dataset.k); paint(); } else if (b.dataset.w === 'b') { got = got.filter(k => k !== +b.dataset.k); paint(); } else if (b.dataset.a === 'reset') { got = []; paint(); }
+                else if (b.dataset.a === 'check') { const ok = got.length === toks.length && got.map(k => toks[k]).join(' ') === toks.join(' '); if (ok) { done = true; award(1); $('#wf-fb').innerHTML = '<i class="fa-solid fa-circle-check"></i> Perfect'; sayEn(it.ex); await sleep(1500); } else { tries++; award(0); $('#wf-fb').innerHTML = '<i class="fa-solid fa-circle-xmark"></i> Not quite' + (tries > 1 ? '. It starts with “' + esc(toks.slice(0, 3).join(' ')) + '”' : ''); if (tries > 2) { got = toks.map((x, k) => k); paint(); done = true; await sleep(1500); } } }
+            }
+        }
+        return 'ok';
+    }
+    async function spell(my, g) {
+        const list = shuf(S.items).filter(it => it.w.length <= 16).slice(0, 6); if (list.length < 2) return 'skip';
+        for (let q = 0; q < list.length; q++) {
+            const it = list[q]; main(head(g, 'Listen, then type the word.', q / list.length) + '<section class="wf-card wf-q"><button class="wf-bigplay" data-a="hear" aria-label="Play the word"><i class="fa-solid fa-volume-high"></i></button><p class="wf-qp">Type what you hear</p><input class="wf-in" data-in="spell" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Type the word" placeholder="Type here"><div id="wf-fb" class="wf-fb"></div><div class="wf-row c"><button class="wf-ghost" data-a="hint">Hint</button><button class="wf-go sm" data-a="check">Check</button></div></section>');
+            sayEn(it.w); let done = false, tries = 0; const inp = $('.wf-in'); if (inp && !matchMedia('(pointer:coarse)').matches) inp.focus();
+            while (!done) {
+                const b = await wait('[data-a="hear"], [data-a="check"], [data-a="hint"]'); if (my !== S.tok) return;
+                if (b.dataset.a === 'hear') sayEn(it.w); else if (b.dataset.a === 'hint') $('#wf-fb').innerHTML = (it.ipa ? esc(it.ipa) + ' · ' : '') + esc(it.w.slice(0, 1)) + '…' + ' (' + it.w.length + ' letters)';
+                else { const v = ($('.wf-in').value || '').trim().toLowerCase(), ok = v === it.w.toLowerCase(); if (ok) { done = true; award(1); $('#wf-fb').innerHTML = '<i class="fa-solid fa-circle-check"></i> Spelled right'; await sleep(900); } else { tries++; award(0); $('#wf-fb').innerHTML = '<i class="fa-solid fa-circle-xmark"></i> Not yet' + (tries > 1 ? '. Answer: <b>' + esc(it.w) + '</b>' : ''); if (tries > 1) { done = true; await sleep(1700); } } }
+            }
+        }
+        return 'ok';
+    }
+
+    /* ---------- the camera and the two voice exams ---------- */
+    function camIntro() {
+        S.step = 'e1'; const my = ++S.tok;
+        main('<section class="wf-card wf-hero"><div class="wf-teach"><div class="wf-orb"><i></i><i></i><u></u></div></div><h2>Now show your teacher</h2><p>Turn your camera on and say the words aloud. In Exam 1 your teacher says each English word and you say its meaning in <b>' + esc(langOf(S.lang).n) + '</b>. In Exam 2 your teacher says the ' + esc(langOf(S.lang).n) + ' word and you say it in English.</p><p class="wf-priv"><i class="fa-solid fa-lock"></i> Your camera stays on your device. Nothing is recorded or sent.</p><div class="wf-row c"><button class="wf-go" data-a="cam"><i class="fa-solid fa-video"></i> Turn on camera</button><button class="wf-ghost" data-a="nocam">Continue without camera</button></div></section>');
+        (async () => { const b = await wait('[data-a="cam"], [data-a="nocam"]'); if (my !== S.tok) return; if (b.dataset.a === 'cam') { try { S.cam = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user', width: { ideal: 640 } }, audio: false }); } catch (e) { S.cam = null; S.camErr = 1; } } exam(1, my); })();
+    }
+    function examFrame(n, k, total, L) {
+        const e1 = n === 1;
+        return '<div class="wf-gh"><span class="wf-gn">' + n + '/2</span><div><h2>Exam ' + n + ': ' + (e1 ? 'say the meaning' : 'say it in English') + '</h2><p>' + (e1 ? 'Your teacher says an English word. Say its meaning in ' + esc(L.n) + '.' : 'Your teacher says a ' + esc(L.n) + ' word. Say it in English.') + '</p></div></div><div class="wf-bar"><i style="width:' + Math.round(k / total * 100) + '%"></i></div>' +
+            '<section class="wf-stage"><div class="wf-cam' + (S.cam ? '' : ' off') + '" id="wf-cam">' + (S.cam ? '<video id="wf-vid" muted playsinline autoplay></video>' : '<span>' + (S.camErr ? 'Camera blocked' : 'No camera') + '</span>') + '</div><div class="wf-teach lg" id="wf-teach"><div class="wf-orb"><i></i><i></i><u></u></div></div></section>' +
+            '<section class="wf-card wf-ask"><div class="wf-cnt">Word ' + (k + 1) + ' of ' + total + '</div><div class="wf-prompt" id="wf-prompt" aria-live="polite">…</div><div class="wf-state" id="wf-state"></div><div id="wf-fb" class="wf-fb"></div>' +
+            '<div class="wf-row c"><button class="wf-mic" data-a="mic" id="wf-micb"><i class="fa-solid fa-microphone"></i> Speak</button><button class="wf-ghost" data-a="repeat"><i class="fa-solid fa-rotate-left"></i> Repeat</button><button class="wf-ghost" data-a="skip">Skip</button></div>' +
+            '<div class="wf-typed"><input class="wf-in" data-in="ans" id="wf-ans" autocomplete="off" spellcheck="false" aria-label="Or type your answer" placeholder="Or type your answer"><button class="wf-go sm" data-a="check">Check</button></div></section>';
+    }
+    async function exam(n, my) {
+        S.step = n === 1 ? 'e1' : 'e2'; const L = langOf(S.lang), list = shuf(S.items), res = [], e1 = n === 1;
+        for (let k = 0; k < list.length; k++) {
+            if (my !== S.tok) return; const it = list[k]; main(examFrame(n, k, list.length, L)); attachCam();
+            const spokenLabel = e1 ? it.w : it.tr.m, targets = e1 ? [it.tr.m].concat(it.tr.a || []) : [it.w], ansLang = e1 ? L.sp : 'en-US';
+            const setP = (t, st) => { const p = $('#wf-prompt'); if (p) { p.textContent = t; p.dir = (!e1 && L.rtl) ? 'rtl' : 'ltr'; } const s = $('#wf-state'); if (s) s.textContent = st || ''; };
+            setP(spokenLabel, 'Your teacher is speaking…'); const teach = $('#wf-teach'); if (teach) teach.classList.add('talk');
+            const prompt = (k === 0 ? (e1 ? 'Exam one. I say an English word, and you tell me its meaning in ' + L.n + '. ' : 'Exam two. I say the word in ' + L.n + ', and you tell me the English word. ') : '') + '';
+            if (prompt) await sayEn(prompt); if (my !== S.tok) return;
+            await (e1 ? sayEn(it.w) : sayNative(it.tr.m, L)); if (my !== S.tok) return; if (teach) teach.classList.remove('talk');
+            let ok = false, tries = 0, skipped = false;
+            while (!ok && tries < 2 && !skipped) {
+                const mic = !S.noSR; let heard = '';
+                setP(spokenLabel, mic ? 'Your turn. Speak now…' : 'Your turn. Type your answer.'); const mb = $('#wf-micb'); if (mb && mic) mb.classList.add('rec');
+                const lp = mic ? listen(ansLang, 9000) : null; const act = wait('[data-a="check"], [data-a="skip"], [data-a="repeat"], [data-a="mic"]');
+                const r = await Promise.race([lp ? lp.then(x => ({ s: x })) : new Promise(() => { }), act.then(b => ({ b }))]); if (my !== S.tok) return; if (mb) mb.classList.remove('rec');
+                if (r.b) { stopAll(); const a = r.b.dataset.a; if (a === 'skip') { skipped = true; break; } if (a === 'repeat') { await (e1 ? sayEn(it.w) : sayNative(it.tr.m, L)); continue; } if (a === 'mic') continue; heard = ($('#wf-ans').value || '').trim(); if (!heard) continue; }
+                else { const s = r.s; if (s.na) { S.noSR = true; setP(spokenLabel, 'Type your answer'); continue; } if (s.err === 'not-allowed' || s.err === 'service-not-allowed') { S.noSR = true; $('#wf-fb').innerHTML = 'Microphone is blocked. Type your answers instead.'; continue; } if (!s.alts.length) { tries++; $('#wf-fb').textContent = 'I did not hear you. Try again.'; continue; } if (s.alts.some(x => same(x, targets))) heard = s.alts.find(x => same(x, targets)); else heard = s.alts[0]; }
+                if (same(heard, targets)) { ok = true; $('#wf-fb').innerHTML = '<i class="fa-solid fa-circle-check"></i> ' + esc(heard); await sayEn(['Correct!', 'Great!', 'Well done!', 'Perfect!'][k % 4]); }
+                else { tries++; $('#wf-fb').innerHTML = '<i class="fa-solid fa-circle-xmark"></i> I heard “' + esc(heard) + '”'; if (tries < 2) await sayEn('Try once more.'); }
+            }
+            if (!ok) { const ans = e1 ? it.tr.m : it.w; $('#wf-fb').innerHTML = '<i class="fa-solid fa-circle-info"></i> Answer: <b>' + esc(ans) + '</b>'; await (e1 ? sayNative(it.tr.m, L) : sayEn(it.w)); await sleep(500); }
+            res.push({ w: it.w, ok }); (e1 ? S.e1 : S.e2).push({ w: it.w, ok });
+        }
+        if (my !== S.tok) return; if (e1) { await sayEn('Exam one is complete. Now exam two.'); exam(2, my); } else results();
+    }
+    function attachCam() { const v = $('#wf-vid'); if (v && S.cam) { v.srcObject = S.cam; v.play().catch(() => { }); } }
+
+    /* ---------- results and XP ---------- */
+    function award_() {
+        const c1 = S.e1.filter(x => x.ok).length, c2 = S.e2.filter(x => x.ok).length; let pts = S.pts + c1 * 10 + c2 * 15 + 20; pts = Math.min(pts, 400);
+        const day = new Date().toISOString().slice(0, 10); let used = 0; try { const o = JSON.parse(LSg('wf_day', '{}')); if (o.d === day) used = o.n || 0; } catch (e) { }
+        const give = Math.max(0, Math.min(pts, DAY_CAP - used)); if (give > 0) { try { const u = U(); u.gamePts = (u.gamePts || 0) + give; u.examLog = u.examLog || {}; const e = u.examLog['wordforge:exam'] || { n: 0, best: 0 }; e.n++; e.best = Math.max(e.best, Math.round((c1 + c2) / (2 * S.items.length) * 100)); u.examLog['wordforge:exam'] = e; if (typeof pfFeed === 'function') pfFeed('game', 'Word Forge: ' + S.items.length + ' words, +' + give + ' XP'); if (typeof pfSave === 'function') pfSave(); try { if (window.LRXP) window.LRXP.earn('cards'); } catch (x) { } } catch (e) { } LSs('wf_day', JSON.stringify({ d: day, n: used + give })); }
+        return { give, pts, capped: give < pts };
+    }
+    async function results() {
+        S.step = 'res'; stopCam(); const L = langOf(S.lang), a = award_(), c1 = S.e1.filter(x => x.ok).length, c2 = S.e2.filter(x => x.ok).length, n = S.items.length, pc = Math.round((c1 + c2) / (2 * n) * 100);
+        const miss = S.items.filter(it => { const x = S.e1.find(q => q.w === it.w), y = S.e2.find(q => q.w === it.w); return !(x && x.ok) || !(y && y.ok); });
+        main('<section class="wf-card wf-res"><div class="wf-ring big" style="--p:' + pc + '"><b>' + pc + '%</b></div><h2>' + (pc >= 85 ? 'Outstanding!' : pc >= 60 ? 'Well done!' : 'Good start!') + '</h2><p>' + (pc >= 85 ? 'You really know these words.' : pc >= 60 ? 'Most of the words are yours now.' : 'Practise the tricky words once more and they will stick.') + '</p><div class="wf-xp"><i class="fa-solid fa-bolt"></i> +' + a.give + ' XP' + (a.capped ? '<small>daily limit reached</small>' : '') + '</div>' +
+            '<div class="wf-sc"><div><b>' + c1 + '/' + n + '</b><small>Exam 1 · meanings</small></div><div><b>' + c2 + '/' + n + '</b><small>Exam 2 · English</small></div></div></section>' +
+            '<section class="wf-card"><div class="wf-lab">Your words</div><ul class="wf-list">' + S.items.map(it => { const x = S.e1.find(q => q.w === it.w), y = S.e2.find(q => q.w === it.w); return '<li><b>' + esc(it.w) + '</b><span dir="' + (L.rtl ? 'rtl' : 'ltr') + '">' + esc(it.tr.m) + '</span><i class="' + (x && x.ok ? 'ok' : 'bad') + '"></i><i class="' + (y && y.ok ? 'ok' : 'bad') + '"></i></li>'; }).join('') + '</ul></section>' +
+            '<div class="wf-cta"><div class="wf-row c">' + (miss.length ? '<button class="wf-go" data-a="again"><i class="fa-solid fa-arrows-rotate"></i> Practise ' + miss.length + ' tricky word' + (miss.length > 1 ? 's' : '') + '</button>' : '') + '<button class="wf-ghost" data-a="saveall"><i class="fa-regular fa-star"></i> Save to My words</button><button class="wf-ghost" data-a="new">New words</button></div></div>');
+        S.miss = miss.map(x => x.w);
+        const t = $('.wf-res'); if (t) sayEn(pc >= 60 ? 'Well done. You earned ' + a.give + ' experience points.' : 'Good start. Let us practise the tricky words again.');
+    }
+
+    /* ---------- events ---------- */
+    function onClick(e) {
+        const b = e.target.closest('[data-a]'); if (!b) return; const a = b.dataset.a;
+        if (a === 'close') return close();
+        if (S.step === 'setup' || S.step === 'res' || a === 'back') {
+            if (a === 'lang') { S.lang = b.dataset.c; LSs('wf_lang', S.lang); root.querySelectorAll('.wf-langs button').forEach(x => { const on = x.dataset.c === S.lang; x.classList.toggle('on', on); x.setAttribute('aria-checked', on); }); }
+            else if (a === 'sample') { S.text = SAMPLE.join('\n'); LSs('wf_text', S.text); setup(); }
+            else if (a === 'clear') { S.text = ''; LSs('wf_text', ''); setup(); const t = $('#wf-ta'); if (t) t.focus(); }
+            else if (a === 'paste') { try { navigator.clipboard.readText().then(t => { if (t) { S.text = (S.text ? S.text.trim() + '\n' : '') + t; LSs('wf_text', S.text); setup(); } }).catch(() => { const t = $('#wf-ta'); if (t) t.focus(); }); } catch (x) { const t = $('#wf-ta'); if (t) t.focus(); } }
+            else if (a === 'start') start();
+            else if (a === 'back') { S.tok++; setup(); }
+            else if (a === 'new') { S.text = ''; LSs('wf_text', ''); setup(); }
+            else if (a === 'again') { S.text = (S.miss || []).join('\n'); setup(); setTimeout(start, 0); }
+            else if (a === 'saveall') { let n = 0; S.items.forEach(it => { try { if (typeof saveWord === 'function') { saveWord(it.w); n++; } } catch (x) { } }); b.innerHTML = '<i class="fa-solid fa-check"></i> Saved ' + n; b.disabled = true; }
+        }
+    }
+    function open() {
+        shell(); S.text = LSg('wf_text', ''); const sl = LSg('wf_lang', ''), u = U(); S.lang = (sl && langs().some(l => l.c === sl)) ? sl : (langs().some(l => l.c === u.xLang) ? u.xLang : (langs().some(l => l.c === 'uz') ? 'uz' : langs()[0].c));
+        root.classList.add('open'); document.documentElement.classList.add('wf-lock'); S.tok++; setup(); try { history.pushState({ wf: 1 }, ''); } catch (e) { }
+        try { const t = $('#wf-ta'); if (t && !matchMedia('(pointer:coarse)').matches) t.focus(); } catch (e) { }
+    }
+    function close(fromPop) { S.tok++; stopAll(); stopCam(); if (root) root.classList.remove('open'); document.documentElement.classList.remove('wf-lock'); if (!fromPop) { try { if (history.state && history.state.wf) history.back(); } catch (e) { } } }
+    addEventListener('popstate', () => { if (root && root.classList.contains('open')) close(true); });
+    window.WF = { open, close, _s: S, _parse: parseWords, _same: same, _blank: blank };
+})();
+
 </script><!--/hs:js-->
 <!--cz:js--><script id="cz-js">
 /* ===== Chess Arena 2: a real wooden board, classic pieces, smooth sliding moves, drag or tap, wooden sounds =====
