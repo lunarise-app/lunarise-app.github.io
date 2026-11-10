@@ -49913,6 +49913,18 @@ html.mg-lock, html.mg-lock body { overflow: hidden !important; }
 #mg .mg-ty.dim { opacity: .35; }
 #mg .mg-ty.dim.on { opacity: .45; box-shadow: inset 0 0 0 2.5px #b8b5cc; background: #f1f1f6 !important; }
 #mg .mg-hint { font-weight: 600; font-size: 13px; text-align: center; opacity: .7; margin-top: 8px; }
+
+/* ===== smooth mode: for school panels, old tablets and weak phones ===== */
+#mg .mg-lt { font-size: 22px; line-height: 1; }
+#mg.mg-lite *, #mg.mg-lite *::before, #mg.mg-lite *::after { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; filter: none !important; text-shadow: none !important; }
+#mg.mg-lite .mg-sky *, #mg.mg-lite .mg-sky::after, #mg.mg-lite .mg-stars, #mg.mg-lite .mg-sun, #mg.mg-lite .mg-cl, #mg.mg-lite .mg-emo:not(.happy):not(.dance):not(.boing) { animation: none !important; }
+#mg.mg-lite .mg-sky { transition: none; }
+#mg.mg-lite .mg-hill.h1, #mg.mg-lite .mg-hill.h2 { box-shadow: none !important; }
+#mg.mg-lite .mg-sun { box-shadow: none !important; }
+#mg.mg-lite .mg-qc, #mg.mg-lite .mg-blk, #mg.mg-lite .mg-hud > div { box-shadow: 0 4px 0 rgba(35, 32, 74, .14) !important; }
+/* the busy page behind the game is not drawn while smooth mode is on */
+html.mg-lite-lock body > *:not(#mg):not(script):not(style):not(link) { visibility: hidden !important; }
+html.mg-lite-lock #mg { visibility: visible !important; }
 </style>
 <!--mg:js--><script id="mg-js">
 /* ===== Math Sky Pop: a maths game for children.
@@ -49935,6 +49947,15 @@ html.mg-lock, html.mg-lock body { overflow: hidden !important; }
     const pick = (a) => a[Math.floor(Math.random() * a.length)];
     const shuf = (a) => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
     const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+    /* Smooth mode: school panels, old tablets and weak phones cannot draw the 3D friend and every glow smoothly.
+       'mg_lite' = '1' (on), '0' (off), empty (the game decides: weak device, 4K screen, the site's Lite mode, or slow frames). */
+    function liteWanted() {
+        try { const v = LS.get('mg_lite', ''); if (v === '1') return true; if (v === '0') return false; } catch (e) { }
+        try { if (/[?&]lite\b/.test(location.search)) return true; } catch (e) { }
+        try { if (D.body.classList.contains('lite') || D.documentElement.classList.contains('lite')) return true; } catch (e) { }
+        try { const c = navigator.hardwareConcurrency || 8, m = navigator.deviceMemory || 8, d = window.devicePixelRatio || 1; if (m <= 2 || (c <= 4 && m <= 4) || screen.width * screen.height * d * d >= 6e6) return true; } catch (e) { }
+        return false;
+    }
     const REDUCED = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { return false; } })();
     const U = () => { try { return state.user || {}; } catch (e) { return {}; } };
     const save = () => { try { pfSave(); } catch (e) { } };
@@ -50420,19 +50441,44 @@ void main(){
     class Buddy {
         constructor() {
             this.cv = D.createElement('canvas'); this.cv.className = 'mg-cv'; this.ok = false; this.t0 = performance.now(); this.last = this.t0;
-            this.mood = 'idle'; this.mt = 0; this.ms = 0; this.K = 0; this.talk = 0; this.raf = 0; this.S = {}; this.bt = -1; this.nb = 2; this.dbl = 0; this.earT = [3, 6]; this.q = 1; this.ftA = 0; this.ftN = 0; this.mo = 0;
+            this.bad = 0; this.slow = 0; this.t1 = performance.now(); this.lastDraw = 0; this.mood = 'idle'; this.mt = 0; this.ms = 0; this.K = 0; this.talk = 0; this.raf = 0; this.S = {}; this.bt = -1; this.nb = 2; this.dbl = 0; this.earT = [3, 6]; this.q = 1; this.ftA = 0; this.ftN = 0; this.mo = 0;
             this.lk = { x: 0, y: 0, tx: 0, ty: 0, until: 0, wt: 0 };
-            let gl = null; try { gl = this.cv.getContext('webgl2', { alpha: true, premultipliedAlpha: false, antialias: false, powerPreference: 'low-power' }); } catch (e) { }
+            if (liteWanted()) return;
+            let gl = null; try { gl = this.cv.getContext('webgl2', { alpha: true, premultipliedAlpha: false, antialias: false, powerPreference: 'low-power', failIfMajorPerformanceCaveat: true }); } catch (e) { }
             if (!gl) return;
-            const sh = (t, src) => { const s = gl.createShader(t); gl.shaderSource(s, src); gl.compileShader(s); if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) { try { console.warn('buddy shader', gl.getShaderInfoLog(s)); } catch (e) { } return null; } return s; };
-            const v = sh(gl.VERTEX_SHADER, '#version 300 es\nin vec2 p;void main(){gl_Position=vec4(p,0.,1.);}'), f = sh(gl.FRAGMENT_SHADER, BFS); if (!v || !f) return;
-            const pr = gl.createProgram(); gl.attachShader(pr, v); gl.attachShader(pr, f); gl.linkProgram(pr); if (!gl.getProgramParameter(pr, gl.LINK_STATUS)) return; gl.useProgram(pr);
-            const b = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, b); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
-            const l = gl.getAttribLocation(pr, 'p'); gl.enableVertexAttribArray(l); gl.vertexAttribPointer(l, 2, gl.FLOAT, false, 0, 0);
-            this.gl = gl; this.u = {}; UN.forEach(n => this.u[n] = gl.getUniformLocation(pr, n)); this.ok = true;
-            this.buf = new Uint8Array(512);
+            this.cv.addEventListener('webglcontextlost', (e) => { try { e.preventDefault(); } catch (x) { } this.dead(); }, false);
+            /* The 3D picture is a big shader. A browser that builds it on the main thread (old school panels, weak tablets) can freeze
+               the whole page for many seconds or crash its graphics, which shows as a black and white flicker. So the shader is built in the
+               background (KHR_parallel_shader_compile) and used only when it is ready in time; without that ability, the emoji friend is used. */
+            const ext = gl.getExtension('KHR_parallel_shader_compile'); if (!ext) return;
+            const sh = (t, src) => { const s = gl.createShader(t); gl.shaderSource(s, src); gl.compileShader(s); return s; };
+            const v = sh(gl.VERTEX_SHADER, '#version 300 es\nin vec2 p;void main(){gl_Position=vec4(p,0.,1.);}'), f = sh(gl.FRAGMENT_SHADER, BFS);
+            const pr = gl.createProgram(); gl.attachShader(pr, v); gl.attachShader(pr, f); gl.linkProgram(pr);
+            this.gl = gl; this.pending = true; const t0 = performance.now();
+            const poll = () => {
+                if (this.gone || gl.isContextLost()) return;
+                let done = false; try { done = gl.getProgramParameter(pr, ext.COMPLETION_STATUS_KHR); } catch (e) { }
+                if (!done) { if (performance.now() - t0 > 6000) { this.pending = false; this.dead(true); return; } setTimeout(poll, 80); return; }
+                this.pending = false;
+                if (!gl.getProgramParameter(pr, gl.LINK_STATUS)) { try { console.warn('buddy shader', gl.getProgramInfoLog(pr)); } catch (e) { } this.dead(); return; }
+                gl.useProgram(pr);
+                const b = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, b); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+                const l = gl.getAttribLocation(pr, 'p'); gl.enableVertexAttribArray(l); gl.vertexAttribPointer(l, 2, gl.FLOAT, false, 0, 0);
+                this.u = {}; UN.forEach(n => this.u[n] = gl.getUniformLocation(pr, n)); this.ok = true;
+                this.buf = new Uint8Array(512);
+                try { const h = $('mg-bd'); if (h && EL && !this.cv.isConnected) { h.innerHTML = ''; this.mount(h); } } catch (e) { }
+            };
+            setTimeout(poll, 60);
         }
         mount(h) { h.appendChild(this.cv); this.loop(); }
+        /* the picture cannot go on (slow screen or lost graphics): swap it for the plain emoji friend, the game goes on */
+        dead(remember) {
+            this.ok = false; this.gone = true; cancelAnimationFrame(this.raf); this.raf = 0;
+            try { this.cv.remove(); } catch (e) { }
+            const bd = $('mg-bd'); if (bd && !$('mg-emo')) bd.innerHTML = '<span class="mg-emo" id="mg-emo">' + F().e + '</span>';
+            if (remember) { try { if (LS.get('mg_lite', '') === '') LS.set('mg_lite', '1'); } catch (e) { } }
+            try { if (EL) { EL.classList.add('mg-lite'); D.documentElement.classList.add('mg-lite-lock'); syncLite(); } } catch (e) { }
+        }
         set(m, ms) { this.mood = m; this.ms = performance.now(); this.mt = ms ? performance.now() + ms : 0; }
         /* the eyes and the head follow a point on the screen (your finger, or the balloon you tapped) */
         lookPt(x, y, ms) {
@@ -50440,7 +50486,7 @@ void main(){
             this.lk.tx = clamp((x - cx) / (innerWidth * .5), -1, 1); this.lk.ty = clamp((cy - y) / (innerHeight * .5), -1, 1); this.lk.until = performance.now() + (ms || 2600);
         }
         lookEl(el, ms) { try { const r = el.getBoundingClientRect(); this.lookPt(r.left + r.width / 2, r.top + r.height / 2, ms); } catch (e) { } }
-        loop() { if (!this.ok || this.raf) return; this.last = performance.now(); const f = (now) => { this.raf = 0; if (!this.cv.isConnected) return; if (!D.hidden) this.frame(now); this.raf = requestAnimationFrame(f); }; this.raf = requestAnimationFrame(f); }
+        loop() { if (!this.ok || this.raf) return; this.last = this.t1 = performance.now(); const f = (now) => { this.raf = 0; if (!this.cv.isConnected || !this.ok) return; if (D.hidden) this.last = now; if (!D.hidden && (this.q >= 1 || now - this.lastDraw >= 30)) { this.lastDraw = now; this.frame(now); } if (this.ok) this.raf = requestAnimationFrame(f); }; this.raf = requestAnimationFrame(f); }
         level(t) {
             if (this.talk === 2 && AU.an) { AU.an.getByteTimeDomainData(this.buf); let s = 0; for (let i = 0; i < this.buf.length; i++) { const x = (this.buf[i] - 128) / 128; s += x * x; } return Math.min(1, Math.sqrt(s / this.buf.length) * 5.5); }
             if (this.talk === 1) return Math.max(0, .45 + .45 * Math.sin(t * 17) * Math.sin(t * 5.3 + 1));
@@ -50451,8 +50497,11 @@ void main(){
         frame(now) {
             const gl = this.gl, dt = clamp((now - this.last) / 1000 || .016, .004, .04), t = (now - this.t0) / 1000; this.last = now;
             /* keep it smooth on slow phones: lower the picture size a little when frames take too long */
-            this.ftA += dt; this.ftN++; if (this.ftN >= 40) { const a = this.ftA / this.ftN; if (a > .034 && this.q > .55) this.q *= .86; else if (a < .021 && this.q < 1) this.q = Math.min(1, this.q * 1.06); this.ftA = 0; this.ftN = 0; }
-            const r = this.cv.getBoundingClientRect(), dpr = Math.max(1.4, Math.min(2, devicePixelRatio || 1)) * this.q;
+            const raw = Math.min(.6, (now - this.t1) / 1000 || .016); this.t1 = now; this.ftA += raw; this.ftN++;
+            /* a frame that takes a quarter of a second, three times in a row, means the graphics cannot keep up: stop the 3D picture at once */
+            if (raw > .25) { if (++this.slow >= 3) { this.dead(true); return; } } else this.slow = 0;
+            if (this.ftN >= 20) { const a = this.ftA / this.ftN; if (a > .034 && this.q > .42) { this.q *= .78; this.bad = 0; } else if (a > .045) { if (++this.bad >= 2) { this.dead(true); return; } } else { this.bad = 0; if (a < .021 && this.q < 1) this.q = Math.min(1, this.q * 1.06); } this.ftA = 0; this.ftN = 0; }
+            const r = this.cv.getBoundingClientRect(), dpr = Math.max(1, Math.min(2, devicePixelRatio || 1)) * this.q;
             const w = Math.max(60, Math.round(r.width * dpr)), h = Math.max(60, Math.round(r.height * dpr)); if (this.cv.width !== w || this.cv.height !== h) { this.cv.width = w; this.cv.height = h; }
             if (this.mt && now > this.mt) { this.mt = 0; this.mood = 'idle'; this.ms = now; }
             const m = this.mood, s = (now - this.ms) / 1000, M = REDUCED ? .35 : 1, lv = this.level(t), talk = this.talk ? 1 : 0, sn = Math.sin, PI = Math.PI;
@@ -50608,6 +50657,32 @@ void main(){
         const P = { back: 'M15 5l-7 7 7 7', music: 'M9 18V6l10-2v12M9 18a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0zM19 16a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z', nomusic: 'M9 18V6l10-2v12M9 18a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0zM3 3l18 18', vol: 'M4 9.5h3.5L12 5.5v13l-4.5-4H4zM16 9a4 4 0 0 1 0 6M18.5 6.5a7.5 7.5 0 0 1 0 11', mute: 'M4 9.5h3.5L12 5.5v13l-4.5-4H4zM16 9.5l5 5M21 9.5l-5 5', talk: 'M4 5h16v11H9l-5 4z', notalk: 'M4 5h16v11H9l-5 4zM3 3l18 18', ear: 'M7 10a5 5 0 0 1 10 0c0 3-3 4-3 7a3 3 0 0 1-6 0M10 10a2 2 0 0 1 4 0', half: 'M12 3v18M5 7h4M5 12h4M15 9l4 4M19 9l-4 4', book: 'M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2zM4 19V5', star: 'M12 3.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L12 16.8l-5.2 2.7 1-5.8L3.6 9.6l5.8-.8z', skip: 'M5 5l8 7-8 7zM15 5v14' };
         return '<svg viewBox="0 0 24 24" aria-hidden="true" fill="' + (n === 'star' ? 'currentColor' : 'none') + '" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="' + P[n] + '"/></svg>';
     }
+    /* smooth mode on the page: no blur, no glow filters, no drifting clouds, and the busy page behind the game is hidden */
+    function syncLite() {
+        const on = !!(EL && EL.classList.contains('mg-lite'));
+        D.documentElement.classList.toggle('mg-lite-lock', on);
+        const b = $('mg-lite'); if (b) b.setAttribute('aria-pressed', on);
+    }
+    function setLite(on, save) {
+        if (!EL) return;
+        EL.classList.toggle('mg-lite', !!on); if (save) LS.set('mg_lite', on ? '1' : '0');
+        if (on && BD && BD.ok) BD.dead();
+        if (!on && BD && !BD.ok && !BD.cv.isConnected) { /* the 3D friend comes back the next time the game opens */ }
+        syncLite();
+    }
+    /* if the first seconds are slow, the game switches to smooth mode by itself (and remembers it on this device) */
+    function perfWatch() {
+        if (LS.get('mg_lite', '') !== '' || (EL && EL.classList.contains('mg-lite'))) return;
+        const my = EL; let n = 0, last = 0, bad = 0, sum = 0;
+        const f = (t) => {
+            if (!EL || EL !== my) return;
+            if (D.hidden) { last = 0; requestAnimationFrame(f); return; }
+            if (last) { const d = t - last; n++; sum += d; if (d > 48) bad++; } last = t;
+            if (n < 110) { requestAnimationFrame(f); return; }
+            if (sum / n > 40 || bad / n > .35) { setLite(true, true); try { const bb = $('mg-bub'); if (bb) { bb.textContent = 'Smooth mode is on, so the game runs better on this screen.'; bb.classList.add('on'); setTimeout(() => bb.classList.remove('on'), 4200); } } catch (e) { } }
+        };
+        setTimeout(() => requestAnimationFrame(f), 2200);
+    }
     function open() {
         if (EL) return;
         if (!D.getElementById('lf-font') && !D.getElementById('mg-font')) { const l = D.createElement('link'); l.id = 'mg-font'; l.rel = 'stylesheet'; l.href = 'https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&display=swap'; D.head.appendChild(l); }
@@ -50617,13 +50692,16 @@ void main(){
             '<div class="mg-top"><button type="button" class="mg-ib" data-a="back" aria-label="Back">' + icon('back') + '</button><div class="mg-tt" id="mg-tt">Math Sky Pop</div>' +
             '<button type="button" class="mg-ib" data-a="music" id="mg-music" aria-pressed="' + on('music') + '" aria-label="Music on or off">' + icon(on('music') ? 'music' : 'nomusic') + '</button>' +
             '<button type="button" class="mg-ib" data-a="sfx" id="mg-sfx" aria-pressed="' + on('sfx') + '" aria-label="Sounds on or off">' + icon(on('sfx') ? 'vol' : 'mute') + '</button>' +
-            '<button type="button" class="mg-ib" data-a="voice" id="mg-voice" aria-pressed="' + on('voice') + '" aria-label="Your friend talks: on or off">' + icon(on('voice') ? 'talk' : 'notalk') + '</button></div>' +
+            '<button type="button" class="mg-ib" data-a="voice" id="mg-voice" aria-pressed="' + on('voice') + '" aria-label="Your friend talks: on or off">' + icon(on('voice') ? 'talk' : 'notalk') + '</button>' +
+            '<button type="button" class="mg-ib mg-lt" data-a="lite" id="mg-lite" aria-pressed="false" aria-label="Smooth mode for slow screens" title="Smooth mode for slow screens">⚡</button></div>' +
             '<div class="mg-main" id="mg-main"></div>' +
             '<div class="mg-pal" id="mg-pal"><div class="mg-bub" id="mg-bub" aria-hidden="true"></div><button type="button" class="mg-bd" id="mg-bd" data-a="buddy" aria-label="Tap your friend"></button></div>' +
             '<div class="mg-fx" id="mg-fx" aria-hidden="true"></div><div class="mg-sr" id="mg-sr" aria-live="polite"></div>';
         D.body.appendChild(EL); D.documentElement.classList.add('mg-lock');
-        if (!BD) BD = new Buddy(); BD.K = F().K;
+        if (liteWanted()) EL.classList.add('mg-lite'); syncLite();
+        if (!BD || (!BD.ok && !BD.pending && !EL.classList.contains('mg-lite') && !BD.cv.isConnected && BD.gl && BD.gl.isContextLost && BD.gl.isContextLost())) BD = new Buddy(); BD.K = F().K;
         if (BD.ok) BD.mount($('mg-bd')); else $('mg-bd').innerHTML = '<span class="mg-emo" id="mg-emo">' + F().e + '</span>';
+        perfWatch();
         D.addEventListener('pointermove', onPtr, { passive: true }); EL.addEventListener('click', onClick); EL.addEventListener('input', onInput); D.addEventListener('keydown', onKey); addEventListener('popstate', onPop);
         try { history.pushState({ mg: 1 }, ''); } catch (e) { }
         requestAnimationFrame(() => requestAnimationFrame(() => EL && EL.classList.add('on'))); setTimeout(() => EL && EL.classList.add('on'), 60);
@@ -50631,7 +50709,7 @@ void main(){
     }
     function close() {
         if (!EL) return; stopGame(); hush(); musicStop(); WARM++; if (BD) BD.stop();
-        EL.classList.remove('on'); D.documentElement.classList.remove('mg-lock'); D.removeEventListener('keydown', onKey); D.removeEventListener('pointermove', onPtr); removeEventListener('popstate', onPop);
+        EL.classList.remove('on'); D.documentElement.classList.remove('mg-lock', 'mg-lite-lock'); D.removeEventListener('keydown', onKey); D.removeEventListener('pointermove', onPtr); removeEventListener('popstate', onPop);
         const el = EL; EL = null; setTimeout(() => el.remove(), REDUCED ? 0 : 320);
         try { if (history.state && history.state.mg) { closedAt = Date.now(); history.back(); } } catch (e) { }
         if (RET && RET.focus) try { RET.focus({ preventScroll: true }); } catch (e) { }
@@ -50847,6 +50925,7 @@ void main(){
         if (a === 'back') { if (sub()) home(); else close(); }
         else if (a === 'music') { tog('music'); b.innerHTML = icon(on('music') ? 'music' : 'nomusic'); b.setAttribute('aria-pressed', on('music')); if (on('music')) musicStart(AU.bpm, AU.tr); else musicStop(); }
         else if (a === 'sfx') { tog('sfx'); b.innerHTML = icon(on('sfx') ? 'vol' : 'mute'); b.setAttribute('aria-pressed', on('sfx')); }
+        else if (a === 'lite') { const now = !EL.classList.contains('mg-lite'); setLite(now, true); if (!now && (!BD || !BD.ok)) { BD = new Buddy(); BD.K = F().K; const h = $('mg-bd'); if (h) { if (BD.ok) { h.innerHTML = ''; BD.mount(h); } else h.innerHTML = '<span class="mg-emo" id="mg-emo">' + F().e + '</span>'; } } }
         else if (a === 'voice') { tog('voice'); b.innerHTML = icon(on('voice') ? 'talk' : 'notalk'); b.setAttribute('aria-pressed', on('voice')); if (!on('voice')) hush(); else say('Yay! I can talk again!'); }
         else if (a === 'friend') { LS.set('mg_friend', b.dataset.f); if (BD) BD.K = F().K; const em = $('mg-emo'); if (em) em.textContent = F().e; home(); mood('wave', 1800); say(F().intro); setTimeout(warm, 1500); }
         else if (a === 'buddy') { sfx('boing'); mood('boing', 1200); say(Math.random() < .5 ? line('tap') : line('joke')); }
