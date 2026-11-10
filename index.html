@@ -6785,7 +6785,7 @@ html.gv-open,html.gv-open body{overflow:hidden!important}
 #wf.open{display:flex}
 #wf .wf-bg{position:absolute;inset:0;pointer-events:none;background:radial-gradient(600px 380px at 85% -5%,rgba(139,123,255,.28),transparent 70%),radial-gradient(520px 360px at -5% 105%,rgba(53,214,192,.16),transparent 70%)}
 #wf *{box-sizing:border-box}
-#wf button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+:where(#wf button){font:inherit;color:inherit;cursor:pointer;border:0;background:none}
 #wf button:focus-visible,#wf input:focus-visible,#wf textarea:focus-visible{outline:2px solid var(--ac2);outline-offset:2px}
 .wf-top{position:relative;display:flex;align-items:center;gap:12px;padding:calc(10px + env(safe-area-inset-top)) 14px 10px;flex-wrap:wrap}
 .wf-x{width:40px;height:40px;border-radius:14px;background:var(--s2);border:1px solid var(--ln)!important}
@@ -6888,6 +6888,70 @@ html.gv-open,html.gv-open body{overflow:hidden!important}
 .wf-chip{background:linear-gradient(135deg,rgba(124,92,255,.35),rgba(255,122,182,.25))}
 .wf-gn{background:linear-gradient(135deg,#7c5cff,#ff7ab6);color:#fff}
 .wf-card.wf-q{border-top:3px solid #7c5cff}.wf-card.wf-word{border-top:3px solid #35d6c0}.wf-card.wf-ask{border-top:3px solid #ff7ab6}
+.wf-main>*{flex-shrink:0}
+html.sx-lock,html.sx-lock body{overflow:hidden}
+#sx{--bg:#070914;--s1:#10142a;--ln:rgba(255,255,255,.09);--tx:#eef1ff;--mu:#98a2c8;--ta:#22d3ee;--tb:#6366f1;--ea:#f472b6;--eb:#fb923c;--ok:#34d399;--bad:#fb7185;position:fixed;inset:0;z-index:99980;display:none;flex-direction:column;height:100dvh;background:var(--bg);color:var(--tx);overflow:hidden;font-family:inherit;-webkit-tap-highlight-color:transparent}
+#sx.open{display:flex}#sx *{box-sizing:border-box}:where(#sx button){font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+#sx button:focus-visible,#sx input:focus-visible,#sx select:focus-visible{outline:2px solid var(--ta);outline-offset:2px}
+.sx-bg{position:absolute;inset:0;pointer-events:none;background:radial-gradient(640px 360px at 95% -10%,rgba(99,102,241,.3),transparent 70%),radial-gradient(520px 340px at -10% 110%,rgba(244,114,182,.18),transparent 70%)}
+.sx-top{position:relative;display:flex;align-items:center;gap:12px;padding:calc(10px + env(safe-area-inset-top)) 14px 8px}
+.sx-x{width:40px;height:40px;border-radius:14px;background:#171c38;border:1px solid var(--ln)!important;flex:none}
+.sx-ttl{min-width:0;flex:1}.sx-ttl b{display:block;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.sx-ttl small{color:var(--mu);font-size:12px}
+.sx-pill span{display:inline-block;min-width:64px;text-align:center;padding:7px 12px;border-radius:99px;font-weight:800;font-variant-numeric:tabular-nums;background:rgba(255,255,255,.08)}.sx-pill .low{background:rgba(251,113,133,.3);color:#ffd0d8}
+.sx-main{position:relative;flex:1;min-height:0;overflow:auto;width:100%;max-width:760px;margin:0 auto;padding:4px 14px calc(22px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:12px;-webkit-overflow-scrolling:touch}
+.sx-hero{border-radius:24px;min-height:150px;background:linear-gradient(135deg,#232a5c,#3b1d5e);background-size:cover;background-position:center;display:flex;align-items:flex-end;border:1px solid var(--ln)}
+.sx-hero-in{padding:18px}.sx-hero h2{margin:0 0 4px;font-size:24px}.sx-hero p{margin:0;color:#cfd5f5;font-size:14px}
+.sx-modes{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media(max-width:520px){.sx-modes{grid-template-columns:1fr}}
+.sx-mode{display:flex;flex-direction:column;align-items:flex-start;gap:6px;text-align:left;padding:18px;border-radius:24px;border:1px solid var(--ln)!important;transition:transform .15s}.sx-mode:active{transform:scale(.98)}
+.sx-mode b{font-size:22px}.sx-mode span{color:#c4cbeb;font-size:14px;line-height:1.45}.sx-mode em{font-style:normal;font-size:12px;font-weight:700;padding:4px 10px;border-radius:99px;background:rgba(255,255,255,.1);margin-top:4px}
+.sx-mode.t{background:linear-gradient(150deg,rgba(34,211,238,.22),rgba(99,102,241,.22))}.sx-mode.e{background:linear-gradient(150deg,rgba(244,114,182,.22),rgba(251,146,60,.2))}
+.sx-mi{font-size:26px;width:52px;height:52px;border-radius:16px;display:grid;place-items:center;color:#fff}.sx-mode.t .sx-mi{background:linear-gradient(135deg,var(--ta),var(--tb))}.sx-mode.e .sx-mi{background:linear-gradient(135deg,var(--ea),var(--eb))}
+.sx-card{background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.025));border:1px solid var(--ln);border-radius:22px;padding:16px}
+.sx-setc.t{border-top:3px solid var(--ta)}.sx-setc.e{border-top:3px solid var(--ea)}.sx-setc h3{margin:0 0 6px;font-size:20px}
+.sx-set{display:flex;flex-direction:column;gap:8px;padding:12px 0;border-bottom:1px solid var(--ln)}.sx-set:last-child{border:0}.sx-set b{font-size:14px}.sx-set small{display:block;color:var(--mu);font-size:12px;margin-top:2px}
+.sx-seg{display:flex;flex-wrap:wrap;gap:6px}.sx-seg button{padding:8px 14px;border-radius:12px;background:rgba(255,255,255,.06);border:1px solid var(--ln)!important;font-size:13px;font-weight:600}
+.sx-setc.t .sx-seg .on{background:linear-gradient(135deg,rgba(34,211,238,.4),rgba(99,102,241,.45));border-color:var(--ta)!important}.sx-setc.e .sx-seg .on{background:linear-gradient(135deg,rgba(244,114,182,.42),rgba(251,146,60,.4));border-color:var(--ea)!important}
+.sx-trbox{display:flex;flex-direction:column;gap:8px}.sx-sel{padding:10px 12px;border-radius:12px;background:#171c38;color:var(--tx);border:1px solid var(--ln);font:inherit;font-size:14px}
+.sx-cta{display:flex;flex-direction:column;gap:10px;align-items:center}.sx-row{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;width:100%}
+.sx-go{padding:15px 30px;border-radius:18px;font-weight:800;font-size:16px;color:#fff!important;width:100%;max-width:420px;box-shadow:0 10px 28px rgba(0,0,0,.35)}.sx-go.sm{width:auto;padding:12px 22px;font-size:14px;border-radius:14px}
+.sx-go.t{background:linear-gradient(135deg,var(--ta),var(--tb))}.sx-go.e{background:linear-gradient(135deg,var(--ea),var(--eb))}
+.sx-ghost{padding:11px 16px;border-radius:14px;background:rgba(255,255,255,.07);border:1px solid var(--ln)!important;font-size:13px;font-weight:600}
+.sx-vw{position:relative;border-radius:20px;overflow:hidden;background:#000;aspect-ratio:16/9;max-height:34vh;width:100%;margin:0 auto;border:1px solid var(--ln);flex:none}.sx-vw video{width:100%;height:100%;object-fit:contain;display:block}
+.sx-verr{display:none;position:absolute;inset:0;place-items:center;text-align:center;padding:16px;background:rgba(7,9,20,.85);color:var(--mu);font-size:13px}.sx-verr.on{display:grid}
+.sx-replay{position:absolute;right:10px;bottom:10px;width:42px;height:42px;border-radius:50%;background:rgba(7,9,20,.7)!important;backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.2)!important}
+.sx-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;flex:none}.sx-stats div{padding:9px 6px;border-radius:14px;background:rgba(255,255,255,.05);text-align:center}.sx-stats b{display:block;font-size:19px;font-variant-numeric:tabular-nums}.sx-stats small{color:var(--mu);font-size:11px}
+.sx-main>*{flex-shrink:0}.sx-lines{flex:1 0 auto;min-height:120px;display:flex;flex-direction:column;justify-content:center;gap:10px;padding:6px 2px}
+.sx-prev{color:#5d6690;font-size:14px;text-align:center;min-height:18px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.sx-next{color:#6e789f;font-size:15px;text-align:center;min-height:20px}
+.sx-curw{padding:16px;border-radius:20px;background:rgba(255,255,255,.04);border:1px solid var(--ln)}
+.sx-cur{font-size:clamp(20px,4.6vw,30px);line-height:1.55;text-align:center;font-family:'JetBrains Mono','SFMono-Regular',Consolas,monospace;letter-spacing:.2px;word-break:break-word;transition:box-shadow .2s}
+.sx-cur i{font-style:normal;color:#5d6690}.sx-cur .ok{color:var(--ok)}.sx-cur .bad{color:var(--bad);background:rgba(251,113,133,.18);border-radius:4px}.sx-cur .cur{color:#fff;border-bottom:3px solid var(--ta);animation:sxBl 1s steps(1) infinite}
+@keyframes sxBl{50%{border-color:transparent}}
+.sx-cur.flash{box-shadow:0 0 0 2px var(--ok),0 0 30px rgba(52,211,153,.35);border-radius:12px}.sx-cur.flashbad{box-shadow:0 0 0 2px #fbbf24;border-radius:12px}
+.sx-tr{display:none;text-align:center;color:#ffd9a8;font-size:15px;line-height:1.4;min-height:20px}.sx-tr.on{display:block}
+.sx-inw{display:flex;gap:8px;flex:none}.sx-in{flex:1;min-width:0;padding:15px 16px;border-radius:16px;background:rgba(0,0,0,.35);border:1px solid rgba(34,211,238,.4);color:var(--tx);font:inherit;font-size:17px}
+.sx-ic{width:50px;border-radius:16px;background:rgba(255,255,255,.07)!important;border:1px solid var(--ln)!important}
+.sx-bar{height:6px;border-radius:9px;background:rgba(255,255,255,.08);overflow:hidden;flex:none}.sx-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--ea),var(--eb));transition:width .4s}
+.sx-steps{display:flex;gap:8px;justify-content:center;flex:none}.sx-steps span{padding:6px 14px;border-radius:99px;font-size:12px;font-weight:700;background:rgba(255,255,255,.05);color:var(--mu)}.sx-steps .on{background:linear-gradient(135deg,var(--ea),var(--eb));color:#fff}
+.sx-lines.e{flex:1 0 auto}.sx-line{font-size:clamp(20px,4.6vw,30px);line-height:1.55;text-align:center;font-weight:700;padding:14px;border-radius:20px;background:rgba(255,255,255,.04);border:1px solid var(--ln)}
+.sx-w{display:inline-block;transition:color .15s,opacity .2s;color:#cdd3f3}.sx-w.on{color:#fff;text-shadow:0 0 14px rgba(244,114,182,.7)}.sx-w.now{color:#ffd9a8;text-shadow:0 0 14px rgba(251,146,60,.8)}
+.sx-w.ok{color:var(--ok)}.sx-w.part{color:#fbbf24}.sx-w.bad{color:var(--bad);text-decoration:underline wavy rgba(251,113,133,.6)}.sx-w.hid{filter:blur(9px);user-select:none}
+.sx-live{min-height:20px;text-align:center;color:var(--mu);font-size:13px}.sx-note{color:var(--mu);font-size:14px;text-align:center;margin:0}
+.sx-ctl{display:flex;flex-direction:column;align-items:center;gap:10px;flex:none;padding-bottom:6px}.sx-ctl .sx-row{align-items:center}
+.sx-mic{padding:15px 26px;border-radius:99px;font-weight:800;color:#fff!important;background:linear-gradient(135deg,#ff5f8f,#ff8a5c)}.sx-mic.rec{animation:sxRec 1.1s ease-in-out infinite}@keyframes sxRec{50%{box-shadow:0 0 0 14px rgba(255,95,143,.2)}}
+.sx-sline{display:flex;align-items:center;gap:14px;text-align:left}.sx-sline small{display:block;color:var(--mu);font-size:12px;margin-top:2px}
+.sx-mini{--p:0;--c:#34d399;width:64px;height:64px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--c) calc(var(--p)*1%),rgba(255,255,255,.1) 0);position:relative;flex:none}.sx-mini::before{content:"";position:absolute;inset:6px;border-radius:50%;background:#10142a}.sx-mini b{position:relative;font-size:16px}
+.sx-res{text-align:center}.sx-res h2{margin:10px 0 4px;font-size:26px}.sx-res p{margin:0;color:var(--mu)}
+.sx-ring{--p:0;--c:var(--ta);width:128px;height:128px;border-radius:50%;margin:0 auto;display:grid;place-items:center;position:relative;background:conic-gradient(var(--c) calc(var(--p)*1%),rgba(255,255,255,.1) 0)}.sx-ring::before{content:"";position:absolute;inset:11px;border-radius:50%;background:#10142a}.sx-ring b{position:relative;font-size:30px}
+.sx-res.e .sx-ring{--c:var(--ea)}
+.sx-xp{display:inline-flex;gap:8px;align-items:center;margin:14px 0 4px;padding:10px 20px;border-radius:99px;font-weight:800;font-size:20px;color:#1b1400;background:linear-gradient(135deg,#ffd76a,#ffb020)}.sx-xp.off{background:rgba(255,255,255,.08);color:var(--mu);font-size:13px;font-weight:600}
+.sx-badge{display:inline-flex;gap:8px;align-items:center;margin-top:10px;padding:6px 14px;border-radius:99px;font-size:13px;font-weight:700;background:rgba(255,215,106,.18);color:#ffd76a}
+.sx-sc{display:flex;gap:8px;margin-top:12px}.sx-sc div{flex:1;padding:12px 6px;border-radius:16px;background:rgba(255,255,255,.05)}.sx-sc b{display:block;font-size:22px}.sx-sc small{color:var(--mu);font-size:11px}
+.sx-lab{font-weight:700;margin-bottom:10px;font-size:14px}.sx-lab small{color:var(--mu);font-weight:400;margin-left:6px}
+.sx-wl{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--ln)}.sx-wl:last-child{border:0}.sx-wl p{margin:0;font-size:14px;line-height:1.45;text-align:left;color:#dfe3fb}
+.sx-chip{flex:none;min-width:48px;text-align:center;padding:3px 8px;border-radius:99px;font-size:12px;font-weight:800}.sx-chip.ok{background:rgba(52,211,153,.22);color:#6ee7b7}.sx-chip.bad{background:rgba(251,113,133,.22);color:#fda4af}
+.sx-bw{display:flex;flex-wrap:wrap;gap:8px}.sx-bw button{padding:8px 14px;border-radius:99px;background:rgba(251,113,133,.16);border:1px solid rgba(251,113,133,.4)!important;font-size:14px}.sx-bw i{margin-right:6px;font-size:12px}
+@media(prefers-reduced-motion:reduce){#sx *{animation:none!important;transition:none!important}}
+.sx-cta{position:sticky;bottom:0;padding:14px 0 4px;background:linear-gradient(180deg,rgba(7,9,20,0),#070914 40%);z-index:2}
 </style><style id="mv-art-css" data-th-skip>
 /* Movies: the big pictures stay cinematic (dark shade, white writing) in every theme and in Light mode */
 .mv-hero{position:relative;min-height:420px;border-radius:26px;overflow:hidden;display:flex;align-items:flex-end;background:#0b0d1a var(--bd) center 20%/cover no-repeat;box-shadow:0 30px 60px -30px rgba(0,0,0,.9);isolation:isolate}
@@ -12769,7 +12833,8 @@ function spaceGL() {
         function shTrack(t) { shStopAll(); sh.add = false; sh.track = 'video'; renderCert(); }
         function shCat(c) { sh.cat = c; renderCert(); }
         function shLevel(l) { sh.level = l; renderCert(); }
-        function shOpen(id) { const c0 = SH_CM.find(x => x.id === id); if (c0 && !(c0.src && c0.s && c0.s.length > 1)) return cmOpen(id); shvDestroy(); shStopAll(); sh.id = id; sh.i = 0; sh.scores = []; sh.res = null; sh.stage = 'practice'; renderCert(); certTop(); const v = shItem().vid || shItem().src; if (v) { shxInit(); } else setTimeout(shListen, 450); }
+        function shOpen(id) { const c0 = SH_CM.find(x => x.id === id); if (c0 && !(c0.src && c0.s && c0.s.length > 1)) return cmOpen(id);
+            { const q = shVids().find(x => x.id === id); if (q && (q.src || q.chain) && q.s && q.s.length > 1 && window.SX) { shvDestroy(); shStopAll(); sh.id = id; sh.stage = 'menu'; renderCert(); SX.open(q); return; } } shvDestroy(); shStopAll(); sh.id = id; sh.i = 0; sh.scores = []; sh.res = null; sh.stage = 'practice'; renderCert(); certTop(); const v = shItem().vid || shItem().src; if (v) { shxInit(); } else setTimeout(shListen, 450); }
         function shSpeed(r) { sh.rate = r; document.querySelectorAll('.sh-sp').forEach(b => b.classList.toggle('on', +b.dataset.r === r)); }
         function shListen() {
             if (shItem() && (shItem().vid || shItem().src)) return;
@@ -12868,6 +12933,48 @@ function spaceGL() {
             { id: 'n-rhythm', nw: 1, e: '🥁', lv: 'B2', ty: 'Lecture', cat: ['music', 'talk'], f: 'Lecture 3. Rhythm- Fundamentals.webm', cl: 'en', t: 'Music lecture — rhythm fundamentals', by: 'University music lecture' },
             { id: 'n-wikidata', nw: 1, e: '🧩', lv: 'B2', ty: 'Tutorial', cat: ['tech'], f: 'A Gentle Introduction to Wikidata for Absolute Beginners (including non-techies!).webm', cl: 'en', t: 'Data for beginners — a gentle introduction', by: 'Tech tutorial for non-techies' },
             { id: 'n-duck', nw: 1, e: '🐢', lv: 'B1', ty: 'Classic film', cat: ['history', 'film'], f: 'Duck And Cover (1951) Bert The Turtle.webm', cl: 'en', t: 'Duck and Cover (1951) — Bert the Turtle', by: 'Classic school film · public domain' },
+            /* 42 more videos (November 2026) */
+            { id: 'x-exo', nw: 1, e: '🪐', lv: 'B2', ty: 'Explainer', cat: ['space', 'science'], f: 'What Is an Exoplanet-.webm', cl: 'en', t: 'What is an exoplanet?', by: 'Space explainer' },
+            { id: 'x-micro', nw: 1, e: '🧴', lv: 'B2', ty: 'Explainer', cat: ['nature', 'science', 'health'], f: 'Microplastic pollution and consumption explained.webm', cl: 'en', t: 'Microplastic pollution, explained', by: 'Environment explainer' },
+            { id: 'x-chem', nw: 1, e: '🌊', lv: 'B2', ty: 'Explainer', cat: ['nature', 'science'], f: 'Chemical Pollution of the Ocean.webm', cl: 'en', t: 'Chemical pollution of the ocean', by: 'Environment explainer' },
+            { id: 'x-pellet', nw: 1, e: '🛢️', lv: 'C1', ty: 'Documentary', cat: ['nature'], f: 'Devastating Impact of Industrial Plastic Pellet Pollution in the Ocean.webm', cl: 'en', t: 'Plastic pellets in the ocean', by: 'Environment documentary' },
+            { id: 'x-atmo', nw: 1, e: '🌫️', lv: 'C1', ty: 'Animation', cat: ['science', 'nature'], f: 'Atmospheric deposition (WMO animation).webm', cl: 'en', t: 'Atmospheric deposition — an animation', by: 'WMO · science animation' },
+            { id: 'x-leaf', nw: 1, e: '🍃', lv: 'B2', ty: 'Nature film', cat: ['nature', 'science'], f: 'Travel Deep Inside a Leaf - Annotated Version - California Academy of Sciences.webm', cl: 'en', t: 'Travel deep inside a leaf', by: 'California Academy of Sciences' },
+            { id: 'x-star', nw: 1, e: '🌟', lv: 'C1', ty: 'Explainer', cat: ['space', 'science'], f: 'STScI- Exploring Star and Planet Formation.webm', cl: 'en', t: 'How stars and planets form', by: 'Space Telescope Science Institute' },
+            { id: 'x-hubble', nw: 1, e: '🔭', lv: 'C1', ty: 'Explainer', cat: ['space', 'science'], f: 'Hubblecast 11.webm', cl: 'en', t: 'Hubblecast — news from the telescope', by: 'ESA · Hubble' },
+            { id: 'x-abx1', nw: 1, e: '💊', lv: 'B2', ty: 'Health film', cat: ['health', 'science'], f: 'Fighting a Global Threat- CDC and Partners Combat Antibiotic Resistance.webm', cl: 'en', t: 'Fighting antibiotic resistance', by: 'CDC · health' },
+            { id: 'x-abx2', nw: 1, e: '🐄', lv: 'B2', ty: 'Health film', cat: ['health', 'science', 'nature'], f: 'Protecting Humans and Animals- Combating Antibiotic Resistance.webm', cl: 'en', t: 'Protecting people and animals from resistance', by: 'CDC · health' },
+            { id: 'x-totem', nw: 1, e: '🪵', lv: 'B1', ty: 'Culture film', cat: ['culture', 'history'], f: 'Telling Stories Through Totem Poles.webm', cl: 'en', t: 'Telling stories through totem poles', by: 'Culture documentary' },
+            { id: 'x-maple', nw: 1, e: '🍁', lv: 'B1', ty: 'Food report', cat: ['food', 'culture'], f: 'Barmont Maple in Huntsville prepares for maple syrup production.webm', cl: 'en', t: 'Making maple syrup', by: 'Local news report' },
+            { id: 'x-fake', nw: 1, e: '📰', lv: 'C1', ty: 'Explainer', cat: ['history', 'culture'], f: 'Fake News in the 18th Century - Collection in Focus - British Library.webm', cl: 'en', t: 'Fake news in the 18th century', by: 'British Library' },
+            { id: 'x-mario', nw: 1, e: '🍄', lv: 'B2', ty: 'Interview', cat: ['culture', 'tech', 'talk'], f: 'Super Mario Odyssey - The Story of Yoshiaki Koizumi.webm', cl: 'en', t: 'The story of a game designer', by: 'Games interview' },
+            { id: 'x-fauci1', nw: 1, e: '💉', lv: 'B2', ty: 'Health talk', cat: ['health', 'talk'], f: 'Dr. Fauci on the Johnson & Johnson Vaccine, 2021-03-01.webm', cl: 'en', t: 'Dr. Fauci answers questions about a vaccine', by: 'White House · health' },
+            { id: 'x-mask', nw: 1, e: '😷', lv: 'B1', ty: 'Speech', cat: ['health', 'talk'], f: 'President Biden Encourages People to Wear a Mask.webm', cl: 'en', t: 'A message about wearing a mask', by: 'White House · speech' },
+            { id: 'x-women', nw: 1, e: '👩', lv: 'B2', ty: 'Speech', cat: ['history', 'talk'], f: 'President Biden Marks Women\'s History Month.webm', cl: 'en', t: 'Women\'s History Month message', by: 'White House · speech' },
+            { id: 'x-jobs', nw: 1, e: '🏗️', lv: 'B2', ty: 'Speech', cat: ['talk'], f: 'President Biden Explains the Need for the American Jobs Plan.webm', cl: 'en', t: 'Why we need a jobs plan', by: 'White House · speech' },
+            { id: 'x-vacc', nw: 1, e: '🩺', lv: 'B2', ty: 'Speech', cat: ['health', 'talk'], f: 'President Biden Provides an Update on Vaccinations.webm', cl: 'en', t: 'An update on vaccinations', by: 'White House · speech' },
+            { id: 'x-pday', nw: 1, e: '🏛️', lv: 'B1', ty: 'Message', cat: ['history', 'talk'], f: 'Presidents\' Day Message from President Biden, 2021.webm', cl: 'en', t: 'A Presidents\' Day message', by: 'White House · message' },
+            { id: 'x-wcnasa', nw: 1, e: '🛰️', lv: 'B1', ty: 'Phone call', cat: ['space', 'talk'], f: 'A Weekly Conversation- President Biden Calls NASA.webm', cl: 'en', t: 'A phone call to NASA', by: 'White House · weekly conversation' },
+            { id: 'x-wcmike', nw: 1, e: '🔧', lv: 'B1', ty: 'Conversation', cat: ['talk'], f: 'A Weekly Conversation- With Mike at W. S. Jenks & Son.webm', cl: 'en', t: 'A talk with a hardware store owner', by: 'White House · weekly conversation' },
+            { id: 'x-wcdoc', nw: 1, e: '🩺', lv: 'B1', ty: 'Conversation', cat: ['health', 'talk'], f: 'A Weekly Conversation - On the Line with Doctors.webm', cl: 'en', t: 'On the line with doctors', by: 'White House · weekly conversation' },
+            { id: 'x-psaki', nw: 1, e: '🎙️', lv: 'C1', ty: 'Press briefing', cat: ['talk'], f: 'White House Press Secretary Jen Psaki Answers Your Questions, 2021-02-16.webm', cl: 'en', t: 'Answering your questions — press secretary', by: 'White House · Q&A' },
+            { id: 'x-yellen', nw: 1, e: '💵', lv: 'B2', ty: 'Interview', cat: ['talk'], f: 'Secretary Janet Yellen on the Child Tax Credit.webm', cl: 'en', t: 'The Child Tax Credit explained', by: 'White House · interview' },
+            { id: 'x-alexia', nw: 1, e: '⚽', lv: 'B2', ty: 'Speech', cat: ['sport', 'talk'], f: 'Alèxia Putellas 13 September 2023 speech.webm', cl: 'en', t: 'A football star\'s speech', by: 'Sport · speech' },
+            { id: 'x-country', nw: 1, e: '🐑', lv: 'B2', ty: 'Classic film', cat: ['film', 'history'], f: 'Country Lads (1941).webm', cl: 'en', t: 'Country Lads (1941)', by: 'Classic documentary · public domain' },
+            { id: 'x-news', nw: 1, e: '🚆', lv: 'B2', ty: 'Classic film', cat: ['film', 'history'], f: 'NEWSPAPER TRAIN (1942).webm', cl: 'en', t: 'Newspaper Train (1942)', by: 'Classic documentary · public domain' },
+            { id: 'x-asked', nw: 1, e: '🎞️', lv: 'B2', ty: 'Classic film', cat: ['film', 'history'], f: 'THEY ASKED FOR IT! (1942).webm', cl: 'en', t: 'They Asked For It! (1942)', by: 'Classic film · public domain' },
+            { id: 'x-crete', nw: 1, e: '⛵', lv: 'C1', ty: 'Classic film', cat: ['film', 'history'], f: 'Return from Crete (1941).webm', cl: 'en', t: 'Return from Crete (1941)', by: 'Classic film · public domain' },
+            { id: 'x-maher', nw: 1, e: '🌐', lv: 'B2', ty: 'Interview', cat: ['tech', 'talk'], f: 'Wikipedia-VideoWiki-Katherine Maher video article.webm', cl: 'en', t: 'Katherine Maher on Wikipedia', by: 'Tech interview' },
+            { id: 'x-sound', nw: 1, e: '📚', lv: 'B2', ty: 'Short film', cat: ['tech', 'culture'], f: 'Sound of All Human Knowledge Thematic Film 16x9.webm', cl: 'en', t: 'The sound of all human knowledge', by: 'Short film' },
+            { id: 'x-mit', nw: 1, e: '🎓', lv: 'C1', ty: 'Lecture', cat: ['tech', 'science', 'talk'], f: 'Course Overview (6.002x).webm', cl: 'en', t: 'A university course overview', by: 'MIT · lecture' },
+            { id: 'x-heal', nw: 1, e: '🕊️', lv: 'C1', ty: 'Documentary', cat: ['history'], f: 'To Heal, We Must Remember.webm', cl: 'en', t: 'To heal, we must remember', by: 'History documentary' },
+            { id: 'x-walrus', nw: 1, e: '🦭', lv: 'B1', ty: 'Nature film', cat: ['nature'], f: 'WWF Russia. Extinction of Atlantic walruses.webm', cl: 'en', t: 'Saving the Atlantic walrus', by: 'WWF · wildlife' },
+            { id: 'x-n60', nw: 1, e: '🚀', lv: 'B2', ty: 'Short film', cat: ['space', 'history'], f: 'NASA- 60 Years in 60 Seconds.webm', cl: 'en', t: 'NASA — 60 years in 60 seconds', by: 'NASA · short film' },
+            { id: 'x-mackie', nw: 1, e: '🌊', lv: 'B1', ty: 'Interview', cat: ['science', 'talk', 'nature'], f: 'Anthony Mackie Asks NASA About Ocean Science.webm', cl: 'en', t: 'An actor asks NASA about the ocean', by: 'NASA · interview' },
+            { id: 'x-eday', nw: 1, e: '🌍', lv: 'B1', ty: 'Short film', cat: ['nature', 'space'], f: 'Celebrating Earth Day from Above - Down To Earth.webm', cl: 'en', t: 'Celebrating Earth Day from above', by: 'NASA · Earth Day' },
+            { id: 'x-opals', nw: 1, e: '🔦', lv: 'C1', ty: 'Explainer', cat: ['space', 'tech'], f: 'NASA\'s OPALS Beams Video from Space.webm', cl: 'en', t: 'A laser beams video from space', by: 'NASA · technology' },
+            { id: 'x-launch', nw: 1, e: '🚀', lv: 'B2', ty: 'Documentary', cat: ['space', 'history'], f: 'Launching for America.webm', cl: 'en', t: 'Launching for America', by: 'NASA · launch story' },
+            { id: 'x-artemis', nw: 1, e: '🌙', lv: 'B2', ty: 'Explainer', cat: ['space', 'science'], f: 'Artemis - How We Are Going to the Moon - 4K.webm', cl: 'en', t: 'How we are going to the Moon', by: 'NASA · Artemis' },
             /* backups for the new set */
             { id: 'n-five', nw: 1, bk: 2, e: '🎬', lv: 'C1', ty: 'Classic film', cat: ['film'], f: 'Five Minutes To Live (1961).webm', cl: 'en', t: 'Five Minutes to Live (1961)', by: 'Classic crime film' },
             { id: 'n-bondage', nw: 1, bk: 2, e: '🎭', lv: 'C1', ty: 'Classic film', cat: ['film'], f: 'Of Human Bondage (1934).webm', cl: 'en', t: 'Of Human Bondage (1934) — Bette Davis', by: 'Classic drama · public domain' },
@@ -42328,6 +42435,262 @@ window.LRLP = (function () {
     function close(fromPop) { S.tok++; stopAll(); stopCam(); if (root) root.classList.remove('open'); document.documentElement.classList.remove('wf-lock'); if (!fromPop) { try { if (history.state && history.state.wf) history.back(); } catch (e) { } } }
     addEventListener('popstate', () => { if (root && root.classList.contains('open')) close(true); });
     window.WF = { open, close, _s: S, _parse: parseWords, _same: same, _blank: blank };
+})();
+
+</script><script id="sx-js">
+/* ===== Shadow Studio: Type Along and Echo (shadowing) for video lessons ===== */
+(function () {
+    'use strict';
+    const $ = (s, r) => (r || document).querySelector(s);
+    const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const LSg = (k, d) => { try { const v = localStorage.getItem(k); return v == null ? d : v; } catch (e) { return d; } };
+    const LSs = (k, v) => { try { localStorage.setItem(k, v); } catch (e) { } };
+    const U = () => { try { return state.user || {}; } catch (e) { return {}; } };
+    const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+    const fmt = (ms) => { const s = Math.max(0, Math.round(ms / 1000)), m = Math.floor(s / 60); return m + ':' + String(s % 60).padStart(2, '0'); };
+    const DEF = { timer: 0, vm: 'first', show: 'show', rate: 1, tr: 0, mcase: 0, auto: 1, esh: 'show', erate: 1 };
+    let cfg = Object.assign({}, DEF); try { Object.assign(cfg, JSON.parse(LSg('sx_cfg', '{}'))); } catch (e) { }
+    const saveCfg = () => LSs('sx_cfg', JSON.stringify(cfg));
+    const X = { it: null, step: 'pick', mode: '', tok: 0, vtok: 0, rec: null, trc: {}, lines: [], idx: [], vErr: 0 };
+    let root = null;
+
+    /* ---------- video timing ---------- */
+    const L = () => X.it.s;
+    const hasTs = () => !!(X.it && X.it.ts && X.it.ts.length >= X.it.s.length - 1 && X.it.ts.length > 1);
+    const segStart = (i) => hasTs() ? (X.it.ts[i] || 0) : 0;
+    const segEnd = (i) => { const w = L()[i].split(' ').length, nx = X.it.ts && X.it.ts[i + 1]; const own = segStart(i) + Math.max(2.5, w * .5); return nx && nx > segStart(i) ? Math.min(nx, segStart(i) + Math.max(4, w * .9 + 2)) : own; };
+    const vEl = () => $('#sx-v');
+    function chain() { const it = X.it; return it.chain && it.chain.length ? it.chain : (typeof shvChain === 'function' ? shvChain(it.src) : [it.src]); }
+    function vInit() {
+        const v = vEl(); if (!v) return; const ch = chain(); let n = 0; X.vErr = 0;
+        const set = () => { v.src = ch[n]; v.load(); };
+        v.onerror = () => { n++; if (n < ch.length) set(); else { X.vErr = 1; const e = $('#sx-verr'); if (e) e.classList.add('on'); } };
+        set();
+    }
+    function vReady() { const v = vEl(); return new Promise(res => { if (!v || v.readyState >= 1) return res(); const t = setTimeout(res, 4000); v.addEventListener('loadedmetadata', () => { clearTimeout(t); res(); }, { once: true }); }); }
+    async function playSeg(a, b, rate, onTick) {
+        const v = vEl(); if (!v || X.vErr) return 'none'; const my = ++X.vtok; await vReady(); if (my !== X.vtok) return 'c';
+        v.playbackRate = rate || 1; try { v.currentTime = a; } catch (e) { } try { await v.play(); } catch (e) { return 'blocked'; }
+        return new Promise(res => { const chk = () => { if (my !== X.vtok) return res('c'); if (v.currentTime >= b - .04 || v.ended) { v.pause(); return res('ok'); } if (onTick) onTick((v.currentTime - a) / Math.max(.1, b - a)); requestAnimationFrame(chk); }; chk(); });
+    }
+    function vStop() { X.vtok++; const v = vEl(); if (v) try { v.pause(); } catch (e) { } }
+
+    /* ---------- speech ---------- */
+    function tts(text, rate) { return new Promise(res => { try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(text); u.lang = 'en-US'; u.rate = rate || 1; u.onend = u.onerror = () => res(); speechSynthesis.speak(u); setTimeout(res, 2500 + text.length * 120); } catch (e) { res(); } }); }
+    function stopAll() { vStop(); try { speechSynthesis.cancel(); } catch (e) { } try { if (X.rec) { X.rec.onend = X.rec.onresult = X.rec.onerror = null; X.rec.abort(); } } catch (e) { } X.rec = null; clearInterval(X.tm); X.tm = null; }
+    function listen(ms, onInterim) {
+        return new Promise(res => {
+            const SR = window.SpeechRecognition || window.webkitSpeechRecognition; if (!SR || !window.isSecureContext) return res({ na: 1, text: '' });
+            let r; try { r = new SR(); } catch (e) { return res({ na: 1, text: '' }); } let txt = '', fin = false;
+            const end = (v) => { if (fin) return; fin = true; clearTimeout(t); try { r.stop(); } catch (e) { } X.rec = null; X.stopListen = null; res(v || { text: txt }); };
+            const t = setTimeout(() => end(), ms); X.stopListen = () => end();
+            r.lang = 'en-US'; r.interimResults = true; r.continuous = false; r.maxAlternatives = 1;
+            r.onresult = (e) => { let s = ''; for (let i = 0; i < e.results.length; i++) s += ' ' + e.results[i][0].transcript; txt = s.trim(); if (onInterim) onInterim(txt); if (e.results[e.results.length - 1].isFinal) setTimeout(() => end(), 350); };
+            r.onerror = (e) => end({ err: e && e.error, text: txt }); r.onend = () => end();
+            X.rec = r; try { r.start(); } catch (e) { end({ err: 'start', text: '' }); }
+        });
+    }
+    async function trans(i) {
+        if (X.trc[i] != null) return X.trc[i]; const c = LSg('wf_lang', '') || U().xLang || 'uz';
+        try { const r = await fetch('https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=' + encodeURIComponent(c) + '&dt=t&q=' + encodeURIComponent(L()[i])); const d = await r.json(); X.trc[i] = (d[0] || []).map(x => x && x[0]).filter(Boolean).join('').trim(); } catch (e) { X.trc[i] = ''; }
+        return X.trc[i];
+    }
+    function showTr(i) { const el = $('#sx-tr'); if (!el) return; el.textContent = ''; el.classList.toggle('on', !!cfg.tr); if (cfg.tr) trans(i).then(t => { const e = $('#sx-tr'); if (e && X.cur === i) e.textContent = t; }); }
+
+    /* ---------- shell ---------- */
+    function shell() {
+        if (root) return;
+        root = document.createElement('div'); root.id = 'sx'; root.setAttribute('role', 'dialog'); root.setAttribute('aria-label', 'Shadow Studio');
+        root.innerHTML = '<div class="sx-bg" aria-hidden="true"></div><div class="sx-top"><button class="sx-x" data-a="close" aria-label="Close"><i class="fa-solid fa-chevron-left"></i></button><div class="sx-ttl"><b id="sx-t"></b><small id="sx-sub"></small></div><div class="sx-pill" id="sx-pill"></div></div><div id="sx-main" class="sx-main"></div>';
+        document.body.appendChild(root); root.addEventListener('click', onClick); root.addEventListener('input', onInput); root.addEventListener('keydown', onKey);
+    }
+    const main = (h) => { const m = $('#sx-main'); if (m) { m.innerHTML = h; m.scrollTop = 0; } };
+    const seg = (key, opts, val) => '<div class="sx-seg" role="radiogroup">' + opts.map(o => '<button type="button" role="radio" aria-checked="' + (String(o[0]) === String(val)) + '" class="' + (String(o[0]) === String(val) ? 'on' : '') + '" data-a="cfg" data-k="' + key + '" data-v="' + o[0] + '">' + o[1] + '</button>').join('') + '</div>';
+    const row = (lab, sub, ctl) => '<div class="sx-set"><div><b>' + lab + '</b>' + (sub ? '<small>' + sub + '</small>' : '') + '</div>' + ctl + '</div>';
+    const trSel = () => { const c = LSg('wf_lang', '') || U().xLang || 'uz', ls = ((window.LRW && window.LRW.langs) || [{ c: 'uz', n: 'Uzbek' }]).slice().sort((a, b) => a.n.localeCompare(b.n)); return '<select class="sx-sel" data-a="trlang" aria-label="Translation language">' + ls.map(l => '<option value="' + esc(l.c) + '"' + (l.c === c ? ' selected' : '') + '>' + esc(l.n) + '</option>').join('') + '</select>'; };
+
+    /* ---------- 1. choose a mode ---------- */
+    function pick() {
+        stopAll(); X.step = 'pick'; X.mode = ''; const it = X.it, n = it.s.length;
+        $('#sx-t').textContent = it.t || 'Video'; $('#sx-sub').textContent = [it.lv, it.ty, n + ' lines', it.dur ? fmt(it.dur * 1000) : ''].filter(Boolean).join(' · '); $('#sx-pill').innerHTML = '';
+        const best = (U().sxBest || {})[it.id] || {};
+        main('<div class="sx-hero"' + (it.thumb ? ' style="background-image:linear-gradient(180deg,rgba(7,9,20,.2),rgba(7,9,20,.95)),url(' + it.thumb + ')"' : '') + '><div class="sx-hero-in"><h2>How do you want to practise?</h2><p>Same video, two ways to train. Switch any time.</p></div></div>' +
+            '<div class="sx-modes"><button class="sx-mode t" data-a="mode" data-m="type"><i class="sx-mi fa-solid fa-keyboard"></i><b>Type Along</b><span>Watch each line, then type it. Live speed, accuracy and streaks.</span><em>' + (best.wpm ? 'Best ' + best.wpm + ' wpm · ' + best.acc + '%' : 'Great for spelling and listening') + '</em></button>' +
+            '<button class="sx-mode e" data-a="mode" data-m="echo"><i class="sx-mi fa-solid fa-microphone-lines"></i><b>Echo</b><span>Hear a line, say it back right after the speaker. Get a word-by-word score.</span><em>' + (best.echo ? 'Best ' + best.echo + '%' : 'Great for accent and rhythm') + '</em></button></div>');
+    }
+    function setup(m) {
+        X.mode = m; X.step = 'setup'; const t = m === 'type';
+        const sets = t ? row('Timer', 'Optional. Starts with your first key.', seg('timer', [[0, 'Free'], [60, '1 min'], [120, '2 min'], [180, '3 min'], [300, '5 min']], cfg.timer)) +
+            row('Video', hasTs() ? 'What the video does while you type.' : 'This video has no line timing, so it plays freely.', hasTs() ? seg('vm', [['first', 'Play line first'], ['loop', 'Loop line'], ['free', 'Keep playing'], ['off', 'Silent']], cfg.vm) : '') +
+            row('Text', 'Dictation hides the line. Press Tab to peek.', seg('show', [['show', 'Show'], ['dict', 'Dictation']], cfg.show)) +
+            row('Match case', 'Off: “hello” equals “Hello”.', seg('mcase', [[0, 'Off'], [1, 'On']], cfg.mcase)) +
+            row('Speed', '', seg('rate', [[.5, '0.5×'], [.75, '0.75×'], [1, '1×']], cfg.rate))
+            : row('Text', 'Hide it to train your ear.', seg('esh', [['show', 'Show'], ['hide', 'Hidden']], cfg.esh)) +
+            row('Speed', 'Slow is great for hard lines.', seg('erate', [[.75, '0.75×'], [1, '1×']], cfg.erate)) +
+            row('Auto next', 'Moves on when you score 70% or more.', seg('auto', [[1, 'On'], [0, 'Off']], cfg.auto));
+        main('<div class="sx-card sx-setc ' + (t ? 't' : 'e') + '"><h3>' + (t ? 'Type Along' : 'Echo') + '</h3>' + sets + row('Translation', 'Show each line in your language.', '<div class="sx-trbox">' + seg('tr', [[0, 'Off'], [1, 'On']], cfg.tr) + (cfg.tr ? trSel() : '') + '</div>') + '</div>' +
+            '<div class="sx-cta"><button class="sx-go ' + (t ? 't' : 'e') + '" data-a="start"><i class="fa-solid fa-play"></i> Start</button><button class="sx-ghost" data-a="back">Change mode</button></div>');
+    }
+
+    /* ---------- 2a. Type Along ---------- */
+    const T = {};
+    function frameVideo() { return '<div class="sx-vw"><video id="sx-v" playsinline preload="auto"></video><div id="sx-verr" class="sx-verr">The video could not load. You can still practise with the text.</div><button class="sx-replay" data-a="replay" aria-label="Replay line"><i class="fa-solid fa-rotate-left"></i></button></div>'; }
+    function startType() {
+        const my = ++X.tok; X.step = 'type'; X.idx = X.idx && X.idx.length ? X.idx : L().map((x, i) => i); Object.assign(T, { p: 0, t0: 0, ok: 0, bad: 0, hints: 0, res: [], streak: 0, best: 0, typed: '', done: false, peek: 0 });
+        $('#sx-pill').innerHTML = '<span id="sx-tm">' + (cfg.timer ? fmt(cfg.timer * 1000) : '0:00') + '</span>';
+        main(frameVideo() + '<div class="sx-stats" id="sx-stats"></div><div class="sx-lines"><div class="sx-prev" id="sx-prev"></div><div class="sx-curw"><div class="sx-cur" id="sx-cur" aria-live="off"></div></div><div class="sx-next" id="sx-next"></div><div class="sx-tr" id="sx-tr"></div></div>' +
+            '<div class="sx-inw"><input id="sx-in" class="sx-in" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" enterkeyhint="done" placeholder="Type the line here" aria-label="Type the line"><button class="sx-ic" data-a="hint" title="Peek (Tab)"><i class="fa-solid fa-eye"></i></button><button class="sx-ic" data-a="skip" title="Skip line"><i class="fa-solid fa-forward"></i></button></div>');
+        const v = vEl(); if (v) { v.muted = false; v.setAttribute('controlslist', 'nodownload'); } vInit(); typeLine(my, true);
+    }
+    const curIdx = () => X.idx[T.p];
+    function eq(a, b) { return cfg.mcase ? a === b : (a || '').toLowerCase() === (b || '').toLowerCase(); }
+    function paintType() {
+        const i = curIdx(), line = L()[i], ty = T.typed, dict = cfg.show === 'dict' && !T.peek; let h = '';
+        for (let k = 0; k < line.length; k++) {
+            const ch = line[k]; let c = 'p', t = ch;
+            if (k < ty.length) { c = eq(ty[k], ch) ? 'ok' : 'bad'; t = ch; } else if (k === ty.length) c = 'cur'; if (dict && k >= ty.length) t = ch === ' ' ? ' ' : '·';
+            h += '<i class="' + c + '">' + (t === ' ' ? '&nbsp;' : esc(t)) + '</i>';
+        }
+        const c = $('#sx-cur'); if (c) c.innerHTML = h;
+        const pv = $('#sx-prev'), nx = $('#sx-next'); if (pv) pv.textContent = T.p > 0 ? L()[X.idx[T.p - 1]] : ''; if (nx) nx.textContent = (T.p + 1 < X.idx.length && cfg.show !== 'dict') ? L()[X.idx[T.p + 1]] : '';
+    }
+    function typeStats() {
+        const el = $('#sx-stats'); if (!el) return; const ms = T.t0 ? Date.now() - T.t0 : 0, mins = Math.max(.05, ms / 60000), wpm = T.t0 ? Math.round(T.ok / 5 / mins) : 0, tot = T.ok + T.bad, acc = tot ? Math.round(T.ok / tot * 100) : 100;
+        el.innerHTML = '<div><b>' + wpm + '</b><small>wpm</small></div><div><b>' + acc + '%</b><small>accuracy</small></div><div><b>' + T.streak + '</b><small>streak</small></div><div><b>' + Math.min(T.p + 1, X.idx.length) + '/' + X.idx.length + '</b><small>lines</small></div>';
+        const bar = $('#sx-bar'); if (bar) bar.style.width = Math.round(T.p / X.idx.length * 100) + '%';
+    }
+    async function typeLine(my, first) {
+        if (my !== X.tok) return; const i = curIdx(); X.cur = i; T.typed = ''; T.peek = 0; T.lt0 = 0; T.lbad = 0; const inp = $('#sx-in'); if (inp) { inp.value = ''; if (first || !matchMedia('(pointer:coarse)').matches) inp.focus(); }
+        paintType(); typeStats(); showTr(i);
+        if (!hasTs() || cfg.vm === 'off') return; const a = segStart(i), b = segEnd(i), r = cfg.rate;
+        if (cfg.vm === 'free') { const v = vEl(); if (first && v) { vReady().then(() => { try { v.currentTime = a; v.playbackRate = r; v.play().catch(() => { }); } catch (e) { } }); } return; }
+        if (cfg.vm === 'loop') { (async () => { while (my === X.tok && X.cur === i && !T.done) { const s = await playSeg(a, b, r); if (s === 'c' || s === 'none' || s === 'blocked') break; await sleep(500); } })(); return; }
+        playSeg(a, b, r);
+    }
+    function replay() { if (X.step !== 'type' || !hasTs()) { const v = vEl(); if (v && !X.vErr) { v.currentTime = 0; v.play().catch(() => { }); } return; } playSeg(segStart(X.cur), segEnd(X.cur), cfg.rate); const i = $('#sx-in'); if (i) i.focus(); }
+    function onInput(e) {
+        if (e.target.id !== 'sx-in' || X.step !== 'type' || T.done) return; const line = L()[curIdx()]; let v = e.target.value; if (v.length > line.length) v = v.slice(0, line.length); e.target.value = v;
+        if (!T.t0 && v.length) { T.t0 = Date.now(); T.lt0 = T.t0; if (cfg.timer) startTimer(); else X.tm = setInterval(tick, 500); }
+        if (!T.lt0 && v.length) T.lt0 = Date.now();
+        if (v.length > T.typed.length) { const k = v.length - 1; if (eq(v[k], line[k])) T.ok++; else { T.bad++; T.lbad++; } }
+        T.typed = v; paintType(); typeStats();
+        if (v.length >= line.length) finishLine();
+    }
+    function finishLine() {
+        const i = curIdx(), line = L()[i], ty = T.typed; let ok = 0; for (let k = 0; k < line.length; k++) if (eq(ty[k], line[k])) ok++; const acc = Math.round(ok / line.length * 100), ms = Math.max(500, Date.now() - (T.lt0 || Date.now()));
+        T.res.push({ i, acc, ms, wpm: Math.round(ok / 5 / (ms / 60000)), typed: ty }); if (acc >= 90) { T.streak++; T.best = Math.max(T.best, T.streak); } else T.streak = 0;
+        const c = $('#sx-cur'); if (c) c.classList.add(acc >= 90 ? 'flash' : 'flashbad'); T.p++; typeStats();
+        if (T.p >= X.idx.length) { T.done = true; setTimeout(() => finishType(), 450); return; }
+        const my = X.tok; setTimeout(() => { if (c) c.classList.remove('flash', 'flashbad'); typeLine(my, false); }, 380);
+    }
+    function tick() { if (X.step !== 'type') return clearInterval(X.tm); const t = $('#sx-tm'); if (t && T.t0) t.textContent = fmt(Date.now() - T.t0); typeStats(); }
+    function startTimer() { const end = T.t0 + cfg.timer * 1000; X.tm = setInterval(() => { if (X.step !== 'type') return clearInterval(X.tm); const left = end - Date.now(), t = $('#sx-tm'); if (t) { t.textContent = fmt(left); t.classList.toggle('low', left < 10000); } typeStats(); if (left <= 0) { clearInterval(X.tm); T.done = true; finishType(true); } }, 250); }
+    function finishType(timeUp) {
+        stopAll(); X.step = 'tres'; const it = X.it, n = T.res.length, ms = Math.max(1000, (T.t0 ? Date.now() - T.t0 : 1000)), tot = T.ok + T.bad, acc = tot ? Math.round(T.ok / tot * 100) : 0, wpm = Math.round(T.ok / 5 / (ms / 60000));
+        const u = U(); u.sxBest = u.sxBest || {}; const b0 = u.sxBest[it.id] || {}, newBest = n >= Math.min(5, L().length) && wpm > (b0.wpm || 0), nb = Object.assign({}, b0); if (n >= Math.min(5, L().length)) { nb.wpm = Math.max(b0.wpm || 0, wpm); nb.acc = newBest ? acc : (b0.acc || acc); u.sxBest[it.id] = nb; }
+        const xp = award(acc, n >= Math.max(2, Math.ceil(X.idx.length / 2)), 'Shadowing · ' + it.t + ' · ' + acc + '% · ⏱ ' + fmt(ms) + ' · ' + wpm + ' wpm');
+        const weak = T.res.filter(r => r.acc < 85).sort((a, b) => a.acc - b.acc).slice(0, 8);
+        $('#sx-pill').innerHTML = ''; if (acc >= 85 && typeof triggerConfetti === 'function') try { triggerConfetti(); } catch (e) { }
+        main('<div class="sx-card sx-res t"><div class="sx-ring" style="--p:' + acc + '"><b>' + acc + '%</b></div><h2>' + (timeUp ? 'Time is up!' : acc >= 95 ? 'Flawless typing!' : acc >= 85 ? 'Great work!' : 'Nice run!') + '</h2><p>' + n + ' of ' + X.idx.length + ' lines · ' + fmt(ms) + '</p>' + (newBest ? '<div class="sx-badge"><i class="fa-solid fa-trophy"></i> New personal best</div>' : '') + xpHtml(xp) +
+            '<div class="sx-sc"><div><b>' + wpm + '</b><small>words per minute</small></div><div><b>' + T.best + '</b><small>best streak</small></div><div><b>' + T.hints + '</b><small>peeks</small></div></div></div>' +
+            (weak.length ? '<div class="sx-card"><div class="sx-lab">Lines to practise</div>' + weak.map(r => '<div class="sx-wl"><span class="sx-chip bad">' + r.acc + '%</span><p>' + esc(L()[r.i]) + '</p></div>').join('') + '</div>' : '') +
+            '<div class="sx-cta">' + (weak.length ? '<button class="sx-go t" data-a="retryweak"><i class="fa-solid fa-bullseye"></i> Practise ' + weak.length + ' weak line' + (weak.length > 1 ? 's' : '') + '</button>' : '') + '<div class="sx-row"><button class="sx-ghost" data-a="again">Again</button><button class="sx-ghost" data-a="next">Next video</button><button class="sx-ghost" data-a="back">Change mode</button></div></div>');
+        X.weak = weak.map(r => r.i);
+    }
+    function xpHtml(xp) { return xp ? '<div class="sx-xp"><i class="fa-solid fa-bolt"></i> +' + xp + ' XP</div>' : '<div class="sx-xp off">Finish half the lines to earn XP</div>'; }
+    function award(pct, enough, feed) {
+        const u = U(); u.shLog = u.shLog || {}; const it = X.it, prev = u.shLog[it.id] || 0; u.shLog[it.id] = Math.max(prev, pct); if (!enough) { try { pfSave(); } catch (e) { } return 0; }
+        const day = new Date().toISOString().slice(0, 10); let d = {}; try { d = JSON.parse(LSg('sx_day', '{}')); } catch (e) { } if (d.d !== day) d = { d: day, n: 0 }; let xp = 0;
+        if (d.n < 8) { d.n++; LSs('sx_day', JSON.stringify(d)); xp = 20; u.examLog = u.examLog || {}; const k = 'shadow:shadowing', e = u.examLog[k] || { n: 0, best: 0 }; e.n++; e.best = Math.max(e.best, pct); u.examLog[k] = e; }
+        try { pfFeed('exam', feed); } catch (e) { } try { pfSave(); } catch (e) { } return xp;
+    }
+
+    /* ---------- 2b. Echo (shadowing) ---------- */
+    const E = {};
+    function startEcho() {
+        const my = ++X.tok; X.step = 'echo'; X.idx = X.idx && X.idx.length ? X.idx : L().map((x, i) => i); Object.assign(E, { p: 0, scores: {}, words: {}, phase: '' });
+        $('#sx-pill').innerHTML = '<span id="sx-tm">1/' + X.idx.length + '</span>';
+        main(frameVideo() + '<div class="sx-bar"><i id="sx-bar" style="width:0"></i></div><div class="sx-steps" id="sx-steps"><span data-s="listen">1 Listen</span><span data-s="speak">2 Speak</span><span data-s="score">3 Score</span></div><div class="sx-lines e"><div class="sx-line" id="sx-eline"></div><div class="sx-tr" id="sx-tr"></div><div class="sx-live" id="sx-live" aria-live="polite"></div></div><div id="sx-ctl" class="sx-ctl"></div>');
+        const v = vEl(); if (v) v.muted = false; vInit(); echoLine(my);
+    }
+    function lineHtml(i, st, prog) {
+        const w = L()[i].split(' '), hide = cfg.esh === 'hide' && st == null && !E.reveal; const nW = w.length;
+        return w.map((x, k) => { let c = ''; if (st) c = st[k] === 1 ? 'ok' : st[k] === .5 ? 'part' : 'bad'; else if (prog != null) c = k < Math.floor(prog * nW) ? 'on' : k === Math.floor(prog * nW) ? 'now' : ''; return '<span class="sx-w ' + c + (hide ? ' hid' : '') + '">' + esc(x) + '</span>'; }).join(' ');
+    }
+    function setPhase(p) { E.phase = p; root.querySelectorAll('#sx-steps span').forEach(s => s.classList.toggle('on', s.dataset.s === p)); const lv = $('#sx-live'); if (lv && p !== 'speak') lv.textContent = ''; }
+    function ctl(h) { const c = $('#sx-ctl'); if (c) c.innerHTML = h; }
+    async function echoLine(my) {
+        if (my !== X.tok) return; const i = X.idx[E.p]; X.cur = i; E.reveal = 0; const n = X.idx.length; const pl = $('#sx-tm'); if (pl) pl.textContent = (E.p + 1) + '/' + n; const bar = $('#sx-bar'); if (bar) bar.style.width = Math.round(E.p / n * 100) + '%';
+        const el = $('#sx-eline'); el.innerHTML = lineHtml(i, null, 0); showTr(i); setPhase('listen');
+        ctl('<button class="sx-ghost" data-a="skipl"><i class="fa-solid fa-forward"></i> Skip</button><button class="sx-ghost" data-a="peek"><i class="fa-solid fa-eye"></i> Peek</button>');
+        const r = cfg.erate; let s;
+        if (hasTs() && !X.vErr) s = await playSeg(segStart(i), segEnd(i), r, (p) => { const e = $('#sx-eline'); if (e && E.phase === 'listen') e.innerHTML = lineHtml(i, null, p); });
+        else { const words = L()[i].split(' ').length, dur = words * .42 / r; const t0 = Date.now(), iv = setInterval(() => { const e = $('#sx-eline'); if (e && E.phase === 'listen') e.innerHTML = lineHtml(i, null, Math.min(1, (Date.now() - t0) / 1000 / dur)); }, 120); await tts(L()[i], r); clearInterval(iv); s = 'ok'; }
+        if (my !== X.tok || s === 'c') return; if (s === 'blocked') { ctl('<button class="sx-go e" data-a="relisten"><i class="fa-solid fa-play"></i> Tap to listen</button>'); return; }
+        echoSpeak(my, i);
+    }
+    async function echoSpeak(my, i) {
+        if (my !== X.tok) return; setPhase('speak'); const line = L()[i], el = $('#sx-eline'); el.innerHTML = lineHtml(i, null, null); const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (!SR || !window.isSecureContext) { ctl('<p class="sx-note">Say the line out loud, then rate yourself.</p><div class="sx-row"><button class="sx-go e" data-a="selfok"><i class="fa-solid fa-circle-check"></i> I nailed it</button><button class="sx-ghost" data-a="relisten">Listen again</button><button class="sx-ghost" data-a="selfno">Not yet</button></div>'); return; }
+        ctl('<button class="sx-mic rec" data-a="stopmic"><i class="fa-solid fa-microphone"></i> Listening… tap when done</button>');
+        const res = await listen(4500 + line.split(' ').length * 700, (t) => { const lv = $('#sx-live'); if (lv) lv.textContent = t; }); if (my !== X.tok) return;
+        if (res.err === 'not-allowed' || res.err === 'service-not-allowed') { ctl('<p class="sx-note">Microphone is blocked. Allow it in your browser settings, then try again.</p><div class="sx-row"><button class="sx-go e" data-a="selfok">I said it</button><button class="sx-ghost" data-a="relisten">Listen again</button></div>'); return; }
+        if (!res.text) { setPhase('speak'); ctl('<p class="sx-note">I did not hear you. Try again.</p><div class="sx-row"><button class="sx-go e" data-a="again1"><i class="fa-solid fa-microphone"></i> Speak</button><button class="sx-ghost" data-a="relisten">Listen again</button></div>'); return; }
+        echoScore(my, i, res.text);
+    }
+    function echoScore(my, i, heard) {
+        setPhase('score'); const r = (typeof shScore === 'function') ? shScore(L()[i], heard) : { pct: 0, st: [], words: [] }; const best = Math.max(E.scores[i] || 0, r.pct); E.scores[i] = best; r.st.forEach((s, k) => { if (s < 1) (E.words[i] = E.words[i] || {})[L()[i].split(' ')[k]] = 1; });
+        $('#sx-eline').innerHTML = lineHtml(i, r.st, null); const lv = $('#sx-live'); if (lv) lv.textContent = 'You said: ' + heard; const col = r.pct >= 85 ? '#34d399' : r.pct >= 60 ? '#fbbf24' : '#fb7185';
+        const last = E.p >= X.idx.length - 1, pass = r.pct >= 70;
+        ctl('<div class="sx-sline"><div class="sx-mini" style="--p:' + r.pct + ';--c:' + col + '"><b>' + r.pct + '%</b></div><div><b style="color:' + col + '">' + (r.pct >= 90 ? 'Excellent!' : r.pct >= 70 ? 'Good job' : r.pct >= 45 ? 'Almost there' : 'Try once more') + '</b><small>' + (pass ? 'Green words are right. Red ones need work.' : 'Listen again and copy the rhythm.') + '</small></div></div><div class="sx-row"><button class="sx-ghost" data-a="relisten"><i class="fa-solid fa-volume-high"></i> Listen</button><button class="sx-ghost" data-a="again1"><i class="fa-solid fa-rotate-right"></i> Try again</button><button class="sx-go e sm" data-a="nextl">' + (last ? 'Finish' : 'Next') + ' <i class="fa-solid fa-arrow-right"></i></button></div>');
+        if (cfg.auto && pass) { const t = ++X.at; setTimeout(() => { if (X.at === t && X.step === 'echo' && E.phase === 'score' && X.cur === i) nextEcho(); }, 2200); }
+    }
+    function nextEcho() { X.at++; stopAll(); const my = X.tok; E.p++; if (E.p >= X.idx.length) return finishEcho(); echoLine(my); }
+    function finishEcho() {
+        stopAll(); X.step = 'eres'; const it = X.it, ids = X.idx, sc = ids.map(i => E.scores[i] || 0), avg = Math.round(sc.reduce((a, b) => a + b, 0) / Math.max(1, sc.length)), done = ids.filter(i => E.scores[i] != null).length;
+        const u = U(); u.sxBest = u.sxBest || {}; const b0 = u.sxBest[it.id] || {}; const nb = avg > (b0.echo || 0) && done >= Math.min(5, L().length); if (done >= Math.min(5, L().length)) { u.sxBest[it.id] = Object.assign({}, b0, { echo: Math.max(b0.echo || 0, avg) }); }
+        const xp = award(avg, done >= Math.max(2, Math.ceil(ids.length / 2)), 'Shadowing · ' + it.t + ' · ' + avg + '%'); if (avg >= 85 && typeof triggerConfetti === 'function') try { triggerConfetti(); } catch (e) { }
+        const wm = {}; ids.forEach(i => Object.keys(E.words[i] || {}).forEach(w => { const k = w.replace(/[^A-Za-z'’-]/g, '').toLowerCase(); if (k.length > 2) wm[k] = 1; })); const words = Object.keys(wm).slice(0, 16), weak = ids.filter(i => E.scores[i] != null && E.scores[i] < 70);
+        const col = avg >= 85 ? '#34d399' : avg >= 60 ? '#fbbf24' : '#fb7185'; $('#sx-pill').innerHTML = '';
+        main('<div class="sx-card sx-res e"><div class="sx-ring" style="--p:' + avg + ';--c:' + col + '"><b>' + avg + '%</b></div><h2>' + (avg >= 90 ? 'Native-like!' : avg >= 75 ? 'Great shadowing!' : avg >= 55 ? 'Good progress!' : 'Keep going!') + '</h2><p>' + done + ' of ' + ids.length + ' lines</p>' + (nb ? '<div class="sx-badge"><i class="fa-solid fa-trophy"></i> New personal best</div>' : '') + xpHtml(xp) + '</div>' +
+            (words.length ? '<div class="sx-card"><div class="sx-lab">Words to practise <small>tap to hear</small></div><div class="sx-bw">' + words.map(w => '<button data-a="sayw" data-w="' + esc(w) + '"><i class="fa-solid fa-volume-high"></i>' + esc(w) + '</button>').join('') + '</div></div>' : '') +
+            '<div class="sx-card"><div class="sx-lab">Line scores</div>' + ids.map(i => '<div class="sx-wl"><span class="sx-chip ' + ((E.scores[i] || 0) >= 70 ? 'ok' : 'bad') + '">' + (E.scores[i] != null ? E.scores[i] + '%' : '–') + '</span><p>' + esc(L()[i]) + '</p></div>').join('') + '</div>' +
+            '<div class="sx-cta">' + (weak.length ? '<button class="sx-go e" data-a="retryweak"><i class="fa-solid fa-bullseye"></i> Practise ' + weak.length + ' weak line' + (weak.length > 1 ? 's' : '') + '</button>' : '') + '<div class="sx-row"><button class="sx-ghost" data-a="again">Again</button><button class="sx-ghost" data-a="next">Next video</button><button class="sx-ghost" data-a="back">Change mode</button></div></div>');
+        X.weak = weak;
+    }
+
+    /* ---------- events ---------- */
+    function onKey(e) {
+        if (e.key === 'Escape') return close(); if (X.step === 'type') { if (e.key === 'Tab') { e.preventDefault(); hint(); } if (e.key === 'Enter' && e.target.id === 'sx-in') { e.preventDefault(); if (T.typed.length >= 3) { const l = L()[curIdx()]; T.typed = T.typed.padEnd(l.length, ' '); T.bad += l.length - T.typed.trim().length; finishLine(); } } if (e.key === 'ArrowUp' && e.target.id === 'sx-in') { e.preventDefault(); replay(); } }
+    }
+    function hint() { if (X.step !== 'type') return; T.hints++; T.peek = 1; paintType(); const my = X.tok, k = curIdx(); setTimeout(() => { if (my === X.tok && curIdx() === k) { T.peek = 0; paintType(); } }, 2400); }
+    function onClick(e) {
+        const b = e.target.closest('[data-a]'); if (!b) return; const a = b.dataset.a;
+        if (a === 'close') return close();
+        if (a === 'cfg') { cfg[b.dataset.k] = isNaN(+b.dataset.v) ? b.dataset.v : +b.dataset.v; saveCfg(); const sc = $('#sx-main').scrollTop; setup(X.mode); $('#sx-main').scrollTop = sc; }
+        else if (a === 'trlang') { /* handled by change */ }
+        else if (a === 'mode') { setup(b.dataset.m); } else if (a === 'back') { X.idx = []; pick(); }
+        else if (a === 'start') { X.idx = []; X.mode === 'type' ? startType() : startEcho(); }
+        else if (a === 'replay') replay(); else if (a === 'hint') hint();
+        else if (a === 'skip') { if (X.step === 'type' && !T.done) { T.streak = 0; T.res.push({ i: curIdx(), acc: 0, ms: 0, wpm: 0, typed: '' }); T.p++; if (T.p >= X.idx.length) { T.done = true; finishType(); } else typeLine(X.tok, false); } }
+        else if (a === 'again') { X.idx = []; X.mode === 'type' ? startType() : startEcho(); }
+        else if (a === 'retryweak') { X.idx = (X.weak || []).slice(); X.mode === 'type' ? startType() : startEcho(); }
+        else if (a === 'next') { const cur = X.it.id; let nx = null; try { const l = shList(), k = l.findIndex(x => x.id === cur); nx = l[(k + 1) % l.length]; } catch (er) { } close(); if (nx && typeof shOpen === 'function') shOpen(nx.id); }
+        else if (a === 'relisten') { const my = ++X.tok; stopAll(); echoLine(my); }
+        else if (a === 'again1') { const my = X.tok; echoSpeak(my, X.cur); }
+        else if (a === 'stopmic') { if (X.stopListen) X.stopListen(); }
+        else if (a === 'nextl') nextEcho(); else if (a === 'skipl') { X.at++; stopAll(); const my = X.tok; E.p++; if (E.p >= X.idx.length) finishEcho(); else echoLine(my); }
+        else if (a === 'peek') { E.reveal = 1; $('#sx-eline').innerHTML = lineHtml(X.cur, null, null); }
+        else if (a === 'selfok') { E.scores[X.cur] = Math.max(E.scores[X.cur] || 0, 85); nextEcho(); } else if (a === 'selfno') { const my = ++X.tok; stopAll(); echoLine(my); }
+        else if (a === 'sayw') tts(b.dataset.w, .85);
+    }
+    document.addEventListener('change', (e) => { if (e.target && e.target.dataset && e.target.dataset.a === 'trlang') { LSs('wf_lang', e.target.value); X.trc = {}; } });
+    function open(it) {
+        shell(); X.it = it; X.trc = {}; X.idx = []; X.at = 0; X.vErr = 0; root.classList.add('open'); document.documentElement.classList.add('sx-lock'); X.tok++; pick(); try { history.pushState({ sx: 1 }, ''); } catch (e) { }
+    }
+    function close(fromPop) { X.tok++; stopAll(); if (root) root.classList.remove('open'); document.documentElement.classList.remove('sx-lock'); const m = $('#sx-main'); if (m) m.innerHTML = ''; X.step = 'closed'; if (!fromPop) { try { if (history.state && history.state.sx) history.back(); } catch (e) { } } }
+    addEventListener('popstate', () => { if (root && root.classList.contains('open')) close(true); });
+    window.SX = { open, close, _X: X, _T: T, _E: E };
 })();
 
 </script><!--/hs:js-->
