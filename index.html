@@ -8164,7 +8164,7 @@ void main(){
     root.addEventListener('pointerdown', (e) => { if (started || e.target.closest('.li-skip')) finish(true); });
     document.addEventListener('keydown', function k(e) { if (ended) return document.removeEventListener('keydown', k); if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') finish(true); });
     const skip = $('.li-skip'); if (skip) skip.addEventListener('click', () => finish(true));
-    if (!DEBUG) setTimeout(() => { if (!ended) finish(); }, 7000);   // never in the way for long, whatever happens
+    if (!DEBUG) setTimeout(() => { if (!ended) finish(); }, 13000);   // never in the way for long, whatever happens
 
     /* ---------- the words ---------- */
     const word = $('.li-word');
@@ -8173,8 +8173,8 @@ void main(){
     /* ---------- without 3D (old phone, saving mode, motion turned off): a short calm version ---------- */
     function simple() {
         started = true; root.classList.add('simple', 'go');
-        setTimeout(showWord, reduce ? 100 : 250);
-        setTimeout(() => finish(true), reduce ? 900 : 1300);
+        setTimeout(showWord, reduce ? 300 : 1800);
+        setTimeout(() => finish(true), reduce ? 2500 : 5600);
     }
 
     /* ---------- the 3D film ---------- */
@@ -8344,7 +8344,7 @@ void main(){
     /* the scene (Earth radius 1 at the centre). The film flies backwards from the Moon to low orbit: at the end the Earth's
        curved edge lies low across the screen, the Moon hangs over it on the right, the sun comes up over the edge on the
        left, and the name stands in the sky. Everything is placed from the final view, so phones and tablets both get it. */
-    const D2R = Math.PI / 180, MR = 0.27, T_ALL = 5.3, KS = 2.45;   // the film plays about 2.4 times faster: the whole opening is about 2.2 s
+    const D2R = Math.PI / 180, MR = 0.27, T_ALL = 5.3, KS = 0.9;   // the whole opening is about 6 s
     const C_END = [0, 0.02, 1.32];
     let SC = null;
     function makeScene(w, h) {
