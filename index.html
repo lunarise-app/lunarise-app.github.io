@@ -19,12 +19,12 @@ html.lr-intro-on,html.lr-intro-on body{overflow:hidden!important}
 #lr-intro .li-icon svg{display:block;width:100%;height:100%;overflow:visible}
 #lr-intro .li-sq{transition:opacity .7s ease}
 #lr-intro .li-cr{transition:opacity 1.25s ease .15s}
-#lr-intro .li-halo{position:absolute;inset:-35%;border-radius:50%;background:radial-gradient(closest-side,rgba(129,140,248,.34),rgba(129,140,248,.1) 55%,transparent);opacity:0;transition:opacity .8s}
+#lr-intro .li-halo{position:absolute;inset:-35%;border-radius:50%;background:radial-gradient(closest-side,rgba(150,160,255,.7),rgba(129,140,248,.24) 55%,transparent);opacity:0;transition:opacity .5s}
 /* while the page is getting ready: the icon breathes softly */
 #lr-intro:not(.go) .li-icon{animation:liBreath 2.6s ease-in-out .5s infinite}
 #lr-intro:not(.go) .li-halo{opacity:1;animation:liHalo 2.6s ease-in-out .5s infinite}
 @keyframes liBreath{50%{transform:scale(1.03)}}
-@keyframes liHalo{50%{opacity:.45}}
+@keyframes liHalo{50%{opacity:.8}}
 /* the film starts: the square melts away and the crescent turns into the real Moon behind it */
 #lr-intro.gl.go .li-icon{transform:scale(1.18)}
 #lr-intro.gl.go .li-sq{opacity:0}
@@ -48,7 +48,28 @@ html.lr-intro-on,html.lr-intro-on body{overflow:hidden!important}
 #lr-intro.simple.go .li-halo{opacity:.8}
 #lr-intro.simple .li-word{top:calc(50% + 2vmin)}
 @media (prefers-reduced-motion:reduce){#lr-intro *{animation:none!important}#lr-intro .li-word b{letter-spacing:-.015em;filter:none;transform:none}}
-</style><script>(function(){try{var q=location.search,h=document.documentElement;if(/[?&](nointro|call|chat|remind|testcall|ans|gr)=?/.test(q))return;if(sessionStorage.getItem('lr_intro'))return;h.classList.add('lr-intro-on');}catch(e){}})();</script><!--/intro:head-->
+</style><script>(function(){try{var q=location.search,h=document.documentElement;if(/[?&](nointro|call|chat|remind|testcall|ans|gr)=?/.test(q))return;if(sessionStorage.getItem('lr_intro'))return;h.classList.add('lr-intro-on');}catch(e){}})();</script><script id="lr-guard">(function(){
+var H=document.documentElement,D=document,t0=Date.now(),shown=0;
+function ready(){try{return typeof window.navigateTo==='function'&&D.body&&D.body.children.length>3&&!H.classList.contains('lr-intro-on')}catch(e){return false}}
+function wipe(){try{if('serviceWorker' in navigator)navigator.serviceWorker.getRegistrations().then(function(r){r.forEach(function(x){x.unregister()})});if(window.caches)caches.keys().then(function(k){k.forEach(function(n){caches.delete(n)})})}catch(e){}}
+function box(){if(shown||D.getElementById('lr-recover'))return;shown=1;var d=D.createElement('div');d.id='lr-recover';d.setAttribute('role','alertdialog');
+d.style.cssText='position:fixed;inset:0;z-index:2147483000;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;padding:24px;background:#070b16;color:#e8eaff;font:600 16px/1.4 system-ui,sans-serif;text-align:center';
+d.innerHTML='<div style="font-size:20px;font-weight:800">LunaRise is taking longer than usual</div><div style="opacity:.75;max-width:340px">Your connection may be slow. You can wait, or reload to get a fresh copy.</div><button id="lr-recover-b" style="all:unset;cursor:pointer;padding:14px 28px;border-radius:14px;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;font-weight:700">Reload</button>';
+(D.body||H).appendChild(d);D.getElementById('lr-recover-b').onclick=function(){wipe();setTimeout(function(){location.reload()},250)}}
+var iv=setInterval(function(){
+ try{
+  if(ready()){var r=D.getElementById('lr-recover');if(r)r.remove()}
+  else if(Date.now()-t0>16000)box();
+  /* a game or panel that closed badly must never leave the page hidden or locked */
+  if((H.classList.contains('mg-lock')||H.classList.contains('mg-lite-lock'))&&!D.getElementById('mg')){H.classList.remove('mg-lock','mg-lite-lock')}
+ }catch(e){}
+},1000);
+/* a broken saved copy: two failed starts in a row clear the saved files once */
+try{var k='lr_boot',n=+(localStorage.getItem(k)||0);localStorage.setItem(k,String(n+1));
+ addEventListener('lr:intro-done',function(){try{localStorage.setItem(k,'0')}catch(e){}});
+ setTimeout(function(){if(ready())try{localStorage.setItem(k,'0')}catch(e){}},9000);
+ if(n>=2&&!sessionStorage.getItem('lr_wiped')){sessionStorage.setItem('lr_wiped','1');localStorage.setItem(k,'0');wipe();setTimeout(function(){location.reload()},400)}}catch(e){}
+})();</script><!--/intro:head-->
     <title>LunaRise — Learn English for IELTS &amp; CEFR</title>
     <meta name="description" content="Learn English for IELTS and CEFR with LunaRise: grammar lessons, a smart dictionary that translates into 14 languages, including Uzbek and Russian, reading and listening practice, shadowing videos, an AI tutor and 3D learning games.">
     <meta name="robots" content="index,follow">
@@ -6759,7 +6780,7 @@ html.gv-open,html.gv-open body{overflow:hidden!important}
 .gl-chips:has(.lp-b),.ai-chips:has(.lp-b),.rl-chips:has(.lp-b){display:block!important;overflow:visible!important;-webkit-mask-image:none!important;mask-image:none!important}
 .mwfc-langs:has(.lp-b),.lrw-strip:has(.lp-b){overflow:visible!important;-webkit-mask-image:none!important;mask-image:none!important}
 .gl-head:has(+ .gl-chips .lp-b) .gl-now{display:none}.lp-row{margin:12px 0 0}.pf-lpb .lp-b{width:auto;min-width:150px}@media (prefers-reduced-motion:reduce){.lp-sheet,.lp-card{transition:none}}
-</style><style id="mv-art-css" data-th-skip>
+.sc-top{position:relative;isolation:isolate}.sc-top::before{content:"";position:absolute;inset:-12px -8px -4px;z-index:-1;background:linear-gradient(180deg,rgba(7,11,22,.66),rgba(7,11,22,0));border-radius:26px;pointer-events:none}.sc-ttl .sc-h,.sc-ttl .sc-sub{text-shadow:0 2px 14px rgba(5,8,24,.9)}</style><style id="mv-art-css" data-th-skip>
 /* Movies: the big pictures stay cinematic (dark shade, white writing) in every theme and in Light mode */
 .mv-hero{position:relative;min-height:420px;border-radius:26px;overflow:hidden;display:flex;align-items:flex-end;background:#0b0d1a var(--bd) center 20%/cover no-repeat;box-shadow:0 30px 60px -30px rgba(0,0,0,.9);isolation:isolate}
 .mv-hero.sk{background:linear-gradient(90deg,#141729,#1e2340,#141729);background-size:200% 100%;animation:mvSk 1.4s linear infinite}
@@ -8143,7 +8164,7 @@ void main(){
     root.addEventListener('pointerdown', (e) => { if (started || e.target.closest('.li-skip')) finish(true); });
     document.addEventListener('keydown', function k(e) { if (ended) return document.removeEventListener('keydown', k); if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') finish(true); });
     const skip = $('.li-skip'); if (skip) skip.addEventListener('click', () => finish(true));
-    if (!DEBUG) setTimeout(() => { if (!ended) finish(); }, 20000);   // never in the way for long, whatever happens
+    if (!DEBUG) setTimeout(() => { if (!ended) finish(); }, 7000);   // never in the way for long, whatever happens
 
     /* ---------- the words ---------- */
     const word = $('.li-word');
@@ -8152,8 +8173,8 @@ void main(){
     /* ---------- without 3D (old phone, saving mode, motion turned off): a short calm version ---------- */
     function simple() {
         started = true; root.classList.add('simple', 'go');
-        setTimeout(showWord, reduce ? 150 : 650);
-        setTimeout(() => finish(), reduce ? 1700 : 2700);
+        setTimeout(showWord, reduce ? 100 : 250);
+        setTimeout(() => finish(true), reduce ? 900 : 1300);
     }
 
     /* ---------- the 3D film ---------- */
@@ -8323,7 +8344,7 @@ void main(){
     /* the scene (Earth radius 1 at the centre). The film flies backwards from the Moon to low orbit: at the end the Earth's
        curved edge lies low across the screen, the Moon hangs over it on the right, the sun comes up over the edge on the
        left, and the name stands in the sky. Everything is placed from the final view, so phones and tablets both get it. */
-    const D2R = Math.PI / 180, MR = 0.27, T_ALL = 5.3;
+    const D2R = Math.PI / 180, MR = 0.27, T_ALL = 5.3, KS = 2.45;   // the film plays about 2.4 times faster: the whole opening is about 2.2 s
     const C_END = [0, 0.02, 1.32];
     let SC = null;
     function makeScene(w, h) {
@@ -8395,7 +8416,7 @@ void main(){
     async function pictures() {
         const t0 = performance.now();
         const lo = await Promise.all([loadPic(grab('day')), loadPic(grab('fx'))]);
-        const wait = Math.max(0, 900 - (performance.now() - t0));   // give the sharp copies a moment, never long
+        const wait = Math.max(0, 250 - (performance.now() - t0));   // give the sharp copies a moment, never long
         const hi = await Promise.race([Promise.all([hiDay, hiFx]), new Promise(r => setTimeout(() => r([null, null]), wait))]);
         pics.day = hi[0] || lo[0]; pics.fx = (hi[0] && hi[1]) ? hi[1] : lo[1];
         return !!(pics.day && pics.fx);
@@ -8443,14 +8464,14 @@ void main(){
             let dt = now - last; last = now;
             if (dt > 220 && hic < 6) { hic++; t0 += dt - 33; }   // a single busy moment pauses the film instead of jumping
             if (dt > 150) { if (++slowRun >= 8 && !bail) { bail = 1; showWord(); setTimeout(() => finish(), 1300); } } else slowRun = 0;   // a phone too slow for it: straight to the name
-            const t = (now - t0) / 1000;
+            const t = (now - t0) / 1000 * KS;
             if (frames < 60 && dt < 220) {
                 frames++; sumDt += dt;
                 if (frames % 12 === 0) { const avg = sumDt / 12; sumDt = 0; if (avg > 26 && slow < 3) { slow++; scale *= .74; } else if (avg > 75 && slow >= 3) { showWord(); setTimeout(() => finish(), 1300); return draw(t); } }
             }
             draw(t);
             if (!wordShown && t > 3.05) { wordShown = true; showWord(); }
-            if (t > T_ALL) return finish();
+            if (t > T_ALL) return finish(true);
             raf = requestAnimationFrame(frame);
         };
         raf = requestAnimationFrame(frame);
@@ -12346,7 +12367,7 @@ function spaceGL() {
             window.__sp = { draw: (t) => { T = t; draw(t, .016); }, rebuild, get Q() { return Q; } };
         }
         window.spaceScene2D = spaceScene2D;
-        window.__startSpace = function () { if (window.__spaceOn) return; window.__spaceOn = 1; if (!(window.lqEarth && window.lqEarth())) { if (!spaceGL()) spaceScene2D(); } }; if (!window.__spPause) window.__startSpace();
+        window.__startSpace = function () { if (window.__spaceOn) return; window.__spaceOn = 1; if (!(window.lqEarth && window.lqEarth())) { if (!spaceGL()) spaceScene2D(); } }; if (!window.__spPause) { if (document.documentElement.classList.contains('lr-intro-on')) { const g = () => { window.removeEventListener('lr:intro-done', g); setTimeout(() => { if (!window.__spPause) window.__startSpace(); }, 150); }; window.addEventListener('lr:intro-done', g); setTimeout(g, 9000); } else window.__startSpace(); }
 
         /* ===== auto performance mode ===== */
         (function () {
@@ -26923,7 +26944,7 @@ const VOICE = (() => {
     const ST = {
         lumi: { v: 'coral', v1: 'nova', sp: .9, pitch: 1.1, rate: .9, ins: 'You are Lumi, a sweet, warm and cheerful cartoon penguin teacher talking to a small child. Smile while you speak. Speak slowly, clearly and gently, with a bright, kind and playful tone, like a favourite kids TV presenter. American English.' },
         coach: { v: 'nova', v1: 'nova', sp: 1, pitch: 1, rate: .95, ins: 'Friendly, upbeat young English teacher talking to a 10-year-old. Clear, natural American English, warm and encouraging, never shouting.' },
-        word: { v: 'sage', v1: 'shimmer', sp: .95, pitch: 1, rate: .88, ins: 'Read the text exactly as written, once, clearly and naturally, like a friendly dictionary pronunciation. Neutral American English. Do not add any words.' }
+        word: { v: 'coral', v1: 'shimmer', sp: .95, pitch: 1, rate: .88, ins: 'Read the text exactly as written, once, clearly and naturally, like a friendly dictionary pronunciation. Neutral American English. Do not add any words.' }
     };
     function choose() {
         if (!ok) return; const vs = speechSynthesis.getVoices() || [], en = vs.filter(v => /^en(-|_|$)/i.test(v.lang)), us = en.filter(v => /en[-_]US/i.test(v.lang));
@@ -31541,7 +31562,7 @@ window.kgLive = function () {
             const p = (async () => {
                 for (const model of ['gpt-4o-mini-tts', 'tts-1']) {
                     try {
-                        const body = { model, voice: model === 'tts-1' ? 'nova' : 'sage', input: text, response_format: 'mp3' };
+                        const body = { model, voice: 'coral', input: text, response_format: 'mp3' };
                         if (model === 'gpt-4o-mini-tts') body.instructions = 'You are a friendly, professional British IELTS speaking examiner. British English accent, clear, natural, warm but neutral. Natural conversational pace, not slow.';
                         const ctl = new AbortController(), to = setTimeout(() => ctl.abort(), 15000);
                         let r; try { r = await lrAIFetch('https://api.openai.com/v1/audio/speech', { method: 'POST', signal: ctl.signal, headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + (typeof aiKey === 'function' ? aiKey() : '') }, body: JSON.stringify(body) }); } finally { clearTimeout(to); }
@@ -32514,7 +32535,7 @@ var LR_TURN = null;    // optional TURN servers for voice on strict networks, e.
         return `<div class="sc-wrap"><div class="sc-seek">
             <div class="sc-radar" aria-hidden="true"><i></i><i></i><i></i>${av(C.uid, 92, { dot: false })}${fl.map((c, i) => `<span style="--i:${i}">${flag(c)}</span>`).join('')}</div>
             <h3>${late ? 'Still looking…' : 'Finding someone to talk to'}</h3>
-            <p>${late ? 'Not many learners are free right now. Keep waiting, or say hi in a group room.' : 'We look for a learner from another country at your level. This usually takes under a minute.'}</p>
+            <p>${late ? 'Not many learners are free right now. Keep waiting, or say hi in a group room.' : 'We look for a learner from another country at your level, and call someone who is online right now. This usually takes under a minute.'}</p>
             <div class="sc-row center"><button class="sc-btn ghost" onclick="CLUB.cancel()">Cancel</button>${late ? `<button class="sc-btn" onclick="CLUB.cancel('all')">Go to the Lobby</button>` : ''}</div>
         </div></div>`;
     }
@@ -32783,7 +32804,26 @@ var LR_TURN = null;    // optional TURN servers for voice on strict networks, e.
         C.qmOff = listen(me.child('m'), 'value', s => { const v = s.val(); if (v && v !== 'x' && C.v === 'search') joinPair(v); });
         setTimeout(tryMatch, 300 + Math.random() * 500);
         C.timers.m = setInterval(tryMatch, 3000 + Math.random() * 1500);
+        C.tried = []; C.auto = null; C.timers.dial = setTimeout(autoDial, 2200); C.timers.dialI = setInterval(autoDial, 6500);
         C.timers.late = setTimeout(() => { if (C.v === 'search') render(); }, 61000);
+    }
+    /* nobody else is searching: ring a learner who is online and free right now (best match first: other country, same level) */
+    async function autoDial() {
+        if (C.v !== 'search' || C.vc || C.inc || C.matching || C.dialing || !C.db) return;
+        C.dialing = true;
+        try {
+            let ids = Object.keys(C.pres || {}).filter(u => u !== C.uid && isOn(u) && !busy(u) && !isBlocked(u) && !C.tried.includes(u) && !C.skipped.includes(u));
+            if (!ids.length) { if (C.tried.length && Date.now() - (C.searchT || 0) > 45000) C.tried = []; return; }
+            ids = ids.sort(() => Math.random() - .5).slice(0, 14);
+            await Promise.all(ids.map(u => ensureUser(u)));
+            if (C.v !== 'search' || C.vc || C.inc) return;
+            const ok = ids.filter(u => callAllowed(u).ok && uinfo(u).w !== 'friends');
+            if (!ok.length) { ids.forEach(u => C.tried.push(u)); return; }
+            ok.sort((a, b) => score(uinfo(b)) - score(uinfo(a)));
+            const u = ok[0]; C.tried.push(u); C.auto = { u, t: Date.now() };
+            await callU(u);
+        } catch (e) { console.warn('autoDial', e); }
+        finally { C.dialing = false; }
     }
     function score(o) { return (o.c !== C.me.c ? 3 : 0) + (o.l === C.me.l ? 2 : 0); }
     async function tryMatch() {
@@ -32813,7 +32853,8 @@ var LR_TURN = null;    // optional TURN servers for voice on strict networks, e.
         }
     }
     function stopSearch() {
-        clearInterval(C.timers.m); clearTimeout(C.timers.late);
+        clearInterval(C.timers.m); clearTimeout(C.timers.late); clearTimeout(C.timers.dial); clearInterval(C.timers.dialI);
+        if (C.auto && C.vc && C.vc.peer && C.vc.peer.uid === C.auto.u && C.vc.st !== 'live') { C.auto = null; try { hangup('cancelled'); } catch (e) { } }
         if (C.qmOff) { C.qmOff(); C.qmOff = null; }
         if (C.db) { const me = C.db.ref('club/q/' + C.uid); try { me.onDisconnect().cancel(); } catch (e) { } me.remove().catch(() => { }); }
     }
@@ -33795,6 +33836,7 @@ var LR_TURN = null;    // optional TURN servers for voice on strict networks, e.
         pc.onconnectionstatechange = () => {
             if (C.vc !== r) return; const s = pc.connectionState;
             if (s === 'connected' && r.st !== 'live') {
+                if (C.auto && r.peer && r.peer.uid === C.auto.u) C.auto = null; if (C.v === 'search') { try { stopSearch(); C.v = 'shell'; render(); } catch (e) { } }
                 r.st = 'live'; r.t0 = Date.now(); clearTimeout(r.fail); clearTimeout(r.rb); paintCall(); vib(30); boostSender(r); tuneVideo(r); netWatch(r);
                 if (r.kind === 'pair' && C.v === 'pair') sysMsg('Voice call connected 🎙️'); tipOnce();
                 // a friend on an older LunaRise answers without the little control line: video then stays off
@@ -33992,6 +34034,7 @@ var LR_TURN = null;    // optional TURN servers for voice on strict networks, e.
         if (r.cam) r.cam.getTracks().forEach(t => t.stop());
         spkOff(r); const a = $('sc-audio'); if (a) { a.srcObject = null; a.remove(); }
         const mini = $('sc-mini'); if (mini) mini.remove();
+        if (C.auto && r.peer && r.peer.uid === C.auto.u) C.auto = null;
         const secs = r.t0 ? Math.round((Date.now() - r.t0) / 1000) : 0, p = r.peer, wasV = !!(r.usedV || r.vid);
         if (r.ringing) { C.db.ref('club/ring/' + p.uid).remove().catch(() => { }); try { C.db.ref('club/ring/' + p.uid).onDisconnect().cancel(); } catch (e) { } }
         try { C.db.ref('club/calls/' + r.cid + '/rtc/hang').onDisconnect().cancel(); } catch (e) { }
@@ -37849,7 +37892,7 @@ Reply ONLY with JSON: {"paras": [${L.p} paragraph strings]}`;
         let buf = null; try { buf = await idb('v', 'readonly', (s) => s.get(k)); } catch (e) { }
         if (!buf && aiOK()) {
             for (const model of ['gpt-4o-mini-tts', 'tts-1']) {
-                const body = { model, voice: model === 'tts-1' ? 'nova' : 'coral', input: w, response_format: 'mp3' };
+                const body = { model, voice: 'coral', input: w, response_format: 'mp3' };
                 if (model === 'gpt-4o-mini-tts') body.instructions = 'Say only this one English word, once, clearly and naturally, in a General American accent, like a dictionary recording.';
                 try { const r = await lrAIFetch('https://api.openai.com/v1/audio/speech', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + aiKey() }, body: JSON.stringify(body) }); if (r.ok) { buf = await r.arrayBuffer(); if (buf && buf.byteLength > 200) { idb('v', 'readwrite', (s) => s.put(buf, k)).catch(() => { }); break; } buf = null; } else if (r.status === 401 || r.status === 429) break; } catch (e) { }
             }
@@ -39542,7 +39585,7 @@ ${p.p}`;
             for (const model of ['gpt-4o-mini-tts', 'tts-1']) {
                 const ctl = new AbortController(), to = setTimeout(() => ctl.abort(), 15000);
                 try {
-                    const body = { model, voice: model === 'tts-1' ? 'nova' : 'sage', input: text, response_format: 'mp3' };
+                    const body = { model, voice: 'coral', input: text, response_format: 'mp3' };
                     if (model === 'gpt-4o-mini-tts') body.instructions = 'You are a friendly, professional British IELTS speaking examiner. Clear British English, warm but neutral, natural pace.';
                     const r = await lrAIFetch('https://api.openai.com/v1/audio/speech', { method: 'POST', signal: ctl.signal, headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + key() }, body: JSON.stringify(body) });
                     if (!r || !r.ok) continue; const b = await r.blob(); if (b && b.size > 600) return URL.createObjectURL(b);
@@ -41460,7 +41503,7 @@ ${p.p}`;
     const LSG = (k, d) => { try { const v = localStorage.getItem(k); return v == null ? d : v; } catch (e) { return d; } };
     const LSS = (k, v) => { try { localStorage.setItem(k, v); } catch (e) { } };
     let TTS = LSG('lr_gv_tts', 'mini');       // 'mini' = gpt-4o-mini-tts / coral; 'std' = tts-1 / nova if this account cannot use the first
-    const VN = 'sage';
+    const VN = 'coral';
     const AU = new Map(), AP = new Map();
     function voice(text, vn) {
         vn = vn || VN;
@@ -41472,7 +41515,7 @@ ${p.p}`;
             if (!aiOk() || navigator.onLine === false) return null;
             for (let a = 0; a < 2; a++) {
                 try {
-                    const body = TTS === 'mini' ? { model: 'gpt-4o-mini-tts', voice: vn, input: text, response_format: 'mp3', instructions: VOICE } : { model: 'tts-1', voice: 'sage', input: text, response_format: 'mp3', speed: .9 };
+                    const body = TTS === 'mini' ? { model: 'gpt-4o-mini-tts', voice: vn, input: text, response_format: 'mp3', instructions: VOICE } : { model: 'tts-1', voice: 'coral', input: text, response_format: 'mp3', speed: .9 };
                     const r = await lrAIFetch('https://api.openai.com/v1/audio/speech', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + key() }, body: JSON.stringify(body) });
                     if (r.ok) { const ab = await r.arrayBuffer(); if (ab.byteLength > 600) { const b = new Blob([ab], { type: 'audio/mpeg' }); try { idb() && idb().set(ck, b); } catch (e) { } return URL.createObjectURL(b); } }
                     else if ((r.status === 400 || r.status === 404) && TTS === 'mini') { TTS = 'std'; LSS('lr_gv_tts', 'std'); return null; }
@@ -45043,6 +45086,9 @@ Reply with JSON only: {"words":[{"w":"","pos":"","ipa":"","def":"","ex":""}],"gr
             ['Voice messages and calls in Speaking Club', '', [false, true, true, true, true], 1],
             ['Classroom: teach your own classes', 'Set homework, Luna helps every student', [false, '1 class', '3 classes', '10 classes', 'Unlimited'], 0],
             ['Games: Word Voyage, Galaxy Rush, Chess and more', 'Learn while you play', [true, true, true, true, true], 0],
+            ['Find a partner: press once, we call someone online', 'Matches your level and a learner from another country', [true, true, true, true, true], 1],
+            ['Math Sky Pop: a 3D animal friend for maths', 'Three friends, three levels, speech and music', [true, true, true, true, true], 1],
+            ['Smart speed: the site checks your device', 'Full quality on new devices, light mode on old ones', [true, true, true, true, true], 1],
             ['Free full movies, cartoons and anime', 'From official channels', [true, true, true, true, true], 0],
             ['Live teachers on YouTube and Telegram', 'An alert when they go live', [true, true, true, true, true], 0]]],
         ['Extras', 'fa-star', [
@@ -49996,13 +50042,13 @@ html.mg-lite-lock #mg { visibility: visible !important; }
     /* ===================== THE FRIENDS ===================== */
     const SERENE = 'Voice Affect: Soft, gentle and soothing; a calm, kind English teacher who talks to children aged 4 to 10. Tone: Calm, reassuring, warm and quietly encouraging; a happy little smile in the voice when praising. Pacing: Slow and unhurried, with a clear pause after every sentence; say numbers and signs slowly and very clearly. Pronunciation: Crisp and simple, every word easy to understand. Emotion: Patient and kind, never loud, never scary.';
     const FR = {
-        bao: { name: 'Bao', what: 'panda', e: '🐼', K: 0, voice: 'sage', pitch: 1.05, rate: .92,
+        bao: { name: 'Bao', what: 'panda', e: '🐼', K: 0, voice: 'coral', pitch: 1.05, rate: .92,
             instr: SERENE,
             intro: 'Hi, I\'m Bao the panda! Let\'s have a pan-tastic time with numbers!', catch: ['Pan-tastic!', 'Bamboo-tastic!', 'That\'s black-and-white brilliant!', 'Even my bamboo is clapping for you!', 'Panda power!'] },
-        coco: { name: 'Coco', what: 'bear', e: '🐻', K: 1, voice: 'sage', pitch: 1.05, rate: .92,
+        coco: { name: 'Coco', what: 'bear', e: '🐻', K: 1, voice: 'coral', pitch: 1.05, rate: .92,
             instr: SERENE,
             intro: 'Hey hey! I\'m Coco the bear. Ready for a beary fun game?', catch: ['Beary good!', 'Un-bear-lievable!', 'That\'s beary clever!', 'Big bear hug for you!', 'Roar-some!'] },
-        kiki: { name: 'Kiki', what: 'koala', e: '🐨', K: 2, voice: 'sage', pitch: 1.05, rate: .92,
+        kiki: { name: 'Kiki', what: 'koala', e: '🐨', K: 2, voice: 'coral', pitch: 1.05, rate: .92,
             instr: SERENE,
             intro: 'Hello hello! I\'m Kiki the koala. Let\'s climb the number tree together!', catch: ['Koala-ty work!', 'Eucalyp-tastic!', 'You\'re tree-mendous!', 'Koala-fied genius!', 'Hugs and high fives!'] }
     };
@@ -50581,7 +50627,7 @@ void main(){
     const VC = new Map(), VP = new Map(), AB = new Map(); let VT = 0, SRC = null, SPK = false, BT = 0, NUDGE = 0;
     async function ttsNet(text, fr) {
         if (!aiOk() || typeof lrAIFetch !== 'function') return null;
-        for (const [model, voice] of [['gpt-4o-mini-tts', 'sage'], ['tts-1', 'sage']]) {
+        for (const [model, voice] of [['gpt-4o-mini-tts', 'coral'], ['tts-1', 'coral']]) {
             try {
                 const body = { model, voice, input: text, response_format: 'mp3' };
                 if (model === 'gpt-4o-mini-tts') body.instructions = SERENE; else body.speed = .92;
