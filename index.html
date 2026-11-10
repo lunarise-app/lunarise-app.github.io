@@ -6233,6 +6233,24 @@ html.ax-lock,html.ax-lock body{overflow:hidden}
 .mv-eps img{flex:none;width:96px;aspect-ratio:16/9;border-radius:8px;object-fit:cover}
 .mv-eps b{display:block;font-size:13.5px}.mv-eps small{font-size:12px;color:rgba(199,210,254,.7)}
 @media (max-width:640px){.mv-fc,.mv-sk.w{width:72vw;max-width:280px}}
+
+/* v78: See all free videos */
+.mv-allb{margin-left:auto;display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;border:1px solid rgba(34,197,94,.45);background:rgba(34,197,94,.12);color:#86efac;font:700 12.5px/1 system-ui,sans-serif;cursor:pointer}
+.mv-allb i{font-size:10px}
+.mv-frow .mv-rh{display:flex;align-items:center;gap:10px}
+.mv-all{position:fixed;inset:0;z-index:3200;overflow-y:auto;overscroll-behavior:contain;background:#0b0d1a;color:#f1f5f9;padding:12px 16px 40px;opacity:0;transform:translateY(18px);transition:opacity .2s,transform .25s}
+.mv-all.open{opacity:1;transform:none}
+.mv-ah{position:sticky;top:0;z-index:2;display:flex;align-items:center;gap:12px;margin:-12px -16px 12px;padding:12px 16px;background:rgba(11,13,26,.96);backdrop-filter:blur(8px)}
+.mv-ah h3{margin:0;font-size:18px;font-weight:800}
+.mv-ah small{margin-left:auto;color:#86efac;font-weight:700;font-size:13px}
+.mv-ax{width:40px;height:40px;border-radius:50%;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.07);color:#fff;font-size:16px;cursor:pointer}
+.mv-aq{display:flex;align-items:center;gap:10px;margin:0 0 16px;padding:0 14px;height:46px;border-radius:14px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06)}
+.mv-aq input{flex:1;min-width:0;height:100%;border:0;outline:0;background:none;color:#fff;font-size:15px}
+.mv-ag{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:16px 12px}
+.mv-ag .mv-fc{width:auto}
+.mv-ae{grid-column:1/-1;text-align:center;color:rgba(199,210,254,.7);padding:40px 0}
+.mv-am{display:block;margin:22px auto 0;padding:12px 26px;border-radius:999px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.08);color:#fff;font-weight:700;font-size:14px;cursor:pointer}
+@media (max-width:640px){.mv-ag{grid-template-columns:repeat(2,1fr);gap:14px 10px}.mv-ag .mv-fx b{font-size:13px}}
 /* ===== Help & feedback (Profile) and the support chat ===== */
 .hs{position:relative;margin-top:8px;padding:22px 18px 18px;border-radius:28px;background:radial-gradient(120% 90% at 0% 0%,rgba(129,140,248,.22),transparent 60%),radial-gradient(90% 80% at 100% 100%,rgba(251,191,36,.12),transparent 60%),rgba(15,18,45,.72);border:1px solid rgba(165,180,252,.18);box-shadow:0 24px 60px -30px rgba(0,0,0,.8);overflow:hidden}
 .hs-head{display:flex;gap:14px;align-items:flex-start;margin-bottom:16px}
@@ -39040,7 +39058,7 @@ ${p.p}`;
             if (/#shorts|highlight|trailer|teaser|\bpv\b|promo|now available|in cinemas/i.test(t)) continue;
             const c = ch[ci] || ['', ''], ct = clean(String(t).replace(/\s*[|\-–]\s*([^|]+)$/, (w, z) => nm(z) === nm(c[0]) ? '' : w)), ep = /^(.*?)\s*[-–|:]?\s*(?:season\s*(\d+)\s*)?(?:episode|ep\.?)\s*(\d+)/i.exec(ct);
             const yr = (/\b(19[2-9]\d|20[0-4]\d)\b/.exec(t) || [])[1];
-            out.push({ v, t: ct || t, m, ch: c[0], k: c[1], d: dt || '', yr: yr ? +yr : 0, n: nm(ct.replace(/\(\s*(19|20)\d\d\s*\)/, '')), s: ep ? nm(ep[1].replace(/\(.*?\)/g, '')) : '', se: ep && ep[2] ? +ep[2] : 0, e: ep ? +ep[3] : 0 });
+            out.push({ v, t: ct || t, m, ch: c[0], k: c[1], d: dt || '', yr: yr ? +yr : (/^(19|20)\d\d/.test(dt || '') ? +String(dt).slice(0, 4) : 0), n: nm(ct.replace(/\(\s*(19|20)\d\d\s*\)/, '')), s: ep ? nm(ep[1].replace(/\(.*?\)/g, '')) : '', se: ep && ep[2] ? +ep[2] : 0, e: ep ? +ep[3] : 0 });
         }
         return out;
     }
@@ -39062,8 +39080,8 @@ ${p.p}`;
         const want = nm(d.title), y = parseInt(year(d), 10) || 0; if (want.length < 2) return null;
         if (d.mt === 'movie') {
             const rt = d.runtime || 0;
-            const c = FC.filter((x) => !x.s && x.k !== 'sport' && x.n === want && (!x.yr || !y || Math.abs(x.yr - y) <= 1) && (!rt || Math.abs(x.m - rt) <= 30));
-            c.sort((a, b) => (rt ? Math.abs(a.m - rt) - Math.abs(b.m - rt) : b.m - a.m));
+            const c = FC.filter((x) => !x.s && x.k !== 'sport' && x.n === want && (!x.yr || !y || Math.abs(x.yr - y) <= 1) && (!rt || !x.m || Math.abs(x.m - rt) <= 30));
+            c.sort((a, b) => (rt && a.m && b.m ? Math.abs(a.m - rt) - Math.abs(b.m - rt) : b.m - a.m));
             return c[0] ? { one: c[0] } : null;
         }
         const eps = FC.filter((x) => x.s && (x.s === want || (want.length > 5 && x.s.indexOf(want + ' ') === 0)));
@@ -39072,10 +39090,10 @@ ${p.p}`;
         u.sort((a, b) => (a.se - b.se) || (a.e - b.e));
         return { eps: u.slice(0, 60) };
     }
-    const thumb = (v) => 'https://i.ytimg.com/vi/' + encodeURIComponent(v) + '/mqdefault.jpg';
-    const hm = (m) => m >= 60 ? Math.floor(m / 60) + 'h ' + (m % 60) + 'm' : m + ' min';
+    const thumb = (v) => String(v).indexOf('ia:') === 0 ? 'https://archive.org/services/img/' + encodeURIComponent(String(v).slice(3)) : 'https://i.ytimg.com/vi/' + encodeURIComponent(v) + '/mqdefault.jpg';
+    const hm = (m) => m >= 60 ? Math.floor(m / 60) + 'h ' + (m % 60) + 'm' : m > 0 ? m + ' min' : '';
     function fcard(x) {
-        return `<button type="button" class="mv-fc" onclick="MV.fp('${E(x.v)}')" aria-label="Watch ${E(x.t)}"><span class="mv-ft"><img src="${thumb(x.v)}" alt="" loading="lazy" decoding="async"><em>${hm(x.m)}</em><i class="fa-solid fa-play"></i></span><span class="mv-fx"><b>${E(x.t)}</b><small>${E(x.ch)} · free</small></span></button>`;
+        return `<button type="button" class="mv-fc" onclick="MV.fp('${E(x.v)}')" aria-label="Watch ${E(x.t)}"><span class="mv-ft"><img src="${thumb(x.v)}" alt="" loading="lazy" decoding="async">${x.m > 0 ? `<em>${hm(x.m)}</em>` : ''}<i class="fa-solid fa-play"></i></span><span class="mv-fx"><b>${E(x.t)}</b><small>${E(x.ch)} · free</small></span></button>`;
     }
     function freeRowsHtml(c) {
         const ks = FKIND[c] || []; if (!ks.length || !FREE_URL || FREE_URL.indexOf('__') === 0) return '';
@@ -39085,7 +39103,7 @@ ${p.p}`;
             const seed = new Date().toISOString().slice(0, 10) + k, pick = L.slice(0, 400);
             let h = 0; for (const ch of seed) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
             const sh = pick.map((x, i) => [((h ^ (i * 2654435761)) >>> 0) % 1000, x]).sort((a, b) => a[0] - b[0]).map((p) => p[1]).slice(0, 30);
-            return `<section class="mv-row mv-frow"><div class="mv-rh"><h3><i class="fa-solid fa-circle-play"></i> ${E(t)}</h3><small>${E(sub || L.length + ' to watch')}</small></div><div class="mv-sc">${sh.map(fcard).join('')}</div></section>`;
+            return `<section class="mv-row mv-frow"><div class="mv-rh"><h3><i class="fa-solid fa-circle-play"></i> ${E(t)}</h3><button type="button" class="mv-allb" onclick="MV.all('${k}')">See all ${Math.min(L.length, 1000)}<i class="fa-solid fa-chevron-right"></i></button></div><div class="mv-sc">${sh.map(fcard).join('')}</div></section>`;
         }).join('') + '</div>';
     }
     function paintFree() { const c = S.c, el = $('mv-free-' + c); if (el && !S.q) el.outerHTML = freeRowsHtml(c); const r = $('mv-fres'); if (r && S.q) r.outerHTML = freeResHtml(); }
@@ -39095,6 +39113,33 @@ ${p.p}`;
         const L = FC.filter((x) => ks.indexOf(x.k) >= 0 && (x.n.indexOf(q) >= 0)).slice(0, 24);
         return `<div id="mv-fres">${L.length ? `<section class="mv-row mv-frow"><div class="mv-rh"><h3><i class="fa-solid fa-circle-play"></i> Free to watch now</h3><small>${L.length} found</small></div><div class="mv-sc">${L.map(fcard).join('')}</div></section>` : ''}</div>`;
     }
+
+    /* ---------- "See all": up to 500 free videos of one kind ---------- */
+    const AL = { k: '', q: '', n: 60, t: '' };
+    function allList() {
+        if (!FC) return [];
+        const q = nm(AL.q);
+        let L = FC.filter((x) => x.k === AL.k);
+        if (q.length > 1) L = L.filter((x) => x.n.indexOf(q) >= 0 || nm(x.ch).indexOf(q) >= 0);
+        return L.slice().sort((a, b) => String(b.d || '').localeCompare(String(a.d || ''))).slice(0, 1000);
+    }
+    function allPaint() {
+        const g = $('mv-ag'); if (!g) return;
+        const L = allList(), show = L.slice(0, AL.n);
+        g.innerHTML = show.length ? show.map(fcard).join('') : '<p class="mv-ae">Nothing found. Try another word.</p>';
+        const c = $('mv-an'); if (c) c.textContent = L.length + ' free';
+        const m = $('mv-am'); if (m) { m.style.display = L.length > show.length ? '' : 'none'; m.textContent = 'Show more (' + (L.length - show.length) + ' left)'; }
+    }
+    function allOpen(k) {
+        if ($('mv-all')) return;
+        AL.k = k; AL.q = ''; AL.n = 60;
+        let t = 'Free videos'; for (const c of Object.keys(FKIND)) for (const f of FKIND[c]) if (f[0] === k) { t = f[1]; break; }
+        const p = document.createElement('div'); p.id = 'mv-all'; p.className = 'mv-all';
+        p.innerHTML = `<div class="mv-ah"><button type="button" class="mv-ax" onclick="MV.allX()" aria-label="Back"><i class="fa-solid fa-arrow-left"></i></button><h3>${E(t)}</h3><small id="mv-an"></small></div><div class="mv-aq"><i class="fa-solid fa-magnifying-glass"></i><input id="mv-aq" type="search" placeholder="Search these videos" autocomplete="off" oninput="MV.allQ(this.value)"></div><div id="mv-ag" class="mv-ag"></div><button type="button" id="mv-am" class="mv-am" onclick="MV.allM()">Show more</button>`;
+        document.body.appendChild(p); document.body.style.overflow = 'hidden';
+        allPaint(); requestAnimationFrame(() => p.classList.add('open'));
+    }
+    function allClose() { const p = $('mv-all'); if (!p) return; p.classList.remove('open'); document.body.style.overflow = ''; setTimeout(() => p.remove(), 200); }
 
     /* ---------- pieces ---------- */
     const myList = () => { const u = state.user; if (!Array.isArray(u.mvList)) u.mvList = []; return u.mvList; };
@@ -39300,6 +39345,22 @@ ${p.p}`;
     function playYT(key, note) {
         player(`<div class="mv-frame"><iframe src="https://www.youtube-nocookie.com/embed/${encodeURIComponent(key)}?autoplay=1&rel=0&modestbranding=1&playsinline=1&cc_load_policy=1&cc_lang_pref=en&hl=en&vq=hd1080" title="Video" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe></div><p class="mv-pn">${E(note || 'English subtitles are on.')} For the sharpest picture choose ⚙ → Quality → 1080p.</p>`);
     }
+    /* a free film from the Internet Archive: the sharpest file that still starts at once, or the Archive player */
+    async function playIA(id, title) {
+        const p = player(`<div class="mv-frame"><div class="mv-load"><i class="fa-solid fa-circle-notch fa-spin"></i> Opening the film…</div></div>`);
+        let src = '';
+        try {
+            const r = await fetch('https://archive.org/metadata/' + encodeURIComponent(id)); const j = await r.json();
+            const vids = (j.files || []).filter((f) => /\.mp4$/i.test(f.name) || /mpeg4|h\.264/i.test(f.format || ''));
+            vids.sort((a, b) => (+b.size || 0) - (+a.size || 0)); const best = vids.find((f) => (+f.size || 0) < 1.4e9) || vids[vids.length - 1];
+            if (best) src = 'https://archive.org/download/' + encodeURIComponent(id) + '/' + best.name.split('/').map(encodeURIComponent).join('/');
+        } catch (e) { }
+        const fr = p.querySelector('.mv-frame'); if (!fr) return;
+        const embed = `<iframe src="https://archive.org/embed/${encodeURIComponent(id)}" title="${E(title)}" allow="autoplay; fullscreen" allowfullscreen></iframe>`;
+        fr.innerHTML = src ? `<video controls autoplay playsinline preload="metadata" poster="${thumb('ia:' + id)}" src="${E(src)}"></video>` : embed;
+        const v = fr.querySelector('video'); if (v) v.addEventListener('error', () => { fr.innerHTML = embed; }, { once: true });
+        p.querySelector('.mv-pbox').insertAdjacentHTML('beforeend', `<p class="mv-pn">${E(title)} · free · public domain · Internet Archive</p>`);
+    }
     async function playFull() {
         const d = S.cur; if (!d || !d.ia) return;
         const p = player(`<div class="mv-frame"><div class="mv-load"><i class="fa-solid fa-circle-notch fa-spin"></i> Opening the film…</div></div>`);
@@ -39317,11 +39378,11 @@ ${p.p}`;
         p.querySelector('.mv-pbox').insertAdjacentHTML('beforeend', `<p class="mv-pn">${E(d.title)} (${E(year(d))}) · public domain · Internet Archive</p>`);
     }
     addEventListener('popstate', () => { const st = history.state && history.state.mv; if ($('mv-play') && st !== 'p') { stop(true); stack = Math.max(0, stack - 1); return; } if ($('mv-sheet') && st !== 'd' && st !== 'p') { closeSheet(true); stack = Math.max(0, stack - 1); } });
-    document.addEventListener('keydown', (e) => { if (e.key !== 'Escape') return; if ($('mv-play')) stop(false); else if ($('mv-sheet')) closeSheet(false); });
+    document.addEventListener('keydown', (e) => { if (e.key !== 'Escape') return; if ($('mv-play')) stop(false); else if ($('mv-sheet')) closeSheet(false); else if ($('mv-all')) allClose(); });
 
     /* ---------- the page ---------- */
     function enter() { if (!root()) return; start(); }
-    function leave() { if ($('mv-play')) stop(false); if ($('mv-sheet')) closeSheet(false); }
+    function leave() { if ($('mv-play')) stop(false); if ($('mv-sheet')) closeSheet(false); if ($('mv-all')) allClose(); }
     const N0 = window.navigateTo;
     if (typeof N0 === 'function') window.navigateTo = function (v) { const r = N0.apply(this, arguments); try { if (v === 'movies') enter(); else leave(); } catch (e) { console.error(e); } return r; };
     window.MV = {
@@ -39343,7 +39404,11 @@ ${p.p}`;
             if (v === undefined) { showToast('Could not reach YouTube. Try again later.'); repaint(); return; }
             d.yt = v || 0; repaint(); if (v) MV.ytPlay(); else showToast('No free full version on YouTube');
         },
-        fp(v) { const x = (FC || []).find((y) => y.v === v); playYT(v, x ? x.t + ' · free from ' + x.ch + ' on YouTube. English subtitles are on when the video has them.' : ''); },
+        all(k) { allOpen(k); },
+        allX() { allClose(); },
+        allQ(v) { AL.q = v; AL.n = 60; allPaint(); },
+        allM() { AL.n += 60; allPaint(); },
+        fp(v) { const x = (FC || []).find((y) => y.v === v); if (String(v).indexOf('ia:') === 0) { playIA(String(v).slice(3), x ? x.t : ''); return; } playYT(v, x ? x.t + ' · free from ' + x.ch + ' on YouTube. English subtitles are on when the video has them.' : ''); },
         ytPlay() { const d = S.cur; if (d && d.yt) playYT(d.yt.id, d.title + ', from ' + d.yt.ch + ' on YouTube. English subtitles are on when the video has them.'); },
         save() { const d = S.cur; if (!d) return; const L = myList(), i = L.findIndex((x) => x.id === d.id && (x.mt || 'movie') === d.mt); if (i >= 0) { L.splice(i, 1); showToast('Removed from My list'); } else { L.unshift({ id: d.id, mt: d.mt, c: d.cat || S.c, t: d.title, p: d.poster_path, y: d.release_date, v: d.vote_average, ia: d.ia || '' }); if (L.length > 100) L.length = 100; showToast('🔖 Added to My list'); } pfSave(); repaint(); const v = $('view-movies'); if (!S.q && root() && v && !v.classList.contains('hidden')) render(); },
         learn() { const d = S.cur; if (!d) return; const lv = (state.user && state.user.target) || 'IELTS'; const what = d.mt === 'tv' ? (d.original_language === JA ? 'anime series' : 'TV series') : (d.original_language === JA ? 'anime film' : 'movie'); const msg = `Teach me 12 useful English words and phrases from the ${what} "${d.title}" (${year(d)}). For each: meaning in simple English, translation, and a short example line like the characters might say. Then give 3 questions about the story to practise speaking. My goal: ${lv}.`; closeSheet(false); navigateTo('ai-chat'); setTimeout(() => { try { sendChatMessage(msg); } catch (e) { } }, 450); },
