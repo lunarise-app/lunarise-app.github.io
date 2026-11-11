@@ -7365,6 +7365,141 @@ html.ml-lock,html.ml-lock body{overflow:hidden}
 .ml-sent i{width:8px;height:8px;border-radius:50%;background:#8b7bff;opacity:.4;animation:mlsent 1s infinite ease-in-out}
 .ml-sent i:nth-child(2){animation-delay:.15s}.ml-sent i:nth-child(3){animation-delay:.3s}
 @keyframes mlsent{50%{opacity:1;transform:translateY(-4px)}}
+
+/* ===== Luna Speaking ===== */
+.ml-spv{position:absolute;inset:0;z-index:40;background:var(--bg);animation:mlSpIn .26s cubic-bezier(.2,.8,.2,1)}
+.ml-spv::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(560px 380px at 100% -8%,rgba(139,123,255,.30),transparent 70%),radial-gradient(480px 340px at -10% 105%,rgba(41,211,181,.13),transparent 70%)}
+@keyframes mlSpIn{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+.ml-spw{position:absolute;inset:0;display:flex;flex-direction:column;max-width:680px;margin:0 auto}
+.ml-sph{position:relative;display:flex;align-items:center;gap:12px;padding:calc(10px + env(safe-area-inset-top)) 14px 10px}
+.ml-spt{flex:1;min-width:0}
+.ml-spt b{display:block;font-size:18px;font-weight:900;letter-spacing:-.01em;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ml-spt small{display:block;font-size:12px;color:var(--mu);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ml-splang{flex:none;display:flex;align-items:center;gap:7px;height:40px;padding:0 12px;border-radius:14px;background:var(--s2);border:1px solid var(--ln)!important;font-size:13px;max-width:46vw}
+.ml-splang b{font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ml-splang i{font-size:10px;color:var(--mu)}
+.ml-splang span{font-size:17px;line-height:1}
+.ml-spb{position:relative;flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding:6px 16px 24px}
+.ml-spf{position:relative;padding:10px 14px calc(14px + env(safe-area-inset-bottom));background:linear-gradient(180deg,rgba(11,12,30,0),rgba(11,12,30,.92) 28%);border-top:1px solid rgba(255,255,255,.05)}
+.ml-spw .ml-ib{flex:none;width:44px;height:44px;border-radius:14px;display:grid;place-items:center;background:var(--s2);border:1px solid var(--ln)!important;font-size:15px}
+.ml-spw .ml-ib:disabled{opacity:.35;cursor:default}
+.ml-spw .ml-ib.send{background:var(--ac);border-color:transparent!important;color:#fff}
+
+/* home */
+.ml-sp1{margin:12px 0 18px}
+.ml-sp1 h2{margin:0 0 8px;font-size:clamp(30px,8vw,42px);line-height:1.04;font-weight:900;letter-spacing:-.03em;background:linear-gradient(100deg,#fff 15%,#cfc6ff 55%,#8ff2dc);-webkit-background-clip:text;background-clip:text;color:transparent}
+.ml-sp1 p{margin:0;font-size:15px;line-height:1.55;color:var(--mu);max-width:34em}
+.ml-sp1 p b{color:var(--tx)}
+.ml-sp1.s{margin:4px 0 14px}.ml-sp1.s p{font-size:14px}
+.ml-spc{display:flex;align-items:center;gap:14px;width:100%;margin:0 0 12px;padding:16px;border-radius:22px;background:var(--s1);border:1px solid var(--ln)!important;transition:transform .15s,background .15s}
+.ml-spc:active{transform:scale(.985);background:var(--s2)}
+.ml-spc .ic{flex:none;width:52px;height:52px;border-radius:16px;display:grid;place-items:center;font-size:21px;color:#fff;box-shadow:0 10px 24px -10px rgba(0,0,0,.6)}
+.ml-spc.a .ic{background:linear-gradient(135deg,#8b7bff,#ff6b8a)}
+.ml-spc.b .ic{background:linear-gradient(135deg,#29d3b5,#4a90ff)}
+.ml-spc>div{flex:1;min-width:0}
+.ml-spc b{display:block;font-size:17px;font-weight:800;letter-spacing:-.01em}
+.ml-spc small{display:block;margin-top:3px;font-size:13px;color:var(--mu);line-height:1.4}
+.ml-spc .go{flex:none;font-size:13px;color:var(--mu)}
+.ml-spc.ch{padding:13px 14px}
+.ml-av{flex:none;width:48px;height:48px;border-radius:50%;display:grid;place-items:center;font-size:20px;font-weight:900;color:#fff;background:linear-gradient(140deg,hsl(var(--h) 72% 58%),hsl(calc(var(--h) + 40) 70% 42%));box-shadow:0 8px 20px -8px hsl(var(--h) 70% 40%)}
+.ml-av.s{width:34px;height:34px;font-size:15px;align-self:flex-end}
+.ml-sp2{display:flex;gap:10px;align-items:flex-start;margin:4px 0 6px;padding:12px 14px;border-radius:16px;background:rgba(139,123,255,.1);border:1px solid rgba(139,123,255,.22);font-size:13px;line-height:1.5;color:#cfc9f5}
+.ml-sp2 i{color:var(--gold);margin-top:2px}
+.ml-sph2{margin:22px 2px 10px;font-size:13px;font-weight:800;color:var(--mu);letter-spacing:.02em}
+
+/* fix cards (shared by chat and home) */
+.ml-fx{position:relative;display:flex;flex-wrap:wrap;align-items:center;gap:4px 8px;margin:6px 0;padding:11px 48px 11px 14px;border-radius:16px;background:rgba(255,160,64,.1);border:1px solid rgba(255,160,64,.26)}
+.ml-fx .l{flex:1 1 100%;display:flex;flex-wrap:wrap;align-items:center;gap:6px 9px;font-size:14.5px;line-height:1.4}
+.ml-fx s{color:#ff9d8a;text-decoration-thickness:2px}
+.ml-fx .l i{font-size:11px;color:var(--mu)}
+.ml-fx b{color:#8ff2dc;font-weight:800}
+.ml-fx small{flex:1 1 100%;font-size:13px;line-height:1.5;color:#e4e6ff}
+.ml-fx .ml-ib{position:absolute;right:8px;top:8px;width:34px;height:34px;border-radius:11px;font-size:13px}
+.ml-fx em{position:absolute;right:12px;bottom:10px;font-style:normal;font-size:11px;font-weight:800;color:var(--gold)}
+.ml-fx.ok{flex-wrap:nowrap;align-items:center;gap:10px;padding:10px 14px;background:rgba(41,211,181,.12);border-color:rgba(41,211,181,.3);font-size:13.5px;color:#aaf5e6}
+.ml-fx.ok i{color:var(--teal);font-size:16px}
+.ml-fx.keep{background:var(--s1);border-color:var(--ln)}
+
+/* language grid */
+.ml-spg{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:8px}
+.ml-spg button{display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:13px 14px;border-radius:18px;background:var(--s1);border:1.5px solid var(--ln)!important;text-align:left}
+.ml-spg button span{font-size:24px;line-height:1.1;margin-bottom:3px}
+.ml-spg button b{font-size:15px;font-weight:800}
+.ml-spg button small{font-size:11.5px;color:var(--mu)}
+.ml-spg button.on{border-color:var(--teal)!important;background:rgba(41,211,181,.12)}
+.ml-spnote{margin:16px 2px 0;font-size:12.5px;line-height:1.5;color:var(--mu)}
+
+/* read aloud */
+.ml-spp{height:5px;border-radius:5px;background:var(--s2);overflow:hidden;margin:6px 0 8px}
+.ml-spp i{display:block;height:100%;border-radius:5px;background:linear-gradient(90deg,var(--ac),var(--teal));transition:width .3s}
+.ml-spn{font-size:12px;font-weight:700;color:var(--mu);margin-bottom:12px}
+.ml-spcard{padding:22px 20px;border-radius:26px;background:linear-gradient(160deg,rgba(255,255,255,.09),rgba(255,255,255,.035));border:1px solid var(--ln);box-shadow:0 24px 50px -28px rgba(0,0,0,.7)}
+.ml-spcard .sent{margin:0;font-family:Georgia,'Iowan Old Style','Palatino Linotype',serif;font-size:clamp(21px,5.4vw,27px);line-height:1.75;letter-spacing:.005em}
+.ml-sw{border-radius:7px;padding:1px 2px;margin:0 -1px;cursor:pointer;transition:background .25s,color .25s}
+.ml-sw.ok{background:rgba(41,211,181,.2);color:#9af5e2}
+.ml-sw.near{background:rgba(242,196,109,.22);color:#ffe0a0}
+.ml-sw.miss{background:rgba(255,107,138,.24);color:#ffb3c3;text-decoration:underline wavy rgba(255,107,138,.7);text-underline-offset:5px}
+.ml-lg{display:flex;gap:14px;margin-top:14px;font-size:12px;color:var(--mu)}
+.ml-lg span::before{content:"";display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px;vertical-align:0}
+.ml-lg .ok::before{background:var(--teal)}.ml-lg .near::before{background:var(--gold)}.ml-lg .miss::before{background:var(--ac2)}
+.ml-spres{display:flex;align-items:center;gap:16px;margin-top:14px;padding:14px 16px;border-radius:20px;background:var(--s1);border:1px solid var(--ln)}
+.ml-spres .ring{flex:none;width:68px;height:68px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--c) calc(var(--p)*1%),rgba(255,255,255,.1) 0)}
+.ml-spres .ring b{display:grid;place-items:center;width:54px;height:54px;border-radius:50%;background:#141535;font-size:20px;font-weight:900}
+.ml-spres.g{--c:var(--teal)}.ml-spres.m{--c:var(--gold)}.ml-spres.b{--c:var(--ac2)}
+.ml-spres>div:last-child{min-width:0}
+.ml-spres>div:last-child b{display:block;font-size:17px;font-weight:900}
+.ml-spres small{display:block;margin-top:3px;font-size:13px;line-height:1.4;color:var(--mu);overflow-wrap:anywhere}
+.ml-sptip{display:flex;gap:10px;align-items:flex-start;margin-top:12px;padding:13px 15px;border-radius:18px;background:rgba(139,123,255,.12);border:1px solid rgba(139,123,255,.28);font-size:14.5px;line-height:1.55;color:#ddd8ff}
+.ml-sptip i{margin-top:3px;color:var(--gold);flex:none}
+.ml-sptip.ok{background:rgba(41,211,181,.12);border-color:rgba(41,211,181,.3);color:#aaf5e6}.ml-sptip.ok i{color:var(--teal)}
+.ml-sptip.load{color:var(--mu)}
+.ml-sphint{display:flex;align-items:center;justify-content:center;gap:9px;margin-top:20px;padding:14px;border-radius:16px;font-size:14px;color:var(--mu);text-align:center;line-height:1.5}
+.ml-sphint.live{color:#fff;background:rgba(255,107,138,.12);flex-wrap:wrap}.ml-sphint.live i{color:var(--ac2);animation:mlSpBlink 1s infinite}
+.ml-sphint.warn{color:#ffd0a0;background:rgba(255,160,64,.1)}
+@keyframes mlSpBlink{50%{opacity:.25}}
+
+/* controls */
+.ml-spctl{display:flex;align-items:center;justify-content:center;gap:12px}
+.ml-spbtn{flex:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;width:62px;height:56px;border-radius:18px;background:var(--s2);border:1px solid var(--ln)!important;font-size:16px}
+.ml-spbtn span{font-size:11px;font-weight:700;color:var(--mu)}
+.ml-spmic{flex:none;position:relative;width:74px;height:74px;border-radius:50%;display:grid;place-items:center;font-size:27px;color:#fff;background:linear-gradient(140deg,#8b7bff,#ff6b8a);box-shadow:0 14px 34px -10px rgba(139,123,255,.8),inset 0 1px 0 rgba(255,255,255,.35)}
+.ml-spmic.s{width:46px;height:46px;font-size:18px;box-shadow:0 8px 18px -8px rgba(139,123,255,.8)}
+.ml-spmic.rec{background:linear-gradient(140deg,#ff6b8a,#ff3d6e)}
+.ml-spmic.rec::after{content:"";position:absolute;inset:-7px;border-radius:50%;border:2px solid rgba(255,107,138,.7);animation:mlSpPulse 1.1s ease-out infinite}
+.ml-spmic.rec i::before{content:"\f04d"}
+@keyframes mlSpPulse{from{transform:scale(.88);opacity:1}to{transform:scale(1.25);opacity:0}}
+
+/* chat */
+.ml-chat{display:flex;flex-direction:column;gap:6px;padding-top:6px}
+.ml-b{display:flex;gap:9px;max-width:92%}
+.ml-b.c{align-self:flex-start;align-items:flex-end}
+.ml-b.u{align-self:flex-end;max-width:84%;margin-top:8px}
+.ml-b p{margin:0;font-size:16px;line-height:1.5;overflow-wrap:anywhere}
+.ml-b.c .ml-bd{padding:11px 14px 8px;border-radius:20px 20px 20px 6px;background:var(--s2);border:1px solid var(--ln)}
+.ml-b.u p{padding:11px 15px;border-radius:20px 20px 6px 20px;background:linear-gradient(135deg,#7d6cff,#9b6bff);color:#fff;box-shadow:0 10px 24px -14px rgba(125,108,255,.9)}
+.ml-b .ml-acts{display:flex;gap:6px;margin-top:6px}
+.ml-b .ml-acts button{display:flex;align-items:center;gap:6px;height:28px;padding:0 10px;border-radius:10px;background:rgba(255,255,255,.07);font-size:12px;font-weight:700;color:var(--mu)}
+.ml-b .ml-trx{margin-top:8px;padding-top:8px;border-top:1px dashed var(--ln);font-size:14px;line-height:1.5;color:#e0e3ff}
+.ml-b .ml-typing{padding:14px 16px}
+.ml-fxw{align-self:flex-end;width:min(100%,92%);margin:0 0 6px}
+.ml-spi{display:flex;align-items:center;gap:9px}
+.ml-spi input{flex:1;min-width:0;height:46px;padding:0 16px;border-radius:23px;background:var(--s2);border:1px solid var(--ln);color:var(--tx);font:inherit;font-size:16px;outline:0}
+.ml-spi input:focus{border-color:var(--ac);box-shadow:0 0 0 3px rgba(139,123,255,.22)}
+.ml-spi input::placeholder{color:#7a80a8}
+
+/* shared */
+.ml-spe{display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;padding:60px 24px;color:var(--mu)}
+.ml-spe i{font-size:34px;color:var(--ac)}
+.ml-spe b{font-size:17px;color:var(--tx)}
+.ml-spe small{font-size:13.5px;line-height:1.5}
+.ml-dots{display:inline-flex;gap:4px;align-items:center}
+.ml-dots i{width:7px;height:7px;border-radius:50%;background:var(--mu);animation:mlSpDot 1s infinite ease-in-out}
+.ml-dots i:nth-child(2){animation-delay:.15s}.ml-dots i:nth-child(3){animation-delay:.3s}
+.ml-dots.big i{width:10px;height:10px;background:var(--ac)}
+@keyframes mlSpDot{0%,80%,100%{transform:translateY(0);opacity:.4}40%{transform:translateY(-5px);opacity:1}}
+@media (prefers-reduced-motion:reduce){.ml-spv,.ml-spmic.rec::after,.ml-dots i,.ml-sphint.live i{animation:none}}
+@media (min-width:700px){.ml-spg{grid-template-columns:repeat(3,1fr)}}
+@media (max-width:430px){#ml-top{gap:4px}#ml-top .ml-ib{width:36px;height:38px;font-size:14px;border-radius:12px}#ml-top .ml-x{width:38px;height:38px}}
 </style><style id="mv-art-css" data-th-skip>
 /* Movies: the big pictures stay cinematic (dark shade, white writing) in every theme and in Light mode */
 .mv-hero{position:relative;min-height:420px;border-radius:26px;overflow:hidden;display:flex;align-items:flex-end;background:#0b0d1a var(--bd) center 20%/cover no-repeat;box-shadow:0 30px 60px -30px rgba(0,0,0,.9);isolation:isolate}
@@ -43378,7 +43513,7 @@ window.__MLD = {
     function shell() {
         if (root) return;
         root = document.createElement('div'); root.id = 'ml'; root.setAttribute('role', 'dialog'); root.setAttribute('aria-label', 'Moon Library');
-        root.innerHTML = '<div class="ml-glow"></div><div id="ml-cat" class="ml-scr"></div><div id="ml-rd" class="ml-scr" hidden></div><div id="ml-sheet" class="ml-sheetwrap" hidden></div><div id="ml-wp" class="ml-wp" hidden></div>';
+        root.innerHTML = '<div class="ml-glow"></div><div id="ml-cat" class="ml-scr"></div><div id="ml-rd" class="ml-scr" hidden></div><div id="ml-sheet" class="ml-sheetwrap" hidden></div><div id="ml-wp" class="ml-wp" hidden></div><div id="ml-sp" class="ml-spv" hidden></div>';
         document.body.appendChild(root);
         root.addEventListener('click', onClick);
         root.addEventListener('input', onInput);
@@ -43512,6 +43647,7 @@ window.__MLD = {
         rd.dataset.th = S.th;
         rd.innerHTML = '<div class="ml-rbar top" id="ml-top"><button class="ml-x" data-a="back" aria-label="Back to library"><i class="fa-solid fa-chevron-left"></i></button><div class="ml-ttl"><b>' + esc(b.title) + '</b><small>' + esc(b.author) + '</small></div>' +
             '<button class="ml-lvp" id="ml-lvp" data-a="lvpanel" aria-label="Reading level" title="Reading level"></button>' +
+            '<button class="ml-ib" data-a="lsp-open" aria-label="Luna Speaking" title="Luna Speaking"><i class="fa-solid fa-microphone-lines"></i></button>' +
             '<button class="ml-ib" data-a="words" aria-label="Words I looked up" title="Words I looked up"><i class="fa-solid fa-language"></i><em id="ml-wn" hidden>0</em></button>' +
             '<button class="ml-ib" data-a="toc" aria-label="Contents, bookmarks and search" title="Contents"><i class="fa-solid fa-list-ul"></i></button>' +
             '<button class="ml-ib" data-a="mark" id="ml-mk" aria-label="Bookmark this page" title="Bookmark"><i class="fa-regular fa-bookmark"></i></button>' +
@@ -43806,7 +43942,7 @@ window.__MLD = {
     }
     function leaveBook() {
         if (R.b && R.t0) { const st = JG('ml_stats', { pages: 0, min: 0 }); st.min = (st.min || 0) + Math.min(240, (Date.now() - R.t0) / 60000); JS('ml_stats', st); R.t0 = 0; }
-        R.tok++; R.b = null; R.doc = null; ttsStop();
+        R.tok++; R.b = null; R.doc = null; ttsStop(); try { lspClose(); } catch (e) { }
     }
 
     /* ----- turning pages ----- */
@@ -44056,6 +44192,264 @@ window.__MLD = {
         r.onerror = () => { end(); fb.textContent = 'I could not hear you. Check the microphone permission and try again.'; }; r.onend = end; try { r.start(); } catch (e) { end(); }
     }
 
+    /* ======================= LUNA SPEAKING ======================= */
+    /* Read a page aloud (pronunciation) · talk to a character · mistakes explained in the learner's language */
+    const LS_ = { v: 'home', pv: 'home', i: 0, sents: [], res: null, mic: null, hist: [], ch: null, busy: false, tok: 0, tipTok: 0 };
+    const lspSR = () => window.SpeechRecognition || window.webkitSpeechRecognition;
+    const lspLv = () => (R.lvl && R.lvl !== 'O') ? R.lvl : 'B1';
+    const LUNA = { name: 'Luna', role: 'Your English tutor', style: 'warm, encouraging and curious; loves books', hello: 'Hi! I am Luna. Tell me, what are you reading today?', luna: 1 };
+
+    async function lspAI(sys, msgs, max, ms) {
+        if (!adOK()) throw { code: 'noai' };
+        const body = { model: (typeof LR_AI_MODEL !== 'undefined' ? LR_AI_MODEL : 'gpt-4o-mini'), temperature: .5, max_tokens: max || 400, response_format: { type: 'json_object' }, messages: [{ role: 'system', content: sys }].concat(msgs) };
+        const ctl = new AbortController(), to = setTimeout(() => ctl.abort(), ms || 30000);
+        try {
+            const r = await lrAIFetch('https://api.openai.com/v1/chat/completions', { method: 'POST', signal: ctl.signal, headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + aiKey() }, body: JSON.stringify(body) });
+            if (!r.ok) throw { code: r.status };
+            const j = await r.json(); return JSON.parse(j.choices[0].message.content);
+        } finally { clearTimeout(to); }
+    }
+
+    /* ----- my mistakes (kept on this device) ----- */
+    const lspMist = () => { const l = JG('ml_sp_mist', []); return Array.isArray(l) ? l : []; };
+    function lspSaveMist(fx, lc) {
+        const L = lspMist();
+        fx.forEach(f => {
+            const k = String(f.better || '').toLowerCase(); if (!k) return; const j = L.findIndex(x => String(x.b || '').toLowerCase() === k);
+            if (j >= 0) { const x = L.splice(j, 1)[0]; x.n = (x.n || 1) + 1; x.t = Date.now(); x.y = f.why; x.c = lc; L.unshift(x); }
+            else L.unshift({ s: f.said, b: f.better, y: f.why, c: lc, n: 1, t: Date.now() });
+        });
+        JS('ml_sp_mist', L.slice(0, 60));
+    }
+
+    /* ----- microphone ----- */
+    function lspListen(onI, onD) {
+        const SR = lspSR(); if (!SR) { setTimeout(() => onD('', 'nosr'), 0); return { stop() { } }; }
+        stopSpeech(); let r, last = '', fin = false;
+        const done = (err) => { if (fin) return; fin = true; onD(last.trim(), err || ''); };
+        try { r = new SR(); } catch (e) { setTimeout(() => done('nomic'), 0); return { stop() { } }; }
+        r.lang = 'en-US'; r.interimResults = true; r.maxAlternatives = 1; r.continuous = false;
+        r.onresult = (e) => { let t = ''; for (let i = 0; i < e.results.length; i++) t += e.results[i][0].transcript + ' '; last = t; onI(t.trim()); };
+        r.onerror = (e) => done(e.error === 'no-speech' ? 'nospeech' : (e.error === 'not-allowed' || e.error === 'service-not-allowed') ? 'denied' : e.error === 'aborted' ? '' : (e.error || 'err'));
+        r.onend = () => done('');
+        try { r.start(); } catch (e) { setTimeout(() => done('nomic'), 0); }
+        return { stop() { try { r.stop(); } catch (e) { } } };
+    }
+    function lspMicErr(err) {
+        return err === 'denied' ? 'The microphone is blocked. Allow it in your browser settings and try again.' : err === 'nosr' ? 'Voice input isn’t supported in this browser. Try Chrome, or type instead.' : err === 'nospeech' ? 'I didn’t hear anything. Tap the mic and speak a little louder.' : 'The microphone isn’t available right now.';
+    }
+    function lspMicUI() { const m = $('#ml-lsp-mic'); if (m) { m.classList.toggle('rec', !!LS_.mic); m.setAttribute('aria-label', LS_.mic ? 'Stop listening' : 'Start speaking'); } const w = $('#ml-lsp-w'); if (w) w.classList.toggle('rec', !!LS_.mic); }
+    function lspAbort() { LS_.tok++; if (LS_.mic) { try { LS_.mic.stop(); } catch (e) { } } LS_.mic = null; stopSpeech(); lspMicUI(); }
+
+    /* ----- scoring: align what was said with the sentence ----- */
+    const lspNw = (s) => String(s || '').toLowerCase().replace(/[’‘`]/g, "'").replace(/[^a-z0-9' ]+/g, ' ').replace(/(^|\s)'+|'+(\s|$)/g, ' ').split(/\s+/).filter(Boolean);
+    function lspLev(a, b) {
+        const m = a.length, n = b.length; if (!m) return n; if (!n) return m; let p = []; for (let j = 0; j <= n; j++) p[j] = j;
+        for (let i = 1; i <= m; i++) { const c = [i]; for (let j = 1; j <= n; j++) c[j] = Math.min(p[j] + 1, c[j - 1] + 1, p[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1)); p = c; }
+        return p[n];
+    }
+    function lspScoreText(target, heard) {
+        const toks = target.split(/\s+/), A = []; toks.forEach((w, k) => lspNw(w).forEach(p => A.push({ k, w: p })));
+        const H = lspNw(heard), n = A.length, m = H.length;
+        const sub = (a, b) => { if (a === b) return 0; const d = lspLev(a, b), L = Math.max(a.length, b.length); if (d <= 1 && L >= 3) return .5; if (L > 4 && d / L <= .34) return .6; return 1; };
+        const D = [], P = []; for (let i = 0; i <= n; i++) { D[i] = new Array(m + 1).fill(0); P[i] = new Array(m + 1).fill(0); }
+        for (let i = 1; i <= n; i++) { D[i][0] = i; P[i][0] = 1; } for (let j = 1; j <= m; j++) { D[0][j] = j * .6; P[0][j] = 2; }
+        for (let i = 1; i <= n; i++) for (let j = 1; j <= m; j++) {
+            const d = D[i - 1][j - 1] + sub(A[i - 1].w, H[j - 1]), u = D[i - 1][j] + 1, l = D[i][j - 1] + .6;
+            if (d <= u && d <= l) { D[i][j] = d; P[i][j] = 0; } else if (u <= l) { D[i][j] = u; P[i][j] = 1; } else { D[i][j] = l; P[i][j] = 2; }
+        }
+        const cs = new Array(n).fill(1); let i = n, j = m;
+        while (i > 0 || j > 0) { const p = P[i][j]; if (i > 0 && j > 0 && p === 0) { cs[i - 1] = sub(A[i - 1].w, H[j - 1]); i--; j--; } else if (i > 0 && (j === 0 || p === 1)) { cs[i - 1] = 1; i--; } else j--; }
+        const st = toks.map(() => 'skip'), rank = { skip: -1, ok: 0, near: 1, miss: 2 };
+        A.forEach((a, x) => { const s = cs[x] === 0 ? 'ok' : cs[x] < 1 ? 'near' : 'miss'; if (rank[s] > rank[st[a.k]]) st[a.k] = s; });
+        const cnt = st.filter(x => x !== 'skip').length || 1, pts = st.reduce((q, x) => q + (x === 'ok' ? 1 : x === 'near' ? .5 : 0), 0);
+        return { st, score: Math.round(100 * pts / cnt), heard };
+    }
+
+    /* ----- shell ----- */
+    function lspOpen() {
+        const v = $('#ml-sp'); if (!v) return; closePanel(); closeWp(); ttsStop();
+        v.hidden = false; v.innerHTML = '<div class="ml-spw"><div class="ml-sph"><button class="ml-x" data-a="lsp-back" aria-label="Back"><i class="fa-solid fa-chevron-left"></i></button><div class="ml-spt"><b id="ml-lsp-t">Luna Speaking</b><small id="ml-lsp-s"></small></div><button class="ml-splang" data-a="lsp-lang" id="ml-lsp-l" aria-label="Language for explanations"></button></div><div class="ml-spb" id="ml-lsp-b"></div><div class="ml-spf" id="ml-lsp-f" hidden></div></div>';
+        if (!v._k) { v._k = 1; v.addEventListener('keydown', (e) => { if (e.key === 'Enter' && e.target && e.target.id === 'ml-lsp-in') { e.preventDefault(); const i = e.target, t = i.value; i.value = ''; lspSend(t); } }); }
+        lspHome();
+    }
+    function lspClose() { lspAbort(); const v = $('#ml-sp'); if (v) { v.hidden = true; v.innerHTML = ''; } }
+    function lspHead(t, s) {
+        const T = $('#ml-lsp-t'), S = $('#ml-lsp-s'), l = $('#ml-lsp-l'), L = curLang();
+        if (T) T.textContent = t; if (S) S.textContent = s || ''; if (l) l.innerHTML = '<span>' + L.f + '</span><b>' + esc(L.nat || L.n) + '</b><i class="fa-solid fa-chevron-down"></i>';
+    }
+    function lspFoot(h) { const f = $('#ml-lsp-f'); if (!f) return; f.hidden = !h; f.innerHTML = h || ''; }
+    function lspBody(h) { const b = $('#ml-lsp-b'); if (b) { b.innerHTML = h; b.scrollTop = 0; } return b; }
+    function lspRender() { const v = LS_.v; if (v === 'read') paintRead(); else if (v === 'chars') lspChars(); else if (v === 'chat') paintChat(); else if (v === 'lang') lspLang(); else lspHome(); }
+    function lspBack() {
+        const v = LS_.v; lspAbort();
+        if (v === 'home') return lspClose();
+        if (v === 'lang') { LS_.v = LS_.pv; return lspRender(); }
+        if (v === 'chat') return lspChars();
+        return lspHome();
+    }
+
+    /* ----- home ----- */
+    function lspHome() {
+        LS_.v = 'home'; lspAbort(); const L = curLang(), mi = lspMist().slice(0, 5);
+        lspHead('Luna Speaking', R.b ? R.b.title : ''); lspFoot('');
+        lspBody('<div class="ml-sp1"><h2>Say it out loud.</h2><p>Practise English with the book in your hands. Luna listens, shows exactly what to fix, and explains every mistake in <b>' + L.f + ' ' + esc(L.n) + '</b>.</p></div>' +
+            '<button class="ml-spc a" data-a="lsp-read"><span class="ic"><i class="fa-solid fa-book-open"></i></span><div><b>Read this page aloud</b><small>See which words you said clearly</small></div><i class="fa-solid fa-chevron-right go"></i></button>' +
+            '<button class="ml-spc b" data-a="lsp-chars"><span class="ic"><i class="fa-solid fa-comments"></i></span><div><b>Talk to a character</b><small>Chat by voice with someone from the story</small></div><i class="fa-solid fa-chevron-right go"></i></button>' +
+            '<div class="ml-sp2"><i class="fa-solid fa-wand-magic-sparkles"></i><span>Mistake coach is on in both. Tap <b>' + L.f + '</b> above to get explanations in another language.</span></div>' +
+            (mi.length ? '<div class="ml-sph2">Mistakes to remember</div>' + mi.map(m => '<div class="ml-fx keep"><div class="l"><s>' + esc(m.s || '') + '</s><i class="fa-solid fa-arrow-right"></i><b>' + esc(m.b) + '</b></div><small>' + esc(m.y || '') + '</small><button class="ml-ib" data-a="lsp-sayfix" data-t="' + esc(m.b) + '" aria-label="Hear it"><i class="fa-solid fa-volume-high"></i></button>' + (m.n > 1 ? '<em>×' + m.n + '</em>' : '') + '</div>').join('') : ''));
+    }
+
+    /* ----- language for explanations ----- */
+    function lspLang() {
+        if (LS_.v !== 'lang') { LS_.pv = LS_.v; LS_.v = 'lang'; } lspAbort(); const cur = curLang().c;
+        lspHead('Explain in…', 'Mistakes and tips will use this language'); lspFoot('');
+        lspBody('<div class="ml-spg">' + langs().map(l => '<button class="' + (l.c === cur ? 'on' : '') + '" data-a="lsp-setlang" data-c="' + esc(l.c) + '"><span>' + l.f + '</span><b>' + esc(l.nat || l.n) + '</b><small>' + esc(l.n) + '</small></button>').join('') + '</div><p class="ml-spnote">Everything you practise stays in English. Only the explanations change.</p>');
+    }
+
+    /* ----- read aloud ----- */
+    function lspRead() {
+        LS_.v = 'read'; lspAbort();
+        const raw = collectSentences().map(s => s.map(x => x.textContent).join(' ').replace(/\s+/g, ' ').trim()).filter(t => t.split(' ').length >= 3), seen = {};
+        LS_.sents = raw.filter(t => !seen[t] && (seen[t] = 1)).slice(0, 40); LS_.i = 0; LS_.res = null; paintRead();
+    }
+    function paintRead() {
+        LS_.v = 'read'; const S = LS_.sents; lspHead('Read aloud', R.b ? R.b.title : '');
+        if (!S.length) { lspFoot(''); return lspBody('<div class="ml-spe"><i class="fa-regular fa-face-smile"></i><b>No sentences on this page</b><small>Close this, turn to a page with text, and open Luna Speaking again.</small></div>'); }
+        const t = S[LS_.i], r = LS_.res, ws = t.split(' ');
+        const chips = ws.map((w, k) => '<span class="ml-sw ' + (r ? r.st[k] : '') + '" data-a="lsp-word" data-w="' + esc(w) + '">' + esc(w) + '</span>').join(' ');
+        const verdict = r ? (r.score >= 90 ? 'Excellent' : r.score >= 70 ? 'Good' : r.score >= 40 ? 'Getting there' : 'Try again') : '';
+        lspBody('<div class="ml-spp"><i style="width:' + Math.round((LS_.i + 1) / S.length * 100) + '%"></i></div><div class="ml-spn">Sentence ' + (LS_.i + 1) + ' of ' + S.length + '</div>' +
+            '<div class="ml-spcard"><p class="sent">' + chips + '</p>' + (r ? '<div class="ml-lg"><span class="ok">Clear</span><span class="near">Almost</span><span class="miss">Missed</span></div>' : '') + '</div>' +
+            (r ? '<div class="ml-spres ' + (r.score >= 90 ? 'g' : r.score >= 60 ? 'm' : 'b') + '"><div class="ring" style="--p:' + r.score + '"><b>' + r.score + '</b></div><div><b>' + verdict + '</b><small id="ml-lsp-h">' + (r.heard ? 'You said: “' + esc(r.heard) + '”' : '') + '</small></div></div><div class="ml-sptip" id="ml-lsp-tip"></div>' :
+                '<div class="ml-sphint" id="ml-lsp-h"><i class="fa-solid fa-microphone"></i> Tap the mic, then read the sentence.</div>'));
+        lspFoot('<div class="ml-spctl" id="ml-lsp-w"><button class="ml-ib" data-a="lsp-prev" aria-label="Previous sentence"' + (LS_.i ? '' : ' disabled') + '><i class="fa-solid fa-chevron-left"></i></button><button class="ml-spbtn" data-a="lsp-hear"><i class="fa-solid fa-volume-high"></i><span>Listen</span></button><button class="ml-spmic" id="ml-lsp-mic" data-a="lsp-mic" aria-label="Start speaking"><i class="fa-solid fa-microphone"></i></button><button class="ml-spbtn" data-a="lsp-slow"><i class="fa-solid fa-hippo"></i><span>Slow</span></button><button class="ml-ib" data-a="lsp-next" aria-label="Next sentence"' + (LS_.i < S.length - 1 ? '' : ' disabled') + '><i class="fa-solid fa-chevron-right"></i></button></div>');
+        if (r) lspTip(t, r);
+    }
+    function lspReadMic() {
+        if (LS_.mic) { try { LS_.mic.stop(); } catch (e) { } return; }
+        const t = LS_.sents[LS_.i]; if (!t) return; const tk = ++LS_.tok; LS_.res = null;
+        $$('.ml-spcard .ml-sw').forEach(x => x.className = 'ml-sw'); const lg = $('.ml-spcard .ml-lg'); if (lg) lg.remove(); const rs = $('.ml-spres'), tp = $('#ml-lsp-tip'); if (rs) rs.remove(); if (tp) tp.remove();
+        let h = $('#ml-lsp-h'); if (!h) { const b = $('#ml-lsp-b'); const d = document.createElement('div'); d.className = 'ml-sphint'; d.id = 'ml-lsp-h'; b.appendChild(d); h = d; }
+        h.className = 'ml-sphint live'; h.innerHTML = '<i class="fa-solid fa-microphone"></i> Listening… read the sentence';
+        LS_.mic = lspListen((x) => { if (tk === LS_.tok) { const hh = $('#ml-lsp-h'); if (hh) hh.textContent = '“' + x + '”'; } }, (txt, err) => {
+            if (tk !== LS_.tok) return; LS_.mic = null; lspMicUI();
+            if (!txt) { const hh = $('#ml-lsp-h'); if (hh) { hh.className = 'ml-sphint warn'; hh.textContent = lspMicErr(err); } return; }
+            LS_.res = lspScoreText(t, txt); paintRead();
+        });
+        lspMicUI();
+    }
+    async function lspTip(target, res) {
+        const box = $('#ml-lsp-tip'); if (!box) return;
+        if (res.score >= 95) { box.className = 'ml-sptip ok'; box.innerHTML = '<i class="fa-solid fa-circle-check"></i> Clear and natural. Go to the next sentence.'; return; }
+        const ws = target.split(/\s+/), trouble = ws.filter((w, k) => res.st[k] === 'miss' || res.st[k] === 'near').map(w => w.replace(/[^\p{L}'’-]/gu, '')).filter(Boolean).slice(0, 8);
+        if (!adOK()) { box.innerHTML = '<i class="fa-solid fa-hand-pointer"></i> Tap a red or amber word to hear it, then try again.'; return; }
+        box.className = 'ml-sptip load'; box.innerHTML = '<span class="ml-dots"><i></i><i></i><i></i></span> Luna is listening back…'; const my = ++LS_.tipTok, L = curLang();
+        try {
+            const o = await lspAI('You are Luna, a kind English pronunciation coach. The learner\'s native language is ' + L.n + ' (' + (L.nat || L.n) + '). Speech recognition heard the learner say something different from the target sentence. In at most 2 short sentences written in ' + L.n + ', tell the learner the most important sound(s) to fix in the trouble words and how to make them (a simple hint; you may add IPA). Keep the English words themselves in English. Never mention speech recognition. Return JSON {"tip":"..."}.', [{ role: 'user', content: JSON.stringify({ target, heard: res.heard, trouble }) }], 220, 22000);
+            if (my !== LS_.tipTok || LS_.res !== res) return; const b2 = $('#ml-lsp-tip'); if (b2) { b2.className = 'ml-sptip'; b2.innerHTML = '<i class="fa-solid fa-lightbulb"></i> ' + esc(String(o.tip || '')); }
+        } catch (e) { if (my !== LS_.tipTok || LS_.res !== res) return; const b2 = $('#ml-lsp-tip'); if (b2) { b2.className = 'ml-sptip'; b2.innerHTML = '<i class="fa-solid fa-hand-pointer"></i> Tap a red or amber word to hear it, then try again.'; } }
+    }
+    function lspStep(d) { const n = LS_.i + d; if (n < 0 || n >= LS_.sents.length) return; lspAbort(); LS_.i = n; LS_.res = null; paintRead(); }
+
+    /* ----- characters ----- */
+    const lspHue = (s) => { let h = 7; for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) % 360; return h; };
+    async function lspChars() {
+        LS_.v = 'chars'; lspAbort(); lspHead('Who do you want to talk to?', R.b ? R.b.title : ''); lspFoot('');
+        const store = JG('ml_sp_ch', {}), b = R.b; let list = b && store[b.id];
+        if (!list) {
+            if (!adOK()) { list = []; }
+            else {
+                lspBody('<div class="ml-spe"><span class="ml-dots big"><i></i><i></i><i></i></span><b>Finding people from the story…</b></div>');
+                const tk = LS_.tok;
+                try {
+                    const o = await lspAI('You help build a language-learning chat. Given a book, list 4 characters a reader could chat with. If the book has no characters (essays, poems, non-fiction), use the author or a person mentioned in it. Reply as JSON {"chars":[{"name":"...","role":"at most 7 words","style":"at most 12 words describing how they talk","hello":"a friendly first line in simple English (CEFR ' + lspLv() + '), at most 22 words, that refers to the story and ends with a question"}]}.', [{ role: 'user', content: 'Book: "' + b.title + '" by ' + b.author }], 600, 30000);
+                    list = (o.chars || []).filter(c => c && c.name && c.hello).slice(0, 4).map(c => ({ name: String(c.name).slice(0, 40), role: String(c.role || '').slice(0, 60), style: String(c.style || '').slice(0, 100), hello: String(c.hello).slice(0, 220) }));
+                    if (list.length) { store[b.id] = list; JS('ml_sp_ch', store); }
+                } catch (e) { list = []; }
+                if (tk !== LS_.tok || LS_.v !== 'chars') return;
+            }
+        }
+        LS_.chars = [LUNA].concat(list || []);
+        lspBody('<div class="ml-sp1 s"><p>Chat out loud in English. After every message Luna shows what to fix, in <b>' + curLang().f + ' ' + esc(curLang().n) + '</b>.</p></div>' + LS_.chars.map((c, i) => '<button class="ml-spc ch" data-a="lsp-pick" data-i="' + i + '"><span class="ml-av" style="--h:' + (c.luna ? 262 : lspHue(c.name)) + '">' + (c.luna ? '<i class="fa-solid fa-moon"></i>' : esc(c.name.charAt(0).toUpperCase())) + '</span><div><b>' + esc(c.name) + '</b><small>' + esc(c.role) + '</small></div><i class="fa-solid fa-chevron-right go"></i></button>').join('') + ((list && list.length) ? '' : '<p class="ml-spnote">' + (adOK() ? 'Couldn’t load story characters, but Luna is ready.' : 'Story characters need the AI connection. Luna is ready to chat.') + '</p>'));
+    }
+
+    /* ----- chat ----- */
+    function lspStart(c) {
+        if (!c) return; LS_.ch = c; LS_.hist = [{ r: 'c', t: c.hello }]; LS_.busy = false; paintChat();
+        if (LSg('ml_sp_auto', '1') === '1') speak(c.hello, { rate: .95 });
+    }
+    function lspBubbles() {
+        const c = LS_.ch, hue = c.luna ? 262 : lspHue(c.name), av = '<span class="ml-av s" style="--h:' + hue + '">' + (c.luna ? '<i class="fa-solid fa-moon"></i>' : esc(c.name.charAt(0).toUpperCase())) + '</span>';
+        return LS_.hist.map((m, i) => {
+            if (m.r === 'c') return '<div class="ml-b c" data-n="' + i + '">' + av + '<div class="ml-bd"><p>' + esc(m.t) + '</p><div class="ml-acts"><button data-a="lsp-say" data-n="' + i + '" aria-label="Hear it"><i class="fa-solid fa-volume-high"></i></button><button data-a="lsp-tr" data-n="' + i + '"><i class="fa-solid fa-language"></i> ' + esc(curLang().n) + '</button></div><div class="ml-trx" id="ml-trx' + i + '" hidden></div></div></div>';
+            let h = '<div class="ml-b u"><p>' + esc(m.t) + '</p></div>';
+            if (m.pend) h += '';
+            else if (m.fx && m.fx.length) h += '<div class="ml-fxw">' + m.fx.map(f => '<div class="ml-fx"><div class="l"><s>' + esc(f.said) + '</s><i class="fa-solid fa-arrow-right"></i><b>' + esc(f.better) + '</b></div><small>' + esc(f.why) + '</small><button class="ml-ib" data-a="lsp-sayfix" data-t="' + esc(f.better) + '" aria-label="Hear it"><i class="fa-solid fa-volume-high"></i></button></div>').join('') + '</div>';
+            else if (m.fx) h += '<div class="ml-fxw"><div class="ml-fx ok"><i class="fa-solid fa-circle-check"></i><span>' + esc(m.praise || 'Perfect, no mistakes!') + '</span></div></div>';
+            return h;
+        }).join('') + (LS_.busy && LS_.hist.length && LS_.hist[LS_.hist.length - 1].r === 'u' ? '<div class="ml-b c">' + av + '<div class="ml-bd ml-typing"><span class="ml-dots"><i></i><i></i><i></i></span></div></div>' : '');
+    }
+    function paintChat(keepIn) {
+        LS_.v = 'chat'; const c = LS_.ch; if (!c) return lspChars(); lspHead(c.name, c.role);
+        const b = lspBody('<div class="ml-chat" id="ml-lsp-chat">' + lspBubbles() + '</div>'); if (b) b.scrollTop = b.scrollHeight;
+        if (!$('#ml-lsp-in')) lspFoot('<div class="ml-spi" id="ml-lsp-w"><button class="ml-ib" data-a="lsp-auto" id="ml-lsp-au" aria-label="Voice replies"><i class="fa-solid ' + (LSg('ml_sp_auto', '1') === '1' ? 'fa-volume-high' : 'fa-volume-xmark') + '"></i></button><input id="ml-lsp-in" type="text" enterkeyhint="send" autocomplete="off" autocapitalize="sentences" placeholder="Speak or type in English…" aria-label="Your message"><button class="ml-spmic s" id="ml-lsp-mic" data-a="lsp-mic" aria-label="Start speaking"><i class="fa-solid fa-microphone"></i></button><button class="ml-ib send" data-a="lsp-send" aria-label="Send"><i class="fa-solid fa-paper-plane"></i></button></div>');
+        lspMicUI();
+    }
+    function lspChatMic() {
+        if (LS_.mic) { try { LS_.mic.stop(); } catch (e) { } return; }
+        if (LS_.busy) return; const inp = $('#ml-lsp-in'), tk = ++LS_.tok; if (inp) { inp.value = ''; inp.placeholder = 'Listening…'; }
+        LS_.mic = lspListen((x) => { if (tk === LS_.tok && inp) inp.value = x; }, (txt, err) => {
+            if (tk !== LS_.tok) return; LS_.mic = null; lspMicUI(); const i2 = $('#ml-lsp-in'); if (i2) { i2.placeholder = 'Speak or type in English…'; i2.value = ''; }
+            if (!txt) { toast(lspMicErr(err)); return; } lspSend(txt);
+        });
+        lspMicUI();
+    }
+    async function lspSend(text) {
+        text = String(text || '').replace(/\s+/g, ' ').trim().slice(0, 400); if (!text || LS_.busy || !LS_.ch) return;
+        if (!adOK()) { toast('Luna needs the AI connection to chat.'); return; }
+        stopSpeech(); const c = LS_.ch, L = curLang(), me = { r: 'u', t: text, pend: 1 }; LS_.hist.push(me); LS_.busy = true; paintChat();
+        const hist = LS_.hist.slice(0, -1).slice(-8).map(m => ({ role: m.r === 'u' ? 'user' : 'assistant', content: m.t }));
+        let ex = ''; try { ex = collectSentences().slice(0, 4).map(s => s.map(x => x.textContent).join(' ')).join(' ').slice(0, 500); } catch (e) { }
+        const sys = 'You are ' + c.name + (c.luna ? ', a friendly English tutor who loves books.' : ', a character from the book "' + (R.b ? R.b.title : '') + '" by ' + (R.b ? R.b.author : '') + '.') + ' How you talk: ' + c.style + '. You are chatting with a learner of English at CEFR level ' + lspLv() + ' whose native language is ' + L.n + ' (' + (L.nat || L.n) + '). Stay in character. Reply ONLY in English with 1 to 3 short sentences, using vocabulary a ' + lspLv() + ' learner understands, and end with a simple question about the story or the learner\'s opinion so the talk continues.' + (ex ? ' The learner is reading this part right now: "' + ex + '".' : '') +
+            ' You are also a gentle language coach. Return JSON {"reply":"your English reply","fixes":[{"said":"exact words from the learner\'s last message","better":"the corrected English","why":"a short explanation written in ' + L.n + ' (max 18 words)"}],"praise":"a short warm sentence in ' + L.n + ' if the last message had no mistakes, else empty"}. List at most 3 fixes. Only real grammar, word-choice, preposition, tense or word-order mistakes; ignore capital letters, punctuation and speech-recognition glitches. If the learner wrote in another language, put the English version in "better" and say so in "why".';
+        try {
+            const o = await lspAI(sys, hist.concat([{ role: 'user', content: text }]), 520, 32000), reply = String(o.reply || '').trim(); if (!reply) throw { code: 'empty' };
+            const fx = (Array.isArray(o.fixes) ? o.fixes : []).filter(f => f && f.better && f.said && String(f.better).trim().toLowerCase() !== String(f.said).trim().toLowerCase()).slice(0, 3).map(f => ({ said: String(f.said).slice(0, 160), better: String(f.better).slice(0, 200), why: String(f.why || '').slice(0, 220) }));
+            me.pend = 0; me.fx = fx; me.praise = String(o.praise || '').slice(0, 160); LS_.hist.push({ r: 'c', t: reply.slice(0, 600) }); if (fx.length) lspSaveMist(fx, L.c);
+            LS_.busy = false; if (LS_.v === 'chat' && LS_.ch === c) { paintChat(); if (LSg('ml_sp_auto', '1') === '1') speak(reply, { rate: .95 }); }
+        } catch (e) {
+            me.pend = 0; me.fx = null; LS_.busy = false; LS_.hist.push({ r: 'c', t: (e && e.code === 429) ? 'I need a short break. Try again in a moment.' : 'Sorry, I lost the connection. Please say that again.' }); if (LS_.v === 'chat') paintChat();
+        }
+    }
+    async function lspTrans(n, btn) {
+        const m = LS_.hist[+n], box = $('#ml-trx' + n); if (!m || !box) return; if (!box.hidden) { box.hidden = true; return; }
+        box.hidden = false; if (m.tr) { box.textContent = m.tr; return; } box.innerHTML = '<span class="ml-dots"><i></i><i></i><i></i></span>';
+        const L = curLang(), t = await gtx(m.t, L.c); m.tr = t || 'Translation isn’t available right now.'; if (!box.hidden) { box.textContent = m.tr; if (L.rtl) box.dir = 'rtl'; }
+    }
+
+    /* ----- actions ----- */
+    function lspAct(k, b) {
+        if (k === 'open') return lspOpen();
+        if (k === 'back') return lspBack();
+        if (k === 'lang') return lspLang();
+        if (k === 'setlang') { LSs('ml_lang', b.dataset.c); LS_.v = LS_.pv || 'home'; return lspRender(); }
+        if (k === 'read') return lspRead();
+        if (k === 'chars') return lspChars();
+        if (k === 'pick') return lspStart(LS_.chars && LS_.chars[+b.dataset.i]);
+        if (k === 'mic') return LS_.v === 'chat' ? lspChatMic() : lspReadMic();
+        if (k === 'hear') { const t = LS_.sents[LS_.i]; if (t) { lspAbort(); speak(t, { rate: .95 }); } return; }
+        if (k === 'slow') { const t = LS_.sents[LS_.i]; if (t) { lspAbort(); speak(t, { rate: .55 }); } return; }
+        if (k === 'prev') return lspStep(-1);
+        if (k === 'next') return lspStep(1);
+        if (k === 'word') { lspAbort(); speak(b.dataset.w.replace(/[^\p{L}'’-]/gu, ''), { rate: .5 }); return; }
+        if (k === 'say') { const m = LS_.hist[+b.dataset.n]; if (m) { lspAbort(); speak(m.t, { rate: .95 }); } return; }
+        if (k === 'sayfix') { lspAbort(); speak(b.dataset.t, { rate: .85 }); return; }
+        if (k === 'tr') return lspTrans(b.dataset.n, b);
+        if (k === 'send') { const i = $('#ml-lsp-in'); if (i) { const t = i.value; i.value = ''; lspSend(t); } return; }
+        if (k === 'auto') { const on = LSg('ml_sp_auto', '1') === '1'; LSs('ml_sp_auto', on ? '0' : '1'); if (on) stopSpeech(); const ic = $('#ml-lsp-au i'); if (ic) ic.className = 'fa-solid ' + (on ? 'fa-volume-xmark' : 'fa-volume-high'); toast(on ? 'Voice replies off' : 'Voice replies on'); return; }
+    }
+
     /* ======================= READ ALOUD ======================= */
     function collectSentences() {
         const spans = $$('#ml-book .ml-pg .w').filter(s => !s.closest('.ml-leaf')), out = []; let cur = [];
@@ -44101,6 +44495,7 @@ window.__MLD = {
     /* ======================= events ======================= */
     function onKey(e) {
         if (!root || !root.classList.contains('open')) return; const rd = $('#ml-rd'); if (rd.hidden) { if (e.key === 'Escape') { if (!$('#ml-sheet').hidden) closeSheet(); else close(); } return; }
+        { const sp = $('#ml-sp'); if (sp && !sp.hidden) { if (e.key === 'Escape') lspBack(); return; } }
         if (e.target && /input|select|textarea/i.test(e.target.tagName)) return;
         if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); turn(1); } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); turn(-1); }
         else if (e.key === 'Escape') { if ($('#ml-wp') && !$('#ml-wp').hidden) closeWp(); else if (R.panel) closePanel(); else showCat(); }
@@ -44117,6 +44512,7 @@ window.__MLD = {
     async function onClick(e) {
         if (stage && stage.contains(e.target) && !e.target.closest('[data-a]')) { onStageClick(e); return; }
         const b = e.target.closest('[data-a]'); if (!b) return; const a = b.dataset.a, id = b.dataset.id;
+        if (a.indexOf('lsp-') === 0) return lspAct(a.slice(4), b);
         if (a === 'fav') { e.stopPropagation(); toggleFav(id); if (!$('#ml-sheet').hidden) detail(id); paintCat(); return; }
         if (a === 'close') return close();
         if (a === 'detail') return detail(id);
