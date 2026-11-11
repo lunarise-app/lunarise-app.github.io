@@ -7224,6 +7224,143 @@ html.ml-lock,html.ml-lock body{overflow:hidden}
 .ml-sl .o{position:absolute;inset:0;z-index:5;pointer-events:none;opacity:0;will-change:opacity}
 .ml-sl .o.a{background:linear-gradient(90deg,#0a0600,rgba(10,6,0,0))}
 .ml-sl .o.b{background:linear-gradient(90deg,rgba(10,6,0,0),#0a0600)}
+
+/* ===== reading levels ===== */
+.ml-lvc{margin:16px 0 4px;padding:14px;border-radius:18px;background:linear-gradient(135deg,rgba(124,92,255,.16),rgba(41,211,181,.08));border:1px solid var(--ln)}
+.ml-lvc.big{margin:14px 0 2px}
+.ml-lvh{display:grid;grid-template-columns:auto 1fr;column-gap:10px;align-items:center;margin-bottom:11px}
+.ml-lvh i{grid-row:1/3;width:34px;height:34px;border-radius:11px;display:grid;place-items:center;background:rgba(139,123,255,.22);color:#c9c0ff;font-size:14px}
+.ml-lvh b{font-size:14px;font-weight:800;line-height:1.2}
+.ml-lvh small{font-size:12px;color:var(--mu);line-height:1.35}
+.ml-lvs{display:flex;gap:7px;overflow-x:auto;scrollbar-width:none;margin:0 -2px;padding:2px}
+.ml-lvs::-webkit-scrollbar{display:none}
+.ml-lvs button{flex:none;min-width:48px;height:36px;padding:0 13px;border-radius:12px;font-size:13px;font-weight:800;background:var(--s1);border:1px solid var(--ln);color:var(--mu);transition:background .15s,color .15s,transform .12s}
+.ml-lvs button:active{transform:scale(.95)}
+.ml-lvs button.on{background:linear-gradient(120deg,#7c5cff,#c05cff);color:#fff;border-color:transparent;box-shadow:0 8px 18px -10px rgba(160,90,255,.9)}
+.ml-rdr .ml-lvp{height:32px;min-width:44px;padding:0 11px;border-radius:11px;font-size:12.5px;font-weight:800;letter-spacing:.2px;color:var(--uitx);background:rgba(127,127,127,.16);flex:none;margin-right:2px}
+.ml-rdr .ml-lvp.on{background:linear-gradient(120deg,#7c5cff,#c05cff);color:#fff}
+.ml-lvr{display:grid;grid-template-columns:46px 1fr 20px;align-items:center;gap:12px;width:100%;padding:11px 12px;margin-bottom:8px;border-radius:15px;background:rgba(127,127,127,.1);border:1px solid transparent;text-align:left}
+.ml-lvr b{width:46px;height:38px;border-radius:12px;display:grid;place-items:center;font-size:13.5px;font-weight:800;background:rgba(127,127,127,.18)}
+.ml-lvr span{display:flex;flex-direction:column;gap:2px;min-width:0}
+.ml-lvr strong{font-size:14px;font-weight:800}
+.ml-lvr small{font-size:12px;opacity:.7;line-height:1.35}
+.ml-lvr i{opacity:0;color:#7c5cff;font-size:14px}
+.ml-lvr.on{border-color:#8b7bff;background:rgba(139,123,255,.16)}
+.ml-lvr.on b{background:linear-gradient(120deg,#7c5cff,#c05cff);color:#fff}
+.ml-lvr.on i{opacity:1}
+.ml-lvn{font-size:12px;opacity:.7;line-height:1.5;margin:10px 2px 2px}
+@media(max-width:420px){.ml-rdr .ml-ttl small{display:none}}
+
+/* ===== restored: panels, loading, word popup, home door (lost in v92/v93) ===== */
+.ml-panel{position:absolute;z-index:9;left:50%;bottom:0;transform:translate(-50%,0);width:min(100%,560px);max-height:78%;display:flex;flex-direction:column;background:var(--ui);color:var(--uitx);border-radius:24px 24px 0 0;box-shadow:0 -18px 50px -14px rgba(0,0,0,.5);border:1px solid var(--uiln);border-bottom:0;animation:mlUp .28s cubic-bezier(.2,.8,.2,1)}
+@keyframes mlUp{from{transform:translate(-50%,40px);opacity:0}}
+.ml-ph{display:flex;align-items:center;justify-content:space-between;padding:12px 12px 4px 20px}
+.ml-ph b{font-size:17px;font-weight:900}
+.ml-pb{padding:6px 18px calc(22px + env(safe-area-inset-bottom));overflow-y:auto;overscroll-behavior:contain;min-height:0}
+.ml-lab{margin:14px 0 8px;font-size:12px;font-weight:800;color:var(--uimu)}
+.ml-themes{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.ml-th{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 4px 8px;border-radius:14px;background:var(--b);color:var(--t);border:2px solid var(--uiln)!important;font-family:Georgia,serif}
+.ml-th span{font-size:22px;font-weight:700}
+.ml-th small{font:700 10.5px system-ui,sans-serif;opacity:.8}
+.ml-th.on{border-color:var(--acc)!important;box-shadow:0 0 0 3px color-mix(in srgb,var(--acc) 30%,transparent)}
+.ml-sz{display:flex;align-items:center;justify-content:center;gap:18px}
+.ml-sz .ml-ib{background:var(--uiln)}
+.ml-szv{display:flex;align-items:baseline;gap:3px;min-width:70px;justify-content:center}
+.ml-szv b{font-size:26px}
+.ml-szv small{color:var(--uimu)}
+.ml-seg2{display:flex;gap:6px;padding:4px;border-radius:14px;background:var(--uiln)}
+.ml-seg2 button{flex:1;height:38px;border-radius:10px;font-size:13px;font-weight:700;color:var(--uimu);text-align:center}
+.ml-seg2 button.on{background:var(--ui);color:var(--uitx);box-shadow:0 1px 6px rgba(0,0,0,.18)}
+.ml-tabs{display:flex;gap:4px;padding:2px 14px 4px}
+.ml-tabs button{flex:1;height:38px;border-radius:11px;font-size:13px;font-weight:700;color:var(--uimu);text-align:center}
+.ml-tabs button.on{background:var(--uiln);color:var(--uitx)}
+.ml-tabs b{font-size:11px;background:var(--acc);color:#fff;border-radius:8px;padding:1px 5px;margin-left:3px}
+.ml-list{display:flex;flex-direction:column}
+.ml-li{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:48px;padding:9px 6px;border-bottom:1px solid var(--uiln)!important;font-size:14px;line-height:1.35;text-align:left}
+.ml-li span{flex:1;min-width:0}
+.ml-li small{flex:none;color:var(--uimu);font-size:12px}
+.ml-li.on{color:var(--acc);font-weight:800}
+.ml-li mark{background:rgba(255,200,60,.5);color:inherit;border-radius:3px;padding:0 1px}
+.ml-wl .ml-wr{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--uiln)}
+.ml-wr b{flex:none;min-width:84px}
+.ml-wr span{flex:1;min-width:0;color:var(--uimu);font-size:14px}
+.ml-rdr .ml-btn{background:var(--uiln);color:var(--uitx);border:0!important}
+.ml-rdr .ml-btn.pri{background:linear-gradient(120deg,#7c5cff,#c05cff 55%,#ff6b8a);color:#fff}
+.ml-rdr .ml-empty b{color:var(--uitx)}
+.ml-rdr .ml-empty{color:var(--uimu)}
+/* loading */
+.ml-load{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:20px;background:var(--pdesk)}
+.ml-load .ml-x{position:absolute;top:calc(12px + env(safe-area-inset-top));left:14px}
+.ml-load-c{display:flex;flex-direction:column;align-items:center;gap:14px;max-width:340px;text-align:center}
+.ml-load-c .ml-cv{width:130px}
+.ml-load-c b{font-size:18px;color:var(--uitx)}
+.ml-load-c>span{font-size:14px;color:var(--uimu);line-height:1.5}
+.ml-spin{display:block;width:26px;height:26px;border-radius:50%;border:3px solid var(--uiln);border-top-color:var(--acc);animation:mlSp .8s linear infinite}
+@keyframes mlSp{to{transform:rotate(360deg)}}
+.ml-busy{position:absolute;inset:0;z-index:8;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:color-mix(in srgb,var(--pdesk) 86%,transparent);backdrop-filter:blur(4px);color:var(--uitx);font-weight:700}
+/* the word card */
+.ml-wp{position:absolute;z-index:30;left:50%;bottom:0;width:min(100%,560px);max-height:72%;overflow-y:auto;overscroll-behavior:contain;transform:translate(-50%,0);background:linear-gradient(180deg,#1a1b3a,#0f1026);color:#f1f2ff;border-radius:26px 26px 0 0;border:1px solid rgba(255,255,255,.14);border-bottom:0;box-shadow:0 -20px 60px -10px rgba(0,0,0,.65);padding:6px 18px calc(18px + env(safe-area-inset-bottom));animation:mlUp .26s cubic-bezier(.2,.8,.2,1)}
+.ml-wp-grab{width:38px;height:4px;border-radius:4px;background:rgba(255,255,255,.22);margin:4px auto 10px}
+.ml-wp-h{display:flex;align-items:flex-start;gap:10px}
+.ml-wp-w{flex:1;min-width:0;display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px}
+.ml-wp-w b{font-size:28px;line-height:1.1;font-weight:900;letter-spacing:-.02em;overflow-wrap:anywhere}
+.ml-ipa{font-size:16px;color:var(--gold);font-family:"Segoe UI","Noto Sans",system-ui,sans-serif}
+.ml-wp-w em{font-style:normal;font-size:12.5px;font-weight:700;color:#b9bdea;background:rgba(255,255,255,.08);border-radius:8px;padding:2px 8px}
+.ml-mu{color:#7f85b3;font-size:12px}
+.ml-wp-b{flex:none;display:flex;gap:4px}
+.ml-wp .ml-ib{width:40px;height:40px;border-radius:13px;display:grid;place-items:center;background:rgba(255,255,255,.08);font-size:14px;color:#fff}
+.ml-wp .ml-ib.acc{background:linear-gradient(135deg,#7c5cff,#ff6b8a)}
+.ml-wp .ml-ib.rec{background:#ff4d6d;animation:mlPulse 1s infinite}
+@keyframes mlPulse{50%{box-shadow:0 0 0 7px rgba(255,77,109,.25)}}
+.ml-wp-fb{margin-top:10px;padding:9px 12px;border-radius:12px;background:rgba(255,255,255,.07);font-size:13.5px}
+.ml-wp-fb.ok{background:rgba(41,211,181,.16);color:#8ff2dc}
+.ml-wp-fb.no{background:rgba(255,160,64,.15);color:#ffd0a0}
+.ml-wp-l{display:flex;gap:7px;overflow-x:auto;margin:14px -18px 0;padding:2px 18px 8px;scrollbar-width:none}
+.ml-wp-l::-webkit-scrollbar{display:none}
+.ml-wp-l button{flex:none;display:flex;align-items:center;gap:6px;height:34px;padding:0 12px;border-radius:99px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1)!important;font-size:12.5px;font-weight:700;white-space:nowrap;color:#d7daf6}
+.ml-wp-l button i{font-style:normal;font-size:15px}
+.ml-wp-l button.on{background:#fff;color:#1b1540;border-color:#fff!important}
+.ml-wp-t{display:flex;align-items:center;gap:12px;min-height:66px;padding:12px 14px;border-radius:18px;background:linear-gradient(135deg,rgba(124,92,255,.26),rgba(255,107,138,.14));border:1px solid rgba(255,255,255,.14)}
+.ml-wp-t>div{flex:1;min-width:0}
+.ml-wp-t b{font-size:22px;line-height:1.2;font-weight:800;overflow-wrap:anywhere}
+.ml-wp-t small{display:block;color:#c2c6ec;font-size:13px;margin-top:2px}
+.ml-fl{flex:none;font-size:26px}
+.ml-alt{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
+.ml-alt span{font-size:12.5px;padding:2px 9px;border-radius:9px;background:rgba(255,255,255,.1);color:#e1e3fa}
+.ml-off{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:13.5px;color:#d8dbf6}
+.ml-wp-d{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+.ml-df{font-size:14px;line-height:1.5;color:#dcdff7}
+.ml-df em{font-style:normal;font-weight:800;font-size:11.5px;color:var(--teal);margin-right:7px}
+.ml-df i{display:block;margin-top:2px;color:#a3a8d6;font-size:13px}
+.ml-wp-s{margin-top:14px;padding:12px 14px;border-radius:16px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08)}
+.ml-wp-s small{font-size:11.5px;font-weight:800;color:var(--gold)}
+.ml-wp-s p{margin:4px 0 0;font-size:14px;line-height:1.55;font-style:italic;color:#e8eaff}
+.ml-wp-sb{display:flex;gap:8px;margin-top:10px}
+.ml-wp-st{display:flex;gap:10px;align-items:flex-start;margin-top:10px}
+.ml-wp-st:empty{display:none}
+.ml-wp-st p{font-style:normal;margin:0;font-size:14.5px;line-height:1.5}
+.ml-wp-a{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.ml-wp-a .ml-btn{flex:1 1 150px;height:46px}
+.ml-wp-all{margin-top:10px;display:grid;grid-template-columns:1fr 1fr;gap:6px}
+@media (max-width:420px){.ml-wp-all{grid-template-columns:1fr}}
+.ml-ar{display:flex;align-items:center;gap:8px;min-height:44px;padding:6px 10px;border-radius:12px;background:rgba(255,255,255,.06);font-size:13px}
+.ml-ar>i{font-style:normal;font-size:17px}
+.ml-ar>span{flex:none;color:#aab0dc;font-size:11.5px;width:58px}
+.ml-ar b{flex:1;min-width:0;font-weight:700;overflow-wrap:anywhere}
+.ml-dots{display:inline-block;width:26px;height:8px;background:radial-gradient(circle,#8b91c2 2.5px,transparent 3px) 0 0/9px 8px repeat-x;animation:mlDt 1s steps(3) infinite}
+@keyframes mlDt{50%{opacity:.35}}
+@media (prefers-reduced-motion:reduce){.ml-wp,.ml-panel,.ml-sh,.ml-leaf{animation:none!important;transition:none!important}.ml-spin{animation-duration:2s}}
+.rs-door.rs-l{grid-column:1/-1;flex-direction:row;align-items:stretch}
+.rs-door.rs-l .rs-art{width:132px;height:auto;min-height:150px;background:radial-gradient(80% 90% at 20% 0%,rgba(242,196,109,.45),transparent 60%),linear-gradient(150deg,#3a2a7a,#1b1540 70%);display:flex;align-items:center;justify-content:center;gap:0}
+.rs-door.rs-l .rs-art i{position:relative;display:block;width:44px;height:64px;border-radius:3px 7px 7px 3px;box-shadow:0 10px 16px -6px rgba(0,0,0,.6),inset 2px 0 0 rgba(255,255,255,.2)}
+.rs-door.rs-l .rs-art i:nth-child(1){background:linear-gradient(150deg,#ff6b8a,#8a1f4b);transform:rotate(-9deg) translateX(10px)}
+.rs-door.rs-l .rs-art i:nth-child(2){background:linear-gradient(150deg,#f2c46d,#8a4b12);z-index:2;height:74px}
+.rs-door.rs-l .rs-art i:nth-child(3){background:linear-gradient(150deg,#29d3b5,#0b5f6b);transform:rotate(9deg) translateX(-10px)}
+@media (max-width:560px){.rs-door.rs-l{flex-direction:column}.rs-door.rs-l .rs-art{width:auto;height:104px;min-height:0}}
+
+.ml-mini .ml-cvt{font-size:10.5px}.ml-mini .ml-cva{font-size:8px}
+.ml-panel .ml-lvr{color:var(--uitx)}
+.ml-more{display:flex;width:100%;max-width:420px;margin:18px auto 4px}
 </style><style id="mv-art-css" data-th-skip>
 /* Movies: the big pictures stay cinematic (dark shade, white writing) in every theme and in Light mode */
 .mv-hero{position:relative;min-height:420px;border-radius:26px;overflow:hidden;display:flex;align-items:flex-end;background:#0b0d1a var(--bd) center 20%/cover no-repeat;box-shadow:0 30px 60px -30px rgba(0,0,0,.9);isolation:isolate}
@@ -43109,17 +43246,29 @@ window.__MLD = {
     const sleep = (ms) => new Promise(r => setTimeout(r, ms));
     const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
     const toast = (m) => { try { showToast(m); } catch (e) { } };
-    const GENRES = ['Classics', 'Adventure', 'Mystery & Horror', 'Romance', 'Sci-Fi', 'Kids & Family', 'Plays', 'Ideas'];
-    const GCOL = { 'Classics': '#f2c46d', 'Adventure': '#ff9a5a', 'Mystery & Horror': '#b46bff', 'Romance': '#ff6b8a', 'Sci-Fi': '#29d3b5', 'Kids & Family': '#4da3ff', 'Plays': '#ff7ad9', 'Ideas': '#8fe388', 'My books': '#9aa3c7' };
-    const GICON = { 'Classics': 'fa-landmark', 'Adventure': 'fa-compass', 'Mystery & Horror': 'fa-user-secret', 'Romance': 'fa-heart', 'Sci-Fi': 'fa-rocket', 'Kids & Family': 'fa-star', 'Plays': 'fa-masks-theater', 'Ideas': 'fa-lightbulb' };
+    const GENRES = ['Classics', 'Adventure', 'Mystery & Horror', 'Romance', 'Sci-Fi', 'Fantasy', 'Kids & Family', 'Humor', 'History', 'Short Stories', 'Poetry', 'Plays', 'Ideas'];
+    const GCOL = { 'Classics': '#f2c46d', 'Adventure': '#ff9a5a', 'Mystery & Horror': '#b46bff', 'Romance': '#ff6b8a', 'Sci-Fi': '#29d3b5', 'Kids & Family': '#4da3ff', 'Plays': '#ff7ad9', 'Ideas': '#8fe388', 'Fantasy': '#a58bff', 'Humor': '#ffd166', 'History': '#d0a56b', 'Short Stories': '#ff9f7a', 'Poetry': '#7fd1ff', 'My books': '#9aa3c7' };
+    const GICON = { 'Classics': 'fa-landmark', 'Adventure': 'fa-compass', 'Mystery & Horror': 'fa-user-secret', 'Romance': 'fa-heart', 'Sci-Fi': 'fa-rocket', 'Kids & Family': 'fa-star', 'Plays': 'fa-masks-theater', 'Ideas': 'fa-lightbulb', 'Fantasy': 'fa-wand-sparkles', 'Humor': 'fa-face-laugh', 'History': 'fa-scroll', 'Short Stories': 'fa-feather', 'Poetry': 'fa-feather-pointed' };
     const PAL = [['#7c5cff', '#2b1b8a'], ['#ff6b8a', '#8a1f4b'], ['#29d3b5', '#0b5f6b'], ['#f2c46d', '#8a4b12'], ['#4da3ff', '#1a2f8a'], ['#b46bff', '#4a1a8a'], ['#ff9a5a', '#9b2c1a'], ['#5ee38a', '#0f6a45']];
     const THEMES = { paper: ['Paper', '#fbf8f1', '#26221c', '#e8e1d2'], sepia: ['Sepia', '#f1e3c4', '#4b3a22', '#d9c79f'], lilac: ['Lilac', '#efeafc', '#2c2447', '#d6cdf3'], dark: ['Dark', '#1d1e29', '#d9d9e6', '#0f1018'], night: ['Night', '#000', '#b4b4c2', '#000'] };
     const FONTS = { serif: ['Serif', 'Georgia,"Iowan Old Style","Palatino Linotype",Palatino,"Times New Roman",serif'], sans: ['Sans', 'system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif'], easy: ['Easy', 'Verdana,Tahoma,"Trebuchet MS",sans-serif'] };
 
     /* ---------- the catalogue ---------- */
-    const BASE = D.books.map(r => ({ id: String(r[0]), gid: r[0], title: r[1], author: r[2], year: r[3], genre: r[4], rating: r[5], level: r[6], len: r[7], blurb: r[8] }));
+    let BASE = D.books.map(r => ({ id: String(r[0]), gid: r[0], title: r[1], author: r[2], year: r[3], genre: r[4], rating: r[5], level: r[6], len: r[7], blurb: r[8] }));
     const myBooks = () => JG('ml_my', []).map(m => ({ id: m.id, my: 1, title: m.title, author: m.author || 'Your own text', year: 0, genre: 'My books', rating: 0, level: 'Mine', len: m.len || 0, blurb: 'Text you added yourself. It stays on this device.' }));
     const all = () => myBooks().concat(BASE);
+    /* more books: the Books 2 action writes books/catalog.json next to the texts, and it is merged in here */
+    let catLoaded = 0;
+    async function loadCat() {
+        if (catLoaded) return; catLoaded = 1;
+        try {
+            const r = await fetch(new URL('books/catalog.json', location.href).href, { cache: 'no-cache' }); if (!r.ok) return; const j = await r.json();
+            const seen = new Set(BASE.map(b => b.id)), key = (b) => norm(b.title) + '|' + norm(b.author), tk = new Set(BASE.map(key)); let n = 0;
+            (j.books || []).forEach(r => { const b = { id: String(r[0]), gid: r[0], title: r[1], author: r[2], year: r[3], genre: r[4], rating: r[5], level: r[6], len: r[7], blurb: r[8] }; if (!b.title || seen.has(b.id) || tk.has(key(b))) return; seen.add(b.id); tk.add(key(b)); BASE.push(b); n++; });
+            Object.keys(j.authors || {}).forEach(a => { if (!D.authors[a]) D.authors[a] = j.authors[a]; });
+            if (n) { C.n = 48; paintCat(); }
+        } catch (e) { catLoaded = 0; }
+    }
     const byId = (id) => all().find(b => b.id === String(id));
     const minsOf = (len) => Math.max(1, Math.round(len * 1000 / 230));
     const dur = (m) => m < 60 ? m + ' min' : Math.floor(m / 60) + ' h' + (m % 60 >= 5 ? ' ' + (Math.round(m % 60 / 5) * 5 % 60) + ' min' : '');
@@ -43129,7 +43278,7 @@ window.__MLD = {
     const prog = () => JG('ml_prog', {});
     const favs = () => JG('ml_fav', []);
     const bad = () => JG('ml_bad', []);
-    const SET0 = { th: 'paper', font: 'serif', fs: (typeof innerWidth !== 'undefined' && innerWidth < 500) ? 18 : 19, lh: 1.62, anim: 'flip', snd: 1, lay: 'auto', just: 1, rate: 1, voice: '' };
+    const SET0 = { th: 'paper', font: 'serif', fs: (typeof innerWidth !== 'undefined' && innerWidth < 500) ? 18 : 19, lh: 1.62, anim: 'flip', lay: 'auto', just: 1, rate: 1, voice: '' };
     const settings = () => Object.assign({}, SET0, JG('ml_set', {}));
     const saveSet = (o) => JS('ml_set', Object.assign(settings(), o));
 
@@ -43216,7 +43365,7 @@ window.__MLD = {
     }
 
     /* ---------- state ---------- */
-    const C = { q: '', g: 'All', lv: 'All', sort: 'top' };
+    const C = { q: '', g: 'All', lv: 'All', sort: 'top', n: 48 };
     const R = { b: null, doc: null, starts: [-1], ends: [-1], done: false, v: 0, spread: false, busy: false, lastK: 150, seen: new Set(), looked: new Map(), t0: 0, tok: 0, chrome: true, panel: '' };
     const TT = { on: false, paused: false, i: 0, sents: [], tok: 0 };
     let root = null, book = null, stage = null, meas = null, leaf = null, drag = null, wpTok = 0, popBook = null;
@@ -43239,7 +43388,7 @@ window.__MLD = {
     function open() {
         shell(); root.classList.add('open'); document.documentElement.classList.add('ml-lock');
         try { history.pushState({ ml: 1 }, ''); } catch (e) { }
-        showCat();
+        showCat(); loadCat();
     }
     function close(fromPop) {
         leaveBook(); ttsStop(); closeWp(); closeSheet();
@@ -43281,11 +43430,12 @@ window.__MLD = {
             '<label class="ml-search"><i class="fa-solid fa-magnifying-glass"></i><input id="ml-q" type="search" placeholder="Search a title, an author or a genre" value="' + esc(C.q) + '" autocomplete="off"></label>' +
             (cont ? '<button class="ml-cont" data-a="detail" data-id="' + esc(cont.b.id) + '"><span class="ml-cont-cv">' + coverHTML(cont.b) + '</span><span class="ml-cont-t"><small>Continue reading</small><b>' + esc(cont.b.title) + '</b><span>' + esc(cont.b.author) + '</span><span class="ml-bar"><i style="width:' + Math.min(100, cont.p.pct) + '%"></i></span><em>' + Math.round(cont.p.pct) + '% read</em></span><span class="ml-cont-go"><i class="fa-solid fa-play"></i></span></button>' : '') +
             '<div class="ml-stats"><span><b>' + done + '</b> finished</span><span><b>' + (st.pages || 0).toLocaleString('en-US') + '</b> pages turned</span><span><b>' + dur(Math.round(st.min || 0)) + '</b> reading time</span></div>' +
+            '<div class="ml-lvc big"><div class="ml-lvh"><i class="fa-solid fa-layer-group"></i><b>Read at your level</b><small>Every book is rewritten to fit it. The story stays the same.</small></div><div class="ml-lvs">' + ['O'].concat(LV).map(l => '<button class="' + (LSg('ml_lvl', 'O') === l ? 'on' : '') + '" data-a="lvdef" data-l="' + l + '">' + (l === 'O' ? 'Original' : l) + '</button>').join('') + '</div></div>' +
             '<div class="ml-chips" role="tablist" aria-label="Genres">' + chips + '</div>' +
             '<div class="ml-bar2"><div class="ml-seg" role="radiogroup" aria-label="Level">' + ['All', 'Easy', 'Medium', 'Hard'].map(l => '<button role="radio" aria-checked="' + (C.lv === l) + '" class="' + (C.lv === l ? 'on' : '') + '" data-a="level" data-l="' + l + '">' + l + '</button>').join('') + '</div>' +
             '<label class="ml-sort"><i class="fa-solid fa-arrow-down-wide-short"></i><select id="ml-sort" aria-label="Sort books">' + [['top', 'Top rated'], ['az', 'A to Z'], ['short', 'Shortest first'], ['long', 'Longest first'], ['easy', 'Easiest first']].map(o => '<option value="' + o[0] + '"' + (C.sort === o[0] ? ' selected' : '') + '>' + o[1] + '</option>').join('') + '</select></label></div>' +
             (C.g === 'All' && !C.q && C.lv === 'All' && C.sort === 'top' ? '<h2 class="ml-h2">Readers’ favourites</h2><div class="ml-rail">' + top.map(b => '<div class="ml-mini" role="button" tabindex="0" data-a="detail" data-id="' + esc(b.id) + '" aria-label="' + esc(b.title) + '">' + coverHTML(b) + '<b>' + b.rating.toFixed(1) + ' ★</b></div>').join('') + '</div><h2 class="ml-h2">All books <small>' + L.length + '</small></h2>' : '<h2 class="ml-h2">' + (C.g === 'All' ? 'Results' : C.g === 'Reading' ? 'In progress' : esc(C.g)) + ' <small>' + L.length + '</small></h2>') +
-            (L.length ? '<div class="ml-grid">' + L.map(card).join('') + '</div>' : '<div class="ml-empty"><i class="fa-solid fa-book-open"></i><b>' + (C.g === 'Saved' ? 'Nothing saved yet' : C.g === 'Reading' ? 'You have no book in progress' : 'No book matches') + '</b><span>' + (C.g === 'Saved' ? 'Tap the heart on a book to keep it here.' : C.g === 'Reading' ? 'Open any book and it will wait for you here.' : 'Try another word, or clear the filters.') + '</span><button class="ml-btn" data-a="clear">Show all books</button></div>') +
+            (L.length ? '<div class="ml-grid">' + L.slice(0, C.n).map(card).join('') + '</div>' + (L.length > C.n ? '<button class="ml-btn ml-more" data-a="more">Show more books · ' + (L.length - C.n) + ' left</button>' : '') : '<div class="ml-empty"><i class="fa-solid fa-book-open"></i><b>' + (C.g === 'Saved' ? 'Nothing saved yet' : C.g === 'Reading' ? 'You have no book in progress' : 'No book matches') + '</b><span>' + (C.g === 'Saved' ? 'Tap the heart on a book to keep it here.' : C.g === 'Reading' ? 'Open any book and it will wait for you here.' : 'Try another word, or clear the filters.') + '</span><button class="ml-btn" data-a="clear">Show all books</button></div>') +
             '<p class="ml-foot">Texts are public-domain editions from Project Gutenberg. Ratings are rounded reader ratings.</p></div></div>';
         if (keep) { const q = $('#ml-q'); if (q) { q.focus(); try { q.setSelectionRange(q.value.length, q.value.length); } catch (e) { } } }
     }
@@ -43302,6 +43452,7 @@ window.__MLD = {
             (b.rating ? '<div class="ml-rate">' + stars(b.rating) + '<b>' + b.rating.toFixed(1) + '</b><small>reader rating</small></div>' : '') +
             '<div class="ml-facts"><span><i class="fa-solid fa-gauge"></i>' + esc(b.level) + '</span>' + (b.year ? '<span><i class="fa-solid fa-calendar"></i>' + (b.year < 0 ? Math.abs(b.year) + ' BC' : b.year) + '</span>' : '') + (b.len ? '<span><i class="fa-solid fa-clock"></i>about ' + dur(minsOf(b.len)) + '</span><span><i class="fa-solid fa-file-lines"></i>' + Math.max(1, Math.round(b.len * 1000 / 250)).toLocaleString('en-US') + ' pages</span>' : '') + '</div></div></div>' +
             '<p class="ml-blurb">' + esc(b.blurb) + '</p>' +
+            '<div class="ml-lvc"><div class="ml-lvh"><i class="fa-solid fa-layer-group"></i><b>Reading level</b><small id="ml-lvn">' + LVI[lvlOf(b)][1] + '</small></div><div class="ml-lvs">' + lvChips(b) + '</div></div>' +
             '<div class="ml-acts"><button class="ml-btn pri" data-a="read" data-id="' + esc(b.id) + '"><i class="fa-solid fa-book-open"></i>' + (P && P.pct > 0 && P.pct < 98 ? 'Continue · ' + Math.round(P.pct) + '%' : P && P.pct >= 98 ? 'Read again' : 'Start reading') + '</button><button class="ml-btn ghost ' + (F ? 'on' : '') + '" data-a="fav" data-id="' + esc(b.id) + '" aria-pressed="' + F + '"><i class="fa-' + (F ? 'solid' : 'regular') + ' fa-heart"></i>' + (F ? 'Saved' : 'Save') + '</button>' + (b.my ? '<button class="ml-btn ghost" data-a="delmy" data-id="' + esc(b.id) + '"><i class="fa-solid fa-trash"></i>Remove</button>' : '<a class="ml-btn ghost" target="_blank" rel="noopener" href="https://www.gutenberg.org/ebooks/' + b.gid + '"><i class="fa-solid fa-arrow-up-right-from-square"></i>Gutenberg</a>') + '</div>' +
             (A ? '<h3 class="ml-h3">About the author</h3><div class="ml-auth"><span class="ml-av" style="background:linear-gradient(135deg,' + p[0] + ',' + p[1] + ')">' + esc(b.author.split(' ').filter(w => /^[A-Z]/.test(w)).slice(-2).map(w => w[0]).join('')) + '</span><div><b>' + esc(b.author) + '</b><small>' + esc(A[0]) + '</small><p>' + esc(A[1]) + '</p></div></div>' : '') +
             (more.length ? '<h3 class="ml-h3">More by ' + esc(b.author) + '</h3><div class="ml-rail sm">' + more.map(x => '<div class="ml-mini" role="button" tabindex="0" data-a="detail" data-id="' + esc(x.id) + '" aria-label="' + esc(x.title) + '">' + coverHTML(x) + '</div>').join('') + '</div>' : '') + '</div>');
@@ -43329,11 +43480,13 @@ window.__MLD = {
             if (!titleOk(b, probe)) { const L = bad(); L.push(b.id); JS('ml_bad', L); rd.innerHTML = '<div class="ml-load"><button class="ml-x" data-a="back" aria-label="Back to library"><i class="fa-solid fa-chevron-left"></i></button><div class="ml-load-c"><b>This edition isn’t available</b><span>The library returned a different book. It has been hidden from your shelf.</span></div></div>'; return; }
             cachePut(b.id, raw);
         }
-        const doc = parse(raw, b); if (tok !== R.tok) return;
+        const doc0 = parse(raw, b); if (tok !== R.tok) return; const doc = doc0;
         if (doc.T < 50) { rd.innerHTML = '<div class="ml-load"><button class="ml-x" data-a="back"><i class="fa-solid fa-chevron-left"></i></button><div class="ml-load-c"><b>This text is empty</b></div></div>'; return; }
-        R.doc = doc; R.starts = [-1, doc.start]; R.ends = [-1]; R.done = false; R.lastK = 150;
+        makeSegs(doc0); R.d0 = doc0; R.segs = doc0.segs; R.lvl = adOK() ? lvlOf(b) : 'O'; R.gated = false; R.skipTo = 0; R.wg = 0;
+        await adPrep(R.lvl); if (tok !== R.tok) return;
+        R.doc = compose(doc0, doc0.segs); R.starts = [-1, R.doc.start]; R.ends = [-1]; R.done = false; R.lastK = 150;
         buildReader();
-        const sv = prog()[b.id]; let off = sv && sv.pct < 98 ? sv.off : doc.start; off = clamp(off, doc.start, doc.T - 1);
+        const sv = prog()[b.id]; let off = sv && sv.pct < 98 ? offOf(R.doc, o2p(sv.off)) : R.doc.start; off = clamp(off, R.doc.start, R.doc.T - 1);
         await gotoOffset(off, tok);
         if (tok !== R.tok) return;
         if (!LSg('ml_hint', '')) { LSs('ml_hint', '1'); toast('Tap any word for its meaning · swipe to turn the page'); }
@@ -43342,6 +43495,7 @@ window.__MLD = {
         const rd = $('#ml-rd'), S = settings(), b = R.b;
         rd.dataset.th = S.th;
         rd.innerHTML = '<div class="ml-rbar top" id="ml-top"><button class="ml-x" data-a="back" aria-label="Back to library"><i class="fa-solid fa-chevron-left"></i></button><div class="ml-ttl"><b>' + esc(b.title) + '</b><small>' + esc(b.author) + '</small></div>' +
+            '<button class="ml-lvp" id="ml-lvp" data-a="lvpanel" aria-label="Reading level" title="Reading level"></button>' +
             '<button class="ml-ib" data-a="words" aria-label="Words I looked up" title="Words I looked up"><i class="fa-solid fa-language"></i><em id="ml-wn" hidden>0</em></button>' +
             '<button class="ml-ib" data-a="toc" aria-label="Contents, bookmarks and search" title="Contents"><i class="fa-solid fa-list-ul"></i></button>' +
             '<button class="ml-ib" data-a="mark" id="ml-mk" aria-label="Bookmark this page" title="Bookmark"><i class="fa-regular fa-bookmark"></i></button>' +
@@ -43353,7 +43507,7 @@ window.__MLD = {
         { const pal = palOf(b); book.style.setProperty('--cv1', pal[0]); book.style.setProperty('--cv2', pal[1]); }
         stage.addEventListener('pointerdown', pDown); stage.addEventListener('pointermove', pMove); stage.addEventListener('pointerup', pUp); stage.addEventListener('pointercancel', pUp);
         const seek = $('#ml-seek'); seek.addEventListener('change', () => seekTo(+seek.value / 1000)); seek.addEventListener('input', () => { const t = R.doc.T; $('#ml-pn').textContent = Math.round(+seek.value / 10) + '% · drag to move'; });
-        applyStyle();
+        applyStyle(); paintLv();
     }
     function applyStyle() {
         const S = settings(), rd = $('#ml-rd'); if (!rd || !book) return;
@@ -43378,6 +43532,146 @@ window.__MLD = {
     }
 
     /* ----- pagination: fit words into a page by measuring it ----- */
+    /* ---------- reading levels: the same story, written for your level ---------- */
+    const LV = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
+    const LVI = { O: ['Original', 'The text exactly as the author wrote it.'], A1: ['Beginner', 'Very short, simple sentences and the most common words.'], A2: ['Elementary', 'Short sentences and everyday words.'], B1: ['Intermediate', 'Clear, everyday English with simple story language.'], B2: ['Upper-intermediate', 'Natural English with some richer words.'], C1: ['Advanced', 'Rich, precise English with idioms.'], C2: ['Mastery', 'Sophisticated, literary English.'] };
+    const LVR = {
+        A1: 'CEFR A1 (beginner). Use ONLY the ~700 most common English words. Very short sentences (5 to 10 words). Present simple, past simple and "will" only. No idioms, no phrasal verbs, no passive voice, no long relative clauses. Explain any difficult idea with simple words. You may split one long sentence into several short ones.',
+        A2: 'CEFR A2 (elementary). Use common everyday words (about 1500 words). Short sentences (8 to 14 words). Simple tenses and simple links such as and, but, because, when. Avoid idioms and rare words: replace them with simple words or a short phrase.',
+        B1: 'CEFR B1 (intermediate). Clear, standard English with sentences up to about 20 words and common vocabulary. Past, present perfect, simple conditionals and passives are fine. Replace rare, old-fashioned or literary words and long, tangled sentences with clearer ones.',
+        B2: 'CEFR B2 (upper-intermediate). Natural, fluent English with a good range of vocabulary, including some less common words and common idioms. Sentences may be longer but must be easy to follow. Replace archaic or very rare words and very convoluted syntax.',
+        C1: 'CEFR C1 (advanced). Rich, precise vocabulary, varied sentence structure, idioms and collocations. Keep elegant long sentences when they are clear. Modernise archaic words and remove only the most obscure constructions.',
+        C2: 'CEFR C2 (mastery). Sophisticated, literary, idiomatic English with precise, nuanced and less common vocabulary and varied, elegant syntax. Keep or enrich the author\'s register. Do not simplify.'
+    };
+    const lvlOf = (b) => { const m = JG('ml_lvb', {}), l = m[b.id] || LSg('ml_lvl', 'O'); return l === 'O' || LV.indexOf(l) >= 0 ? l : 'O'; };
+    const setLvl = (b, l) => { const m = JG('ml_lvb', {}); m[b.id] = l; JS('ml_lvb', m); LSs('ml_lvl', l); };
+    const lvTag = (l) => l === 'O' ? 'Original' : l;
+    const adOK = () => { try { return typeof lrAIFetch === 'function' && typeof aiReady === 'function' && aiReady(); } catch (e) { return false; } };
+    const wc = (arr) => arr.reduce((n, p) => n + p.w.length, 0);
+    /* cut the book into pieces of about 380 words that are rewritten one at a time; headings stay as they are */
+    function makeSegs(d) {
+        const P = d.P, segs = []; let cur = null, seenP = false, startP = 0; while (startP < P.length && d.pStart[startP] < d.start) startP++;
+        P.forEach((p, i) => {
+            const isP = p.t === 'p';
+            if (!cur || (!isP && seenP) || (isP && cur.pw >= 190 && cur.pw + p.w.length > 440)) { cur = { p0: i, p1: i, ow: 0, pw: 0, st: 'orig', ad: false }; segs.push(cur); seenP = false; }
+            cur.p1 = i; cur.ow += p.w.length; if (isP) { cur.pw += p.w.length; seenP = true; }
+        });
+        segs.forEach(s => { s.ad = s.p0 >= startP && s.pw >= 25; });
+        let ss = segs.findIndex(s => s.p0 >= startP); if (ss < 0) ss = 0;
+        const cum = [0]; segs.forEach(s => cum.push(cum[cum.length - 1] + s.ow));
+        d.segs = segs; d.startSeg = ss; d.cum = cum;
+    }
+    function compose(d0, segs) {
+        const P = [], pStart = [], segOff = []; let T = 0, ar = 0, ao = 0, pend = 0;
+        segs.forEach(s => {
+            segOff.push(T); const ok = s.use && s.out, src = ok ? s.out : d0.P.slice(s.p0, s.p1 + 1);
+            if (ok) { ar += wc(src); ao += s.ow; } else if (s.ad) pend += s.ow;
+            src.forEach(p => { P.push(p); pStart.push(T); T += p.w.length; });
+        });
+        segOff.push(T);
+        const start = segOff[d0.startSeg] || 0, chapters = [], brks = [];
+        P.forEach((p, i) => { if (p.t === 'h' && p.brk) { brks.push(pStart[i]); if (pStart[i] >= start) { const sub = P[i + 1] && P[i + 1].t === 's' ? ' · ' + P[i + 1].w.join(' ') : ''; chapters.push({ off: pStart[i], name: (p.w.join(' ') + sub).slice(0, 80) }); } } });
+        const ratio = ao ? ar / ao : 1;
+        return { P, pStart, T, start, chapters, brks, title: d0.title, segs, segOff, TX: Math.round(T + (ratio - 1) * pend), d0 };
+    }
+    function segIdx(d, off) { const s = d.segOff; let lo = 0, hi = s.length - 2; while (lo < hi) { const m = (lo + hi + 1) >> 1; if (s[m] <= off) lo = m; else hi = m - 1; } return lo; }
+    function posOf(d, off) { const k = segIdx(d, off), a = d.segOff[k], b = d.segOff[k + 1]; return k + clamp((off - a) / Math.max(1, b - a), 0, .999); }
+    function offOf(d, pos) { const k = clamp(Math.floor(pos), 0, d.segs.length - 1), a = d.segOff[k], b = d.segOff[k + 1]; return Math.min(Math.max(a, d.T - 1), a + Math.floor((pos - k) * (b - a))); }
+    function pctPos(d0, pos) { const k = clamp(Math.floor(pos), 0, d0.segs.length - 1); return clamp((d0.cum[k] + (pos - k) * d0.segs[k].ow) / Math.max(1, d0.T) * 100, 0, 100); }
+    function posPct(d0, f) { const w = f * d0.T; let lo = 0, hi = d0.segs.length - 1; while (lo < hi) { const m = (lo + hi + 1) >> 1; if (d0.cum[m] <= w) lo = m; else hi = m - 1; } return lo + clamp((w - d0.cum[lo]) / Math.max(1, d0.segs[lo].ow), 0, .999); }
+    /* the rewritten pieces are kept on the device, so each piece is paid for once */
+    async function cacheRange(prefix) {
+        const d = await idbOpen(); if (!d) return []; return new Promise(res => {
+            const out = []; try { const rq = d.transaction('t').objectStore('t').openCursor(IDBKeyRange.bound(prefix, prefix + '￿')); rq.onsuccess = () => { const c = rq.result; if (c) { out.push([c.key, c.value]); c.continue(); } else res(out); }; rq.onerror = () => res(out); } catch (e) { res(out); }
+        });
+    }
+    const segHash = (d0, s) => hash(d0.P[s.p0].w.slice(0, 6).join(' ') + '|' + s.ow + '|' + s.p1);
+    const AD = { q: [], busy: 0, tok: 0, dead: 0, fails: 0, wait: [] };
+    function adWake() { const w = AD.wait.splice(0); w.forEach(f => { try { f(); } catch (e) { } }); }
+    async function adCall(lvl, b, paras) {
+        const words = paras.reduce((n, p) => n + p.split(' ').length, 0);
+        const sys = 'You rewrite passages of a book for learners of English. ' + LVR[lvl] + ' RULES: Keep the meaning, plot, facts, order of events, characters, names, places, numbers, tone and the narrator\'s voice exactly the same; only the language changes. Do not summarise, skip, shorten a lot, add, explain or comment. Keep dialogue as dialogue with quotation marks. Write exactly one rewritten paragraph for each input paragraph, in the same order. Keep proper names unchanged. Reply with JSON only: {"paragraphs":["..."]}.';
+        const body = { model: (typeof LR_AI_MODEL !== 'undefined' ? LR_AI_MODEL : 'gpt-4o-mini'), temperature: .3, max_tokens: Math.min(4000, Math.ceil(words * 2.1) + 200), response_format: { type: 'json_object' }, messages: [{ role: 'system', content: sys }, { role: 'user', content: 'Book: "' + b.title + '" by ' + b.author + '. Target level: ' + lvl + '. Paragraphs: ' + JSON.stringify(paras) }] };
+        const ctl = new AbortController(), to = setTimeout(() => ctl.abort(), 75000);
+        try {
+            const r = await lrAIFetch('https://api.openai.com/v1/chat/completions', { method: 'POST', signal: ctl.signal, headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + aiKey() }, body: JSON.stringify(body) });
+            if (!r.ok) throw { code: r.status };
+            const j = await r.json(), o = JSON.parse(j.choices[0].message.content), L = (o.paragraphs || o.p || []).map(x => String(x || '').replace(/\s+/g, ' ').trim()).filter(Boolean);
+            const nw = L.join(' ').split(' ').length; if (!L.length || nw < words * .4 || nw > words * 2.6) throw { code: 'shape' };
+            return L;
+        } finally { clearTimeout(to); }
+    }
+    function adPump() {
+        while (AD.busy < 2 && AD.q.length) {
+            const k = AD.q.shift(), s = R.segs && R.segs[k]; if (!s || s.st !== 'pend') continue;
+            AD.busy++; adWork(k, AD.tok, R.lvl, R.b, R.d0).catch(() => { }).then(() => { AD.busy--; adPump(); });
+        }
+    }
+    async function adWork(k, tok, lvl, b, d0) {
+        const s = R.segs[k], src = d0.P.slice(s.p0, s.p1 + 1), paras = src.filter(p => p.t === 'p').map(p => p.w.join(' ')); let L = null, hard = false;
+        for (let t = 0; t < 2 && !L; t++) { try { L = await adCall(lvl, b, paras); } catch (e) { if (tok !== AD.tok) return; if (e && (e.code === 401 || e.code === 429 || e.code === 404)) { hard = true; break; } } }
+        if (tok !== AD.tok) return;
+        if (L) {
+            AD.fails = 0; const lead = []; for (const p of src) { if (p.t !== 'p') lead.push(p); else break; }
+            s.out = lead.concat(L.map(t => ({ w: t.split(' '), t: 'p' }))); cachePut('seg|' + b.id + '|' + lvl + '|' + k + '|' + segHash(d0, s), L);
+            if (s.st === 'pend') { s.st = 'ready'; adApply(k); } else s.spare = 1;
+        } else {
+            if (s.st === 'pend') s.st = 'fail'; AD.fails += hard ? 3 : 1;
+            if (AD.fails >= 3 && !AD.dead) { AD.dead = 1; R.segs.forEach(x => { if (x.st === 'pend') x.st = 'fail'; }); toast('The AI is busy, so this part is shown in the original English. Try again in a minute.'); }
+        }
+        adWake();
+    }
+    function adApply(k) {
+        if (!R.doc || !R.segs) return; const s = R.segs[k], off = R.doc.segOff[k], front = R.starts[R.starts.length - 1];
+        if (s && s.out && (off >= front || R.starts.length < 2)) {
+            s.use = 1; const d = compose(R.d0, R.segs); if (R.done) { R.done = false; R.ends.length = R.starts.length - 1; } R.doc = d;
+            if (R.gated) { R.gated = false; const rr = $('#ml-R'); if (!R.wg && !R.busy && rr && rr.classList.contains('blank') && !rr.classList.contains('end')) render(R.v); }
+        }
+        adWake();
+    }
+    function adNeed(k, hi) {
+        const s = R.segs && R.segs[k]; if (!s || !s.ad || R.lvl === 'O' || AD.dead) return;
+        if (s.st === 'orig' && s.spare) { s.st = 'ready'; s.spare = 0; adApply(k); return; }
+        if (s.st !== 'orig') return;
+        s.st = 'pend'; if (hi) AD.q.unshift(k); else AD.q.push(k); adPump();
+    }
+    function adFrom(off, ahead) { if (R.lvl === 'O' || !R.segs) return; const k = segIdx(R.doc, off); for (let j = k; j <= Math.min(R.segs.length - 1, k + (ahead || 4)); j++) adNeed(j, j <= k + 1); }
+    /* a jump far ahead must not wait for every piece in between: those stay in the original English for now */
+    function adSkip(off) { if (R.lvl === 'O' || !R.segs) return; const k = segIdx(R.doc, off), f = segIdx(R.doc, Math.max(0, R.starts[R.starts.length - 1])); for (let j = f; j < k; j++) { const s = R.segs[j]; if (s.st === 'pend') { s.st = 'orig'; const i = AD.q.indexOf(j); if (i >= 0) AD.q.splice(i, 1); } } }
+    function gateOk(a) { if (R.lvl === 'O' || !R.segs) return true; const d = R.doc; let k = segIdx(d, a); for (; k < R.segs.length && d.segOff[k] < a + 700; k++) if (R.segs[k].st === 'pend') return false; return true; }
+    const adWaitGate = (tok) => new Promise(res => { const chk = () => { if (tok !== R.tok || gateOk(R.starts[R.starts.length - 1])) res(); else AD.wait.push(chk); }; chk(); });
+    const adWaitSeg = (k, tok) => new Promise(res => { const chk = () => { if (tok !== R.tok || !R.segs[k] || R.segs[k].st !== 'pend') res(); else AD.wait.push(chk); }; chk(); });
+    /* start (or restart) a level for the open book: forget the old pieces, load what this device already has */
+    async function adPrep(lvl) {
+        AD.tok++; AD.q.length = 0; AD.fails = 0; AD.dead = 0; AD.busy = Math.max(0, AD.busy); R.stale = false;
+        R.segs.forEach(s => { s.st = 'orig'; s.out = null; s.spare = 0; s.use = 0; });
+        if (lvl === 'O') return;
+        const rows = await cacheRange('seg|' + R.b.id + '|' + lvl + '|');
+        rows.forEach(([key, L]) => { const m = String(key).split('|'), k = +m[3], s = R.segs[k]; if (s && Array.isArray(L) && L.length && String(segHash(R.d0, s)) === m[4]) { const lead = []; for (let i = s.p0; i <= s.p1; i++) { if (R.d0.P[i].t !== 'p') lead.push(R.d0.P[i]); else break; } s.out = lead.concat(L.map(t => ({ w: String(t).split(' '), t: 'p' }))); s.st = 'ready'; s.use = 1; } });
+    }
+
+    const o2p = (o) => { const d0 = R.d0, c = d0.cum; let lo = 0, hi = d0.segs.length - 1; while (lo < hi) { const m = (lo + hi + 1) >> 1; if (c[m] <= o) lo = m; else hi = m - 1; } return lo + clamp((o - c[lo]) / Math.max(1, d0.segs[lo].ow), 0, .999); };
+    const p2o = (pos) => { const d0 = R.d0, k = clamp(Math.floor(pos), 0, d0.segs.length - 1); return d0.cum[k] + Math.floor((pos - k) * d0.segs[k].ow); };
+    const bmOffs = () => (JG('ml_bm', {})[R.b.id] || []).map(o => ({ o, c: offOf(R.doc, o2p(o)) }));
+    const pctAt = (off) => pctPos(R.d0, posOf(R.doc, off));
+    async function applyLevel(l) {
+        if (!R.b || !R.doc) return; if (l === R.lvl) { closePanel(); return; }
+        if (l !== 'O' && !adOK()) { toast('The AI helper is not available right now. Please try again in a moment.'); return; }
+        closePanel(); closeWp(); try { ttsStop(); } catch (e) { }
+        const tok = R.tok, pos = posOf(R.doc, curOff()); setLvl(R.b, l); R.lvl = l; paintLv();
+        showBusy(l === 'O' ? 'Back to the original text…' : 'Adapting this book to ' + l + '…'); await new Promise(r => setTimeout(r, 30));
+        await adPrep(l); if (tok !== R.tok) return;
+        R.doc = compose(R.d0, R.segs); R.starts = [-1, R.doc.start]; R.ends = [-1]; R.done = false; R.lastK = 150; R.gated = false;
+        await gotoOffset(clamp(offOf(R.doc, pos), R.doc.start, R.doc.T - 1), tok);
+        if (l !== 'O') toast('Now reading at level ' + l + (R.segs.some(s => s.st === 'fail') ? '' : ' · same story, simpler words'.replace('simpler', l >= 'C1' || l === 'C1' || l === 'C2' ? 'richer' : 'simpler')));
+    }
+    function paintLv() { const e = $('#ml-lvp'); if (e) { e.textContent = lvTag(R.lvl); e.classList.toggle('on', R.lvl !== 'O'); } }
+    function lvPanel() {
+        const rows = ['O'].concat(LV).map(l => '<button class="ml-lvr ' + (R.lvl === l ? 'on' : '') + '" data-a="lvset" data-l="' + l + '"><b>' + (l === 'O' ? 'Orig' : l) + '</b><span><strong>' + LVI[l][0] + '</strong><small>' + LVI[l][1] + '</small></span><i class="fa-solid fa-check"></i></button>').join('');
+        return rows + '<p class="ml-lvn">Same story, same meaning. Only the words and sentences change to fit your level. The adapted text is saved on this device.</p>';
+    }
+    function lvChips(b) { const cur = lvlOf(b); return ['O'].concat(LV).map(l => '<button class="' + (cur === l ? 'on' : '') + '" data-a="lvd" data-l="' + l + '" data-id="' + esc(b.id) + '">' + (l === 'O' ? 'Original' : l) + '</button>').join(''); }
+
     function pIndex(off) { const s = R.doc.pStart; let lo = 0, hi = s.length - 1; while (lo < hi) { const m = (lo + hi + 1) >> 1; if (s[m] <= off) lo = m; else hi = m - 1; } return lo; }
     function build(a, k, spans) {
         const d = R.doc, end = a + k; let pi = pIndex(a), out = '';
@@ -43400,10 +43694,11 @@ window.__MLD = {
         return lo;
     }
     function ensure(n) {
-        initMeas();
+        initMeas(); R.gated = false;
         while (R.starts.length <= n && !R.done) {
             const i = R.starts.length - 1, a = R.starts[i]; if (R.ends.length <= i) { }
             if (a >= R.doc.T) { R.done = true; break; }
+            if (R.lvl && R.lvl !== 'O' && !(R.skipTo && a < R.skipTo - 800)) { adFrom(a, 3); if (!gateOk(a)) { R.gated = true; break; } }
             const k = pageSize(a); R.lastK = k; R.ends[i] = a + k;
             if (a + k >= R.doc.T) { R.done = true; break; }
             R.starts.push(a + k);
@@ -43418,18 +43713,19 @@ window.__MLD = {
         }
         return true;
     }
-    const nPages = () => { if (R.done) return R.starts.length; const n = R.starts.length - 2, last = R.starts[R.starts.length - 1], avg = n >= 3 ? (last - R.starts[1]) / n : Math.max(40, R.lastK); return Math.max(R.starts.length + 1, R.starts.length - 1 + Math.ceil((R.doc.T - last) / avg)); };
+    const nPages = () => { if (R.done) return R.starts.length; const n = R.starts.length - 2, last = R.starts[R.starts.length - 1], avg = n >= 3 ? (last - R.starts[1]) / n : Math.max(40, R.lastK); return Math.max(R.starts.length + 1, R.starts.length - 1 + Math.ceil(((R.doc.TX || R.doc.T) - last) / avg)); };
     function pageOfOff(off) { let lo = 1, hi = R.starts.length - 1; while (lo < hi) { const m = (lo + hi + 1) >> 1; if (R.starts[m] <= off) lo = m; else hi = m - 1; } return lo; }
     async function gotoOffset(off, tok) {
         initMeas();
         sizeBook(); const rd = $('#ml-rd');
         // paginate up to the page holding this offset (a long book can take a moment, so show it)
-        let last = R.starts[R.starts.length - 1], shown = false, t0 = performance.now();
+        let last = R.starts[R.starts.length - 1], shown = false, t0 = performance.now(); R.skipTo = off; adSkip(off);
         while (!R.done && R.starts[R.starts.length - 1] <= off) {
             ensure(R.starts.length);
+            if (R.gated) { showBusy('Adapting to ' + R.lvl + '…'); R.wg = 1; await adWaitGate(tok); R.wg = 0; if (tok !== R.tok) return; t0 = performance.now(); continue; }
             if (performance.now() - t0 > 60) { if (!shown) { shown = true; showBusy('Preparing your pages…'); } await new Promise(r => requestAnimationFrame(r)); if (tok !== R.tok) return; t0 = performance.now(); }
         }
-        hideBusy(); const n = pageOfOff(off); R.v = vOfPage(n); render(R.v);
+        R.skipTo = 0; hideBusy(); const n = pageOfOff(off); R.v = vOfPage(n); render(R.v);
     }
     function showBusy(m) { let e = $('#ml-busy'); if (!e) { e = document.createElement('div'); e.id = 'ml-busy'; e.className = 'ml-busy'; $('#ml-rd').appendChild(e); } e.innerHTML = '<i class="ml-spin"></i><span>' + esc(m) + '</span>'; }
     function hideBusy() { const e = $('#ml-busy'); if (e) e.remove(); }
@@ -43458,22 +43754,23 @@ window.__MLD = {
     }
     function curOff() { const n = R.spread ? (leftOf(R.v) >= 1 ? leftOf(R.v) : rightOf(R.v)) : rightOf(R.v); const i = clamp(n, 1, R.starts.length - 1); return R.starts[i]; }
     function afterShow() {
-        const d = R.doc, off = curOff(), pct = clamp(off / d.T * 100, 0, 100), n = R.spread ? Math.max(leftOf(R.v), 0) || rightOf(R.v) : rightOf(R.v);
+        const d = R.doc, off = curOff(), pos = posOf(d, off), pct = pctPos(R.d0, pos), n = R.spread ? Math.max(leftOf(R.v), 0) || rightOf(R.v) : rightOf(R.v);
         const total = R.done ? R.starts.length - 1 : nPages();
         $('#ml-pn').textContent = (R.spread && leftOf(R.v) >= 1 && rightOf(R.v) < R.starts.length ? 'Pages ' + leftOf(R.v) + '–' + rightOf(R.v) : 'Page ' + Math.max(n, 1)) + ' of ' + (R.done ? total : '~' + total);
-        const wl = Math.max(0, d.T - off); $('#ml-left').textContent = wl < 120 ? 'The end' : dur(Math.round(wl / 230)) + ' left · ' + Math.round(pct) + '%';
+        const wl = Math.max(0, (d.TX || d.T) - off); $('#ml-left').textContent = wl < 120 ? 'The end' : dur(Math.round(wl / 230)) + ' left · ' + Math.round(pct) + '%';
         $('#ml-seek').value = Math.round(pct * 10);
-        const bm = JG('ml_bm', {})[R.b.id] || [], vis = visiblePages().map(p => R.starts[p]).filter(x => x != null);
+        const bm = bmOffs().map(x => x.c), vis = visiblePages().map(p => R.starts[p]).filter(x => x != null);
         const on = bm.some(o => vis.some(s => o >= s && o < (R.ends[R.starts.indexOf(s)] || s + 1)));
         const mk = $('#ml-mk'); if (mk) { mk.classList.toggle('on', on); mk.innerHTML = '<i class="fa-' + (on ? 'solid' : 'regular') + ' fa-bookmark"></i>'; }
         { const f = clamp(pct / 100, 0, 1), sp = R.spread; book.style.setProperty('--tl', (sp ? 2 + 9 * f : 0).toFixed(1) + 'px'); book.style.setProperty('--tr', (2 + 9 * (1 - f)).toFixed(1) + 'px'); }
         // remember where we are
-        const P = prog(); P[R.b.id] = { off: off, pct: pct, ts: Date.now() }; JS('ml_prog', P);
+        const P = prog(); P[R.b.id] = { off: p2o(pos), pct: pct, ts: Date.now() }; JS('ml_prog', P);
         // reading credit: new pages, XP and the end of the book
         visiblePages().forEach(p => { if (p >= 1 && !R.seen.has(p)) { R.seen.add(p); R.pgs0++; creditPage(); } });
         if (R.done && visiblePages().includes(R.starts.length - 1)) finished();
         // warm up the next pages while the reader is busy reading this one
         setTimeout(() => { try { if (R.doc && !$('#ml-rd').hidden) ensure(rightOf(R.v) + 4); } catch (e) { } }, 60);
+        try { adFrom(off, 4); } catch (e) { }
         highlightMarks();
     }
     const visiblePages = () => R.spread ? [leftOf(R.v), rightOf(R.v)].filter(p => p >= 1 && p < R.starts.length) : [rightOf(R.v)].filter(p => p >= 1 && p < R.starts.length);
@@ -43540,27 +43837,15 @@ window.__MLD = {
         cs[0].style.transform = 'scaleX(' + (Math.max(0, -xmin) / pw + .06).toFixed(3) + ')'; cs[0].style.opacity = (xmin < -3 && R.spread ? lift * .95 : 0).toFixed(3);
     }
     const setAng = paint;
-    let snd = null;
-    function flipSound() {
-        if (!settings().snd) return;
-        try {
-            snd = snd || new (window.AudioContext || window.webkitAudioContext)(); if (snd.state === 'suspended') snd.resume();
-            const sr = snd.sampleRate, len = Math.floor(sr * .34), buf = snd.createBuffer(1, len, sr), d = buf.getChannelData(0); let lp = 0;
-            for (let i = 0; i < len; i++) { const t = i / len, env = Math.pow(Math.sin(Math.min(1, t * 1.15) * Math.PI), 1.4) * Math.pow(1 - t, .9); lp += ((Math.random() * 2 - 1) - lp) * .55; d[i] = lp * env; }
-            const s = snd.createBufferSource(); s.buffer = buf; const f = snd.createBiquadFilter(); f.type = 'bandpass'; f.Q.value = .8; const t0 = snd.currentTime;
-            f.frequency.setValueAtTime(1500, t0); f.frequency.exponentialRampToValueAtTime(4200, t0 + .26); const g = snd.createGain(); g.gain.value = .22;
-            s.connect(f); f.connect(g); g.connect(snd.destination); s.start(t0);
-        } catch (e) { }
-    }
-    function finish(dir, go, ms) {
+    function finish(dir, go, ms, drag) {
         const to = go ? (dir > 0 ? 1 : 0) : (dir > 0 ? 0 : 1), from = R.q, t0 = performance.now(); ms = ms || 640; let done = false;
         const end = () => { if (done) return; done = true; cancelAnimationFrame(R.raf); if (go) render(R.v + dir); else render(R.v); if (go) onTurned(); };
-        const ease = go && ms > 500 ? (t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2) : (t => 1 - Math.pow(1 - t, 3));
-        if (go) flipSound();
+        const ease = go && ms > 500 && !drag ? (t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2) : (t => 1 - Math.pow(1 - t, 3));
         let fr = 0; const step = (now) => { if (done) return; fr++; const t = Math.min(1, (now - t0) / ms); paint(dir, from + (to - from) * ease(t)); if (t >= 1) { if (go && ms > 500 && fr < ms / 1000 * 22) { try { LSs('ml_fx', 'low'); } catch (e) { } } end(); } else R.raf = requestAnimationFrame(step); };
         R.raf = requestAnimationFrame(step); setTimeout(end, ms + 150);
     }
     function turn(dir) {
+        if (dir > 0 && R.doc && !R.busy && !R.wg && R.lvl !== 'O') { ensure(rightOf(R.v + 1)); if (R.gated) { R.wg = 1; showBusy('Adapting to ' + R.lvl + '…'); adWaitGate(R.tok).then(() => { R.wg = 0; hideBusy(); R.gated = false; turn(dir); }); return; } }
         if (!canTurn(dir)) { if (dir > 0 && R.doc && R.done) toast('That is the last page.'); return; }
         const S = settings(); closeWp();
         const calm = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -43582,7 +43867,7 @@ window.__MLD = {
     }
     function pUp(e) {
         if (!drag) return; const d = drag; drag = null;
-        if (d.go) { const v = d.p / Math.max(1, Date.now() - d.t) * 1000; suppress(); finish(d.dir, d.p > .28 || v > 1.4, 460); }
+        if (d.go) { const v = d.p / Math.max(1, Date.now() - d.t) * 1000, go = d.p > .28 || v > 1.4, rem = go ? 1 - d.p : d.p; suppress(); finish(d.dir, go, clamp(rem / Math.max(v, .9) * 1000, 190, 520), true); }
         else if (d.moved) suppress();
     }
     let sup = 0; const suppress = () => { sup = Date.now() + 350; };
@@ -43600,7 +43885,7 @@ window.__MLD = {
     function toggleChrome() { const rd = $('#ml-rd'); rd.classList.toggle('imm'); }
 
     /* ----- seek, contents, bookmarks, search ----- */
-    async function seekTo(f) { if (!R.doc) return; const d = R.doc, off = clamp(Math.floor(d.start + (d.T - d.start) * f), d.start, d.T - 1); closeWp(); await gotoOffset(off, R.tok); }
+    async function seekTo(f) { if (!R.doc) return; const d = R.doc, off = clamp(offOf(d, posPct(R.d0, clamp(f, 0, .999))), d.start, d.T - 1); closeWp(); await gotoOffset(off, R.tok); }
     async function jump(off) { closePanel(); closeWp(); ttsStop(); await gotoOffset(clamp(off, R.doc.start, R.doc.T - 1), R.tok); }
     function openPanel(kind) {
         const p = $('#ml-panel'); R.panel = kind; p.hidden = false; p.className = 'ml-panel on'; p.innerHTML = panelHTML(kind); const i = $('#ml-ps'); if (i && kind === 'toc') { }
@@ -43616,10 +43901,10 @@ window.__MLD = {
                 '<div class="ml-lab">Typeface</div><div class="ml-seg2">' + Object.keys(FONTS).map(k => '<button class="' + (S.font === k ? 'on' : '') + '" data-a="font" data-k="' + k + '" style="font-family:' + FONTS[k][1] + '">' + FONTS[k][0] + '</button>').join('') + '</div>' +
                 '<div class="ml-lab">Line spacing</div><div class="ml-seg2">' + [[1.4, 'Tight'], [1.62, 'Normal'], [1.85, 'Airy']].map(o => '<button class="' + (Math.abs(S.lh - o[0]) < .02 ? 'on' : '') + '" data-a="lh" data-v="' + o[0] + '">' + o[1] + '</button>').join('') + '</div>' +
                 '<div class="ml-lab">Page turn</div><div class="ml-seg2">' + [['flip', 'Flip'], ['fade', 'Fade'], ['none', 'Instant']].map(o => '<button class="' + (S.anim === o[0] ? 'on' : '') + '" data-a="anim" data-k="' + o[0] + '">' + o[1] + '</button>').join('') + '</div>' +
-                '<div class="ml-lab">Page sound</div><div class="ml-seg2">' + [[1, 'On'], [0, 'Off']].map(o => '<button class="' + (!!S.snd === !!o[0] ? 'on' : '') + '" data-a="snd" data-v="' + o[0] + '">' + o[1] + '</button>').join('') + '</div>' +
                 '<div class="ml-lab">Layout</div><div class="ml-seg2">' + [['auto', 'Auto'], ['single', 'One page'], ['spread', 'Two pages']].map(o => '<button class="' + (S.lay === o[0] ? 'on' : '') + '" data-a="lay" data-k="' + o[0] + '">' + o[1] + '</button>').join('') + '</div>' +
                 '<div class="ml-lab">Alignment</div><div class="ml-seg2">' + [[1, 'Justified'], [0, 'Left']].map(o => '<button class="' + (!!S.just === !!o[0] ? 'on' : '') + '" data-a="just" data-v="' + o[0] + '">' + o[1] + '</button>').join('') + '</div></div>';
         }
+        if (kind === 'lv') return head('Reading level') + '<div class="ml-pb">' + lvPanel() + '</div>';
         if (kind === 'toc') {
             const bm = JG('ml_bm', {})[R.b.id] || [];
             return head('Contents') + '<div class="ml-tabs"><button class="on" data-a="tab" data-k="ch">Chapters</button><button data-a="tab" data-k="bm">Bookmarks' + (bm.length ? ' <b>' + bm.length + '</b>' : '') + '</button><button data-a="tab" data-k="se">Search</button></div><div class="ml-pb" id="ml-tb">' + tabHTML('ch') + '</div>';
@@ -43634,11 +43919,11 @@ window.__MLD = {
         const d = R.doc;
         if (k === 'ch') {
             const cur = curOff(); let at = -1; d.chapters.forEach((c, i) => { if (c.off <= cur) at = i; });
-            return d.chapters.length ? '<div class="ml-list">' + d.chapters.slice(0, 400).map((c, i) => '<button class="ml-li ' + (i === at ? 'on' : '') + '" data-a="jump" data-o="' + c.off + '"><span>' + esc(c.name) + '</span><small>' + Math.round(c.off / d.T * 100) + '%</small></button>').join('') + '</div>' : '<div class="ml-empty sm"><i class="fa-solid fa-list"></i><b>No chapters found</b><span>Use the slider at the bottom to move through the book.</span></div>';
+            return d.chapters.length ? '<div class="ml-list">' + d.chapters.slice(0, 400).map((c, i) => '<button class="ml-li ' + (i === at ? 'on' : '') + '" data-a="jump" data-o="' + c.off + '"><span>' + esc(c.name) + '</span><small>' + Math.round(pctAt(c.off)) + '%</small></button>').join('') + '</div>' : '<div class="ml-empty sm"><i class="fa-solid fa-list"></i><b>No chapters found</b><span>Use the slider at the bottom to move through the book.</span></div>';
         }
         if (k === 'bm') {
-            const bm = (JG('ml_bm', {})[R.b.id] || []).slice().sort((a, b) => a - b);
-            return bm.length ? '<div class="ml-list">' + bm.map(o => '<button class="ml-li" data-a="jump" data-o="' + o + '"><span>' + esc(snip(o, 70)) + '…</span><small>' + Math.round(o / d.T * 100) + '%</small></button>').join('') + '</div>' : '<div class="ml-empty sm"><i class="fa-regular fa-bookmark"></i><b>No bookmarks yet</b><span>Tap the bookmark icon at the top to mark a page.</span></div>';
+            const bm = bmOffs().sort((a, b) => a.o - b.o);
+            return bm.length ? '<div class="ml-list">' + bm.map(x => '<button class="ml-li" data-a="jump" data-o="' + x.c + '"><span>' + esc(snip(x.c, 70)) + '…</span><small>' + Math.round(pctAt(x.c)) + '%</small></button>').join('') + '</div>' : '<div class="ml-empty sm"><i class="fa-regular fa-bookmark"></i><b>No bookmarks yet</b><span>Tap the bookmark icon at the top to mark a page.</span></div>';
         }
         return '<label class="ml-search sm"><i class="fa-solid fa-magnifying-glass"></i><input id="ml-ps" type="search" placeholder="Search inside this book" autocomplete="off"></label><div class="ml-list" id="ml-pr"></div>';
     }
@@ -43647,13 +43932,13 @@ window.__MLD = {
         const out = $('#ml-pr'); if (!out) return; q = q.trim().toLowerCase(); if (q.length < 2) { out.innerHTML = ''; return; }
         const d = R.doc, res = [];
         for (let i = 0; i < d.P.length && res.length < 40; i++) { const t = d.P[i].w.join(' '), l = t.toLowerCase(); let p = l.indexOf(q); if (p >= 0) { const wi = l.slice(0, p).split(' ').length - 1, a = Math.max(0, p - 30); res.push({ off: d.pStart[i] + Math.max(0, wi), txt: (a > 0 ? '…' : '') + t.slice(a, p + q.length + 50) + '…', pre: t.slice(a, p), hit: t.slice(p, p + q.length), post: t.slice(p + q.length, p + q.length + 50) }); } }
-        out.innerHTML = res.length ? res.map(r => '<button class="ml-li" data-a="jump" data-o="' + r.off + '"><span>' + (r.pre ? '…' : '') + esc(r.pre) + '<mark>' + esc(r.hit) + '</mark>' + esc(r.post) + '…</span><small>' + Math.round(r.off / d.T * 100) + '%</small></button>').join('') : '<div class="ml-empty sm"><b>No match</b></div>';
+        out.innerHTML = res.length ? res.map(r => '<button class="ml-li" data-a="jump" data-o="' + r.off + '"><span>' + (r.pre ? '…' : '') + esc(r.pre) + '<mark>' + esc(r.hit) + '</mark>' + esc(r.post) + '…</span><small>' + Math.round(pctAt(r.off)) + '%</small></button>').join('') : '<div class="ml-empty sm"><b>No match</b></div>';
     }
     function toggleMark() {
         const all = JG('ml_bm', {}), L = all[R.b.id] || [], vis = visiblePages(); if (!vis.length) return;
-        const inR = (o) => vis.some(p => o >= R.starts[p] && o < (R.ends[p] != null ? R.ends[p] : R.starts[p] + 1));
+        const inR = (o0) => { const o = offOf(R.doc, o2p(o0)); return vis.some(p => o >= R.starts[p] && o < (R.ends[p] != null ? R.ends[p] : R.starts[p] + 1)); };
         const had = L.filter(inR);
-        if (had.length) all[R.b.id] = L.filter(o => !inR(o)); else { L.push(R.starts[vis[0]]); all[R.b.id] = L; }
+        if (had.length) all[R.b.id] = L.filter(o => !inR(o)); else { L.push(p2o(posOf(R.doc, R.starts[vis[0]]))); all[R.b.id] = L; }
         JS('ml_bm', all); afterShow(); toast(had.length ? 'Bookmark removed' : 'Bookmark added');
     }
     function highlightMarks() { }
@@ -43807,8 +44092,8 @@ window.__MLD = {
     function toggleFav(id) { const F = favs(), i = F.indexOf(id); if (i >= 0) F.splice(i, 1); else F.push(id); JS('ml_fav', F); }
     function onInput(e) {
         const t = e.target;
-        if (t.id === 'ml-q') { C.q = t.value; clearTimeout(onInput.t); onInput.t = setTimeout(paintCat, 160); }
-        else if (t.id === 'ml-sort') { C.sort = t.value; paintCat(); }
+        if (t.id === 'ml-q') { C.q = t.value; C.n = 48; clearTimeout(onInput.t); onInput.t = setTimeout(paintCat, 160); }
+        else if (t.id === 'ml-sort') { C.sort = t.value; C.n = 48; paintCat(); }
         else if (t.id === 'ml-ps') searchBook(t.value);
         else if (t.id === 'ml-rate') { const v = +t.value / 100; saveSet({ rate: v }); $('#ml-ratev').textContent = v.toFixed(1) + '×'; if (e.type === 'change') ttsRestartHere(); }
         else if (t.id === 'ml-voice') { saveSet({ voice: t.value }); ttsRestartHere(); }
@@ -43821,8 +44106,9 @@ window.__MLD = {
         if (a === 'detail') return detail(id);
         if (a === 'shclose') return closeSheet();
         if (a === 'read') return readBook(id);
-        if (a === 'genre') { C.g = b.dataset.g; return paintCat(); }
-        if (a === 'level') { C.lv = b.dataset.l; return paintCat(); }
+        if (a === 'more') { C.n += 60; return paintCat(); }
+        if (a === 'genre') { C.g = b.dataset.g; C.n = 48; return paintCat(); }
+        if (a === 'level') { C.lv = b.dataset.l; C.n = 48; return paintCat(); }
         if (a === 'clear') { C.g = 'All'; C.lv = 'All'; C.q = ''; return paintCat(); }
         if (a === 'import') return importText();
         if (a === 'delmy') { JS('ml_my', JG('ml_my', []).filter(m => m.id !== id)); closeSheet(); return paintCat(); }
@@ -43831,6 +44117,10 @@ window.__MLD = {
         if (a === 'next') return turn(1);
         if (a === 'aa') return R.panel === 'aa' ? closePanel() : openPanel('aa');
         if (a === 'toc') return R.panel === 'toc' ? closePanel() : openPanel('toc');
+        if (a === 'lvpanel') return R.panel === 'lv' ? closePanel() : openPanel('lv');
+        if (a === 'lvset') return applyLevel(b.dataset.l);
+        if (a === 'lvd') { const bk = byId(id); if (bk) { setLvl(bk, b.dataset.l); $$('.ml-lvc button').forEach(x => x.classList.toggle('on', x === b)); const n = $('#ml-lvn'); if (n) n.textContent = LVI[b.dataset.l][1]; if (b.dataset.l !== 'O' && !adOK()) toast('Level reading needs the AI helper. It is not available right now.'); } return; }
+        if (a === 'lvdef') { LSs('ml_lvl', b.dataset.l); paintCat(); return; }
         if (a === 'words') return R.panel === 'words' ? closePanel() : openPanel('words');
         if (a === 'pclose') return closePanel();
         if (a === 'mark') return toggleMark();
@@ -43840,7 +44130,6 @@ window.__MLD = {
         if (a === 'font') { saveSet({ font: b.dataset.k }); applyStyle(); openPanel('aa'); return relayout(); }
         if (a === 'fs') { const S = settings(); saveSet({ fs: clamp(S.fs + (+b.dataset.d), 14, 32) }); applyStyle(); openPanel('aa'); clearTimeout(R.fsT); R.fsT = setTimeout(relayout, 220); return; }
         if (a === 'lh') { saveSet({ lh: +b.dataset.v }); applyStyle(); openPanel('aa'); return relayout(); }
-        if (a === 'snd') { saveSet({ snd: +b.dataset.v }); if (+b.dataset.v) flipSound(); return openPanel('aa'); }
         if (a === 'anim') { saveSet({ anim: b.dataset.k }); return openPanel('aa'); }
         if (a === 'lay') { saveSet({ lay: b.dataset.k }); applyStyle(); openPanel('aa'); return relayout(); }
         if (a === 'just') { saveSet({ just: +b.dataset.v }); applyStyle(); openPanel('aa'); return relayout(); }
