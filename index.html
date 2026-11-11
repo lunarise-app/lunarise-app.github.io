@@ -43246,12 +43246,12 @@ window.__MLD = {
         });
     }
     async function fetchBook(b, onMsg) {
-        const id = b.gid, a = 'https://www.gutenberg.org/cache/epub/' + id + '/pg' + id + '.txt', c = 'https://www.gutenberg.org/files/' + id + '/' + id + '-0.txt', d = 'https://www.gutenberg.org/ebooks/' + id + '.txt.utf-8';
+        const id = b.gid, a = 'https://www.gutenberg.org/cache/epub/' + id + '/pg' + id + '.txt', c = 'https://www.gutenberg.org/files/' + id + '/' + id + '-0.txt', d = 'https://www.gutenberg.org/ebooks/' + id + '.txt.utf-8', enc = encodeURIComponent;
         onMsg('Fetching the book…');
-        try { return await firstOk([a, c, d], 15000); } catch (e) { }
+        try { return await firstOk([new URL('books/' + id + '.txt', location.href).href], 20000); } catch (e) { }
+        try { return await firstOk([a, c, d], 9000); } catch (e) { }
         onMsg('Trying another route…');
-        const enc = encodeURIComponent;
-        try { return await firstOk(['https://corsproxy.io/?url=' + enc(a), 'https://api.allorigins.win/raw?url=' + enc(a), 'https://api.codetabs.com/v1/proxy?quest=' + enc(a), 'https://cors.isomorphic-git.org/' + a], 25000); } catch (e) { }
+        try { return await firstOk(['https://r.jina.ai/' + a, 'https://api.allorigins.win/raw?url=' + enc(a), 'https://api.codetabs.com/v1/proxy/?quest=' + enc(a), 'https://corsproxy.io/?url=' + enc(a), 'https://yacdn.org/proxy/' + a, 'https://cors.isomorphic-git.org/' + a, 'https://thingproxy.freeboard.io/fetch/' + a], 30000); } catch (e) { }
         throw new Error('offline');
     }
 
