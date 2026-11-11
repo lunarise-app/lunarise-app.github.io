@@ -7142,28 +7142,66 @@ html.ml-lock,html.ml-lock body{overflow:hidden}
 
 .ml-stage{position:absolute;left:0;right:0;top:calc(58px + env(safe-area-inset-top));bottom:calc(66px + env(safe-area-inset-bottom));display:flex;align-items:center;justify-content:center;touch-action:pan-y;user-select:none;-webkit-user-select:none;transition:transform .28s cubic-bezier(.2,.8,.2,1);cursor:pointer}
 .ml-rdr.imm .ml-stage{top:calc(8px + env(safe-area-inset-top));bottom:calc(8px + env(safe-area-inset-bottom))}
-.ml-book{position:relative;width:calc(var(--pw,320px) * 2);height:var(--ph,520px);perspective:2400px;transition:opacity .17s;font-family:var(--ff);font-size:var(--fs,19px);line-height:var(--lh,1.62)}
+/* ===== the book: paper, binding, page stacks, curved turning page ===== */
+.ml-rdr{--tex:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .36 0 0 0 0 .28 0 0 0 0 .16 0 0 0 .16 0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");--cv1:#6a4cff;--cv2:#2a1a78}
+.ml-rdr[data-th=dark],.ml-rdr[data-th=night]{--tex:none}
+.ml-stage{background:radial-gradient(120% 85% at 50% 36%,rgba(255,255,255,.26),rgba(255,255,255,0) 58%),radial-gradient(110% 70% at 50% 112%,rgba(0,0,0,.16),transparent 62%)}
+.ml-rdr[data-th=dark] .ml-stage,.ml-rdr[data-th=night] .ml-stage{background:radial-gradient(120% 85% at 50% 36%,rgba(255,255,255,.05),rgba(255,255,255,0) 58%)}
+.ml-book{--mt:clamp(40px,calc(var(--pw,320px)*.11),64px);--mo:clamp(20px,calc(var(--pw,320px)*.085),42px);--mi:calc(var(--mo)*1.2);--mb:clamp(8px,calc(var(--pw,320px)*.03),16px);--tl:6px;--tr:6px;position:relative;width:calc(var(--pw,320px) * 2);height:var(--ph,520px);perspective:3200px;transition:opacity .17s;font-family:var(--ff);font-size:var(--fs,19px);line-height:var(--lh,1.62);font-kerning:normal;text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased}
 .ml-book[data-mode=single]{width:var(--pw)}
 .ml-book.fadeout{opacity:0}
-.ml-pg{position:absolute;top:0;width:var(--pw);height:var(--ph);background:var(--pbg);color:var(--ptx);display:flex;flex-direction:column;padding:26px 26px 14px;overflow:hidden}
-.ml-pg.ml-L{left:0;border-radius:6px 0 0 6px;box-shadow:inset -14px 0 18px -12px rgba(0,0,0,.28),0 18px 36px -18px rgba(0,0,0,.5);padding-right:30px}
-.ml-pg.ml-R{left:var(--pw);border-radius:0 6px 6px 0;box-shadow:inset 14px 0 18px -12px rgba(0,0,0,.28),0 18px 36px -18px rgba(0,0,0,.5);padding-left:30px}
+/* hardcover boards, coloured like the book's catalogue cover */
+.ml-cvr{position:absolute;left:calc(-1 * (var(--tl) + 8px));right:calc(-1 * (var(--tr) + 8px));top:-8px;bottom:-11px;border-radius:10px;background:linear-gradient(135deg,var(--cv1),var(--cv2));box-shadow:0 36px 54px -24px rgba(0,0,0,.62),0 14px 24px -10px rgba(0,0,0,.38),inset 0 0 0 1px rgba(255,255,255,.14),inset 0 -3px 7px rgba(0,0,0,.4);pointer-events:none}
+.ml-cvr::after{content:"";position:absolute;inset:0;border-radius:inherit;background:linear-gradient(180deg,rgba(255,255,255,.16),rgba(0,0,0,.34))}
+.ml-cvr::before{content:"";position:absolute;top:0;bottom:0;left:calc(var(--tl) + 8px + var(--pw) - 6px);width:12px;z-index:1;background:linear-gradient(90deg,transparent,rgba(0,0,0,.45) 50%,transparent)}
+.ml-book[data-mode=single] .ml-cvr::before{display:none}
+/* the thickness of the paper block on each side grows and shrinks as you read */
+.ml-stk{position:absolute;pointer-events:none}
+.ml-stk.l{left:calc(var(--tl) * -1);width:var(--tl);top:3px;bottom:-4px;border-radius:3px 0 0 5px;background:repeating-linear-gradient(90deg,color-mix(in srgb,var(--pbg) 76%,#000) 0 1px,color-mix(in srgb,var(--pbg) 97%,#fff) 1px 2.6px);box-shadow:inset 4px 0 5px -2px rgba(0,0,0,.28)}
+.ml-stk.r{left:100%;width:var(--tr);top:3px;bottom:-4px;border-radius:0 3px 5px 0;background:repeating-linear-gradient(90deg,color-mix(in srgb,var(--pbg) 97%,#fff) 0 1.6px,color-mix(in srgb,var(--pbg) 76%,#000) 1.6px 2.6px);box-shadow:inset -4px 0 5px -2px rgba(0,0,0,.28)}
+.ml-stk.b{left:0;right:0;top:100%;height:5px;border-radius:0 0 3px 3px;background:repeating-linear-gradient(180deg,color-mix(in srgb,var(--pbg) 97%,#fff) 0 1.6px,color-mix(in srgb,var(--pbg) 76%,#000) 1.6px 2.6px);box-shadow:inset 0 -4px 5px -2px rgba(0,0,0,.3)}
+.ml-book[data-mode=single] .ml-stk.l{display:none}
+/* a sheet of paper (static pages and every slice of the turning page) */
+.ml-pg,.ml-sp{position:absolute;top:0;width:var(--pw);height:var(--ph);background-color:var(--pbg);background-image:var(--tex),linear-gradient(180deg,color-mix(in srgb,var(--pbg) 93%,#fff),var(--pbg) 28%,color-mix(in srgb,var(--pbg) 95%,#000));color:var(--ptx);display:flex;flex-direction:column;overflow:hidden;padding:var(--mt) var(--mo) var(--mb) var(--mi)}
+.ml-pg.ml-L{left:0;border-radius:5px 0 0 5px;padding:var(--mt) var(--mi) var(--mb) var(--mo)}
+.ml-pg.ml-R{left:var(--pw);border-radius:0 5px 5px 0;box-shadow:1px 0 0 rgba(0,0,0,.07)}
+.ml-sp.k{padding:var(--mt) var(--mi) var(--mb) var(--mo)}
 .ml-book[data-mode=single] .ml-pg.ml-L{display:none}
-.ml-book[data-mode=single] .ml-pg.ml-R{left:0;border-radius:8px;box-shadow:0 14px 40px -18px rgba(0,0,0,.55);padding:26px 24px 14px}
-.ml-pg.blank{box-shadow:none;background:color-mix(in srgb,var(--pbg) 92%,#000)}
-.ml-pg.ml-L.blank{box-shadow:inset -14px 0 18px -12px rgba(0,0,0,.18)}
-.ml-spine{position:absolute;top:0;bottom:0;left:50%;width:18px;margin-left:-9px;background:linear-gradient(90deg,transparent,rgba(0,0,0,.22) 48%,rgba(0,0,0,.28) 52%,transparent);pointer-events:none;z-index:3}
+.ml-book[data-mode=single] .ml-pg.ml-R,.ml-book[data-mode=single] .ml-sp{left:0;padding:var(--mt) var(--mo) var(--mb)}
+.ml-book[data-mode=single] .ml-pg.ml-R{border-radius:6px}
+/* the curve of the paper into the binding, and a soft shadow when the turning page lifts */
+.ml-pg::before,.ml-sp::before{content:"";position:absolute;inset:0;pointer-events:none;z-index:2}
+.ml-pg.ml-R::before,.ml-sp.f::before{background:linear-gradient(90deg,rgba(0,0,0,.2) 0,rgba(0,0,0,.1) 2.5%,rgba(0,0,0,.04) 8%,transparent 19%),linear-gradient(270deg,rgba(0,0,0,.07),transparent 2.5%)}
+.ml-pg.ml-L::before,.ml-sp.k::before{background:linear-gradient(270deg,rgba(0,0,0,.2) 0,rgba(0,0,0,.1) 2.5%,rgba(0,0,0,.04) 8%,transparent 19%),linear-gradient(90deg,rgba(0,0,0,.07),transparent 2.5%)}
+.ml-book[data-mode=single] .ml-pg.ml-R::before,.ml-book[data-mode=single] .ml-sp.f::before{background:linear-gradient(90deg,rgba(0,0,0,.16),transparent 6%),linear-gradient(270deg,rgba(0,0,0,.06),transparent 2.5%)}
+.ml-cast{position:absolute;top:0;width:var(--pw);height:var(--ph);pointer-events:none;z-index:4;opacity:0;will-change:transform,opacity;transform:scaleX(0)}
+.ml-cast.r{left:var(--pw);transform-origin:0 0;background:linear-gradient(90deg,rgba(0,0,0,.5),rgba(0,0,0,.22) 38%,rgba(0,0,0,0))}
+.ml-cast.l{left:0;transform-origin:100% 0;background:linear-gradient(270deg,rgba(0,0,0,.5),rgba(0,0,0,.22) 38%,rgba(0,0,0,0))}
+.ml-book[data-mode=single] .ml-cast.r{left:0}
+.ml-book[data-mode=single] .ml-cast.l{display:none}
+/* inside of the front / back board */
+.ml-pg.end,.ml-sp.end{background-image:repeating-linear-gradient(45deg,rgba(255,255,255,.13) 0 7px,rgba(255,255,255,0) 7px 14px),linear-gradient(140deg,color-mix(in srgb,var(--cv1) 58%,#fff),color-mix(in srgb,var(--cv2) 58%,#fff))}
+.ml-spine{position:absolute;top:0;bottom:0;left:50%;width:3px;margin-left:-1.5px;background:linear-gradient(90deg,transparent,rgba(0,0,0,.16) 50%,transparent);pointer-events:none;z-index:3}
 .ml-book[data-mode=single] .ml-spine{display:none}
-.ml-meas{visibility:hidden;pointer-events:none;left:-9999px!important;top:0}
-.ml-txt{flex:1;min-height:0;overflow:hidden;text-align:left;hyphens:auto;-webkit-hyphens:auto;overflow-wrap:break-word}
+.ml-meas{visibility:hidden;pointer-events:none;left:-9999px!important;top:0;padding:var(--mt) calc((var(--mo) + var(--mi)) / 2) var(--mb)!important}
+.ml-book[data-mode=single] .ml-meas{padding:var(--mt) var(--mo) var(--mb)!important}
+.ml-meas::before,.ml-meas::after{display:none}
+/* typography */
+.ml-txt{flex:1;min-height:0;overflow:hidden;text-align:left;hyphens:auto;-webkit-hyphens:auto;overflow-wrap:break-word;font-variant-ligatures:common-ligatures}
 .ml-book[data-just="1"] .ml-txt p{text-align:justify}
 .ml-txt p{margin:0;text-indent:1.5em}
-.ml-txt p.ct{text-indent:0}
-.ml-txt h3{margin:.5em 0 .7em;font-size:1.35em;line-height:1.2;font-weight:800;text-align:center;letter-spacing:.01em;text-indent:0}
-.ml-txt h4{margin:-.3em 0 1.1em;font-size:1.05em;font-weight:600;font-style:italic;text-align:center;opacity:.85}
+.ml-txt p.ct,.ml-txt h3+p,.ml-txt h4+p{text-indent:0}
+.ml-txt h3+p::first-letter,.ml-txt h4+p::first-letter{float:left;font-size:3.1em;line-height:.82;padding:.05em .09em 0 0;font-weight:600}
+.ml-txt h3{margin:.9em 0 .55em;font-size:1.45em;line-height:1.18;font-weight:700;text-align:center;letter-spacing:.015em;text-indent:0;text-wrap:balance}
+.ml-txt h3::after{content:"";display:block;width:2.4em;border-top:1px solid currentColor;opacity:.32;margin:.62em auto 0}
+.ml-txt h4{margin:-.2em 0 1.05em;font-size:1.02em;font-weight:500;font-style:italic;text-align:center;opacity:.8}
 .ml-txt h3.ct,.ml-txt h4.ct{text-align:center}
-.ml-pf{flex:none;display:flex;justify-content:space-between;align-items:center;padding-top:8px;font-family:system-ui,sans-serif;font-size:11px;color:color-mix(in srgb,var(--ptx) 55%,transparent);height:26px}
-.ml-pf b{font-weight:700}
+.ml-rh{position:absolute;top:calc(var(--mt) * .4);left:var(--mi);right:var(--mo);text-align:center;font-size:11.5px;line-height:1;font-variant:small-caps;letter-spacing:.09em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:color-mix(in srgb,var(--ptx) 52%,transparent);z-index:1;pointer-events:none}
+.ml-pg.ml-L .ml-rh,.ml-sp.k .ml-rh{left:var(--mo);right:var(--mi)}
+.ml-book[data-mode=single] .ml-rh{left:var(--mo);right:var(--mo)}
+.ml-pf{flex:none;display:flex;justify-content:center;align-items:center;padding-top:6px;font-size:12px;letter-spacing:.06em;color:color-mix(in srgb,var(--ptx) 58%,transparent);height:26px}
+.ml-pf b{font-weight:500;font-variant-numeric:oldstyle-nums}
+.ml-pf b::before,.ml-pf b::after{content:"\2013";margin:0 .6em;opacity:.55}
 .w{border-radius:4px;transition:background .15s}
 .w.sel{background:rgba(124,92,255,.3);box-shadow:0 0 0 2px rgba(124,92,255,.3)}
 .w.rd{background:rgba(255,200,80,.22)}
@@ -7176,132 +7214,16 @@ html.ml-lock,html.ml-lock body{overflow:hidden}
 .ml-title small{font-family:system-ui,sans-serif;font-size:11.5px;opacity:.55}
 .ml-swipe{margin-top:10px;font-family:system-ui,sans-serif;font-size:12px;opacity:.6;display:flex;align-items:center;gap:8px}
 .ml-blank{flex:1}
-/* the turning page */
-.ml-leaf{position:absolute;top:0;left:var(--pw);width:var(--pw);height:var(--ph);transform-origin:left center;transform-style:preserve-3d;display:none;z-index:5;will-change:transform;--sh:0;--pr:0}
+/* the turning page: a chain of narrow slices, each hinged to the one before, so the paper really bends */
+.ml-leaf{position:absolute;top:0;left:var(--pw);width:0;height:var(--ph);transform-style:preserve-3d;display:none;z-index:5;pointer-events:none}
 .ml-book[data-mode=single] .ml-leaf{left:0}
 .ml-leaf.on{display:block}
-.ml-face{position:absolute;inset:0;display:flex;flex-direction:column;background:var(--pbg);color:var(--ptx);padding:26px 26px 14px;overflow:hidden;backface-visibility:hidden;-webkit-backface-visibility:hidden}
-.ml-face.f{border-radius:0 6px 6px 0;padding-left:30px;box-shadow:inset 14px 0 18px -12px rgba(0,0,0,.25)}
-.ml-book[data-mode=single] .ml-face.f{border-radius:8px;padding:26px 24px 14px;box-shadow:0 0 0 rgba(0,0,0,0)}
-.ml-face.k{transform:rotateY(180deg);border-radius:6px 0 0 6px;padding-right:30px;box-shadow:inset -14px 0 18px -12px rgba(0,0,0,.25)}
-.ml-book[data-mode=single] .ml-face.k{display:none}
-.ml-face.blank{background:color-mix(in srgb,var(--pbg) 92%,#000)}
-.ml-shade{position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,rgba(0,0,0,.34),rgba(0,0,0,0) 55%);opacity:calc(var(--sh) * .9);backface-visibility:hidden;-webkit-backface-visibility:hidden}
-.ml-book.turning .ml-face{box-shadow:calc(var(--sh) * -12px) 8px calc(var(--sh) * 26px) rgba(0,0,0,calc(var(--sh) * .38))}
-.ml-book.turning .ml-pg.ml-R::after,.ml-book.turning .ml-pg.ml-L::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,rgba(0,0,0,.18),transparent 40%);opacity:calc(1 - var(--pr))}
-/* panels */
-.ml-panel{position:absolute;z-index:9;left:50%;bottom:0;transform:translate(-50%,0);width:min(100%,560px);max-height:78%;display:flex;flex-direction:column;background:var(--ui);color:var(--uitx);border-radius:24px 24px 0 0;box-shadow:0 -18px 50px -14px rgba(0,0,0,.5);border:1px solid var(--uiln);border-bottom:0;animation:mlUp .28s cubic-bezier(.2,.8,.2,1)}
-@keyframes mlUp{from{transform:translate(-50%,40px);opacity:0}}
-.ml-ph{display:flex;align-items:center;justify-content:space-between;padding:12px 12px 4px 20px}
-.ml-ph b{font-size:17px;font-weight:900}
-.ml-pb{padding:6px 18px calc(22px + env(safe-area-inset-bottom));overflow-y:auto;overscroll-behavior:contain;min-height:0}
-.ml-lab{margin:14px 0 8px;font-size:12px;font-weight:800;color:var(--uimu)}
-.ml-themes{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
-.ml-th{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 4px 8px;border-radius:14px;background:var(--b);color:var(--t);border:2px solid var(--uiln)!important;font-family:Georgia,serif}
-.ml-th span{font-size:22px;font-weight:700}
-.ml-th small{font:700 10.5px system-ui,sans-serif;opacity:.8}
-.ml-th.on{border-color:var(--acc)!important;box-shadow:0 0 0 3px color-mix(in srgb,var(--acc) 30%,transparent)}
-.ml-sz{display:flex;align-items:center;justify-content:center;gap:18px}
-.ml-sz .ml-ib{background:var(--uiln)}
-.ml-szv{display:flex;align-items:baseline;gap:3px;min-width:70px;justify-content:center}
-.ml-szv b{font-size:26px}
-.ml-szv small{color:var(--uimu)}
-.ml-seg2{display:flex;gap:6px;padding:4px;border-radius:14px;background:var(--uiln)}
-.ml-seg2 button{flex:1;height:38px;border-radius:10px;font-size:13px;font-weight:700;color:var(--uimu);text-align:center}
-.ml-seg2 button.on{background:var(--ui);color:var(--uitx);box-shadow:0 1px 6px rgba(0,0,0,.18)}
-.ml-tabs{display:flex;gap:4px;padding:2px 14px 4px}
-.ml-tabs button{flex:1;height:38px;border-radius:11px;font-size:13px;font-weight:700;color:var(--uimu);text-align:center}
-.ml-tabs button.on{background:var(--uiln);color:var(--uitx)}
-.ml-tabs b{font-size:11px;background:var(--acc);color:#fff;border-radius:8px;padding:1px 5px;margin-left:3px}
-.ml-list{display:flex;flex-direction:column}
-.ml-li{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:48px;padding:9px 6px;border-bottom:1px solid var(--uiln)!important;font-size:14px;line-height:1.35;text-align:left}
-.ml-li span{flex:1;min-width:0}
-.ml-li small{flex:none;color:var(--uimu);font-size:12px}
-.ml-li.on{color:var(--acc);font-weight:800}
-.ml-li mark{background:rgba(255,200,60,.5);color:inherit;border-radius:3px;padding:0 1px}
-.ml-wl .ml-wr{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--uiln)}
-.ml-wr b{flex:none;min-width:84px}
-.ml-wr span{flex:1;min-width:0;color:var(--uimu);font-size:14px}
-.ml-rdr .ml-btn{background:var(--uiln);color:var(--uitx);border:0!important}
-.ml-rdr .ml-btn.pri{background:linear-gradient(120deg,#7c5cff,#c05cff 55%,#ff6b8a);color:#fff}
-.ml-rdr .ml-empty b{color:var(--uitx)}
-.ml-rdr .ml-empty{color:var(--uimu)}
-/* loading */
-.ml-load{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:20px;background:var(--pdesk)}
-.ml-load .ml-x{position:absolute;top:calc(12px + env(safe-area-inset-top));left:14px}
-.ml-load-c{display:flex;flex-direction:column;align-items:center;gap:14px;max-width:340px;text-align:center}
-.ml-load-c .ml-cv{width:130px}
-.ml-load-c b{font-size:18px;color:var(--uitx)}
-.ml-load-c>span{font-size:14px;color:var(--uimu);line-height:1.5}
-.ml-spin{display:block;width:26px;height:26px;border-radius:50%;border:3px solid var(--uiln);border-top-color:var(--acc);animation:mlSp .8s linear infinite}
-@keyframes mlSp{to{transform:rotate(360deg)}}
-.ml-busy{position:absolute;inset:0;z-index:8;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:color-mix(in srgb,var(--pdesk) 86%,transparent);backdrop-filter:blur(4px);color:var(--uitx);font-weight:700}
-/* the word card */
-.ml-wp{position:absolute;z-index:30;left:50%;bottom:0;width:min(100%,560px);max-height:72%;overflow-y:auto;overscroll-behavior:contain;transform:translate(-50%,0);background:linear-gradient(180deg,#1a1b3a,#0f1026);color:#f1f2ff;border-radius:26px 26px 0 0;border:1px solid rgba(255,255,255,.14);border-bottom:0;box-shadow:0 -20px 60px -10px rgba(0,0,0,.65);padding:6px 18px calc(18px + env(safe-area-inset-bottom));animation:mlUp .26s cubic-bezier(.2,.8,.2,1)}
-.ml-wp-grab{width:38px;height:4px;border-radius:4px;background:rgba(255,255,255,.22);margin:4px auto 10px}
-.ml-wp-h{display:flex;align-items:flex-start;gap:10px}
-.ml-wp-w{flex:1;min-width:0;display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px}
-.ml-wp-w b{font-size:28px;line-height:1.1;font-weight:900;letter-spacing:-.02em;overflow-wrap:anywhere}
-.ml-ipa{font-size:16px;color:var(--gold);font-family:"Segoe UI","Noto Sans",system-ui,sans-serif}
-.ml-wp-w em{font-style:normal;font-size:12.5px;font-weight:700;color:#b9bdea;background:rgba(255,255,255,.08);border-radius:8px;padding:2px 8px}
-.ml-mu{color:#7f85b3;font-size:12px}
-.ml-wp-b{flex:none;display:flex;gap:4px}
-.ml-wp .ml-ib{width:40px;height:40px;border-radius:13px;display:grid;place-items:center;background:rgba(255,255,255,.08);font-size:14px;color:#fff}
-.ml-wp .ml-ib.acc{background:linear-gradient(135deg,#7c5cff,#ff6b8a)}
-.ml-wp .ml-ib.rec{background:#ff4d6d;animation:mlPulse 1s infinite}
-@keyframes mlPulse{50%{box-shadow:0 0 0 7px rgba(255,77,109,.25)}}
-.ml-wp-fb{margin-top:10px;padding:9px 12px;border-radius:12px;background:rgba(255,255,255,.07);font-size:13.5px}
-.ml-wp-fb.ok{background:rgba(41,211,181,.16);color:#8ff2dc}
-.ml-wp-fb.no{background:rgba(255,160,64,.15);color:#ffd0a0}
-.ml-wp-l{display:flex;gap:7px;overflow-x:auto;margin:14px -18px 0;padding:2px 18px 8px;scrollbar-width:none}
-.ml-wp-l::-webkit-scrollbar{display:none}
-.ml-wp-l button{flex:none;display:flex;align-items:center;gap:6px;height:34px;padding:0 12px;border-radius:99px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1)!important;font-size:12.5px;font-weight:700;white-space:nowrap;color:#d7daf6}
-.ml-wp-l button i{font-style:normal;font-size:15px}
-.ml-wp-l button.on{background:#fff;color:#1b1540;border-color:#fff!important}
-.ml-wp-t{display:flex;align-items:center;gap:12px;min-height:66px;padding:12px 14px;border-radius:18px;background:linear-gradient(135deg,rgba(124,92,255,.26),rgba(255,107,138,.14));border:1px solid rgba(255,255,255,.14)}
-.ml-wp-t>div{flex:1;min-width:0}
-.ml-wp-t b{font-size:22px;line-height:1.2;font-weight:800;overflow-wrap:anywhere}
-.ml-wp-t small{display:block;color:#c2c6ec;font-size:13px;margin-top:2px}
-.ml-fl{flex:none;font-size:26px}
-.ml-alt{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
-.ml-alt span{font-size:12.5px;padding:2px 9px;border-radius:9px;background:rgba(255,255,255,.1);color:#e1e3fa}
-.ml-off{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:13.5px;color:#d8dbf6}
-.ml-wp-d{display:flex;flex-direction:column;gap:8px;margin-top:12px}
-.ml-df{font-size:14px;line-height:1.5;color:#dcdff7}
-.ml-df em{font-style:normal;font-weight:800;font-size:11.5px;color:var(--teal);margin-right:7px}
-.ml-df i{display:block;margin-top:2px;color:#a3a8d6;font-size:13px}
-.ml-wp-s{margin-top:14px;padding:12px 14px;border-radius:16px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08)}
-.ml-wp-s small{font-size:11.5px;font-weight:800;color:var(--gold)}
-.ml-wp-s p{margin:4px 0 0;font-size:14px;line-height:1.55;font-style:italic;color:#e8eaff}
-.ml-wp-sb{display:flex;gap:8px;margin-top:10px}
-.ml-wp-st{display:flex;gap:10px;align-items:flex-start;margin-top:10px}
-.ml-wp-st:empty{display:none}
-.ml-wp-st p{font-style:normal;margin:0;font-size:14.5px;line-height:1.5}
-.ml-wp-a{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
-.ml-wp-a .ml-btn{flex:1 1 150px;height:46px}
-.ml-wp-all{margin-top:10px;display:grid;grid-template-columns:1fr 1fr;gap:6px}
-@media (max-width:420px){.ml-wp-all{grid-template-columns:1fr}}
-.ml-ar{display:flex;align-items:center;gap:8px;min-height:44px;padding:6px 10px;border-radius:12px;background:rgba(255,255,255,.06);font-size:13px}
-.ml-ar>i{font-style:normal;font-size:17px}
-.ml-ar>span{flex:none;color:#aab0dc;font-size:11.5px;width:58px}
-.ml-ar b{flex:1;min-width:0;font-weight:700;overflow-wrap:anywhere}
-.ml-dots{display:inline-block;width:26px;height:8px;background:radial-gradient(circle,#8b91c2 2.5px,transparent 3px) 0 0/9px 8px repeat-x;animation:mlDt 1s steps(3) infinite}
-@keyframes mlDt{50%{opacity:.35}}
-@media (prefers-reduced-motion:reduce){.ml-wp,.ml-panel,.ml-sh,.ml-leaf{animation:none!important;transition:none!important}.ml-spin{animation-duration:2s}}
-@media (max-width:480px){.ml-pg{padding:22px 20px 12px}.ml-book[data-mode=single] .ml-pg.ml-R{padding:22px 20px 12px}.ml-det-hero{align-items:center}}
-.ml-book[data-mode=single] .ml-meas{padding:26px 24px 14px}
-.ml-book[data-mode=spread] .ml-meas{padding:26px 28px 14px}
-@media (max-width:480px){.ml-face{padding:22px 20px 12px}.ml-book[data-mode=single] .ml-face.f{padding:22px 20px 12px}.ml-book[data-mode=single] .ml-meas{padding:22px 20px 12px}.ml-book[data-mode=spread] .ml-meas{padding:22px 23px 12px}}
-/* Reading Lab door + hub */
-.rs-door.rs-l{grid-column:1/-1;flex-direction:row;align-items:stretch}
-.rs-door.rs-l .rs-art{width:132px;height:auto;min-height:150px;background:radial-gradient(80% 90% at 20% 0%,rgba(242,196,109,.45),transparent 60%),linear-gradient(150deg,#3a2a7a,#1b1540 70%);display:flex;align-items:center;justify-content:center;gap:0}
-.rs-door.rs-l .rs-art i{position:relative;display:block;width:44px;height:64px;border-radius:3px 7px 7px 3px;box-shadow:0 10px 16px -6px rgba(0,0,0,.6),inset 2px 0 0 rgba(255,255,255,.2)}
-.rs-door.rs-l .rs-art i:nth-child(1){background:linear-gradient(150deg,#ff6b8a,#8a1f4b);transform:rotate(-9deg) translateX(10px)}
-.rs-door.rs-l .rs-art i:nth-child(2){background:linear-gradient(150deg,#f2c46d,#8a4b12);z-index:2;height:74px}
-.rs-door.rs-l .rs-art i:nth-child(3){background:linear-gradient(150deg,#29d3b5,#0b5f6b);transform:rotate(9deg) translateX(-10px)}
-@media (max-width:560px){.rs-door.rs-l{flex-direction:column}.rs-door.rs-l .rs-art{width:auto;height:104px;min-height:0}}
-
-.ml-mini .ml-cvt{font-size:10.5px}.ml-mini .ml-cva{font-size:8px}
+.ml-sl{position:absolute;top:0;height:100%;transform-origin:0 50%;transform-style:preserve-3d;will-change:transform}
+.ml-sl>.sf,.ml-sl>.sb{position:absolute;top:0;left:0;width:100%;height:100%;overflow:hidden;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.ml-sl>.sb{transform:rotateY(180deg)}
+.ml-sl .o{position:absolute;inset:0;z-index:5;pointer-events:none;opacity:0;will-change:opacity}
+.ml-sl .o.a{background:linear-gradient(90deg,#0a0600,rgba(10,6,0,0))}
+.ml-sl .o.b{background:linear-gradient(90deg,rgba(10,6,0,0),#0a0600)}
 </style><style id="mv-art-css" data-th-skip>
 /* Movies: the big pictures stay cinematic (dark shade, white writing) in every theme and in Light mode */
 .mv-hero{position:relative;min-height:420px;border-radius:26px;overflow:hidden;display:flex;align-items:flex-end;background:#0b0d1a var(--bd) center 20%/cover no-repeat;box-shadow:0 30px 60px -30px rgba(0,0,0,.9);isolation:isolate}
@@ -43207,7 +43129,7 @@ window.__MLD = {
     const prog = () => JG('ml_prog', {});
     const favs = () => JG('ml_fav', []);
     const bad = () => JG('ml_bad', []);
-    const SET0 = { th: 'paper', font: 'serif', fs: (typeof innerWidth !== 'undefined' && innerWidth < 500) ? 18 : 19, lh: 1.62, anim: 'flip', lay: 'auto', just: 1, rate: 1, voice: '' };
+    const SET0 = { th: 'paper', font: 'serif', fs: (typeof innerWidth !== 'undefined' && innerWidth < 500) ? 18 : 19, lh: 1.62, anim: 'flip', snd: 1, lay: 'auto', just: 1, rate: 1, voice: '' };
     const settings = () => Object.assign({}, SET0, JG('ml_set', {}));
     const saveSet = (o) => JS('ml_set', Object.assign(settings(), o));
 
@@ -43424,10 +43346,11 @@ window.__MLD = {
             '<button class="ml-ib" data-a="toc" aria-label="Contents, bookmarks and search" title="Contents"><i class="fa-solid fa-list-ul"></i></button>' +
             '<button class="ml-ib" data-a="mark" id="ml-mk" aria-label="Bookmark this page" title="Bookmark"><i class="fa-regular fa-bookmark"></i></button>' +
             '<button class="ml-ib" data-a="aa" aria-label="Reading settings" title="Settings"><i class="fa-solid fa-font"></i></button></div>' +
-            '<div class="ml-stage" id="ml-stage"><div class="ml-book" id="ml-book"><div class="ml-pg ml-L" id="ml-L"></div><div class="ml-pg ml-R" id="ml-R"></div><div class="ml-spine"></div><div class="ml-leaf" id="ml-leaf"><div class="ml-face f"></div><div class="ml-face k"></div><i class="ml-shade"></i></div><div class="ml-pg ml-meas" id="ml-meas"></div></div></div>' +
+            '<div class="ml-stage" id="ml-stage"><div class="ml-book" id="ml-book"><div class="ml-cvr"></div><i class="ml-stk l"></i><i class="ml-stk r"></i><i class="ml-stk b"></i><div class="ml-pg ml-L" id="ml-L"></div><div class="ml-pg ml-R" id="ml-R"></div><div class="ml-spine"></div><i class="ml-cast l"></i><i class="ml-cast r"></i><div class="ml-leaf" id="ml-leaf"></div><div class="ml-pg ml-meas" id="ml-meas"></div></div></div>' +
             '<div class="ml-rbar bot" id="ml-bot"><div class="ml-tts" id="ml-tts" hidden></div><div class="ml-prow"><button class="ml-ib" data-a="prev" aria-label="Previous page"><i class="fa-solid fa-chevron-left"></i></button><div class="ml-pmid"><input type="range" id="ml-seek" min="0" max="1000" value="0" aria-label="Position in the book"><div class="ml-pinfo"><span id="ml-pn">Page 1</span><span id="ml-left"></span></div></div><button class="ml-ib" data-a="next" aria-label="Next page"><i class="fa-solid fa-chevron-right"></i></button><button class="ml-ib big" data-a="listen" id="ml-lb" aria-label="Read aloud" title="Read aloud"><i class="fa-solid fa-headphones"></i></button></div></div>' +
             '<div class="ml-panel" id="ml-panel" hidden></div>';
         stage = $('#ml-stage'); book = $('#ml-book'); leaf = $('#ml-leaf'); meas = $('#ml-meas');
+        { const pal = palOf(b); book.style.setProperty('--cv1', pal[0]); book.style.setProperty('--cv2', pal[1]); }
         stage.addEventListener('pointerdown', pDown); stage.addEventListener('pointermove', pMove); stage.addEventListener('pointerup', pUp); stage.addEventListener('pointercancel', pUp);
         const seek = $('#ml-seek'); seek.addEventListener('change', () => seekTo(+seek.value / 1000)); seek.addEventListener('input', () => { const t = R.doc.T; $('#ml-pn').textContent = Math.round(+seek.value / 10) + '% · drag to move'; });
         applyStyle();
@@ -43442,11 +43365,13 @@ window.__MLD = {
     function sizeBook() {
         const S = settings(), r = stage.getBoundingClientRect(); if (r.width < 50) return;
         const spread = S.lay === 'spread' || (S.lay === 'auto' && r.width >= 900 && r.width > r.height * 1.15);
-        const vw = r.width - (spread ? 40 : 0), vh = r.height - (spread ? 24 : 0); let pw, ph;
-        if (spread) { pw = Math.min(vw / 2, 580); ph = Math.min(vh, pw * 1.5); } else { pw = Math.min(r.width, 660); ph = Math.min(r.height, 1000); }
+        let pw, ph;
+        if (spread) { ph = Math.min(r.height - 60, 920); pw = Math.min((r.width - 56) / 2, ph / 1.36, 560); ph = Math.min(ph, pw * 1.62); }
+        else { pw = Math.min(r.width - 22, 640); ph = Math.min(r.height - 22, 1000); }
+        R.pw = Math.floor(pw);
         book.style.setProperty('--pw', Math.floor(pw) + 'px'); book.style.setProperty('--ph', Math.floor(ph) + 'px');
         book.dataset.mode = spread ? 'spread' : 'single'; R.spread = spread;
-        const rr = $('#ml-R').getBoundingClientRect(); meas.style.width = pw + 'px'; meas.style.height = ph + 'px';
+        meas.style.width = pw + 'px'; meas.style.height = ph + 'px';
     }
     async function relayout() {
         if (!R.doc) return; const off = curOff(), tok = R.tok; sizeBook(); R.starts = [-1, R.doc.start]; R.ends = [-1]; R.done = false; R.lastK = 150; await gotoOffset(off, tok);
@@ -43464,7 +43389,7 @@ window.__MLD = {
         }
         return out;
     }
-    function initMeas() { if (!meas.firstElementChild) meas.innerHTML = '<div class="ml-txt"></div><div class="ml-pf"><span>x</span><b>1</b></div>'; }
+    function initMeas() { if (!meas.firstElementChild) meas.innerHTML = '<div class="ml-txt"></div><div class="ml-pf"><b>1</b></div>'; }
     function fits(a, k) { const t = meas.firstElementChild; t.innerHTML = build(a, k, false); return t.scrollHeight <= t.clientHeight + 1; }
     function nextBreak(a) { const b = R.doc.brks; let lo = 0, hi = b.length; while (lo < hi) { const m = (lo + hi) >> 1; if (b[m] > a) hi = m; else lo = m + 1; } return lo < b.length ? b[lo] : Infinity; }
     function pageSize(a) {
@@ -43504,25 +43429,29 @@ window.__MLD = {
             ensure(R.starts.length);
             if (performance.now() - t0 > 60) { if (!shown) { shown = true; showBusy('Preparing your pages…'); } await new Promise(r => requestAnimationFrame(r)); if (tok !== R.tok) return; t0 = performance.now(); }
         }
-        hideBusy(); const n = pageOfOff(off); R.v = R.spread ? Math.ceil(n / 2) : n; render(R.v);
+        hideBusy(); const n = pageOfOff(off); R.v = vOfPage(n); render(R.v);
     }
     function showBusy(m) { let e = $('#ml-busy'); if (!e) { e = document.createElement('div'); e.id = 'ml-busy'; e.className = 'ml-busy'; $('#ml-rd').appendChild(e); } e.innerHTML = '<i class="ml-spin"></i><span>' + esc(m) + '</span>'; }
     function hideBusy() { const e = $('#ml-busy'); if (e) e.remove(); }
 
     /* ----- one page, as markup ----- */
-    const leftOf = (v) => R.spread ? 2 * v - 1 : -2, rightOf = (v) => R.spread ? 2 * v : v;
-    const maxV = () => { ensureAll(); const N = R.starts.length; return R.spread ? Math.floor(N / 2) : N - 1; };
+    const leftOf = (v) => R.spread ? (v === 1 ? -1 : 2 * v - 2) : -2, rightOf = (v) => R.spread ? (v === 0 ? 0 : 2 * v - 1) : v;
+    const vOfPage = (n) => R.spread ? (n < 1 ? 0 : (n >> 1) + 1) : n;
+    const maxV = () => { ensureAll(); const N = R.starts.length; return R.spread ? ((N + 1) >> 1) : N - 1; };
     function ensureAll() { }
-    function pageHTML(n, face) {
+    const isEnd = (n) => n === -2 || (n > 0 && n >= R.starts.length && R.done);
+    function chapName(a) { const c = R.doc.chapters; let nm = ''; for (let i = 0; i < c.length; i++) { if (c[i].off <= a) nm = c[i].name; else break; } return nm; }
+    function pageHTML(n, plain) {
         const b = R.b, d = R.doc;
         if (n < 0 || (n > 0 && n >= R.starts.length && (R.done || !ensure(n)))) return '<div class="ml-blank"></div>';
         if (n === 0) return '<div class="ml-title"><div class="ml-title-cv">' + coverHTML(b, 'big') + '</div><h1>' + esc(b.title) + '</h1><p>' + esc(b.author) + '</p><small>' + (b.my ? 'Your own text' : 'Public-domain text · Project Gutenberg') + '</small><span class="ml-swipe"><i class="fa-solid fa-hand-pointer"></i>Swipe or tap the edge to turn the page</span></div>';
         const a = R.starts[n], k = (R.ends[n] != null ? R.ends[n] : a + pageSize(a)) - a;
-        return '<div class="ml-txt">' + build(a, k, true) + '</div><div class="ml-pf"><span>' + esc(b.title.length > 30 ? b.title.slice(0, 28) + '…' : b.title) + '</span><b>' + n + '</b></div>';
+        const rh = (n % 2 === 0) ? b.title : (chapName(a) || b.author);
+        return '<div class="ml-rh">' + esc(rh) + '</div><div class="ml-txt">' + build(a, k, !plain) + '</div><div class="ml-pf"><b>' + n + '</b></div>';
     }
-    function fill(el, n) { el.innerHTML = pageHTML(n); el.classList.toggle('blank', !el.querySelector('.ml-txt,.ml-title')); el.dataset.n = n; }
+    function fill(el, n) { el.innerHTML = pageHTML(n); el.classList.toggle('blank', !el.querySelector('.ml-txt,.ml-title')); el.classList.toggle('end', isEnd(n)); el.dataset.n = n; }
     function render(v) {
-        const L = $('#ml-L'), Rr = $('#ml-R'); R.v = v; leaf.classList.remove('on'); leaf.style.transition = 'none'; leaf.style.transform = '';
+        const L = $('#ml-L'), Rr = $('#ml-R'); R.v = v; leaf.classList.remove('on'); leaf.innerHTML = ''; R.strips = null; R.ovs = null; $$('.ml-cast', book).forEach(c => { c.style.opacity = 0; });
         if (R.spread) fill(L, leftOf(v)); else L.innerHTML = '';
         fill(Rr, rightOf(v)); book.classList.remove('turning'); R.busy = false;
         afterShow();
@@ -43537,6 +43466,7 @@ window.__MLD = {
         const bm = JG('ml_bm', {})[R.b.id] || [], vis = visiblePages().map(p => R.starts[p]).filter(x => x != null);
         const on = bm.some(o => vis.some(s => o >= s && o < (R.ends[R.starts.indexOf(s)] || s + 1)));
         const mk = $('#ml-mk'); if (mk) { mk.classList.toggle('on', on); mk.innerHTML = '<i class="fa-' + (on ? 'solid' : 'regular') + ' fa-bookmark"></i>'; }
+        { const f = clamp(pct / 100, 0, 1), sp = R.spread; book.style.setProperty('--tl', (sp ? 2 + 9 * f : 0).toFixed(1) + 'px'); book.style.setProperty('--tr', (2 + 9 * (1 - f)).toFixed(1) + 'px'); }
         // remember where we are
         const P = prog(); P[R.b.id] = { off: off, pct: pct, ts: Date.now() }; JS('ml_prog', P);
         // reading credit: new pages, XP and the end of the book
@@ -43568,35 +43498,75 @@ window.__MLD = {
 
     /* ----- turning pages ----- */
     function canTurn(dir) { if (!R.doc || R.busy) return false; const t = R.v + dir; if (t < 0) return false; if (dir > 0) { ensure(rightOf(t) ); return t <= maxV(); } return true; }
+    /* the turning page is a chain of narrow slices, each hinged on the one before it, so it bends like paper */
+    const BEND = 1;
     function prepare(dir) {
-        const L = $('#ml-L'), Rr = $('#ml-R'), f = $('.ml-face.f', leaf), k = $('.ml-face.k', leaf), v = R.v; book.classList.add('turning'); R.busy = true;
+        const L = $('#ml-L'), Rr = $('#ml-R'), v = R.v; book.classList.add('turning'); R.busy = true; R.q = dir > 0 ? 0 : 1;
+        let fh, kh, fn, kn;
         if (R.spread) {
-            if (dir > 0) { fill(Rr, rightOf(v + 1)); f.innerHTML = pageHTML(rightOf(v)); k.innerHTML = pageHTML(leftOf(v + 1)); }
-            else { fill(L, leftOf(v - 1)); f.innerHTML = pageHTML(rightOf(v - 1)); k.innerHTML = pageHTML(leftOf(v)); }
+            if (dir > 0) { fill(Rr, rightOf(v + 1)); fn = rightOf(v); kn = leftOf(v + 1); }
+            else { fill(L, leftOf(v - 1)); fn = rightOf(v - 1); kn = leftOf(v); }
         } else {
-            if (dir > 0) { fill(Rr, rightOf(v + 1)); f.innerHTML = pageHTML(rightOf(v)); }
-            else { fill(Rr, rightOf(v)); f.innerHTML = pageHTML(rightOf(v - 1)); }
-            k.innerHTML = '';
+            if (dir > 0) { fill(Rr, rightOf(v + 1)); fn = rightOf(v); } else { fill(Rr, rightOf(v)); fn = rightOf(v - 1); }
+            kn = null;
         }
-        $$('.ml-face', leaf).forEach(x => x.classList.toggle('blank', !x.querySelector('.ml-txt,.ml-title')));
-        leaf.classList.add('on'); leaf.style.transition = 'none';
+        const low = LSg('ml_fx', '') === 'low', N = R.spread ? (low ? 6 : 12) : (low ? 5 : 9), pw = R.pw || 320, sw = pw / N; let inner = '';
+        fh = pageHTML(fn, true); kh = kn == null ? '' : pageHTML(kn, true);
+        const fc = (fh.indexOf('ml-txt') < 0 && fh.indexOf('ml-title') < 0 ? ' blank' : '') + (isEnd(fn) ? ' end' : ''), kc = (kh.indexOf('ml-txt') < 0 && kh.indexOf('ml-title') < 0 ? ' blank' : '') + (kn != null && isEnd(kn) ? ' end' : '');
+        for (let i = N - 1; i >= 0; i--) {
+            inner = '<div class="ml-sl" style="width:' + (sw + 1.4).toFixed(3) + 'px;left:' + (i ? sw.toFixed(3) : '0') + 'px"><div class="sf"><div class="ml-sp f' + fc + '" style="left:' + (-i * sw).toFixed(3) + 'px">' + fh + '</div><i class="o a"></i><i class="o b"></i></div>' +
+                (kn == null ? '' : '<div class="sb"><div class="ml-sp k' + kc + '" style="left:' + (1 - (pw - (i + 1) * sw)).toFixed(3) + 'px">' + kh + '</div><i class="o a"></i><i class="o b"></i></div>') + inner + '</div>';
+        }
+        leaf.innerHTML = inner; R.strips = Array.from(leaf.querySelectorAll('.ml-sl')); R.ovs = R.strips.map(s => Array.from(s.querySelectorAll('.o'))); R.cast = [$('.ml-cast.l', book), $('.ml-cast.r', book)]; R.sw = sw;
+        leaf.classList.add('on'); paint(dir, R.q);
     }
     const maxAng = () => R.spread ? 180 : 100;
-    function setAng(dir, p) { const A = maxAng(), ang = dir > 0 ? -A * p : -A * (1 - p); leaf.style.transform = 'rotateY(' + ang.toFixed(2) + 'deg)'; leaf.style.setProperty('--sh', Math.sin(Math.PI * clamp(Math.abs(ang) / A, 0, 1)).toFixed(3)); leaf.style.setProperty('--pr', clamp(Math.abs(ang) / A, 0, 1).toFixed(3)); }
+    function paint(dir, q) {
+        const S = R.strips; if (!S || !S.length) return; q = clamp(q, 0, 1); R.q = q;
+        const A = maxAng(), th = A * q, N = S.length, sgn = dir > 0 ? 1 : -1, K = (R.spread ? 3.1 : 2.4) * ((R.spread ? 12 : 9) / N);
+        const c = -BEND * sgn * K * Math.sin(2 * Math.PI * q);
+        let phi = th, x = 0, z = 0, xmax = 0, xmin = 0, zmax = 0; const sw = R.sw;
+        const shade = (ph) => { const a = ph <= 90 ? ph : 180 - ph, ar = Math.max(0, a) * Math.PI / 180; return .34 * Math.pow(1 - Math.cos(ar), 1.15); };
+        let cur = shade(phi);
+        for (let i = 0; i < N; i++) {
+            if (i > 0) phi -= c;
+            const rot = i === 0 ? -th : c, el = S[i]; el.style.transform = 'rotateY(' + rot.toFixed(2) + 'deg)';
+            const r = phi * Math.PI / 180, nx = shade(phi - c), o = R.ovs[i], v1 = cur.toFixed(3), v2 = nx.toFixed(3);
+            for (let j = 0; j < o.length; j += 2) { o[j].style.opacity = v1; o[j + 1].style.opacity = v2; } cur = nx;
+            x += sw * Math.cos(r); z += sw * Math.sin(r); if (x > xmax) xmax = x; if (x < xmin) xmin = x; if (z > zmax) zmax = z;
+        }
+        const pw = R.pw || 320, lift = clamp(zmax / (pw * .5), 0, 1), cs = R.cast;
+        cs[1].style.transform = 'scaleX(' + (Math.max(0, xmax) / pw + .06).toFixed(3) + ')'; cs[1].style.opacity = (xmax > 3 ? lift * .95 : 0).toFixed(3);
+        cs[0].style.transform = 'scaleX(' + (Math.max(0, -xmin) / pw + .06).toFixed(3) + ')'; cs[0].style.opacity = (xmin < -3 && R.spread ? lift * .95 : 0).toFixed(3);
+    }
+    const setAng = paint;
+    let snd = null;
+    function flipSound() {
+        if (!settings().snd) return;
+        try {
+            snd = snd || new (window.AudioContext || window.webkitAudioContext)(); if (snd.state === 'suspended') snd.resume();
+            const sr = snd.sampleRate, len = Math.floor(sr * .34), buf = snd.createBuffer(1, len, sr), d = buf.getChannelData(0); let lp = 0;
+            for (let i = 0; i < len; i++) { const t = i / len, env = Math.pow(Math.sin(Math.min(1, t * 1.15) * Math.PI), 1.4) * Math.pow(1 - t, .9); lp += ((Math.random() * 2 - 1) - lp) * .55; d[i] = lp * env; }
+            const s = snd.createBufferSource(); s.buffer = buf; const f = snd.createBiquadFilter(); f.type = 'bandpass'; f.Q.value = .8; const t0 = snd.currentTime;
+            f.frequency.setValueAtTime(1500, t0); f.frequency.exponentialRampToValueAtTime(4200, t0 + .26); const g = snd.createGain(); g.gain.value = .22;
+            s.connect(f); f.connect(g); g.connect(snd.destination); s.start(t0);
+        } catch (e) { }
+    }
     function finish(dir, go, ms) {
-        const A = maxAng(), target = go ? (dir > 0 ? -A : 0) : (dir > 0 ? 0 : -A);
-        leaf.style.transition = 'transform ' + (ms || 520) + 'ms cubic-bezier(.3,.62,.22,1)'; leaf.style.transform = 'rotateY(' + target + 'deg)';
-        const pr = target === 0 ? (dir > 0 ? 0 : 1) : 1;
-        let done = false; const end = () => { if (done) return; done = true; leaf.removeEventListener('transitionend', end); if (go) render(R.v + dir); else render(R.v); if (go) onTurned(); };
-        leaf.addEventListener('transitionend', end); setTimeout(end, (ms || 520) + 80);
-        leaf.style.setProperty('--sh', 0);
+        const to = go ? (dir > 0 ? 1 : 0) : (dir > 0 ? 0 : 1), from = R.q, t0 = performance.now(); ms = ms || 640; let done = false;
+        const end = () => { if (done) return; done = true; cancelAnimationFrame(R.raf); if (go) render(R.v + dir); else render(R.v); if (go) onTurned(); };
+        const ease = go && ms > 500 ? (t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2) : (t => 1 - Math.pow(1 - t, 3));
+        if (go) flipSound();
+        let fr = 0; const step = (now) => { if (done) return; fr++; const t = Math.min(1, (now - t0) / ms); paint(dir, from + (to - from) * ease(t)); if (t >= 1) { if (go && ms > 500 && fr < ms / 1000 * 22) { try { LSs('ml_fx', 'low'); } catch (e) { } } end(); } else R.raf = requestAnimationFrame(step); };
+        R.raf = requestAnimationFrame(step); setTimeout(end, ms + 150);
     }
     function turn(dir) {
         if (!canTurn(dir)) { if (dir > 0 && R.doc && R.done) toast('That is the last page.'); return; }
         const S = settings(); closeWp();
+        const calm = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
         if (S.anim === 'none') { render(R.v + dir); onTurned(); return; }
-        if (S.anim === 'fade') { book.classList.add('fadeout'); setTimeout(() => { render(R.v + dir); book.classList.remove('fadeout'); onTurned(); }, 170); return; }
-        prepare(dir); const A = maxAng(); leaf.style.transform = 'rotateY(' + (dir > 0 ? 0 : -A) + 'deg)'; void leaf.offsetWidth; setAng(dir, dir > 0 ? 0 : 1); finish(dir, true, 560);
+        if (S.anim === 'fade' || calm) { book.classList.add('fadeout'); setTimeout(() => { render(R.v + dir); book.classList.remove('fadeout'); onTurned(); }, 170); return; }
+        prepare(dir); void leaf.offsetWidth; finish(dir, true, R.spread ? 720 : 560);
     }
     function onTurned() { if (TT.on && !TT.paused && !TT.advancing) { } }
     function pDown(e) { if (!R.doc || R.busy || e.target.closest('.ml-wp,.ml-panel')) return; drag = { x: e.clientX, y: e.clientY, id: e.pointerId, go: false, dir: 0, t: Date.now(), p: 0, moved: false }; }
@@ -43612,7 +43582,7 @@ window.__MLD = {
     }
     function pUp(e) {
         if (!drag) return; const d = drag; drag = null;
-        if (d.go) { const v = d.p / Math.max(1, Date.now() - d.t) * 1000; suppress(); finish(d.dir, d.p > .28 || v > 1.4, 380); }
+        if (d.go) { const v = d.p / Math.max(1, Date.now() - d.t) * 1000; suppress(); finish(d.dir, d.p > .28 || v > 1.4, 460); }
         else if (d.moved) suppress();
     }
     let sup = 0; const suppress = () => { sup = Date.now() + 350; };
@@ -43624,7 +43594,7 @@ window.__MLD = {
         if (w) { openWord(w); return; }
         if ($('#ml-wp') && !$('#ml-wp').hidden) { closeWp(); return; }
         const pg = e.target.closest('.ml-pg'); if (!pg && !e.target.closest('.ml-stage')) return;
-        const r = stage.getBoundingClientRect(), x = (e.clientX - r.left) / r.width;
+        const r = book.getBoundingClientRect(), x = (e.clientX - r.left) / r.width;
         if (x < .2) turn(-1); else if (x > .8) turn(1); else toggleChrome();
     }
     function toggleChrome() { const rd = $('#ml-rd'); rd.classList.toggle('imm'); }
@@ -43646,6 +43616,7 @@ window.__MLD = {
                 '<div class="ml-lab">Typeface</div><div class="ml-seg2">' + Object.keys(FONTS).map(k => '<button class="' + (S.font === k ? 'on' : '') + '" data-a="font" data-k="' + k + '" style="font-family:' + FONTS[k][1] + '">' + FONTS[k][0] + '</button>').join('') + '</div>' +
                 '<div class="ml-lab">Line spacing</div><div class="ml-seg2">' + [[1.4, 'Tight'], [1.62, 'Normal'], [1.85, 'Airy']].map(o => '<button class="' + (Math.abs(S.lh - o[0]) < .02 ? 'on' : '') + '" data-a="lh" data-v="' + o[0] + '">' + o[1] + '</button>').join('') + '</div>' +
                 '<div class="ml-lab">Page turn</div><div class="ml-seg2">' + [['flip', 'Flip'], ['fade', 'Fade'], ['none', 'Instant']].map(o => '<button class="' + (S.anim === o[0] ? 'on' : '') + '" data-a="anim" data-k="' + o[0] + '">' + o[1] + '</button>').join('') + '</div>' +
+                '<div class="ml-lab">Page sound</div><div class="ml-seg2">' + [[1, 'On'], [0, 'Off']].map(o => '<button class="' + (!!S.snd === !!o[0] ? 'on' : '') + '" data-a="snd" data-v="' + o[0] + '">' + o[1] + '</button>').join('') + '</div>' +
                 '<div class="ml-lab">Layout</div><div class="ml-seg2">' + [['auto', 'Auto'], ['single', 'One page'], ['spread', 'Two pages']].map(o => '<button class="' + (S.lay === o[0] ? 'on' : '') + '" data-a="lay" data-k="' + o[0] + '">' + o[1] + '</button>').join('') + '</div>' +
                 '<div class="ml-lab">Alignment</div><div class="ml-seg2">' + [[1, 'Justified'], [0, 'Left']].map(o => '<button class="' + (!!S.just === !!o[0] ? 'on' : '') + '" data-a="just" data-v="' + o[0] + '">' + o[1] + '</button>').join('') + '</div></div>';
         }
@@ -43869,6 +43840,7 @@ window.__MLD = {
         if (a === 'font') { saveSet({ font: b.dataset.k }); applyStyle(); openPanel('aa'); return relayout(); }
         if (a === 'fs') { const S = settings(); saveSet({ fs: clamp(S.fs + (+b.dataset.d), 14, 32) }); applyStyle(); openPanel('aa'); clearTimeout(R.fsT); R.fsT = setTimeout(relayout, 220); return; }
         if (a === 'lh') { saveSet({ lh: +b.dataset.v }); applyStyle(); openPanel('aa'); return relayout(); }
+        if (a === 'snd') { saveSet({ snd: +b.dataset.v }); if (+b.dataset.v) flipSound(); return openPanel('aa'); }
         if (a === 'anim') { saveSet({ anim: b.dataset.k }); return openPanel('aa'); }
         if (a === 'lay') { saveSet({ lay: b.dataset.k }); applyStyle(); openPanel('aa'); return relayout(); }
         if (a === 'just') { saveSet({ just: +b.dataset.v }); applyStyle(); openPanel('aa'); return relayout(); }
