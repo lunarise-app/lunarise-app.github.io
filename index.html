@@ -7361,6 +7361,10 @@ html.ml-lock,html.ml-lock body{overflow:hidden}
 .ml-mini .ml-cvt{font-size:10.5px}.ml-mini .ml-cva{font-size:8px}
 .ml-panel .ml-lvr{color:var(--uitx)}
 .ml-more{display:flex;width:100%;max-width:420px;margin:18px auto 4px}
+.ml-sent{display:flex;justify-content:center;gap:7px;padding:26px 0 40px;grid-column:1/-1}
+.ml-sent i{width:8px;height:8px;border-radius:50%;background:#8b7bff;opacity:.4;animation:mlsent 1s infinite ease-in-out}
+.ml-sent i:nth-child(2){animation-delay:.15s}.ml-sent i:nth-child(3){animation-delay:.3s}
+@keyframes mlsent{50%{opacity:1;transform:translateY(-4px)}}
 </style><style id="mv-art-css" data-th-skip>
 /* Movies: the big pictures stay cinematic (dark shade, white writing) in every theme and in Light mode */
 .mv-hero{position:relative;min-height:420px;border-radius:26px;overflow:hidden;display:flex;align-items:flex-end;background:#0b0d1a var(--bd) center 20%/cover no-repeat;box-shadow:0 30px 60px -30px rgba(0,0,0,.9);isolation:isolate}
@@ -43416,6 +43420,17 @@ window.__MLD = {
             '<span class="ml-ct">' + esc(b.title) + '</span><span class="ml-ca">' + esc(b.author) + '</span>' +
             '<span class="ml-cm">' + (b.rating ? stars(b.rating) + '<b>' + b.rating.toFixed(1) + '</b>' : '<em>Yours</em>') + '<span class="ml-dot" style="background:' + col + '"></span><small>' + esc(b.level) + '</small></span></div>';
     }
+    /* endless list: more books are added as you scroll down */
+    let sentIO = null;
+    function watchSent(L) {
+        if (sentIO) { sentIO.disconnect(); sentIO = null; } const s = $('#ml-sent'); if (!s || !('IntersectionObserver' in window)) { if (s) { C.n = L.length; $('#ml-cat .ml-grid').insertAdjacentHTML('beforeend', L.slice(48).map(card).join('')); s.remove(); } return; }
+        sentIO = new IntersectionObserver(es => {
+            if (!es[0].isIntersecting) return; const g = $('#ml-cat .ml-grid'), s2 = $('#ml-sent'); if (!g || !s2) return;
+            const n0 = C.n; C.n = Math.min(L.length, n0 + 48); g.insertAdjacentHTML('beforeend', L.slice(n0, C.n).map(card).join(''));
+            if (C.n >= L.length) { sentIO.disconnect(); s2.remove(); }
+        }, { root: $('#ml-cat .ml-scroll'), rootMargin: '900px 0px' });
+        sentIO.observe(s);
+    }
     function paintCat() {
         const el = $('#ml-cat'); if (!el) return; const L = filtered(), P = prog(), F = favs();
         const cont = Object.keys(P).map(id => ({ b: byId(id), p: P[id] })).filter(x => x.b && x.p.pct > 0 && x.p.pct < 98).sort((a, b) => b.p.ts - a.p.ts)[0];
@@ -43435,8 +43450,9 @@ window.__MLD = {
             '<div class="ml-bar2"><div class="ml-seg" role="radiogroup" aria-label="Level">' + ['All', 'Easy', 'Medium', 'Hard'].map(l => '<button role="radio" aria-checked="' + (C.lv === l) + '" class="' + (C.lv === l ? 'on' : '') + '" data-a="level" data-l="' + l + '">' + l + '</button>').join('') + '</div>' +
             '<label class="ml-sort"><i class="fa-solid fa-arrow-down-wide-short"></i><select id="ml-sort" aria-label="Sort books">' + [['top', 'Top rated'], ['az', 'A to Z'], ['short', 'Shortest first'], ['long', 'Longest first'], ['easy', 'Easiest first']].map(o => '<option value="' + o[0] + '"' + (C.sort === o[0] ? ' selected' : '') + '>' + o[1] + '</option>').join('') + '</select></label></div>' +
             (C.g === 'All' && !C.q && C.lv === 'All' && C.sort === 'top' ? '<h2 class="ml-h2">Readers’ favourites</h2><div class="ml-rail">' + top.map(b => '<div class="ml-mini" role="button" tabindex="0" data-a="detail" data-id="' + esc(b.id) + '" aria-label="' + esc(b.title) + '">' + coverHTML(b) + '<b>' + b.rating.toFixed(1) + ' ★</b></div>').join('') + '</div><h2 class="ml-h2">All books <small>' + L.length + '</small></h2>' : '<h2 class="ml-h2">' + (C.g === 'All' ? 'Results' : C.g === 'Reading' ? 'In progress' : esc(C.g)) + ' <small>' + L.length + '</small></h2>') +
-            (L.length ? '<div class="ml-grid">' + L.slice(0, C.n).map(card).join('') + '</div>' + (L.length > C.n ? '<button class="ml-btn ml-more" data-a="more">Show more books · ' + (L.length - C.n) + ' left</button>' : '') : '<div class="ml-empty"><i class="fa-solid fa-book-open"></i><b>' + (C.g === 'Saved' ? 'Nothing saved yet' : C.g === 'Reading' ? 'You have no book in progress' : 'No book matches') + '</b><span>' + (C.g === 'Saved' ? 'Tap the heart on a book to keep it here.' : C.g === 'Reading' ? 'Open any book and it will wait for you here.' : 'Try another word, or clear the filters.') + '</span><button class="ml-btn" data-a="clear">Show all books</button></div>') +
+            (L.length ? '<div class="ml-grid">' + L.slice(0, C.n).map(card).join('') + '</div>' + (L.length > C.n ? '<div class="ml-sent" id="ml-sent"><i></i><i></i><i></i></div>' : '') : '<div class="ml-empty"><i class="fa-solid fa-book-open"></i><b>' + (C.g === 'Saved' ? 'Nothing saved yet' : C.g === 'Reading' ? 'You have no book in progress' : 'No book matches') + '</b><span>' + (C.g === 'Saved' ? 'Tap the heart on a book to keep it here.' : C.g === 'Reading' ? 'Open any book and it will wait for you here.' : 'Try another word, or clear the filters.') + '</span><button class="ml-btn" data-a="clear">Show all books</button></div>') +
             '<p class="ml-foot">Texts are public-domain editions from Project Gutenberg. Ratings are rounded reader ratings.</p></div></div>';
+        watchSent(L);
         if (keep) { const q = $('#ml-q'); if (q) { q.focus(); try { q.setSelectionRange(q.value.length, q.value.length); } catch (e) { } } }
     }
 
@@ -44106,7 +44122,6 @@ window.__MLD = {
         if (a === 'detail') return detail(id);
         if (a === 'shclose') return closeSheet();
         if (a === 'read') return readBook(id);
-        if (a === 'more') { C.n += 60; return paintCat(); }
         if (a === 'genre') { C.g = b.dataset.g; C.n = 48; return paintCat(); }
         if (a === 'level') { C.lv = b.dataset.l; C.n = 48; return paintCat(); }
         if (a === 'clear') { C.g = 'All'; C.lv = 'All'; C.q = ''; return paintCat(); }
