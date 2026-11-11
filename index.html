@@ -6952,6 +6952,356 @@ html.sx-lock,html.sx-lock body{overflow:hidden}
 .sx-bw{display:flex;flex-wrap:wrap;gap:8px}.sx-bw button{padding:8px 14px;border-radius:99px;background:rgba(251,113,133,.16);border:1px solid rgba(251,113,133,.4)!important;font-size:14px}.sx-bw i{margin-right:6px;font-size:12px}
 @media(prefers-reduced-motion:reduce){#sx *{animation:none!important;transition:none!important}}
 .sx-cta{position:sticky;bottom:0;padding:14px 0 4px;background:linear-gradient(180deg,rgba(7,9,20,0),#070914 40%);z-index:2}
+/* ===== Moon Library ===== */
+html.ml-lock,html.ml-lock body{overflow:hidden}
+#ml{--bg:#0b0c1e;--s1:rgba(255,255,255,.055);--s2:rgba(255,255,255,.09);--ln:rgba(255,255,255,.1);--tx:#f1f2ff;--mu:#9da3c9;--ac:#8b7bff;--ac2:#ff6b8a;--gold:#f2c46d;--teal:#29d3b5;
+  position:fixed;inset:0;z-index:99970;display:none;background:var(--bg);color:var(--tx);font-family:inherit;-webkit-tap-highlight-color:transparent;overflow:hidden}
+#ml.open{display:block}
+#ml *{box-sizing:border-box}
+:where(#ml button){font:inherit;color:inherit;cursor:pointer;border:0;background:none;padding:0;text-align:inherit}
+#ml button:focus-visible,#ml input:focus-visible,#ml select:focus-visible,#ml [role=button]:focus-visible,#ml a:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+#ml [hidden]{display:none!important}
+.ml-glow{position:absolute;inset:0;pointer-events:none;background:radial-gradient(640px 420px at 88% -6%,rgba(139,123,255,.32),transparent 70%),radial-gradient(520px 380px at -8% 30%,rgba(255,107,138,.16),transparent 70%),radial-gradient(520px 360px at 60% 110%,rgba(41,211,181,.14),transparent 70%)}
+.ml-scr{position:absolute;inset:0;display:flex;flex-direction:column}
+.ml-scroll{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+.ml-scroll>*{flex-shrink:0}
+.ml-wrap{position:relative;max-width:1080px;margin:0 auto;padding:calc(12px + env(safe-area-inset-top)) 16px calc(40px + env(safe-area-inset-bottom))}
+
+/* top bar of the catalogue */
+.ml-top{display:flex;align-items:center;gap:12px}
+.ml-x{flex:none;width:42px;height:42px;border-radius:14px;display:grid;place-items:center;background:var(--s2);border:1px solid var(--ln)!important;font-size:15px}
+.ml-brand{display:flex;align-items:center;gap:10px;min-width:0;flex:1}
+.ml-logo{flex:none;width:40px;height:40px;border-radius:13px;display:grid;place-items:center;font-size:17px;color:#1c1440;background:linear-gradient(135deg,#ffe3a1,#f2c46d 55%,#ff9a8a);box-shadow:0 8px 22px -8px rgba(242,196,109,.6)}
+.ml-brand b{display:block;font-size:18px;font-weight:900;letter-spacing:-.01em;line-height:1.1}
+.ml-brand small{display:block;font-size:12px;color:var(--mu);margin-top:2px}
+.ml-add{flex:none;display:flex;align-items:center;gap:8px;height:42px;padding:0 14px;border-radius:14px;background:var(--s2);border:1px solid var(--ln)!important;font-size:13px;font-weight:700}
+@media (max-width:420px){.ml-add span{display:none}.ml-add{width:42px;padding:0;justify-content:center}}
+.ml-h1{margin:22px 0 6px;font-size:clamp(26px,6vw,40px);line-height:1.08;font-weight:900;letter-spacing:-.025em;max-width:16em;background:linear-gradient(100deg,#fff 20%,#d9d2ff 60%,#ffd2a1);-webkit-background-clip:text;background-clip:text;color:transparent}
+.ml-sub{font-size:14.5px;line-height:1.5;color:var(--mu);max-width:36em}
+.ml-search{display:flex;align-items:center;gap:10px;margin-top:16px;height:50px;padding:0 16px;border-radius:16px;background:var(--s1);border:1px solid var(--ln)}
+.ml-search:focus-within{border-color:var(--ac);box-shadow:0 0 0 3px rgba(139,123,255,.22)}
+.ml-search i{color:var(--mu)}
+.ml-search input{flex:1;min-width:0;height:100%;background:none;border:0;outline:0;color:var(--tx);font:inherit;font-size:15px}
+.ml-search input::placeholder{color:#7a80a8}
+.ml-search.sm{height:44px;margin:0 0 10px}
+.ml-search input::-webkit-search-cancel-button{filter:invert(.8)}
+
+/* continue card */
+.ml-cont{position:relative;display:flex;align-items:center;gap:16px;width:100%;margin-top:18px;padding:14px;border-radius:22px;background:linear-gradient(135deg,rgba(139,123,255,.3),rgba(255,107,138,.16) 60%,rgba(242,196,109,.14));border:1px solid rgba(255,255,255,.16)!important;overflow:hidden;text-align:left}
+.ml-cont-cv{flex:none;width:74px}
+.ml-cont-t{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.ml-cont-t small{font-size:11.5px;font-weight:800;color:var(--gold);letter-spacing:.04em}
+.ml-cont-t b{font-size:18px;line-height:1.2;font-weight:900}
+.ml-cont-t>span{font-size:13px;color:var(--mu)}
+.ml-cont-t em{font-style:normal;font-size:12px;color:#d5d8f5;font-weight:700}
+.ml-bar{display:block;height:6px;border-radius:9px;background:rgba(255,255,255,.14);overflow:hidden;margin-top:6px}
+.ml-bar i{display:block;height:100%;border-radius:9px;background:linear-gradient(90deg,var(--teal),var(--gold))}
+.ml-cont-go{flex:none;width:46px;height:46px;border-radius:50%;display:grid;place-items:center;background:#fff;color:#2b1b8a;font-size:15px;padding-left:3px}
+.ml-stats{display:flex;flex-wrap:wrap;gap:8px 18px;margin:16px 2px 4px;font-size:12.5px;color:var(--mu)}
+.ml-stats b{color:#fff;font-size:15px;margin-right:3px}
+
+/* filters */
+.ml-chips{display:flex;gap:8px;overflow-x:auto;padding:14px 2px 6px;margin:0 -16px;padding-left:16px;padding-right:16px;scrollbar-width:none}
+.ml-chips::-webkit-scrollbar{display:none}
+.ml-chip{flex:none;display:flex;align-items:center;gap:7px;height:38px;padding:0 14px;border-radius:99px;background:var(--s1);border:1px solid var(--ln)!important;font-size:13px;font-weight:700;color:#d6d9f5;white-space:nowrap;transition:background .2s,transform .15s}
+.ml-chip i{color:var(--c);font-size:12px}
+.ml-chip b{font-size:11px;background:var(--s2);border-radius:9px;padding:1px 6px}
+.ml-chip.on{background:var(--c);color:#14122b;border-color:transparent!important}
+.ml-chip.on i{color:#14122b}
+.ml-chip:active{transform:scale(.96)}
+.ml-bar2{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:8px}
+.ml-seg{display:flex;padding:3px;border-radius:13px;background:var(--s1);border:1px solid var(--ln)}
+.ml-seg button{height:32px;padding:0 13px;border-radius:10px;font-size:13px;font-weight:700;color:var(--mu)}
+.ml-seg button.on{background:var(--s2);color:#fff;box-shadow:inset 0 0 0 1px rgba(255,255,255,.14)}
+.ml-sort{margin-left:auto;display:flex;align-items:center;gap:8px;height:38px;padding:0 12px;border-radius:13px;background:var(--s1);border:1px solid var(--ln);color:var(--mu);font-size:13px}
+.ml-sort select{background:none;border:0;color:var(--tx);font:inherit;font-weight:700;outline:0;max-width:130px}
+.ml-sort select option{color:#111}
+.ml-h2{margin:26px 2px 12px;font-size:19px;font-weight:900;letter-spacing:-.01em;display:flex;align-items:baseline;gap:8px}
+.ml-h2 small{font-size:12px;font-weight:700;color:var(--mu)}
+.ml-rail{display:flex;gap:14px;overflow-x:auto;margin:0 -16px;padding:4px 16px 12px;scrollbar-width:none;scroll-snap-type:x proximity}
+.ml-rail::-webkit-scrollbar{display:none}
+.ml-mini{flex:none;width:112px;display:flex;flex-direction:column;gap:7px;scroll-snap-align:start;cursor:pointer;transition:transform .2s}
+.ml-mini:hover{transform:translateY(-4px)}
+.ml-mini b{font-size:12px;color:var(--gold);text-align:center}
+.ml-rail.sm .ml-mini{width:84px}
+
+/* cover (generated art; the real image fades in on top of it) */
+.ml-cv{position:relative;display:flex;flex-direction:column;justify-content:space-between;aspect-ratio:2/3;width:100%;padding:11% 10% 9%;border-radius:6px 12px 12px 6px;overflow:hidden;background:radial-gradient(120% 80% at 20% 0%,rgba(255,255,255,.28),transparent 55%),linear-gradient(155deg,var(--a),var(--b));box-shadow:0 18px 30px -14px rgba(0,0,0,.75),0 3px 8px rgba(0,0,0,.4),inset 3px 0 0 rgba(255,255,255,.18),inset 7px 0 8px -5px rgba(0,0,0,.35);color:#fff}
+.ml-cvi{font-size:clamp(14px,5vw,22px);opacity:.85}
+.ml-cvt{font-size:clamp(11px,3.6vw,17px);font-weight:900;line-height:1.12;letter-spacing:-.01em;text-wrap:balance;display:-webkit-box;-webkit-line-clamp:5;-webkit-box-orient:vertical;overflow:hidden;text-shadow:0 2px 8px rgba(0,0,0,.35)}
+.ml-cva{font-size:clamp(8px,2.4vw,11px);font-weight:700;opacity:.85;text-transform:none}
+.ml-cv img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .35s}
+.ml-cv img.on{opacity:1}
+.ml-cv.big{border-radius:8px 16px 16px 8px}
+
+/* grid */
+.ml-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:22px 16px}
+@media (min-width:700px){.ml-grid{grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:28px 20px}}
+.ml-card{display:flex;flex-direction:column;gap:6px;cursor:pointer;min-width:0;transition:transform .22s cubic-bezier(.2,.8,.2,1)}
+.ml-card:hover{transform:translateY(-5px)}
+.ml-card:active{transform:scale(.975)}
+.ml-cvw{position:relative;display:block}
+.ml-pgb{position:absolute;left:10%;right:8%;bottom:6px;height:5px;border-radius:5px;background:rgba(0,0,0,.45);overflow:hidden}
+.ml-pgb i{display:block;height:100%;background:linear-gradient(90deg,var(--teal),var(--gold))}
+.ml-heart{position:absolute;top:7px;right:7px;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:rgba(10,10,30,.62);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);font-size:14px;color:#fff;border:1px solid rgba(255,255,255,.18)!important;z-index:2}
+.ml-heart.on{color:#ff6b8a}
+.ml-ct{margin-top:6px;font-size:14.5px;font-weight:800;line-height:1.25;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.ml-ca{font-size:12.5px;color:var(--mu);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ml-cm{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--mu)}
+.ml-cm b{color:#fff;font-weight:800}
+.ml-cm em{font-style:normal;color:var(--teal);font-weight:700}
+.ml-dot{width:5px;height:5px;border-radius:50%;margin-left:2px}
+.ml-cm small{font-size:12px}
+.ml-st{display:inline-block;font-size:13px;letter-spacing:1px;line-height:1;background:linear-gradient(90deg,var(--gold) var(--r),rgba(255,255,255,.2) var(--r));-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
+.ml-empty{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;padding:44px 16px;color:var(--mu)}
+.ml-empty i{font-size:34px;color:var(--ac)}
+.ml-empty b{font-size:17px;color:#fff}
+.ml-empty.sm{padding:26px 10px}
+.ml-foot{margin:34px 0 0;text-align:center;font-size:12px;color:#6f75a0}
+
+/* buttons */
+.ml-btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;height:48px;padding:0 20px;border-radius:15px;font-size:14.5px;font-weight:800;background:var(--s2);border:1px solid var(--ln)!important;color:#fff;text-decoration:none;transition:transform .15s,filter .2s}
+.ml-btn:active{transform:scale(.97)}
+.ml-btn.pri{background:linear-gradient(120deg,#7c5cff,#c05cff 55%,#ff6b8a);border-color:transparent!important;box-shadow:0 12px 26px -12px rgba(160,90,255,.9)}
+.ml-btn.ghost.on{background:rgba(255,107,138,.18);border-color:rgba(255,107,138,.5)!important;color:#ffb3c4}
+.ml-btn.sm{height:38px;padding:0 14px;font-size:13px;border-radius:12px}
+.ml-btn.done{background:rgba(41,211,181,.16);border-color:rgba(41,211,181,.5)!important;color:#7ff0d8;box-shadow:none}
+
+/* sheet (book page) */
+.ml-sheetwrap{position:absolute;inset:0;z-index:20;display:flex;align-items:flex-end;justify-content:center}
+.ml-sh-bg{position:absolute;inset:0;background:rgba(4,4,16,.66);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);opacity:0;transition:opacity .25s}
+.ml-sheetwrap.on .ml-sh-bg{opacity:1}
+.ml-sh{position:relative;width:100%;max-width:720px;max-height:92%;overflow-y:auto;overscroll-behavior:contain;border-radius:28px 28px 0 0;background:linear-gradient(180deg,#171836,#0f1026);border:1px solid var(--ln);border-bottom:0;padding:0 0 calc(24px + env(safe-area-inset-bottom));transform:translateY(40px);opacity:0;transition:transform .32s cubic-bezier(.2,.8,.2,1),opacity .25s}
+.ml-sheetwrap.on .ml-sh{transform:none;opacity:1}
+@media (min-width:760px){.ml-sheetwrap{align-items:center}.ml-sh{border-radius:28px;border-bottom:1px solid var(--ln);max-height:88%}}
+.ml-det{position:relative;padding:20px 20px 4px;background:radial-gradient(420px 260px at 20% 0%,color-mix(in srgb,var(--a) 45%,transparent),transparent 70%)}
+.ml-det-x{position:absolute;top:14px;right:14px;z-index:3;width:38px;height:38px;border-radius:50%}
+.ml-det-hero{display:flex;gap:18px;align-items:flex-end;padding-top:14px}
+.ml-det-cv{flex:none;width:min(38%,170px);filter:drop-shadow(0 20px 26px rgba(0,0,0,.55))}
+.ml-det-m{min-width:0;display:flex;flex-direction:column;gap:8px;padding-bottom:4px}
+.ml-tag{align-self:flex-start;display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 11px;border-radius:99px;font-size:11.5px;font-weight:800;background:color-mix(in srgb,var(--c) 22%,transparent);color:var(--c);border:1px solid color-mix(in srgb,var(--c) 45%,transparent)}
+.ml-det-m h2{font-size:clamp(21px,5.4vw,30px);line-height:1.1;font-weight:900;letter-spacing:-.02em}
+.ml-by{font-size:14px;color:#cfd2f1}
+.ml-by small{color:var(--mu);margin-left:4px}
+.ml-rate{display:flex;align-items:center;gap:8px}
+.ml-rate .ml-st{font-size:17px}
+.ml-rate b{font-size:16px}
+.ml-rate small{font-size:12px;color:var(--mu)}
+.ml-facts{display:flex;flex-wrap:wrap;gap:6px}
+.ml-facts span{display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 10px;border-radius:9px;background:var(--s1);font-size:12px;color:#d8dbf6}
+.ml-facts i{color:var(--ac);font-size:11px}
+.ml-blurb{margin:18px 0 0;font-size:15.5px;line-height:1.6;color:#e2e4f8}
+.ml-acts{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+.ml-acts .pri{flex:1 1 200px}
+.ml-h3{margin:26px 0 10px;font-size:15px;font-weight:900}
+.ml-auth{display:flex;gap:14px;padding:14px;border-radius:18px;background:var(--s1);border:1px solid var(--ln)}
+.ml-av{flex:none;width:54px;height:54px;border-radius:50%;display:grid;place-items:center;font-weight:900;font-size:18px;color:#fff}
+.ml-auth b{display:block;font-size:15px}
+.ml-auth small{display:block;color:var(--mu);font-size:12px;margin-top:1px}
+.ml-auth p{margin-top:7px;font-size:14px;line-height:1.6;color:#d3d6f2}
+.ml-det .ml-rail{margin:0 -20px;padding:4px 20px 8px}
+
+/* ================= reader ================= */
+.ml-rdr{--pbg:#fbf8f1;--ptx:#26221c;--pdesk:#e8e1d2;--ui:#fff;--uitx:#201d18;--uimu:#7b7466;--uiln:rgba(0,0,0,.09);--uibg:rgba(255,255,255,.92);--acc:#6a4cff;background:var(--pdesk);color:var(--uitx);transition:background .3s}
+.ml-rdr[data-th=sepia]{--ui:#f6ebd0;--uitx:#3d2f1b;--uimu:#8a7550;--uiln:rgba(60,40,10,.14);--uibg:rgba(246,235,208,.94)}
+.ml-rdr[data-th=lilac]{--ui:#f5f1ff;--uitx:#241c3f;--uimu:#76709a;--uiln:rgba(60,40,120,.12);--uibg:rgba(245,241,255,.94)}
+.ml-rdr[data-th=dark]{--ui:#20212e;--uitx:#e6e7f5;--uimu:#9091ad;--uiln:rgba(255,255,255,.1);--uibg:rgba(32,33,46,.94);--acc:#9f8cff}
+.ml-rdr[data-th=night]{--ui:#0a0a0f;--uitx:#c4c4d2;--uimu:#7e7e92;--uiln:rgba(255,255,255,.09);--uibg:rgba(10,10,15,.96);--acc:#9f8cff}
+.ml-rdr[data-th=dark]{background:#0f1018}
+.ml-rdr .ml-ib{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;font-size:15px;color:var(--uitx);position:relative;flex:none}
+.ml-rdr .ml-ib:hover{background:var(--uiln)}
+.ml-rdr .ml-ib.acc{background:var(--acc);color:#fff}
+.ml-rdr .ml-ib.big{background:linear-gradient(135deg,#7c5cff,#ff6b8a);color:#fff;width:46px;height:46px;border-radius:50%}
+.ml-rdr .ml-ib.big.on{box-shadow:0 0 0 4px rgba(124,92,255,.3)}
+.ml-rdr .ml-ib.on{color:#ff6b8a}
+.ml-rdr .ml-ib em{position:absolute;top:2px;right:0;min-width:17px;height:17px;border-radius:9px;background:var(--ac2);color:#fff;font-style:normal;font-size:10.5px;font-weight:800;display:grid;place-items:center;padding:0 4px}
+.ml-rdr .ml-x{background:var(--uiln);color:var(--uitx);border:0!important}
+.ml-rbar.top,.ml-rbar.bot{position:absolute;left:0;right:0;z-index:6;background:var(--uibg);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);color:var(--uitx);transition:transform .3s cubic-bezier(.2,.8,.2,1),opacity .3s}
+.ml-rbar.top{top:0;display:flex;align-items:center;gap:4px;padding:calc(8px + env(safe-area-inset-top)) 10px 8px;border-bottom:1px solid var(--uiln)}
+.ml-rbar.top .ml-x{margin-right:4px}
+.ml-ttl{flex:1;min-width:0;padding:0 4px}
+.ml-ttl b{display:block;font-size:14.5px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ml-ttl small{display:block;font-size:12px;color:var(--uimu);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ml-rbar.bot{bottom:0;padding:8px 10px calc(8px + env(safe-area-inset-bottom));border-top:1px solid var(--uiln)}
+.ml-rdr.imm .ml-rbar.top{transform:translateY(-100%);opacity:0}
+.ml-rdr.imm .ml-rbar.bot{transform:translateY(100%);opacity:0}
+.ml-prow{display:flex;align-items:center;gap:6px}
+.ml-pmid{flex:1;min-width:0}
+.ml-pinfo{display:flex;justify-content:space-between;gap:8px;font-size:11.5px;color:var(--uimu);margin-top:1px}
+.ml-pinfo span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#ml-seek{width:100%;height:26px;margin:0;background:none;-webkit-appearance:none;appearance:none;accent-color:var(--acc)}
+#ml-seek::-webkit-slider-runnable-track{height:5px;border-radius:5px;background:var(--uiln)}
+#ml-seek::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--acc);margin-top:-7.5px;border:3px solid var(--ui);box-shadow:0 2px 8px rgba(0,0,0,.3)}
+#ml-seek::-moz-range-track{height:5px;border-radius:5px;background:var(--uiln)}
+#ml-seek::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--acc);border:3px solid var(--ui)}
+.ml-tts{display:flex;align-items:center;gap:8px;padding:2px 2px 8px;flex-wrap:wrap}
+.ml-rate{display:flex;align-items:center;gap:8px;flex:1 1 150px;color:var(--uimu);font-size:12px}
+.ml-rate input{flex:1;min-width:60px;accent-color:var(--acc)}
+.ml-rate b{color:var(--uitx);min-width:34px}
+.ml-tts select{height:38px;border-radius:11px;border:1px solid var(--uiln);background:var(--ui);color:var(--uitx);font:inherit;font-size:12.5px;padding:0 8px;max-width:150px}
+
+.ml-stage{position:absolute;left:0;right:0;top:calc(58px + env(safe-area-inset-top));bottom:calc(66px + env(safe-area-inset-bottom));display:flex;align-items:center;justify-content:center;touch-action:pan-y;user-select:none;-webkit-user-select:none;transition:transform .28s cubic-bezier(.2,.8,.2,1);cursor:pointer}
+.ml-rdr.imm .ml-stage{top:calc(8px + env(safe-area-inset-top));bottom:calc(8px + env(safe-area-inset-bottom))}
+.ml-book{position:relative;width:calc(var(--pw,320px) * 2);height:var(--ph,520px);perspective:2400px;transition:opacity .17s;font-family:var(--ff);font-size:var(--fs,19px);line-height:var(--lh,1.62)}
+.ml-book[data-mode=single]{width:var(--pw)}
+.ml-book.fadeout{opacity:0}
+.ml-pg{position:absolute;top:0;width:var(--pw);height:var(--ph);background:var(--pbg);color:var(--ptx);display:flex;flex-direction:column;padding:26px 26px 14px;overflow:hidden}
+.ml-pg.ml-L{left:0;border-radius:6px 0 0 6px;box-shadow:inset -14px 0 18px -12px rgba(0,0,0,.28),0 18px 36px -18px rgba(0,0,0,.5);padding-right:30px}
+.ml-pg.ml-R{left:var(--pw);border-radius:0 6px 6px 0;box-shadow:inset 14px 0 18px -12px rgba(0,0,0,.28),0 18px 36px -18px rgba(0,0,0,.5);padding-left:30px}
+.ml-book[data-mode=single] .ml-pg.ml-L{display:none}
+.ml-book[data-mode=single] .ml-pg.ml-R{left:0;border-radius:8px;box-shadow:0 14px 40px -18px rgba(0,0,0,.55);padding:26px 24px 14px}
+.ml-pg.blank{box-shadow:none;background:color-mix(in srgb,var(--pbg) 92%,#000)}
+.ml-pg.ml-L.blank{box-shadow:inset -14px 0 18px -12px rgba(0,0,0,.18)}
+.ml-spine{position:absolute;top:0;bottom:0;left:50%;width:18px;margin-left:-9px;background:linear-gradient(90deg,transparent,rgba(0,0,0,.22) 48%,rgba(0,0,0,.28) 52%,transparent);pointer-events:none;z-index:3}
+.ml-book[data-mode=single] .ml-spine{display:none}
+.ml-meas{visibility:hidden;pointer-events:none;left:-9999px!important;top:0}
+.ml-txt{flex:1;min-height:0;overflow:hidden;text-align:left;hyphens:auto;-webkit-hyphens:auto;overflow-wrap:break-word}
+.ml-book[data-just="1"] .ml-txt p{text-align:justify}
+.ml-txt p{margin:0;text-indent:1.5em}
+.ml-txt p.ct{text-indent:0}
+.ml-txt h3{margin:.5em 0 .7em;font-size:1.35em;line-height:1.2;font-weight:800;text-align:center;letter-spacing:.01em;text-indent:0}
+.ml-txt h4{margin:-.3em 0 1.1em;font-size:1.05em;font-weight:600;font-style:italic;text-align:center;opacity:.85}
+.ml-txt h3.ct,.ml-txt h4.ct{text-align:center}
+.ml-pf{flex:none;display:flex;justify-content:space-between;align-items:center;padding-top:8px;font-family:system-ui,sans-serif;font-size:11px;color:color-mix(in srgb,var(--ptx) 55%,transparent);height:26px}
+.ml-pf b{font-weight:700}
+.w{border-radius:4px;transition:background .15s}
+.w.sel{background:rgba(124,92,255,.3);box-shadow:0 0 0 2px rgba(124,92,255,.3)}
+.w.rd{background:rgba(255,200,80,.22)}
+.w.rdw{background:rgba(255,160,40,.55);color:#000}
+.ml-rdr[data-th=dark] .w.rdw,.ml-rdr[data-th=night] .w.rdw{color:#fff;background:rgba(255,160,40,.5)}
+.ml-title{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center;padding:4%;font-family:var(--ff)}
+.ml-title-cv{width:min(48%,200px)}
+.ml-title h1{font-size:1.5em;line-height:1.15;font-weight:800;margin-top:6px}
+.ml-title p{font-size:1.05em;opacity:.75}
+.ml-title small{font-family:system-ui,sans-serif;font-size:11.5px;opacity:.55}
+.ml-swipe{margin-top:10px;font-family:system-ui,sans-serif;font-size:12px;opacity:.6;display:flex;align-items:center;gap:8px}
+.ml-blank{flex:1}
+/* the turning page */
+.ml-leaf{position:absolute;top:0;left:var(--pw);width:var(--pw);height:var(--ph);transform-origin:left center;transform-style:preserve-3d;display:none;z-index:5;will-change:transform;--sh:0;--pr:0}
+.ml-book[data-mode=single] .ml-leaf{left:0}
+.ml-leaf.on{display:block}
+.ml-face{position:absolute;inset:0;display:flex;flex-direction:column;background:var(--pbg);color:var(--ptx);padding:26px 26px 14px;overflow:hidden;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.ml-face.f{border-radius:0 6px 6px 0;padding-left:30px;box-shadow:inset 14px 0 18px -12px rgba(0,0,0,.25)}
+.ml-book[data-mode=single] .ml-face.f{border-radius:8px;padding:26px 24px 14px;box-shadow:0 0 0 rgba(0,0,0,0)}
+.ml-face.k{transform:rotateY(180deg);border-radius:6px 0 0 6px;padding-right:30px;box-shadow:inset -14px 0 18px -12px rgba(0,0,0,.25)}
+.ml-book[data-mode=single] .ml-face.k{display:none}
+.ml-face.blank{background:color-mix(in srgb,var(--pbg) 92%,#000)}
+.ml-shade{position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,rgba(0,0,0,.34),rgba(0,0,0,0) 55%);opacity:calc(var(--sh) * .9);backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.ml-book.turning .ml-face{box-shadow:calc(var(--sh) * -12px) 8px calc(var(--sh) * 26px) rgba(0,0,0,calc(var(--sh) * .38))}
+.ml-book.turning .ml-pg.ml-R::after,.ml-book.turning .ml-pg.ml-L::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,rgba(0,0,0,.18),transparent 40%);opacity:calc(1 - var(--pr))}
+/* panels */
+.ml-panel{position:absolute;z-index:9;left:50%;bottom:0;transform:translate(-50%,0);width:min(100%,560px);max-height:78%;display:flex;flex-direction:column;background:var(--ui);color:var(--uitx);border-radius:24px 24px 0 0;box-shadow:0 -18px 50px -14px rgba(0,0,0,.5);border:1px solid var(--uiln);border-bottom:0;animation:mlUp .28s cubic-bezier(.2,.8,.2,1)}
+@keyframes mlUp{from{transform:translate(-50%,40px);opacity:0}}
+.ml-ph{display:flex;align-items:center;justify-content:space-between;padding:12px 12px 4px 20px}
+.ml-ph b{font-size:17px;font-weight:900}
+.ml-pb{padding:6px 18px calc(22px + env(safe-area-inset-bottom));overflow-y:auto;overscroll-behavior:contain;min-height:0}
+.ml-lab{margin:14px 0 8px;font-size:12px;font-weight:800;color:var(--uimu)}
+.ml-themes{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.ml-th{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 4px 8px;border-radius:14px;background:var(--b);color:var(--t);border:2px solid var(--uiln)!important;font-family:Georgia,serif}
+.ml-th span{font-size:22px;font-weight:700}
+.ml-th small{font:700 10.5px system-ui,sans-serif;opacity:.8}
+.ml-th.on{border-color:var(--acc)!important;box-shadow:0 0 0 3px color-mix(in srgb,var(--acc) 30%,transparent)}
+.ml-sz{display:flex;align-items:center;justify-content:center;gap:18px}
+.ml-sz .ml-ib{background:var(--uiln)}
+.ml-szv{display:flex;align-items:baseline;gap:3px;min-width:70px;justify-content:center}
+.ml-szv b{font-size:26px}
+.ml-szv small{color:var(--uimu)}
+.ml-seg2{display:flex;gap:6px;padding:4px;border-radius:14px;background:var(--uiln)}
+.ml-seg2 button{flex:1;height:38px;border-radius:10px;font-size:13px;font-weight:700;color:var(--uimu);text-align:center}
+.ml-seg2 button.on{background:var(--ui);color:var(--uitx);box-shadow:0 1px 6px rgba(0,0,0,.18)}
+.ml-tabs{display:flex;gap:4px;padding:2px 14px 4px}
+.ml-tabs button{flex:1;height:38px;border-radius:11px;font-size:13px;font-weight:700;color:var(--uimu);text-align:center}
+.ml-tabs button.on{background:var(--uiln);color:var(--uitx)}
+.ml-tabs b{font-size:11px;background:var(--acc);color:#fff;border-radius:8px;padding:1px 5px;margin-left:3px}
+.ml-list{display:flex;flex-direction:column}
+.ml-li{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:48px;padding:9px 6px;border-bottom:1px solid var(--uiln)!important;font-size:14px;line-height:1.35;text-align:left}
+.ml-li span{flex:1;min-width:0}
+.ml-li small{flex:none;color:var(--uimu);font-size:12px}
+.ml-li.on{color:var(--acc);font-weight:800}
+.ml-li mark{background:rgba(255,200,60,.5);color:inherit;border-radius:3px;padding:0 1px}
+.ml-wl .ml-wr{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--uiln)}
+.ml-wr b{flex:none;min-width:84px}
+.ml-wr span{flex:1;min-width:0;color:var(--uimu);font-size:14px}
+.ml-rdr .ml-btn{background:var(--uiln);color:var(--uitx);border:0!important}
+.ml-rdr .ml-btn.pri{background:linear-gradient(120deg,#7c5cff,#c05cff 55%,#ff6b8a);color:#fff}
+.ml-rdr .ml-empty b{color:var(--uitx)}
+.ml-rdr .ml-empty{color:var(--uimu)}
+/* loading */
+.ml-load{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:20px;background:var(--pdesk)}
+.ml-load .ml-x{position:absolute;top:calc(12px + env(safe-area-inset-top));left:14px}
+.ml-load-c{display:flex;flex-direction:column;align-items:center;gap:14px;max-width:340px;text-align:center}
+.ml-load-c .ml-cv{width:130px}
+.ml-load-c b{font-size:18px;color:var(--uitx)}
+.ml-load-c>span{font-size:14px;color:var(--uimu);line-height:1.5}
+.ml-spin{display:block;width:26px;height:26px;border-radius:50%;border:3px solid var(--uiln);border-top-color:var(--acc);animation:mlSp .8s linear infinite}
+@keyframes mlSp{to{transform:rotate(360deg)}}
+.ml-busy{position:absolute;inset:0;z-index:8;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:color-mix(in srgb,var(--pdesk) 86%,transparent);backdrop-filter:blur(4px);color:var(--uitx);font-weight:700}
+/* the word card */
+.ml-wp{position:absolute;z-index:30;left:50%;bottom:0;width:min(100%,560px);max-height:72%;overflow-y:auto;overscroll-behavior:contain;transform:translate(-50%,0);background:linear-gradient(180deg,#1a1b3a,#0f1026);color:#f1f2ff;border-radius:26px 26px 0 0;border:1px solid rgba(255,255,255,.14);border-bottom:0;box-shadow:0 -20px 60px -10px rgba(0,0,0,.65);padding:6px 18px calc(18px + env(safe-area-inset-bottom));animation:mlUp .26s cubic-bezier(.2,.8,.2,1)}
+.ml-wp-grab{width:38px;height:4px;border-radius:4px;background:rgba(255,255,255,.22);margin:4px auto 10px}
+.ml-wp-h{display:flex;align-items:flex-start;gap:10px}
+.ml-wp-w{flex:1;min-width:0;display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px}
+.ml-wp-w b{font-size:28px;line-height:1.1;font-weight:900;letter-spacing:-.02em;overflow-wrap:anywhere}
+.ml-ipa{font-size:16px;color:var(--gold);font-family:"Segoe UI","Noto Sans",system-ui,sans-serif}
+.ml-wp-w em{font-style:normal;font-size:12.5px;font-weight:700;color:#b9bdea;background:rgba(255,255,255,.08);border-radius:8px;padding:2px 8px}
+.ml-mu{color:#7f85b3;font-size:12px}
+.ml-wp-b{flex:none;display:flex;gap:4px}
+.ml-wp .ml-ib{width:40px;height:40px;border-radius:13px;display:grid;place-items:center;background:rgba(255,255,255,.08);font-size:14px;color:#fff}
+.ml-wp .ml-ib.acc{background:linear-gradient(135deg,#7c5cff,#ff6b8a)}
+.ml-wp .ml-ib.rec{background:#ff4d6d;animation:mlPulse 1s infinite}
+@keyframes mlPulse{50%{box-shadow:0 0 0 7px rgba(255,77,109,.25)}}
+.ml-wp-fb{margin-top:10px;padding:9px 12px;border-radius:12px;background:rgba(255,255,255,.07);font-size:13.5px}
+.ml-wp-fb.ok{background:rgba(41,211,181,.16);color:#8ff2dc}
+.ml-wp-fb.no{background:rgba(255,160,64,.15);color:#ffd0a0}
+.ml-wp-l{display:flex;gap:7px;overflow-x:auto;margin:14px -18px 0;padding:2px 18px 8px;scrollbar-width:none}
+.ml-wp-l::-webkit-scrollbar{display:none}
+.ml-wp-l button{flex:none;display:flex;align-items:center;gap:6px;height:34px;padding:0 12px;border-radius:99px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1)!important;font-size:12.5px;font-weight:700;white-space:nowrap;color:#d7daf6}
+.ml-wp-l button i{font-style:normal;font-size:15px}
+.ml-wp-l button.on{background:#fff;color:#1b1540;border-color:#fff!important}
+.ml-wp-t{display:flex;align-items:center;gap:12px;min-height:66px;padding:12px 14px;border-radius:18px;background:linear-gradient(135deg,rgba(124,92,255,.26),rgba(255,107,138,.14));border:1px solid rgba(255,255,255,.14)}
+.ml-wp-t>div{flex:1;min-width:0}
+.ml-wp-t b{font-size:22px;line-height:1.2;font-weight:800;overflow-wrap:anywhere}
+.ml-wp-t small{display:block;color:#c2c6ec;font-size:13px;margin-top:2px}
+.ml-fl{flex:none;font-size:26px}
+.ml-alt{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
+.ml-alt span{font-size:12.5px;padding:2px 9px;border-radius:9px;background:rgba(255,255,255,.1);color:#e1e3fa}
+.ml-off{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:13.5px;color:#d8dbf6}
+.ml-wp-d{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+.ml-df{font-size:14px;line-height:1.5;color:#dcdff7}
+.ml-df em{font-style:normal;font-weight:800;font-size:11.5px;color:var(--teal);margin-right:7px}
+.ml-df i{display:block;margin-top:2px;color:#a3a8d6;font-size:13px}
+.ml-wp-s{margin-top:14px;padding:12px 14px;border-radius:16px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08)}
+.ml-wp-s small{font-size:11.5px;font-weight:800;color:var(--gold)}
+.ml-wp-s p{margin:4px 0 0;font-size:14px;line-height:1.55;font-style:italic;color:#e8eaff}
+.ml-wp-sb{display:flex;gap:8px;margin-top:10px}
+.ml-wp-st{display:flex;gap:10px;align-items:flex-start;margin-top:10px}
+.ml-wp-st:empty{display:none}
+.ml-wp-st p{font-style:normal;margin:0;font-size:14.5px;line-height:1.5}
+.ml-wp-a{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.ml-wp-a .ml-btn{flex:1 1 150px;height:46px}
+.ml-wp-all{margin-top:10px;display:grid;grid-template-columns:1fr 1fr;gap:6px}
+@media (max-width:420px){.ml-wp-all{grid-template-columns:1fr}}
+.ml-ar{display:flex;align-items:center;gap:8px;min-height:44px;padding:6px 10px;border-radius:12px;background:rgba(255,255,255,.06);font-size:13px}
+.ml-ar>i{font-style:normal;font-size:17px}
+.ml-ar>span{flex:none;color:#aab0dc;font-size:11.5px;width:58px}
+.ml-ar b{flex:1;min-width:0;font-weight:700;overflow-wrap:anywhere}
+.ml-dots{display:inline-block;width:26px;height:8px;background:radial-gradient(circle,#8b91c2 2.5px,transparent 3px) 0 0/9px 8px repeat-x;animation:mlDt 1s steps(3) infinite}
+@keyframes mlDt{50%{opacity:.35}}
+@media (prefers-reduced-motion:reduce){.ml-wp,.ml-panel,.ml-sh,.ml-leaf{animation:none!important;transition:none!important}.ml-spin{animation-duration:2s}}
+@media (max-width:480px){.ml-pg{padding:22px 20px 12px}.ml-book[data-mode=single] .ml-pg.ml-R{padding:22px 20px 12px}.ml-det-hero{align-items:center}}
+.ml-book[data-mode=single] .ml-meas{padding:26px 24px 14px}
+.ml-book[data-mode=spread] .ml-meas{padding:26px 28px 14px}
+@media (max-width:480px){.ml-face{padding:22px 20px 12px}.ml-book[data-mode=single] .ml-face.f{padding:22px 20px 12px}.ml-book[data-mode=single] .ml-meas{padding:22px 20px 12px}.ml-book[data-mode=spread] .ml-meas{padding:22px 23px 12px}}
+/* Reading Lab door + hub */
+.rs-door.rs-l{grid-column:1/-1;flex-direction:row;align-items:stretch}
+.rs-door.rs-l .rs-art{width:132px;height:auto;min-height:150px;background:radial-gradient(80% 90% at 20% 0%,rgba(242,196,109,.45),transparent 60%),linear-gradient(150deg,#3a2a7a,#1b1540 70%);display:flex;align-items:center;justify-content:center;gap:0}
+.rs-door.rs-l .rs-art i{position:relative;display:block;width:44px;height:64px;border-radius:3px 7px 7px 3px;box-shadow:0 10px 16px -6px rgba(0,0,0,.6),inset 2px 0 0 rgba(255,255,255,.2)}
+.rs-door.rs-l .rs-art i:nth-child(1){background:linear-gradient(150deg,#ff6b8a,#8a1f4b);transform:rotate(-9deg) translateX(10px)}
+.rs-door.rs-l .rs-art i:nth-child(2){background:linear-gradient(150deg,#f2c46d,#8a4b12);z-index:2;height:74px}
+.rs-door.rs-l .rs-art i:nth-child(3){background:linear-gradient(150deg,#29d3b5,#0b5f6b);transform:rotate(9deg) translateX(-10px)}
+@media (max-width:560px){.rs-door.rs-l{flex-direction:column}.rs-door.rs-l .rs-art{width:auto;height:104px;min-height:0}}
+
+.ml-mini .ml-cvt{font-size:10.5px}.ml-mini .ml-cva{font-size:8px}
 </style><style id="mv-art-css" data-th-skip>
 /* Movies: the big pictures stay cinematic (dark shade, white writing) in every theme and in Light mode */
 .mv-hero{position:relative;min-height:420px;border-radius:26px;overflow:hidden;display:flex;align-items:flex-end;background:#0b0d1a var(--bd) center 20%/cover no-repeat;box-shadow:0 30px 60px -30px rgba(0,0,0,.9);isolation:isolate}
@@ -19160,6 +19510,7 @@ Respond ONLY with minified JSON: {"title":string,"topic":string (1-2 English wor
             { id: 'ai', icon: 'fa-robot', g: 'linear-gradient(135deg,#22d3ee,#6366f1)', c: 'rgba(34,211,238,.28)', title: 'AI Tutor', desc: 'Chat, speaking practice and homework help in 12 languages.', w2: 1, live: () => 'Ask anything', go: "navigateTo('ai-chat')" },
             { id: 'games', icon: 'fa-gamepad', g: 'linear-gradient(135deg,#7c3aed,#ec4899)', c: 'rgba(167,139,250,.3)', title: 'Game Zone', desc: 'Galaxy Rush class quiz + Chess Arena.', isNew: 1, live: () => ((state.user.gamePts || 0) + ' pts'), go: "navigateTo('games')" },
             { id: 'wordforge', icon: 'fa-hammer', g: 'linear-gradient(135deg,#6d4aff,#19c3b1)', c: 'rgba(109,74,255,.32)', title: 'Word Forge', desc: 'Paste your own words. Learn them with your AI teacher, then say them on camera.', isNew: 1, live: () => 'Your words', go: "WF.open()" },
+            { id: 'library', icon: 'fa-moon', g: 'linear-gradient(135deg,#f2c46d,#ff6b8a)', c: 'rgba(242,196,109,.3)', title: 'Moon Library', desc: 'Real books with covers and ratings. Page-turning reader, read-aloud, tap any word in 14 languages.', isNew: 1, live: () => { try { return JSON.parse(localStorage.getItem('ml_done') || '[]').length + ' finished'; } catch (e) { return 'Open'; } }, go: "ML.open()" },
             { id: 'movies', icon: 'fa-film', g: 'linear-gradient(135deg,#ec4899,#7c3aed)', c: 'rgba(236,72,153,.28)', title: 'Movies', desc: 'Movies, drama, series, cartoons, anime and sport. HD trailers with subtitles and where to watch the full film.', w2: 1, isNew: 1, live: () => { const n = (state.user.mvList || []).length; return n ? n + ' in my list' : 'Trending now'; }, go: "navigateTo('movies')" }, /*club*/{ id: 'club', icon: 'fa-earth-asia', g: 'linear-gradient(135deg,#2c5cc5,#d9465a)', c: 'rgba(96,165,250,.3)', title: 'Speaking Club', desc: 'Make friends worldwide: chat, voice and video calls, AI help with your English.', w2: 1, isNew: 1, live: () => (window.CLUB && CLUB.liveText ? CLUB.liveText() : 'Chats, friends and calls'), go: "navigateTo('club')" },/*/club*/
                         { id: 'profile', icon: 'fa-user-astronaut', g: 'linear-gradient(135deg,#6366f1,#a855f7)', c: 'rgba(129,140,248,.3)', title: 'My Profile', desc: 'XP, badges, settings.', live: () => 'Level ' + pfStats().lvl, go: "navigateTo('profile')" },
             { id: 'reading', icon: 'fa-book-open-reader', g: 'linear-gradient(135deg,#f43f5e,#be123c)', c: 'rgba(244,63,94,.25)', title: 'Reading Lab', desc: 'Two parts: passages with exam questions, and Book Maker for whole illustrated books.', w2: 1, isNew: 1, live: () => { const s = rlStats(); return s.n ? s.n + ' read · ' + s.acc + '%' : rlAll().length + ' passages'; }, go: "navigateTo('reading')" }
@@ -35151,7 +35502,7 @@ var LR_TURN = null;    // optional TURN servers for voice on strict networks, e.
     });
 
     /* ================= Hub: clear groups ================= */
-    const GROUPS = [['Learn', 'Lessons and full exam practice', ['exams', 'grammar', 'reading']], ['Words', 'Look up, save and remember', ['dictionary', 'mywords', 'classroom']], ['Practise speaking', 'With AI and with real people', ['ai', 'club']], ['Play', 'Learn with games', ['games', 'wordforge']], ['Watch', 'English movies — learn while you watch', ['movies']], ['More', '', ['mentors', 'profile']]];
+    const GROUPS = [['Learn', 'Lessons and full exam practice', ['exams', 'grammar', 'reading', 'library']], ['Words', 'Look up, save and remember', ['dictionary', 'mywords', 'classroom']], ['Practise speaking', 'With AI and with real people', ['ai', 'club']], ['Play', 'Learn with games', ['games', 'wordforge']], ['Watch', 'English movies — learn while you watch', ['movies']], ['More', '', ['mentors', 'profile']]];
     function tileList() {
         let T = []; try { T = HB_TILES.slice(); } catch (e) { }
         const sv = saved().length, kn = known().filter(w => isSaved(w)).length;
@@ -37434,6 +37785,12 @@ void main(){
                 <span class="rs-body"><span class="rs-tt"><span class="rl-ico rs-ic" style="background:linear-gradient(135deg,#8b5cf6,#4f46e5)"><i class="fa-solid fa-book"></i></span><span><b>Book Maker</b><em>Whole illustrated books</em></span><span class="rs-go"><i class="fa-solid fa-chevron-right"></i></span></span>
                 <small>Write any topic and get a whole book with pictures at your level. Tap any word to hear it and see it in 14 languages.</small>
                 <span class="rs-meta"><span><i class="fa-solid fa-book-bookmark"></i><b id="rs-bkn">${books ? num(books) + (books === 1 ? ' book' : ' books') + ' on your shelf' : 'No books yet'}</b></span></span></span>
+              </button>
+              <button type="button" class="rs-door rs-l" onclick="ML.open()" aria-label="Moon Library: real books with a page-turning reader">
+                <span class="rs-art"><i></i><i></i><i></i></span>
+                <span class="rs-body"><span class="rs-tt"><span class="rl-ico rs-ic" style="background:linear-gradient(135deg,#f2c46d,#ff6b8a)"><i class="fa-solid fa-moon"></i></span><span><b>Moon Library</b><em>Real books, real pages</em></span><span class="rs-go"><i class="fa-solid fa-chevron-right"></i></span></span>
+                <small>Pride and Prejudice, Sherlock Holmes, Dracula and 60 more, with covers and ratings. Turn the pages, listen to the book, and tap any word to see it in 14 languages.</small>
+                <span class="rs-meta"><span><i class="fa-solid fa-star"></i>Rated</span><span><i class="fa-solid fa-headphones"></i>Read aloud</span><span><i class="fa-solid fa-language"></i>14 languages</span></span></span>
               </button>
             </div>`;
     }
@@ -42691,6 +43048,859 @@ window.LRLP = (function () {
     function close(fromPop) { X.tok++; stopAll(); if (root) root.classList.remove('open'); document.documentElement.classList.remove('sx-lock'); const m = $('#sx-main'); if (m) m.innerHTML = ''; X.step = 'closed'; if (!fromPop) { try { if (history.state && history.state.sx) history.back(); } catch (e) { } } }
     addEventListener('popstate', () => { if (root && root.classList.contains('open')) close(true); });
     window.SX = { open, close, _X: X, _T: T, _E: E };
+})();
+
+</script><script id="ml-js">
+/* Moon Library: the catalogue. Ratings are rounded reader ratings (out of 5), levels and lengths are estimates. Texts come from Project Gutenberg (public domain). */
+window.__MLD = {
+  books: [
+    // id, title, author, first published, genre, rating, level, length (thousand words), one-line story
+    [1342, 'Pride and Prejudice', 'Jane Austen', 1813, 'Romance', 4.3, 'Medium', 122, 'Clever Elizabeth Bennet and the proud Mr Darcy have to unlearn their first impressions in the sharpest love story of its age.'],
+    [11, "Alice's Adventures in Wonderland", 'Lewis Carroll', 1865, 'Kids & Family', 4.0, 'Easy', 27, 'A girl follows a white rabbit down a hole and lands in a world where logic, size and time all go wrong.'],
+    [84, 'Frankenstein', 'Mary Shelley', 1818, 'Sci-Fi', 3.9, 'Hard', 75, 'A young scientist brings a creature to life, then runs from what he has made. The first great science-fiction novel.'],
+    [345, 'Dracula', 'Bram Stoker', 1897, 'Mystery & Horror', 4.0, 'Medium', 160, 'Told in letters and diaries, a band of friends hunts the ancient count who has crossed the sea to London.'],
+    [2701, 'Moby Dick', 'Herman Melville', 1851, 'Adventure', 3.5, 'Hard', 210, 'Captain Ahab chases the white whale across the oceans, and Ishmael tells us what the chase costs.'],
+    [1400, 'Great Expectations', 'Charles Dickens', 1861, 'Classics', 3.8, 'Hard', 185, 'Orphan Pip is given a mysterious fortune and learns what kind of man it is turning him into.'],
+    [98, 'A Tale of Two Cities', 'Charles Dickens', 1859, 'Classics', 3.9, 'Hard', 135, 'London and Paris before and during the French Revolution, and one man’s last, quiet act of courage.'],
+    [730, 'Oliver Twist', 'Charles Dickens', 1838, 'Classics', 3.9, 'Hard', 155, 'A workhouse boy asks for more, runs to London and falls in with thieves. Dickens at his most urgent.'],
+    [46, 'A Christmas Carol', 'Charles Dickens', 1843, 'Classics', 4.0, 'Medium', 29, 'Three ghosts visit the miser Ebenezer Scrooge in one long Christmas night.'],
+    [1661, 'The Adventures of Sherlock Holmes', 'Arthur Conan Doyle', 1892, 'Mystery & Horror', 4.3, 'Medium', 105, 'Twelve short cases for the world’s first consulting detective, told by his friend Dr Watson.'],
+    [2852, 'The Hound of the Baskervilles', 'Arthur Conan Doyle', 1902, 'Mystery & Horror', 4.2, 'Medium', 60, 'A family curse, a howl on the moor and a giant hound. Holmes has to separate legend from crime.'],
+    [76, 'Adventures of Huckleberry Finn', 'Mark Twain', 1884, 'Adventure', 3.8, 'Medium', 110, 'Huck and Jim float down the Mississippi on a raft, each running away from something.'],
+    [74, 'The Adventures of Tom Sawyer', 'Mark Twain', 1876, 'Adventure', 3.9, 'Medium', 70, 'Whitewashed fences, a graveyard secret and a cave in the dark: boyhood on the Mississippi.'],
+    [174, 'The Picture of Dorian Gray', 'Oscar Wilde', 1890, 'Classics', 4.1, 'Medium', 78, 'A beautiful young man stays young while his portrait grows old and carries every one of his sins.'],
+    [1260, 'Jane Eyre', 'Charlotte Brontë', 1847, 'Romance', 4.2, 'Hard', 185, 'A poor, plain and fiercely honest governess finds love at Thornfield Hall, and a secret in the attic.'],
+    [768, 'Wuthering Heights', 'Emily Brontë', 1847, 'Romance', 3.9, 'Hard', 107, 'Love and revenge on the Yorkshire moors, from the wild Heathcliff and Catherine to the next generation.'],
+    [158, 'Emma', 'Jane Austen', 1815, 'Romance', 4.0, 'Medium', 160, 'A rich young woman who loves to match-make is the last to see who she should be matched with.'],
+    [161, 'Sense and Sensibility', 'Jane Austen', 1811, 'Romance', 4.1, 'Medium', 120, 'Two sisters, one careful and one passionate, lose their home and meet love with very different results.'],
+    [105, 'Persuasion', 'Jane Austen', 1817, 'Romance', 4.2, 'Medium', 83, 'Eight years after she was talked out of marriage, Anne Elliot meets Captain Wentworth again.'],
+    [37106, 'Little Women', 'Louisa May Alcott', 1868, 'Kids & Family', 4.1, 'Medium', 185, 'Meg, Jo, Beth and Amy March grow up in Massachusetts while their father is away at war.'],
+    [35, 'The Time Machine', 'H. G. Wells', 1895, 'Sci-Fi', 3.9, 'Medium', 32, 'An inventor travels to the year 802,701 and finds two strange peoples and a warning.'],
+    [36, 'The War of the Worlds', 'H. G. Wells', 1898, 'Sci-Fi', 3.8, 'Medium', 60, 'Martian cylinders fall on Surrey. The tripods that follow change England forever.'],
+    [5230, 'The Invisible Man', 'H. G. Wells', 1897, 'Sci-Fi', 3.9, 'Medium', 47, 'A stranger in bandages arrives at a quiet inn. Under them there is nothing at all.'],
+    [120, 'Treasure Island', 'Robert Louis Stevenson', 1883, 'Adventure', 3.8, 'Medium', 67, 'Young Jim Hawkins, a map, a one-legged cook and a ship bound for buried gold.'],
+    [236, 'The Jungle Book', 'Rudyard Kipling', 1894, 'Kids & Family', 4.0, 'Medium', 55, 'Mowgli, raised by wolves, learns the law of the jungle from Baloo and Bagheera and faces Shere Khan.'],
+    [16, 'Peter Pan', 'J. M. Barrie', 1911, 'Kids & Family', 4.1, 'Easy', 48, 'The boy who would not grow up flies the Darling children to Neverland, pirates and all.'],
+    [55, 'The Wonderful Wizard of Oz', 'L. Frank Baum', 1900, 'Kids & Family', 4.0, 'Easy', 40, 'A Kansas girl and her dog are swept away by a cyclone and set off down the yellow brick road.'],
+    [45, 'Anne of Green Gables', 'L. M. Montgomery', 1908, 'Kids & Family', 4.3, 'Easy', 100, 'A talkative red-haired orphan arrives by mistake at a Prince Edward Island farm and wins everyone over.'],
+    [113, 'The Secret Garden', 'Frances Hodgson Burnett', 1911, 'Kids & Family', 4.2, 'Easy', 80, 'A lonely girl finds a locked garden and a hidden cousin, and brings both back to life.'],
+    [215, 'The Call of the Wild', 'Jack London', 1903, 'Adventure', 3.9, 'Medium', 32, 'Buck, a pet dog, is stolen and sold to the Yukon gold rush. There the wild starts to call.'],
+    [910, 'White Fang', 'Jack London', 1906, 'Adventure', 4.0, 'Medium', 72, 'The same story turned around: a wild wolfdog slowly learns to trust people.'],
+    [103, 'Around the World in Eighty Days', 'Jules Verne', 1872, 'Adventure', 3.9, 'Medium', 63, 'Phileas Fogg bets half his fortune that he can circle the globe in eighty days.'],
+    [164, 'Twenty Thousand Leagues Under the Sea', 'Jules Verne', 1870, 'Sci-Fi', 3.9, 'Medium', 140, 'Captain Nemo and his submarine Nautilus take three prisoners on a tour of the ocean floor.'],
+    [18857, 'A Journey to the Centre of the Earth', 'Jules Verne', 1864, 'Sci-Fi', 3.8, 'Medium', 70, 'A professor, his nephew and a guide climb down an Icelandic volcano into a hidden world.'],
+    [219, 'Heart of Darkness', 'Joseph Conrad', 1899, 'Classics', 3.4, 'Hard', 39, 'Marlow’s river journey into the Congo to find the ivory trader Kurtz.'],
+    [844, 'The Importance of Being Earnest', 'Oscar Wilde', 1895, 'Plays', 4.2, 'Medium', 22, 'Two men invent a friend called Ernest, and the lie grows. The funniest play in English.'],
+    [1513, 'Romeo and Juliet', 'William Shakespeare', 1597, 'Plays', 3.8, 'Hard', 30, 'Two teenagers from feuding families fall in love in Verona. It ends badly for everyone.'],
+    [1524, 'Hamlet', 'William Shakespeare', 1603, 'Plays', 4.0, 'Hard', 32, 'A prince is told by a ghost that his father was murdered. “To be, or not to be.”'],
+    [1533, 'Macbeth', 'William Shakespeare', 1623, 'Plays', 3.9, 'Hard', 18, 'Three witches, a prophecy and a ruthless wife push a Scottish lord towards the crown.'],
+    [5200, 'Metamorphosis', 'Franz Kafka', 1915, 'Classics', 3.9, 'Medium', 22, 'Gregor Samsa wakes up as a giant insect and his family has to decide what to do with him.'],
+    [2554, 'Crime and Punishment', 'Fyodor Dostoevsky', 1866, 'Classics', 4.3, 'Hard', 210, 'A poor student in St Petersburg commits a murder to prove a theory and cannot live with it.'],
+    [1399, 'Anna Karenina', 'Leo Tolstoy', 1878, 'Romance', 4.1, 'Hard', 350, 'A married aristocrat falls for a count, while a landowner called Levin looks for meaning on his farm.'],
+    [2600, 'War and Peace', 'Leo Tolstoy', 1869, 'Classics', 4.1, 'Hard', 560, 'Five Russian families live through Napoleon’s invasion. The largest novel on this shelf.'],
+    [28054, 'The Brothers Karamazov', 'Fyodor Dostoevsky', 1880, 'Classics', 4.4, 'Hard', 360, 'A father is murdered, and his three very different sons are each suspected, in some way.'],
+    [600, 'Notes from Underground', 'Fyodor Dostoevsky', 1864, 'Ideas', 4.2, 'Hard', 35, 'A bitter clerk explains himself from his cellar. A short, strange look inside a mind.'],
+    [43, 'Strange Case of Dr Jekyll and Mr Hyde', 'Robert Louis Stevenson', 1886, 'Mystery & Horror', 3.8, 'Medium', 26, 'A respectable doctor and a violent stranger keep turning up in the same London street.'],
+    [25344, 'The Scarlet Letter', 'Nathaniel Hawthorne', 1850, 'Classics', 3.4, 'Hard', 77, 'In Puritan Boston, Hester Prynne wears a red “A” and refuses to name her child’s father.'],
+    [205, 'Walden', 'Henry David Thoreau', 1854, 'Ideas', 3.8, 'Hard', 105, 'Two years in a cabin by a pond, and what a person really needs to live well.'],
+    [829, "Gulliver's Travels", 'Jonathan Swift', 1726, 'Adventure', 3.6, 'Hard', 100, 'A ship’s surgeon visits tiny people, giants and talking horses, and sees his own world in each.'],
+    [521, 'Robinson Crusoe', 'Daniel Defoe', 1719, 'Adventure', 3.7, 'Hard', 120, 'Shipwrecked alone on an island for twenty-eight years, Crusoe rebuilds a life from nothing.'],
+    [145, 'Middlemarch', 'George Eliot', 1871, 'Classics', 3.9, 'Hard', 316, 'Ordinary lives and hopes in an English town, called by many “the best English novel”.'],
+    [599, 'Vanity Fair', 'William Makepeace Thackeray', 1848, 'Classics', 3.7, 'Hard', 300, 'Becky Sharp climbs through society with wit and no scruples, and amazing energy.'],
+    [766, 'David Copperfield', 'Charles Dickens', 1850, 'Classics', 4.0, 'Hard', 360, 'Dickens’s own favourite: a boy’s long road from a hard childhood to becoming a writer.'],
+    [1184, 'The Count of Monte Cristo', 'Alexandre Dumas', 1844, 'Adventure', 4.3, 'Hard', 460, 'Betrayed and jailed, Edmond Dantès escapes fourteen years later to take a perfect revenge.'],
+    [135, 'Les Misérables', 'Victor Hugo', 1862, 'Classics', 4.3, 'Hard', 550, 'Jean Valjean, an ex-convict, tries to become a good man while inspector Javert never lets go.'],
+    [1257, 'The Three Musketeers', 'Alexandre Dumas', 1844, 'Adventure', 4.1, 'Medium', 230, 'Young d’Artagnan arrives in Paris and joins Athos, Porthos and Aramis. “All for one!”'],
+    [132, 'The Art of War', 'Sun Tzu', -500, 'Ideas', 3.9, 'Medium', 14, 'Thirteen short chapters on strategy, said to be written 2,500 years ago, and still quoted.'],
+    [1232, 'The Prince', 'Niccolò Machiavelli', 1532, 'Ideas', 3.8, 'Hard', 30, 'A blunt handbook on how rulers win and keep power. It made its author’s name a warning.'],
+    [2680, 'Meditations', 'Marcus Aurelius', 180, 'Ideas', 4.3, 'Hard', 60, 'The private notebook of a Roman emperor, written in a war camp, on how to stay calm and good.'],
+    [64317, 'The Great Gatsby', 'F. Scott Fitzgerald', 1925, 'Classics', 3.9, 'Medium', 48, 'Jay Gatsby throws the most glittering parties on Long Island for the sake of one woman.'],
+    [14838, 'The Tale of Peter Rabbit', 'Beatrix Potter', 1902, 'Kids & Family', 4.2, 'Easy', 1, 'Naughty Peter squeezes under the gate into Mr McGregor’s garden. A very short first read.'],
+    [2781, 'Just So Stories', 'Rudyard Kipling', 1902, 'Kids & Family', 4.1, 'Easy', 30, 'How the camel got his hump, the leopard his spots, the elephant his trunk, and more.'],
+    [271, 'Black Beauty', 'Anna Sewell', 1877, 'Kids & Family', 4.0, 'Easy', 59, 'A horse tells his own life story, from a kind farm to a cruel London cab.'],
+    [1448, 'Heidi', 'Johanna Spyri', 1881, 'Kids & Family', 4.2, 'Easy', 77, 'An orphan girl is sent to live with her grandfather in the Swiss Alps.'],
+    [1450, 'Pollyanna', 'Eleanor H. Porter', 1913, 'Kids & Family', 4.1, 'Easy', 60, 'A girl who plays “the glad game” changes a whole grumpy town.'],
+    [1952, 'The Yellow Wallpaper', 'Charlotte Perkins Gilman', 1892, 'Mystery & Horror', 3.8, 'Easy', 6, 'A woman is told to rest in a room with strange yellow wallpaper. A short, chilling story.'],
+    [1080, 'A Modest Proposal', 'Jonathan Swift', 1729, 'Ideas', 3.9, 'Medium', 3, 'The most famous satire in English, in three thousand words.'],
+    [1064, 'The Masque of the Red Death', 'Edgar Allan Poe', 1842, 'Mystery & Horror', 4.0, 'Medium', 2, 'A prince holds a ball behind locked doors while a plague rages outside. A very short story.']
+  ],
+  authors: {
+    'Jane Austen': ['1775–1817', 'English novelist who wrote six finished novels about love, money and manners among the country gentry. She published them without her name, and their quiet irony has made her one of the most read writers in the language.'],
+    'Lewis Carroll': ['1832–1898', 'The pen name of Charles Dodgson, an Oxford mathematician and photographer. He first told the Alice story on a boat trip to a young friend, and its wordplay and logic jokes are loved by children and scholars alike.'],
+    'Mary Shelley': ['1797–1851', 'English writer who began Frankenstein at 18 during a rainy summer on Lake Geneva. She was the daughter of two famous thinkers and later edited the poems of her husband, Percy Shelley.'],
+    'Bram Stoker': ['1847–1912', 'Irish author and theatre manager in London. He spent years researching folklore before Dracula, which turned a Transylvanian legend into the vampire story everyone knows.'],
+    'Herman Melville': ['1819–1891', 'American novelist and former sailor. Moby-Dick sold badly in his lifetime, and it was only in the 1920s that it was recognised as a masterpiece.'],
+    'Charles Dickens': ['1812–1870', 'The most popular English novelist of the Victorian age. Born into a poor family and put to work in a factory at twelve, he wrote about the poor and the powerful with humour and anger, usually in monthly instalments.'],
+    'Arthur Conan Doyle': ['1859–1930', 'Scottish doctor and writer who created Sherlock Holmes in 1887. He tried to stop writing Holmes stories, but readers wouldn’t let him.'],
+    'Mark Twain': ['1835–1910', 'The pen name of Samuel Clemens, a Mississippi riverboat pilot turned writer and speaker. His plain, funny American voice changed how novels in English sound.'],
+    'Oscar Wilde': ['1854–1900', 'Irish poet, playwright and wit, the star of London society in the 1890s. He wrote one novel, Dorian Gray, and plays that are still performed everywhere.'],
+    'Charlotte Brontë': ['1816–1855', 'The eldest of three novelist sisters who grew up in a Yorkshire parsonage. Jane Eyre was published under the name “Currer Bell” and was an instant success.'],
+    'Emily Brontë': ['1818–1848', 'Charlotte’s younger sister, a private person who loved the moors. Wuthering Heights is her only novel, and she died at thirty, a year after it appeared.'],
+    'Louisa May Alcott': ['1832–1888', 'American writer who drew Little Women from her own childhood with three sisters. She also worked as a nurse in the Civil War and wrote many other books and stories.'],
+    'H. G. Wells': ['1866–1946', 'English writer who helped invent science fiction with The Time Machine, The Invisible Man and The War of the Worlds. He also wrote history and thought a great deal about the future of society.'],
+    'Robert Louis Stevenson': ['1850–1894', 'Scottish author of Treasure Island and Jekyll and Hyde. He travelled widely for his health and spent his last years on the island of Samoa.'],
+    'Rudyard Kipling': ['1865–1936', 'English writer born in India. He was the first English-language author to receive the Nobel Prize in Literature, in 1907.'],
+    'J. M. Barrie': ['1860–1937', 'Scottish playwright and novelist. Peter Pan began as a play in 1904, and Barrie gave the rights to a children’s hospital in London.'],
+    'L. Frank Baum': ['1856–1919', 'American writer who wrote fourteen Oz books. The first, in 1900, was meant to be a modern fairy tale without the scary parts.'],
+    'L. M. Montgomery': ['1874–1942', 'Canadian author from Prince Edward Island. Anne of Green Gables was rejected by several publishers before it became a worldwide hit.'],
+    'Frances Hodgson Burnett': ['1849–1924', 'English-American writer of children’s classics, including The Secret Garden and Little Lord Fauntleroy.'],
+    'Jack London': ['1876–1916', 'American author who went to the Klondike gold rush at twenty-one. He turned the cold, hunger and animals he met there into some of the best outdoor adventure stories.'],
+    'Jules Verne': ['1828–1905', 'French novelist who imagined submarines, moon rockets and round-the-world races long before they existed. He is among the most translated authors ever.'],
+    'Joseph Conrad': ['1857–1924', 'Polish-born sailor who learned English as an adult and became a great English novelist. Heart of Darkness is based on his own trip up the Congo River.'],
+    'William Shakespeare': ['1564–1616', 'English playwright and poet from Stratford-upon-Avon. He wrote about 37 plays and 154 sonnets, and coined or popularised many words and phrases we use every day.'],
+    'Franz Kafka': ['1883–1924', 'Prague-born writer in German who worked in an insurance office by day. He published little in his life, and his strange, dream-like stories gave us the word “Kafkaesque”.'],
+    'Fyodor Dostoevsky': ['1821–1881', 'Russian novelist who survived a mock execution and four years in a Siberian prison camp. His books look into guilt, faith and doubt more deeply than almost any others.'],
+    'Leo Tolstoy': ['1828–1910', 'Russian count and novelist. After War and Peace and Anna Karenina he became a religious thinker who gave away much of his wealth.'],
+    'Nathaniel Hawthorne': ['1804–1864', 'American novelist from Salem, Massachusetts. One of his ancestors was a judge at the Salem witch trials, and guilt and secrecy fill his books.'],
+    'Henry David Thoreau': ['1817–1862', 'American essayist and naturalist. He built a cabin at Walden Pond in 1845 and wrote about living simply, and about refusing to obey unjust laws.'],
+    'Jonathan Swift': ['1667–1745', 'Anglo-Irish writer, priest and master of satire. Gulliver’s Travels was written for adults, though children have loved it for centuries.'],
+    'Daniel Defoe': ['1660–1731', 'English writer, trader and spy. He began writing novels at nearly sixty, and Robinson Crusoe is often called the first English novel.'],
+    'George Eliot': ['1819–1880', 'The pen name of Mary Ann Evans, who chose a man’s name to be taken seriously. Her novels study ordinary people’s moral choices with great patience.'],
+    'William Makepeace Thackeray': ['1811–1863', 'English novelist and Dickens’s great rival. Vanity Fair is his best-known work, and the subtitle is “A Novel Without a Hero”.'],
+    'Alexandre Dumas': ['1802–1870', 'French writer of fast, thrilling historical adventures. He worked with several assistants and wrote or planned hundreds of volumes, including The Three Musketeers.'],
+    'Victor Hugo': ['1802–1885', 'France’s national poet and a novelist who also fought for the poor in politics. Les Misérables and The Hunchback of Notre-Dame remain his best-loved books.'],
+    'Sun Tzu': ['c. 544–496 BC', 'Chinese general and thinker, traditionally credited with The Art of War. Little is certain about his life, but the book’s advice on strategy is used today in business and sport.'],
+    'Niccolò Machiavelli': ['1469–1527', 'Italian diplomat from Florence. He wrote The Prince after losing his job and being tortured and exiled, and the book is still read as a study of power.'],
+    'Marcus Aurelius': ['121–180', 'Roman emperor and Stoic philosopher. He wrote the Meditations for himself, in Greek, while leading armies on the northern frontier.'],
+    'F. Scott Fitzgerald': ['1896–1940', 'American writer who gave the Jazz Age its name. The Great Gatsby sold modestly when it appeared and became famous only after his death.'],
+    'Beatrix Potter': ['1866–1943', 'English author and illustrator who began with picture letters to a sick child. She later bought farmland in the Lake District and gave it to the nation.'],
+    'Anna Sewell': ['1820–1878', 'English author who could hardly walk and relied on horse-drawn carriages. She wrote Black Beauty, her only book, in her last years, to make people kinder to animals.'],
+    'Johanna Spyri': ['1827–1901', 'Swiss writer of children’s stories, best known for Heidi, which was inspired by the landscapes of her homeland.'],
+    'Eleanor H. Porter': ['1868–1920', 'American novelist. “Pollyanna” became an English word for an endlessly cheerful person.'],
+    'Charlotte Perkins Gilman': ['1860–1935', 'American writer and social reformer who argued for women’s economic independence. “The Yellow Wallpaper” was drawn from her own medical treatment.'],
+    'Edgar Allan Poe': ['1809–1849', 'American poet and critic who shaped the modern detective and horror story. He lived in poverty, and died at forty under strange circumstances.']
+  }
+};
+
+/* ===== Moon Library: real books with covers and ratings, a page-turning reader, read-aloud, and tap-any-word help in 14 languages ===== */
+(function () {
+    'use strict';
+    const D = window.__MLD || { books: [], authors: {} };
+    const $ = (s, r) => (r || document).querySelector(s);
+    const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
+    const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const LSg = (k, d) => { try { const v = localStorage.getItem(k); return v == null ? d : v; } catch (e) { return d; } };
+    const LSs = (k, v) => { try { localStorage.setItem(k, v); } catch (e) { } };
+    const JG = (k, d) => { try { const v = JSON.parse(LSg(k, '')); return v == null ? d : v; } catch (e) { return d; } };
+    const JS = (k, v) => LSs(k, JSON.stringify(v));
+    const U = () => { try { return state.user || {}; } catch (e) { return {}; } };
+    const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+    const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
+    const toast = (m) => { try { showToast(m); } catch (e) { } };
+    const GENRES = ['Classics', 'Adventure', 'Mystery & Horror', 'Romance', 'Sci-Fi', 'Kids & Family', 'Plays', 'Ideas'];
+    const GCOL = { 'Classics': '#f2c46d', 'Adventure': '#ff9a5a', 'Mystery & Horror': '#b46bff', 'Romance': '#ff6b8a', 'Sci-Fi': '#29d3b5', 'Kids & Family': '#4da3ff', 'Plays': '#ff7ad9', 'Ideas': '#8fe388', 'My books': '#9aa3c7' };
+    const GICON = { 'Classics': 'fa-landmark', 'Adventure': 'fa-compass', 'Mystery & Horror': 'fa-user-secret', 'Romance': 'fa-heart', 'Sci-Fi': 'fa-rocket', 'Kids & Family': 'fa-star', 'Plays': 'fa-masks-theater', 'Ideas': 'fa-lightbulb' };
+    const PAL = [['#7c5cff', '#2b1b8a'], ['#ff6b8a', '#8a1f4b'], ['#29d3b5', '#0b5f6b'], ['#f2c46d', '#8a4b12'], ['#4da3ff', '#1a2f8a'], ['#b46bff', '#4a1a8a'], ['#ff9a5a', '#9b2c1a'], ['#5ee38a', '#0f6a45']];
+    const THEMES = { paper: ['Paper', '#fbf8f1', '#26221c', '#e8e1d2'], sepia: ['Sepia', '#f1e3c4', '#4b3a22', '#d9c79f'], lilac: ['Lilac', '#efeafc', '#2c2447', '#d6cdf3'], dark: ['Dark', '#1d1e29', '#d9d9e6', '#0f1018'], night: ['Night', '#000', '#b4b4c2', '#000'] };
+    const FONTS = { serif: ['Serif', 'Georgia,"Iowan Old Style","Palatino Linotype",Palatino,"Times New Roman",serif'], sans: ['Sans', 'system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif'], easy: ['Easy', 'Verdana,Tahoma,"Trebuchet MS",sans-serif'] };
+
+    /* ---------- the catalogue ---------- */
+    const BASE = D.books.map(r => ({ id: String(r[0]), gid: r[0], title: r[1], author: r[2], year: r[3], genre: r[4], rating: r[5], level: r[6], len: r[7], blurb: r[8] }));
+    const myBooks = () => JG('ml_my', []).map(m => ({ id: m.id, my: 1, title: m.title, author: m.author || 'Your own text', year: 0, genre: 'My books', rating: 0, level: 'Mine', len: m.len || 0, blurb: 'Text you added yourself. It stays on this device.' }));
+    const all = () => myBooks().concat(BASE);
+    const byId = (id) => all().find(b => b.id === String(id));
+    const minsOf = (len) => Math.max(1, Math.round(len * 1000 / 230));
+    const dur = (m) => m < 60 ? m + ' min' : Math.floor(m / 60) + ' h' + (m % 60 >= 5 ? ' ' + (Math.round(m % 60 / 5) * 5 % 60) + ' min' : '');
+    const hash = (s) => { let h = 7; for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0; return h; };
+    const palOf = (b) => PAL[hash(b.id + b.title) % PAL.length];
+    const stars = (r) => '<span class="ml-st" style="--r:' + (r / 5 * 100).toFixed(0) + '%" aria-label="' + r.toFixed(1) + ' out of 5">★★★★★</span>';
+    const prog = () => JG('ml_prog', {});
+    const favs = () => JG('ml_fav', []);
+    const bad = () => JG('ml_bad', []);
+    const SET0 = { th: 'paper', font: 'serif', fs: (typeof innerWidth !== 'undefined' && innerWidth < 500) ? 18 : 19, lh: 1.62, anim: 'flip', lay: 'auto', just: 1, rate: 1, voice: '' };
+    const settings = () => Object.assign({}, SET0, JG('ml_set', {}));
+    const saveSet = (o) => JS('ml_set', Object.assign(settings(), o));
+
+    function coverHTML(b, cls) {
+        const p = palOf(b), g = GICON[b.genre] || 'fa-book';
+        const img = b.my ? '' : '<img alt="" loading="lazy" decoding="async" src="https://www.gutenberg.org/cache/epub/' + b.gid + '/pg' + b.gid + '.cover.medium.jpg" onload="if(this.naturalWidth>60)this.classList.add(\'on\');else this.remove()" onerror="this.remove()">';
+        return '<span class="ml-cv ' + (cls || '') + '" style="--a:' + p[0] + ';--b:' + p[1] + '"><i class="fa-solid ' + g + ' ml-cvi"></i><span class="ml-cvt">' + esc(b.title) + '</span><span class="ml-cva">' + esc(b.author) + '</span>' + img + '</span>';
+    }
+
+    /* ---------- offline cache for the text of each book ---------- */
+    let idb = null;
+    function idbOpen() {
+        return new Promise(res => {
+            if (idb) return res(idb);
+            try {
+                const r = indexedDB.open('ml_texts', 1);
+                r.onupgradeneeded = () => r.result.createObjectStore('t');
+                r.onsuccess = () => { idb = r.result; res(idb); };
+                r.onerror = () => res(null);
+            } catch (e) { res(null); }
+        });
+    }
+    async function cacheGet(k) { const d = await idbOpen(); if (!d) return null; return new Promise(res => { try { const q = d.transaction('t').objectStore('t').get(k); q.onsuccess = () => res(q.result || null); q.onerror = () => res(null); } catch (e) { res(null); } }); }
+    async function cachePut(k, v) { const d = await idbOpen(); if (!d) return; try { d.transaction('t', 'readwrite').objectStore('t').put(v, k); } catch (e) { } }
+
+    /* ---------- getting the text: direct first, then public relays ---------- */
+    function timed(url, ms) {
+        const c = new AbortController(), to = setTimeout(() => c.abort(), ms);
+        return fetch(url, { signal: c.signal }).then(r => { if (!r.ok) throw new Error('http ' + r.status); return r.text(); }).finally(() => clearTimeout(to));
+    }
+    const okText = (t) => typeof t === 'string' && t.length > 1500 && !/^\s*<(!doctype|html)/i.test(t);
+    function firstOk(list, ms) {
+        return new Promise((res, rej) => {
+            let n = list.length, done = false; if (!n) return rej(new Error('none'));
+            list.forEach(u => timed(u, ms).then(t => { if (!done && okText(t)) { done = true; res(t); } else if (!done && --n === 0) rej(new Error('fail')); }).catch(() => { if (!done && --n === 0) rej(new Error('fail')); }));
+        });
+    }
+    async function fetchBook(b, onMsg) {
+        const id = b.gid, a = 'https://www.gutenberg.org/cache/epub/' + id + '/pg' + id + '.txt', c = 'https://www.gutenberg.org/files/' + id + '/' + id + '-0.txt', d = 'https://www.gutenberg.org/ebooks/' + id + '.txt.utf-8';
+        onMsg('Fetching the book…');
+        try { return await firstOk([a, c, d], 15000); } catch (e) { }
+        onMsg('Trying another route…');
+        const enc = encodeURIComponent;
+        try { return await firstOk(['https://corsproxy.io/?url=' + enc(a), 'https://api.allorigins.win/raw?url=' + enc(a), 'https://api.codetabs.com/v1/proxy?quest=' + enc(a), 'https://cors.isomorphic-git.org/' + a], 25000); } catch (e) { }
+        throw new Error('offline');
+    }
+
+    /* ---------- turning raw text into paragraphs and chapters ---------- */
+    const HRE = /^(chapter|book|part|act|scene|letter|volume|stave|canto|epilogue|prologue|preface|introduction|section|appendix|conclusion|sura)\b/i;
+    function parse(raw, b) {
+        let t = String(raw).replace(/\r\n?/g, '\n').replace(/^﻿/, ''), head = '';
+        const sm = t.search(/\*\*\* ?START OF (THE|THIS) PROJECT GUTENBERG[^\n]*\n/i);
+        if (sm >= 0) { head = t.slice(0, sm); t = t.slice(t.indexOf('\n', sm) + 1); }
+        const em = t.search(/\*\*\* ?END OF (THE|THIS) PROJECT GUTENBERG/i); if (em >= 0) t = t.slice(0, em);
+        const tm = head.match(/^Title:\s*(.+)$/mi);
+        let parts = t.split(/\n\s*\n+/).map(p => p.replace(/\s*\n\s*/g, ' ').replace(/\s+/g, ' ').replace(/_([^_]{1,60})_/g, '$1').trim()).filter(Boolean);
+        parts = parts.filter((p, i) => !/^\[?\s*(illustration|transcriber|note:|footnote|etext|produced by|e-text|proofread)/i.test(p) && !(i < 8 && /^(produced by|updated editions|this file was|ebook|release date)/i.test(p)) && !/^\*{3,}|^_{5,}|^[*\s]{5,}$/.test(p));
+        const P = []; let lastH = false;
+        parts.forEach(p => {
+            const words = p.split(' ');
+            const isMaj = p.length <= 80 && (HRE.test(p) || /^[IVXLCDM]{1,8}\.?$/.test(p) || /^\d{1,3}\.?$/.test(p) || (p === p.toUpperCase() && /[A-Z]{4}/.test(p) && p.length < 60 && !/[.!?,;:]$/.test(p)));
+            if (isMaj) { P.push({ w: words, t: 'h', brk: !lastH }); lastH = true; return; }
+            if (lastH && p.length < 60 && !/[.!?]["”’']?$/.test(p)) { P.push({ w: words, t: 's' }); lastH = true; return; }
+            P.push({ w: words, t: 'p' }); lastH = false;
+        });
+        const pStart = []; let T = 0; P.forEach(p => { pStart.push(T); T += p.w.length; });
+        // where the story begins: the first chapter heading that is followed by real prose
+        let start = 0;
+        for (let i = 1; i < Math.min(P.length, 500); i++) {
+            if (P[i].t !== 'p' || P[i].w.length < 28 || P[i - 1].t === 'p') continue;
+            let k = i - 1; while (k > 0 && P[k - 1].t !== 'p') k--; let h = -1; for (let q = i - 1; q >= k; q--) if (P[q].t === 'h') { h = q; break; }
+            if (h >= 0) { start = pStart[h]; break; }
+        }
+        if (start > T * .15) start = 0;
+        const chapters = []; P.forEach((p, i) => { if (p.t === 'h' && p.brk && pStart[i] >= start) { const sub = P[i + 1] && P[i + 1].t === 's' ? ' · ' + P[i + 1].w.join(' ') : ''; chapters.push({ off: pStart[i], name: (p.w.join(' ') + sub).slice(0, 80) }); } });
+        const brks = []; P.forEach((p, i) => { if (p.t === 'h' && p.brk) brks.push(pStart[i]); });
+        return { P, pStart, T, start, chapters, brks, title: tm ? tm[1].trim() : '' };
+    }
+    const norm = (s) => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+    function titleOk(b, got) {
+        if (!got || b.my) return true;
+        const w = norm(b.title).split(/[^a-z]+/).filter(x => x.length > 3 && !/^(the|and|with|from|that|into|under|around)$/.test(x)), g = norm(got);
+        return !w.length || w.some(x => g.indexOf(x) >= 0);
+    }
+
+    /* ---------- state ---------- */
+    const C = { q: '', g: 'All', lv: 'All', sort: 'top' };
+    const R = { b: null, doc: null, starts: [-1], ends: [-1], done: false, v: 0, spread: false, busy: false, lastK: 150, seen: new Set(), looked: new Map(), t0: 0, tok: 0, chrome: true, panel: '' };
+    const TT = { on: false, paused: false, i: 0, sents: [], tok: 0 };
+    let root = null, book = null, stage = null, meas = null, leaf = null, drag = null, wpTok = 0, popBook = null;
+
+    /* ---------- shell ---------- */
+    function shell() {
+        if (root) return;
+        root = document.createElement('div'); root.id = 'ml'; root.setAttribute('role', 'dialog'); root.setAttribute('aria-label', 'Moon Library');
+        root.innerHTML = '<div class="ml-glow"></div><div id="ml-cat" class="ml-scr"></div><div id="ml-rd" class="ml-scr" hidden></div><div id="ml-sheet" class="ml-sheetwrap" hidden></div><div id="ml-wp" class="ml-wp" hidden></div>';
+        document.body.appendChild(root);
+        root.addEventListener('click', onClick);
+        root.addEventListener('input', onInput);
+        root.addEventListener('change', onInput);
+        root.addEventListener('keydown', e => { if (e.key === 'Enter' && e.target && e.target.id === 'ml-q') { e.preventDefault(); e.target.blur(); } });
+        document.addEventListener('keydown', onKey);
+        addEventListener('resize', () => { if (R.b && root.classList.contains('open') && !$('#ml-rd').hidden) { clearTimeout(R.rz); R.rz = setTimeout(relayout, 250); } });
+        addEventListener('popstate', () => { if (!root || !root.classList.contains('open')) return; if (!$('#ml-rd').hidden) { showCat(); try { history.pushState({ ml: 1 }, ''); } catch (e) { } } else close(true); });
+        document.addEventListener('visibilitychange', () => { if (document.hidden && TT.on) ttsPause(); });
+    }
+    function open() {
+        shell(); root.classList.add('open'); document.documentElement.classList.add('ml-lock');
+        try { history.pushState({ ml: 1 }, ''); } catch (e) { }
+        showCat();
+    }
+    function close(fromPop) {
+        leaveBook(); ttsStop(); closeWp(); closeSheet();
+        if (root) root.classList.remove('open'); document.documentElement.classList.remove('ml-lock');
+        if (!fromPop) { try { if (history.state && history.state.ml) history.back(); } catch (e) { } }
+    }
+    function showCat() { leaveBook(); $('#ml-rd').hidden = true; $('#ml-cat').hidden = false; paintCat(); }
+
+    /* ---------- the catalogue screen ---------- */
+    function filtered() {
+        const q = norm(C.q).trim(), P = prog(), F = favs();
+        let L = all().filter(b => !bad().includes(b.id));
+        if (C.g === 'Saved') L = L.filter(b => F.includes(b.id)); else if (C.g === 'Reading') L = L.filter(b => P[b.id] && P[b.id].pct > 0 && P[b.id].pct < 98); else if (C.g !== 'All') L = L.filter(b => b.genre === C.g);
+        if (C.lv !== 'All') L = L.filter(b => b.level === C.lv);
+        if (q) L = L.filter(b => norm(b.title + ' ' + b.author + ' ' + b.genre).indexOf(q) >= 0);
+        const lvR = { Easy: 0, Medium: 1, Hard: 2, Mine: 3 };
+        L.sort((a, b) => C.sort === 'az' ? a.title.localeCompare(b.title) : C.sort === 'short' ? a.len - b.len : C.sort === 'long' ? b.len - a.len : C.sort === 'easy' ? lvR[a.level] - lvR[b.level] || b.rating - a.rating : b.rating - a.rating || a.title.localeCompare(b.title));
+        return L;
+    }
+    function card(b) {
+        const P = prog()[b.id], F = favs().includes(b.id), col = GCOL[b.genre] || '#9aa3c7';
+        return '<div class="ml-card" role="button" tabindex="0" data-a="detail" data-id="' + esc(b.id) + '" aria-label="' + esc(b.title + ' by ' + b.author) + '">' +
+            '<span class="ml-cvw">' + coverHTML(b) + (P && P.pct > 0 ? '<span class="ml-pgb"><i style="width:' + Math.min(100, P.pct) + '%"></i></span>' : '') +
+            '<button class="ml-heart ' + (F ? 'on' : '') + '" data-a="fav" data-id="' + esc(b.id) + '" aria-label="' + (F ? 'Remove from saved' : 'Save') + '" aria-pressed="' + F + '"><i class="fa-' + (F ? 'solid' : 'regular') + ' fa-heart"></i></button></span>' +
+            '<span class="ml-ct">' + esc(b.title) + '</span><span class="ml-ca">' + esc(b.author) + '</span>' +
+            '<span class="ml-cm">' + (b.rating ? stars(b.rating) + '<b>' + b.rating.toFixed(1) + '</b>' : '<em>Yours</em>') + '<span class="ml-dot" style="background:' + col + '"></span><small>' + esc(b.level) + '</small></span></div>';
+    }
+    function paintCat() {
+        const el = $('#ml-cat'); if (!el) return; const L = filtered(), P = prog(), F = favs();
+        const cont = Object.keys(P).map(id => ({ b: byId(id), p: P[id] })).filter(x => x.b && x.p.pct > 0 && x.p.pct < 98).sort((a, b) => b.p.ts - a.p.ts)[0];
+        const done = Object.values(P).filter(p => p.pct >= 98).length, st = JG('ml_stats', { pages: 0, min: 0 });
+        const chips = ['All', 'Reading', 'Saved'].concat(GENRES).map(g => '<button class="ml-chip ' + (C.g === g ? 'on' : '') + '" data-a="genre" data-g="' + esc(g) + '" style="--c:' + (GCOL[g] || '#8b7bff') + '">' + (GICON[g] ? '<i class="fa-solid ' + GICON[g] + '"></i>' : g === 'Saved' ? '<i class="fa-solid fa-heart"></i>' : g === 'Reading' ? '<i class="fa-solid fa-book-open"></i>' : '<i class="fa-solid fa-moon"></i>') + esc(g === 'Reading' ? 'In progress' : g) + (g === 'Saved' && F.length ? ' <b>' + F.length + '</b>' : '') + '</button>').join('');
+        const top = all().filter(b => b.rating >= 4.3 && !b.my).slice(0, 12);
+        const keep = (document.activeElement && document.activeElement.id === 'ml-q');
+        el.innerHTML = '<div class="ml-scroll"><div class="ml-wrap">' +
+            '<div class="ml-top"><button class="ml-x" data-a="close" aria-label="Close library"><i class="fa-solid fa-chevron-left"></i></button><div class="ml-brand"><span class="ml-logo"><i class="fa-solid fa-moon"></i></span><span><b>Moon Library</b><small>' + BASE.length + ' real books · free to read</small></span></div><button class="ml-add" data-a="import" title="Add your own .txt book"><i class="fa-solid fa-plus"></i><span>Add text</span></button></div>' +
+            '<h1 class="ml-h1">Read the books everyone talks about</h1>' +
+            '<p class="ml-sub">Open any book, tap any word for its meaning in 14 languages, or let the voice read to you.</p>' +
+            '<label class="ml-search"><i class="fa-solid fa-magnifying-glass"></i><input id="ml-q" type="search" placeholder="Search a title, an author or a genre" value="' + esc(C.q) + '" autocomplete="off"></label>' +
+            (cont ? '<button class="ml-cont" data-a="detail" data-id="' + esc(cont.b.id) + '"><span class="ml-cont-cv">' + coverHTML(cont.b) + '</span><span class="ml-cont-t"><small>Continue reading</small><b>' + esc(cont.b.title) + '</b><span>' + esc(cont.b.author) + '</span><span class="ml-bar"><i style="width:' + Math.min(100, cont.p.pct) + '%"></i></span><em>' + Math.round(cont.p.pct) + '% read</em></span><span class="ml-cont-go"><i class="fa-solid fa-play"></i></span></button>' : '') +
+            '<div class="ml-stats"><span><b>' + done + '</b> finished</span><span><b>' + (st.pages || 0).toLocaleString('en-US') + '</b> pages turned</span><span><b>' + dur(Math.round(st.min || 0)) + '</b> reading time</span></div>' +
+            '<div class="ml-chips" role="tablist" aria-label="Genres">' + chips + '</div>' +
+            '<div class="ml-bar2"><div class="ml-seg" role="radiogroup" aria-label="Level">' + ['All', 'Easy', 'Medium', 'Hard'].map(l => '<button role="radio" aria-checked="' + (C.lv === l) + '" class="' + (C.lv === l ? 'on' : '') + '" data-a="level" data-l="' + l + '">' + l + '</button>').join('') + '</div>' +
+            '<label class="ml-sort"><i class="fa-solid fa-arrow-down-wide-short"></i><select id="ml-sort" aria-label="Sort books">' + [['top', 'Top rated'], ['az', 'A to Z'], ['short', 'Shortest first'], ['long', 'Longest first'], ['easy', 'Easiest first']].map(o => '<option value="' + o[0] + '"' + (C.sort === o[0] ? ' selected' : '') + '>' + o[1] + '</option>').join('') + '</select></label></div>' +
+            (C.g === 'All' && !C.q && C.lv === 'All' && C.sort === 'top' ? '<h2 class="ml-h2">Readers’ favourites</h2><div class="ml-rail">' + top.map(b => '<div class="ml-mini" role="button" tabindex="0" data-a="detail" data-id="' + esc(b.id) + '" aria-label="' + esc(b.title) + '">' + coverHTML(b) + '<b>' + b.rating.toFixed(1) + ' ★</b></div>').join('') + '</div><h2 class="ml-h2">All books <small>' + L.length + '</small></h2>' : '<h2 class="ml-h2">' + (C.g === 'All' ? 'Results' : C.g === 'Reading' ? 'In progress' : esc(C.g)) + ' <small>' + L.length + '</small></h2>') +
+            (L.length ? '<div class="ml-grid">' + L.map(card).join('') + '</div>' : '<div class="ml-empty"><i class="fa-solid fa-book-open"></i><b>' + (C.g === 'Saved' ? 'Nothing saved yet' : C.g === 'Reading' ? 'You have no book in progress' : 'No book matches') + '</b><span>' + (C.g === 'Saved' ? 'Tap the heart on a book to keep it here.' : C.g === 'Reading' ? 'Open any book and it will wait for you here.' : 'Try another word, or clear the filters.') + '</span><button class="ml-btn" data-a="clear">Show all books</button></div>') +
+            '<p class="ml-foot">Texts are public-domain editions from Project Gutenberg. Ratings are rounded reader ratings.</p></div></div>';
+        if (keep) { const q = $('#ml-q'); if (q) { q.focus(); try { q.setSelectionRange(q.value.length, q.value.length); } catch (e) { } } }
+    }
+
+    /* ---------- the book page (sheet) ---------- */
+    function openSheet(html) { const s = $('#ml-sheet'); s.innerHTML = '<div class="ml-sh-bg" data-a="shclose"></div><div class="ml-sh" role="dialog" aria-modal="true">' + html + '</div>'; s.hidden = false; requestAnimationFrame(() => s.classList.add('on')); }
+    function closeSheet() { const s = $('#ml-sheet'); if (!s) return; s.classList.remove('on'); s.hidden = true; s.innerHTML = ''; }
+    function detail(id) {
+        const b = byId(id); if (!b) return; const P = prog()[b.id], F = favs().includes(b.id), A = D.authors[b.author], col = GCOL[b.genre] || '#8b7bff', p = palOf(b);
+        const more = all().filter(x => x.author === b.author && x.id !== b.id).slice(0, 8);
+        const years = A ? A[0] : '';
+        openSheet('<div class="ml-det" style="--a:' + p[0] + ';--b:' + p[1] + '"><button class="ml-x ml-det-x" data-a="shclose" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>' +
+            '<div class="ml-det-hero"><div class="ml-det-cv">' + coverHTML(b, 'big') + '</div><div class="ml-det-m"><span class="ml-tag" style="--c:' + col + '"><i class="fa-solid ' + (GICON[b.genre] || 'fa-book') + '"></i>' + esc(b.genre) + '</span><h2>' + esc(b.title) + '</h2><div class="ml-by">by <b>' + esc(b.author) + '</b>' + (years ? ' <small>' + esc(years) + '</small>' : '') + '</div>' +
+            (b.rating ? '<div class="ml-rate">' + stars(b.rating) + '<b>' + b.rating.toFixed(1) + '</b><small>reader rating</small></div>' : '') +
+            '<div class="ml-facts"><span><i class="fa-solid fa-gauge"></i>' + esc(b.level) + '</span>' + (b.year ? '<span><i class="fa-solid fa-calendar"></i>' + (b.year < 0 ? Math.abs(b.year) + ' BC' : b.year) + '</span>' : '') + (b.len ? '<span><i class="fa-solid fa-clock"></i>about ' + dur(minsOf(b.len)) + '</span><span><i class="fa-solid fa-file-lines"></i>' + Math.max(1, Math.round(b.len * 1000 / 250)).toLocaleString('en-US') + ' pages</span>' : '') + '</div></div></div>' +
+            '<p class="ml-blurb">' + esc(b.blurb) + '</p>' +
+            '<div class="ml-acts"><button class="ml-btn pri" data-a="read" data-id="' + esc(b.id) + '"><i class="fa-solid fa-book-open"></i>' + (P && P.pct > 0 && P.pct < 98 ? 'Continue · ' + Math.round(P.pct) + '%' : P && P.pct >= 98 ? 'Read again' : 'Start reading') + '</button><button class="ml-btn ghost ' + (F ? 'on' : '') + '" data-a="fav" data-id="' + esc(b.id) + '" aria-pressed="' + F + '"><i class="fa-' + (F ? 'solid' : 'regular') + ' fa-heart"></i>' + (F ? 'Saved' : 'Save') + '</button>' + (b.my ? '<button class="ml-btn ghost" data-a="delmy" data-id="' + esc(b.id) + '"><i class="fa-solid fa-trash"></i>Remove</button>' : '<a class="ml-btn ghost" target="_blank" rel="noopener" href="https://www.gutenberg.org/ebooks/' + b.gid + '"><i class="fa-solid fa-arrow-up-right-from-square"></i>Gutenberg</a>') + '</div>' +
+            (A ? '<h3 class="ml-h3">About the author</h3><div class="ml-auth"><span class="ml-av" style="background:linear-gradient(135deg,' + p[0] + ',' + p[1] + ')">' + esc(b.author.split(' ').filter(w => /^[A-Z]/.test(w)).slice(-2).map(w => w[0]).join('')) + '</span><div><b>' + esc(b.author) + '</b><small>' + esc(A[0]) + '</small><p>' + esc(A[1]) + '</p></div></div>' : '') +
+            (more.length ? '<h3 class="ml-h3">More by ' + esc(b.author) + '</h3><div class="ml-rail sm">' + more.map(x => '<div class="ml-mini" role="button" tabindex="0" data-a="detail" data-id="' + esc(x.id) + '" aria-label="' + esc(x.title) + '">' + coverHTML(x) + '</div>').join('') + '</div>' : '') + '</div>');
+    }
+
+    /* ---------- importing your own text ---------- */
+    function importText() {
+        let f = $('#ml-file'); if (!f) { f = document.createElement('input'); f.type = 'file'; f.id = 'ml-file'; f.accept = '.txt,text/plain'; f.hidden = true; root.appendChild(f); f.addEventListener('change', async () => { const file = f.files && f.files[0]; f.value = ''; if (!file) return; if (file.size > 12e6) { toast('That file is too big (max 12 MB).'); return; } const t = await file.text(); const pd = parse(t, { my: 1 }); if (pd.T < 80) { toast('That file has too little text.'); return; } const id = 'u' + Date.now().toString(36), L = JG('ml_my', []); L.unshift({ id, title: file.name.replace(/\.[^.]+$/, '').slice(0, 60) || 'My text', author: 'Your own text', len: Math.round(pd.T / 1000) }); JS('ml_my', L); await cachePut(id, t); toast('Added to your library.'); C.g = 'All'; paintCat(); }); }
+        f.click();
+    }
+
+    /* ======================= THE READER ======================= */
+    async function readBook(id) {
+        const b = byId(id); if (!b) return; closeSheet(); ttsStop();
+        R.b = b; R.doc = null; R.tok++; const tok = R.tok; R.seen = new Set(); R.looked = new Map(); R.t0 = Date.now(); R.pgs0 = 0;
+        $('#ml-cat').hidden = true; const rd = $('#ml-rd'); rd.hidden = false; rd.className = 'ml-scr ml-rdr'; rd.dataset.th = settings().th;
+        const p = palOf(b);
+        rd.innerHTML = '<div class="ml-load"><button class="ml-x" data-a="back" aria-label="Back to library"><i class="fa-solid fa-chevron-left"></i></button><div class="ml-load-c">' + coverHTML(b, 'big') + '<b>' + esc(b.title) + '</b><span id="ml-lm">Opening…</span><i class="ml-spin"></i></div></div>';
+        let raw = await cacheGet(b.id);
+        if (!raw) {
+            try { raw = await fetchBook(b, m => { if (tok === R.tok) { const e = $('#ml-lm'); if (e) e.textContent = m; } }); }
+            catch (e) { if (tok !== R.tok) return; rd.innerHTML = '<div class="ml-load"><button class="ml-x" data-a="back" aria-label="Back to library"><i class="fa-solid fa-chevron-left"></i></button><div class="ml-load-c">' + coverHTML(b, 'big') + '<b>Can’t reach the book right now</b><span>Check your internet connection. Once a book has opened, it stays on this device and works offline.</span><button class="ml-btn pri" data-a="read" data-id="' + esc(b.id) + '"><i class="fa-solid fa-rotate"></i>Try again</button><a class="ml-btn ghost" target="_blank" rel="noopener" href="https://www.gutenberg.org/ebooks/' + b.gid + '"><i class="fa-solid fa-arrow-up-right-from-square"></i>Open on Gutenberg</a></div></div>'; return; }
+            if (tok !== R.tok) return;
+            const probe = (raw.match(/^Title:\s*(.+)$/mi) || [])[1] || '';
+            if (!titleOk(b, probe)) { const L = bad(); L.push(b.id); JS('ml_bad', L); rd.innerHTML = '<div class="ml-load"><button class="ml-x" data-a="back" aria-label="Back to library"><i class="fa-solid fa-chevron-left"></i></button><div class="ml-load-c"><b>This edition isn’t available</b><span>The library returned a different book. It has been hidden from your shelf.</span></div></div>'; return; }
+            cachePut(b.id, raw);
+        }
+        const doc = parse(raw, b); if (tok !== R.tok) return;
+        if (doc.T < 50) { rd.innerHTML = '<div class="ml-load"><button class="ml-x" data-a="back"><i class="fa-solid fa-chevron-left"></i></button><div class="ml-load-c"><b>This text is empty</b></div></div>'; return; }
+        R.doc = doc; R.starts = [-1, doc.start]; R.ends = [-1]; R.done = false; R.lastK = 150;
+        buildReader();
+        const sv = prog()[b.id]; let off = sv && sv.pct < 98 ? sv.off : doc.start; off = clamp(off, doc.start, doc.T - 1);
+        await gotoOffset(off, tok);
+        if (tok !== R.tok) return;
+        if (!LSg('ml_hint', '')) { LSs('ml_hint', '1'); toast('Tap any word for its meaning · swipe to turn the page'); }
+    }
+    function buildReader() {
+        const rd = $('#ml-rd'), S = settings(), b = R.b;
+        rd.dataset.th = S.th;
+        rd.innerHTML = '<div class="ml-rbar top" id="ml-top"><button class="ml-x" data-a="back" aria-label="Back to library"><i class="fa-solid fa-chevron-left"></i></button><div class="ml-ttl"><b>' + esc(b.title) + '</b><small>' + esc(b.author) + '</small></div>' +
+            '<button class="ml-ib" data-a="words" aria-label="Words I looked up" title="Words I looked up"><i class="fa-solid fa-language"></i><em id="ml-wn" hidden>0</em></button>' +
+            '<button class="ml-ib" data-a="toc" aria-label="Contents, bookmarks and search" title="Contents"><i class="fa-solid fa-list-ul"></i></button>' +
+            '<button class="ml-ib" data-a="mark" id="ml-mk" aria-label="Bookmark this page" title="Bookmark"><i class="fa-regular fa-bookmark"></i></button>' +
+            '<button class="ml-ib" data-a="aa" aria-label="Reading settings" title="Settings"><i class="fa-solid fa-font"></i></button></div>' +
+            '<div class="ml-stage" id="ml-stage"><div class="ml-book" id="ml-book"><div class="ml-pg ml-L" id="ml-L"></div><div class="ml-pg ml-R" id="ml-R"></div><div class="ml-spine"></div><div class="ml-leaf" id="ml-leaf"><div class="ml-face f"></div><div class="ml-face k"></div><i class="ml-shade"></i></div><div class="ml-pg ml-meas" id="ml-meas"></div></div></div>' +
+            '<div class="ml-rbar bot" id="ml-bot"><div class="ml-tts" id="ml-tts" hidden></div><div class="ml-prow"><button class="ml-ib" data-a="prev" aria-label="Previous page"><i class="fa-solid fa-chevron-left"></i></button><div class="ml-pmid"><input type="range" id="ml-seek" min="0" max="1000" value="0" aria-label="Position in the book"><div class="ml-pinfo"><span id="ml-pn">Page 1</span><span id="ml-left"></span></div></div><button class="ml-ib" data-a="next" aria-label="Next page"><i class="fa-solid fa-chevron-right"></i></button><button class="ml-ib big" data-a="listen" id="ml-lb" aria-label="Read aloud" title="Read aloud"><i class="fa-solid fa-headphones"></i></button></div></div>' +
+            '<div class="ml-panel" id="ml-panel" hidden></div>';
+        stage = $('#ml-stage'); book = $('#ml-book'); leaf = $('#ml-leaf'); meas = $('#ml-meas');
+        stage.addEventListener('pointerdown', pDown); stage.addEventListener('pointermove', pMove); stage.addEventListener('pointerup', pUp); stage.addEventListener('pointercancel', pUp);
+        const seek = $('#ml-seek'); seek.addEventListener('change', () => seekTo(+seek.value / 1000)); seek.addEventListener('input', () => { const t = R.doc.T; $('#ml-pn').textContent = Math.round(+seek.value / 10) + '% · drag to move'; });
+        applyStyle();
+    }
+    function applyStyle() {
+        const S = settings(), rd = $('#ml-rd'); if (!rd || !book) return;
+        rd.dataset.th = S.th; const th = THEMES[S.th] || THEMES.paper;
+        rd.style.setProperty('--pbg', th[1]); rd.style.setProperty('--ptx', th[2]); rd.style.setProperty('--pdesk', th[3]);
+        book.style.setProperty('--fs', S.fs + 'px'); book.style.setProperty('--lh', S.lh); book.style.setProperty('--ff', (FONTS[S.font] || FONTS.serif)[1]); book.dataset.just = S.just ? '1' : '0';
+        sizeBook();
+    }
+    function sizeBook() {
+        const S = settings(), r = stage.getBoundingClientRect(); if (r.width < 50) return;
+        const spread = S.lay === 'spread' || (S.lay === 'auto' && r.width >= 900 && r.width > r.height * 1.15);
+        const vw = r.width - (spread ? 40 : 0), vh = r.height - (spread ? 24 : 0); let pw, ph;
+        if (spread) { pw = Math.min(vw / 2, 580); ph = Math.min(vh, pw * 1.5); } else { pw = Math.min(r.width, 660); ph = Math.min(r.height, 1000); }
+        book.style.setProperty('--pw', Math.floor(pw) + 'px'); book.style.setProperty('--ph', Math.floor(ph) + 'px');
+        book.dataset.mode = spread ? 'spread' : 'single'; R.spread = spread;
+        const rr = $('#ml-R').getBoundingClientRect(); meas.style.width = pw + 'px'; meas.style.height = ph + 'px';
+    }
+    async function relayout() {
+        if (!R.doc) return; const off = curOff(), tok = R.tok; sizeBook(); R.starts = [-1, R.doc.start]; R.ends = [-1]; R.done = false; R.lastK = 150; await gotoOffset(off, tok);
+    }
+
+    /* ----- pagination: fit words into a page by measuring it ----- */
+    function pIndex(off) { const s = R.doc.pStart; let lo = 0, hi = s.length - 1; while (lo < hi) { const m = (lo + hi + 1) >> 1; if (s[m] <= off) lo = m; else hi = m - 1; } return lo; }
+    function build(a, k, spans) {
+        const d = R.doc, end = a + k; let pi = pIndex(a), out = '';
+        while (pi < d.P.length && d.pStart[pi] < end) {
+            const p = d.P[pi], s = Math.max(a, d.pStart[pi]) - d.pStart[pi], e = Math.min(end, d.pStart[pi] + p.w.length) - d.pStart[pi], ws = p.w.slice(s, e);
+            const body = spans ? ws.map((x, j) => '<span class="w" data-i="' + (d.pStart[pi] + s + j) + '">' + esc(x) + '</span>').join(' ') : esc(ws.join(' '));
+            const tag = p.t === 'h' ? 'h3' : p.t === 's' ? 'h4' : 'p';
+            out += '<' + tag + (s > 0 ? ' class="ct"' : '') + '>' + body + '</' + tag + '>'; pi++;
+        }
+        return out;
+    }
+    function initMeas() { if (!meas.firstElementChild) meas.innerHTML = '<div class="ml-txt"></div><div class="ml-pf"><span>x</span><b>1</b></div>'; }
+    function fits(a, k) { const t = meas.firstElementChild; t.innerHTML = build(a, k, false); return t.scrollHeight <= t.clientHeight + 1; }
+    function nextBreak(a) { const b = R.doc.brks; let lo = 0, hi = b.length; while (lo < hi) { const m = (lo + hi) >> 1; if (b[m] > a) hi = m; else lo = m + 1; } return lo < b.length ? b[lo] : Infinity; }
+    function pageSize(a) {
+        const d = R.doc, rem = d.T - a, lim = Math.min(rem, nextBreak(a) - a); let g = clamp(R.lastK, 20, lim), lo, hi;
+        if (fits(a, g)) { lo = g; if (g >= lim) return lim; hi = Math.min(lim, Math.ceil(g * 1.06) + 3); while (fits(a, hi)) { lo = hi; if (hi >= lim) return lim; hi = Math.min(lim, Math.ceil(hi * 1.4) + 6); } }
+        else { hi = g; lo = 1; if (g > 12 && fits(a, Math.floor(g * .94))) lo = Math.floor(g * .94); }
+        while (hi - lo > 1) { const m = (lo + hi) >> 1; if (fits(a, m)) lo = m; else hi = m; }
+        return lo;
+    }
+    function ensure(n) {
+        initMeas();
+        while (R.starts.length <= n && !R.done) {
+            const i = R.starts.length - 1, a = R.starts[i]; if (R.ends.length <= i) { }
+            if (a >= R.doc.T) { R.done = true; break; }
+            const k = pageSize(a); R.lastK = k; R.ends[i] = a + k;
+            if (a + k >= R.doc.T) { R.done = true; break; }
+            R.starts.push(a + k);
+        }
+        return R.starts.length > n;
+    }
+    async function ensureAsync(n, tok) {
+        let t0 = performance.now();
+        while (R.starts.length <= n && !R.done) {
+            ensure(R.starts.length); if (tok !== R.tok) return false;
+            if (performance.now() - t0 > 40) { const e = $('#ml-lm'); await new Promise(r => requestAnimationFrame(r)); t0 = performance.now(); }
+        }
+        return true;
+    }
+    const nPages = () => { if (R.done) return R.starts.length; const n = R.starts.length - 2, last = R.starts[R.starts.length - 1], avg = n >= 3 ? (last - R.starts[1]) / n : Math.max(40, R.lastK); return Math.max(R.starts.length + 1, R.starts.length - 1 + Math.ceil((R.doc.T - last) / avg)); };
+    function pageOfOff(off) { let lo = 1, hi = R.starts.length - 1; while (lo < hi) { const m = (lo + hi + 1) >> 1; if (R.starts[m] <= off) lo = m; else hi = m - 1; } return lo; }
+    async function gotoOffset(off, tok) {
+        initMeas();
+        sizeBook(); const rd = $('#ml-rd');
+        // paginate up to the page holding this offset (a long book can take a moment, so show it)
+        let last = R.starts[R.starts.length - 1], shown = false, t0 = performance.now();
+        while (!R.done && R.starts[R.starts.length - 1] <= off) {
+            ensure(R.starts.length);
+            if (performance.now() - t0 > 60) { if (!shown) { shown = true; showBusy('Preparing your pages…'); } await new Promise(r => requestAnimationFrame(r)); if (tok !== R.tok) return; t0 = performance.now(); }
+        }
+        hideBusy(); const n = pageOfOff(off); R.v = R.spread ? Math.ceil(n / 2) : n; render(R.v);
+    }
+    function showBusy(m) { let e = $('#ml-busy'); if (!e) { e = document.createElement('div'); e.id = 'ml-busy'; e.className = 'ml-busy'; $('#ml-rd').appendChild(e); } e.innerHTML = '<i class="ml-spin"></i><span>' + esc(m) + '</span>'; }
+    function hideBusy() { const e = $('#ml-busy'); if (e) e.remove(); }
+
+    /* ----- one page, as markup ----- */
+    const leftOf = (v) => R.spread ? 2 * v - 1 : -2, rightOf = (v) => R.spread ? 2 * v : v;
+    const maxV = () => { ensureAll(); const N = R.starts.length; return R.spread ? Math.floor(N / 2) : N - 1; };
+    function ensureAll() { }
+    function pageHTML(n, face) {
+        const b = R.b, d = R.doc;
+        if (n < 0 || (n > 0 && n >= R.starts.length && (R.done || !ensure(n)))) return '<div class="ml-blank"></div>';
+        if (n === 0) return '<div class="ml-title"><div class="ml-title-cv">' + coverHTML(b, 'big') + '</div><h1>' + esc(b.title) + '</h1><p>' + esc(b.author) + '</p><small>' + (b.my ? 'Your own text' : 'Public-domain text · Project Gutenberg') + '</small><span class="ml-swipe"><i class="fa-solid fa-hand-pointer"></i>Swipe or tap the edge to turn the page</span></div>';
+        const a = R.starts[n], k = (R.ends[n] != null ? R.ends[n] : a + pageSize(a)) - a;
+        return '<div class="ml-txt">' + build(a, k, true) + '</div><div class="ml-pf"><span>' + esc(b.title.length > 30 ? b.title.slice(0, 28) + '…' : b.title) + '</span><b>' + n + '</b></div>';
+    }
+    function fill(el, n) { el.innerHTML = pageHTML(n); el.classList.toggle('blank', !el.querySelector('.ml-txt,.ml-title')); el.dataset.n = n; }
+    function render(v) {
+        const L = $('#ml-L'), Rr = $('#ml-R'); R.v = v; leaf.classList.remove('on'); leaf.style.transition = 'none'; leaf.style.transform = '';
+        if (R.spread) fill(L, leftOf(v)); else L.innerHTML = '';
+        fill(Rr, rightOf(v)); book.classList.remove('turning'); R.busy = false;
+        afterShow();
+    }
+    function curOff() { const n = R.spread ? (leftOf(R.v) >= 1 ? leftOf(R.v) : rightOf(R.v)) : rightOf(R.v); const i = clamp(n, 1, R.starts.length - 1); return R.starts[i]; }
+    function afterShow() {
+        const d = R.doc, off = curOff(), pct = clamp(off / d.T * 100, 0, 100), n = R.spread ? Math.max(leftOf(R.v), 0) || rightOf(R.v) : rightOf(R.v);
+        const total = R.done ? R.starts.length - 1 : nPages();
+        $('#ml-pn').textContent = (R.spread && leftOf(R.v) >= 1 && rightOf(R.v) < R.starts.length ? 'Pages ' + leftOf(R.v) + '–' + rightOf(R.v) : 'Page ' + Math.max(n, 1)) + ' of ' + (R.done ? total : '~' + total);
+        const wl = Math.max(0, d.T - off); $('#ml-left').textContent = wl < 120 ? 'The end' : dur(Math.round(wl / 230)) + ' left · ' + Math.round(pct) + '%';
+        $('#ml-seek').value = Math.round(pct * 10);
+        const bm = JG('ml_bm', {})[R.b.id] || [], vis = visiblePages().map(p => R.starts[p]).filter(x => x != null);
+        const on = bm.some(o => vis.some(s => o >= s && o < (R.ends[R.starts.indexOf(s)] || s + 1)));
+        const mk = $('#ml-mk'); if (mk) { mk.classList.toggle('on', on); mk.innerHTML = '<i class="fa-' + (on ? 'solid' : 'regular') + ' fa-bookmark"></i>'; }
+        // remember where we are
+        const P = prog(); P[R.b.id] = { off: off, pct: pct, ts: Date.now() }; JS('ml_prog', P);
+        // reading credit: new pages, XP and the end of the book
+        visiblePages().forEach(p => { if (p >= 1 && !R.seen.has(p)) { R.seen.add(p); R.pgs0++; creditPage(); } });
+        if (R.done && visiblePages().includes(R.starts.length - 1)) finished();
+        // warm up the next pages while the reader is busy reading this one
+        setTimeout(() => { try { if (R.doc && !$('#ml-rd').hidden) ensure(rightOf(R.v) + 4); } catch (e) { } }, 60);
+        highlightMarks();
+    }
+    const visiblePages = () => R.spread ? [leftOf(R.v), rightOf(R.v)].filter(p => p >= 1 && p < R.starts.length) : [rightOf(R.v)].filter(p => p >= 1 && p < R.starts.length);
+    function creditPage() {
+        const st = JG('ml_stats', { pages: 0, min: 0 }); st.pages = (st.pages || 0) + 1; JS('ml_stats', st);
+        if (R.pgs0 > 0 && R.pgs0 % 10 === 0) xp(5);
+    }
+    function xp(n) {
+        try {
+            const d = new Date().toISOString().slice(0, 10), o = JG('ml_day', { d, n: 0 }); if (o.d !== d) { o.d = d; o.n = 0; } if (o.n >= 150) return; n = Math.min(n, 150 - o.n); o.n += n; JS('ml_day', o);
+            const u = U(); u.gamePts = (u.gamePts || 0) + n; try { pfSave(); } catch (e) { } toast('+' + n + ' XP for reading');
+        } catch (e) { }
+    }
+    function finished() {
+        if (R.fin === R.b.id) return; R.fin = R.b.id; const done = JG('ml_done', []);
+        if (!done.includes(R.b.id)) { done.push(R.b.id); JS('ml_done', done); xp(40); try { pfFeed('read', 'Finished · ' + R.b.title); } catch (e) { } try { triggerConfetti(); } catch (e) { } toast('You finished ' + R.b.title + '!'); }
+    }
+    function leaveBook() {
+        if (R.b && R.t0) { const st = JG('ml_stats', { pages: 0, min: 0 }); st.min = (st.min || 0) + Math.min(240, (Date.now() - R.t0) / 60000); JS('ml_stats', st); R.t0 = 0; }
+        R.tok++; R.b = null; R.doc = null; ttsStop();
+    }
+
+    /* ----- turning pages ----- */
+    function canTurn(dir) { if (!R.doc || R.busy) return false; const t = R.v + dir; if (t < 0) return false; if (dir > 0) { ensure(rightOf(t) ); return t <= maxV(); } return true; }
+    function prepare(dir) {
+        const L = $('#ml-L'), Rr = $('#ml-R'), f = $('.ml-face.f', leaf), k = $('.ml-face.k', leaf), v = R.v; book.classList.add('turning'); R.busy = true;
+        if (R.spread) {
+            if (dir > 0) { fill(Rr, rightOf(v + 1)); f.innerHTML = pageHTML(rightOf(v)); k.innerHTML = pageHTML(leftOf(v + 1)); }
+            else { fill(L, leftOf(v - 1)); f.innerHTML = pageHTML(rightOf(v - 1)); k.innerHTML = pageHTML(leftOf(v)); }
+        } else {
+            if (dir > 0) { fill(Rr, rightOf(v + 1)); f.innerHTML = pageHTML(rightOf(v)); }
+            else { fill(Rr, rightOf(v)); f.innerHTML = pageHTML(rightOf(v - 1)); }
+            k.innerHTML = '';
+        }
+        $$('.ml-face', leaf).forEach(x => x.classList.toggle('blank', !x.querySelector('.ml-txt,.ml-title')));
+        leaf.classList.add('on'); leaf.style.transition = 'none';
+    }
+    const maxAng = () => R.spread ? 180 : 100;
+    function setAng(dir, p) { const A = maxAng(), ang = dir > 0 ? -A * p : -A * (1 - p); leaf.style.transform = 'rotateY(' + ang.toFixed(2) + 'deg)'; leaf.style.setProperty('--sh', Math.sin(Math.PI * clamp(Math.abs(ang) / A, 0, 1)).toFixed(3)); leaf.style.setProperty('--pr', clamp(Math.abs(ang) / A, 0, 1).toFixed(3)); }
+    function finish(dir, go, ms) {
+        const A = maxAng(), target = go ? (dir > 0 ? -A : 0) : (dir > 0 ? 0 : -A);
+        leaf.style.transition = 'transform ' + (ms || 520) + 'ms cubic-bezier(.3,.62,.22,1)'; leaf.style.transform = 'rotateY(' + target + 'deg)';
+        const pr = target === 0 ? (dir > 0 ? 0 : 1) : 1;
+        let done = false; const end = () => { if (done) return; done = true; leaf.removeEventListener('transitionend', end); if (go) render(R.v + dir); else render(R.v); if (go) onTurned(); };
+        leaf.addEventListener('transitionend', end); setTimeout(end, (ms || 520) + 80);
+        leaf.style.setProperty('--sh', 0);
+    }
+    function turn(dir) {
+        if (!canTurn(dir)) { if (dir > 0 && R.doc && R.done) toast('That is the last page.'); return; }
+        const S = settings(); closeWp();
+        if (S.anim === 'none') { render(R.v + dir); onTurned(); return; }
+        if (S.anim === 'fade') { book.classList.add('fadeout'); setTimeout(() => { render(R.v + dir); book.classList.remove('fadeout'); onTurned(); }, 170); return; }
+        prepare(dir); const A = maxAng(); leaf.style.transform = 'rotateY(' + (dir > 0 ? 0 : -A) + 'deg)'; void leaf.offsetWidth; setAng(dir, dir > 0 ? 0 : 1); finish(dir, true, 560);
+    }
+    function onTurned() { if (TT.on && !TT.paused && !TT.advancing) { } }
+    function pDown(e) { if (!R.doc || R.busy || e.target.closest('.ml-wp,.ml-panel')) return; drag = { x: e.clientX, y: e.clientY, id: e.pointerId, go: false, dir: 0, t: Date.now(), p: 0, moved: false }; }
+    function pMove(e) {
+        if (!drag) return; const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+        if (!drag.go) {
+            if (Math.abs(dx) > 14 && Math.abs(dx) > Math.abs(dy) * 1.2) {
+                const dir = dx < 0 ? 1 : -1; if (!canTurn(dir) || settings().anim !== 'flip') { drag.moved = true; if (settings().anim !== 'flip' && canTurn(dir)) { drag = null; turn(dir); suppress(); } else drag = null; return; }
+                drag.go = true; drag.dir = dir; drag.moved = true; closeWp(); try { stage.setPointerCapture(e.pointerId); } catch (x) { } prepare(dir); drag.W = (R.spread ? book.getBoundingClientRect().width / 2 : book.getBoundingClientRect().width) * .9;
+            } return;
+        }
+        const t = drag.dir > 0 ? -dx : dx; drag.p = clamp(t / drag.W, 0, 1); setAng(drag.dir, drag.dir > 0 ? drag.p : 1 - drag.p);
+    }
+    function pUp(e) {
+        if (!drag) return; const d = drag; drag = null;
+        if (d.go) { const v = d.p / Math.max(1, Date.now() - d.t) * 1000; suppress(); finish(d.dir, d.p > .28 || v > 1.4, 380); }
+        else if (d.moved) suppress();
+    }
+    let sup = 0; const suppress = () => { sup = Date.now() + 350; };
+
+    /* ----- taps: words, edges, middle ----- */
+    function onStageClick(e) {
+        if (Date.now() < sup) return;
+        const w = e.target.closest && e.target.closest('.w');
+        if (w) { openWord(w); return; }
+        if ($('#ml-wp') && !$('#ml-wp').hidden) { closeWp(); return; }
+        const pg = e.target.closest('.ml-pg'); if (!pg && !e.target.closest('.ml-stage')) return;
+        const r = stage.getBoundingClientRect(), x = (e.clientX - r.left) / r.width;
+        if (x < .2) turn(-1); else if (x > .8) turn(1); else toggleChrome();
+    }
+    function toggleChrome() { const rd = $('#ml-rd'); rd.classList.toggle('imm'); }
+
+    /* ----- seek, contents, bookmarks, search ----- */
+    async function seekTo(f) { if (!R.doc) return; const d = R.doc, off = clamp(Math.floor(d.start + (d.T - d.start) * f), d.start, d.T - 1); closeWp(); await gotoOffset(off, R.tok); }
+    async function jump(off) { closePanel(); closeWp(); ttsStop(); await gotoOffset(clamp(off, R.doc.start, R.doc.T - 1), R.tok); }
+    function openPanel(kind) {
+        const p = $('#ml-panel'); R.panel = kind; p.hidden = false; p.className = 'ml-panel on'; p.innerHTML = panelHTML(kind); const i = $('#ml-ps'); if (i && kind === 'toc') { }
+    }
+    function closePanel() { const p = $('#ml-panel'); if (p) { p.hidden = true; p.className = 'ml-panel'; p.innerHTML = ''; } R.panel = ''; }
+    function panelHTML(kind) {
+        const S = settings(), d = R.doc;
+        const head = (t, tabs) => '<div class="ml-ph"><b>' + t + '</b><button class="ml-ib" data-a="pclose" aria-label="Close"><i class="fa-solid fa-xmark"></i></button></div>';
+        if (kind === 'aa') {
+            return head('Reading settings') + '<div class="ml-pb">' +
+                '<div class="ml-lab">Theme</div><div class="ml-themes">' + Object.keys(THEMES).map(k => '<button class="ml-th ' + (S.th === k ? 'on' : '') + '" data-a="theme" data-k="' + k + '" style="--b:' + THEMES[k][1] + ';--t:' + THEMES[k][2] + '" aria-label="' + THEMES[k][0] + ' theme"><span>Aa</span><small>' + THEMES[k][0] + '</small></button>').join('') + '</div>' +
+                '<div class="ml-lab">Text size</div><div class="ml-sz"><button class="ml-ib" data-a="fs" data-d="-1" aria-label="Smaller text"><i class="fa-solid fa-minus"></i></button><div class="ml-szv"><b id="ml-fsv">' + S.fs + '</b><small>px</small></div><button class="ml-ib" data-a="fs" data-d="1" aria-label="Larger text"><i class="fa-solid fa-plus"></i></button></div>' +
+                '<div class="ml-lab">Typeface</div><div class="ml-seg2">' + Object.keys(FONTS).map(k => '<button class="' + (S.font === k ? 'on' : '') + '" data-a="font" data-k="' + k + '" style="font-family:' + FONTS[k][1] + '">' + FONTS[k][0] + '</button>').join('') + '</div>' +
+                '<div class="ml-lab">Line spacing</div><div class="ml-seg2">' + [[1.4, 'Tight'], [1.62, 'Normal'], [1.85, 'Airy']].map(o => '<button class="' + (Math.abs(S.lh - o[0]) < .02 ? 'on' : '') + '" data-a="lh" data-v="' + o[0] + '">' + o[1] + '</button>').join('') + '</div>' +
+                '<div class="ml-lab">Page turn</div><div class="ml-seg2">' + [['flip', 'Flip'], ['fade', 'Fade'], ['none', 'Instant']].map(o => '<button class="' + (S.anim === o[0] ? 'on' : '') + '" data-a="anim" data-k="' + o[0] + '">' + o[1] + '</button>').join('') + '</div>' +
+                '<div class="ml-lab">Layout</div><div class="ml-seg2">' + [['auto', 'Auto'], ['single', 'One page'], ['spread', 'Two pages']].map(o => '<button class="' + (S.lay === o[0] ? 'on' : '') + '" data-a="lay" data-k="' + o[0] + '">' + o[1] + '</button>').join('') + '</div>' +
+                '<div class="ml-lab">Alignment</div><div class="ml-seg2">' + [[1, 'Justified'], [0, 'Left']].map(o => '<button class="' + (!!S.just === !!o[0] ? 'on' : '') + '" data-a="just" data-v="' + o[0] + '">' + o[1] + '</button>').join('') + '</div></div>';
+        }
+        if (kind === 'toc') {
+            const bm = JG('ml_bm', {})[R.b.id] || [];
+            return head('Contents') + '<div class="ml-tabs"><button class="on" data-a="tab" data-k="ch">Chapters</button><button data-a="tab" data-k="bm">Bookmarks' + (bm.length ? ' <b>' + bm.length + '</b>' : '') + '</button><button data-a="tab" data-k="se">Search</button></div><div class="ml-pb" id="ml-tb">' + tabHTML('ch') + '</div>';
+        }
+        if (kind === 'words') {
+            const L = Array.from(R.looked.entries());
+            return head('Words I looked up') + '<div class="ml-pb">' + (L.length ? '<div class="ml-wl">' + L.map(([w, o]) => '<div class="ml-wr"><b>' + esc(w) + '</b><span>' + esc(o.m || '') + '</span><button class="ml-ib" data-a="wsay" data-w="' + esc(w) + '" aria-label="Hear ' + esc(w) + '"><i class="fa-solid fa-volume-high"></i></button></div>').join('') + '</div><button class="ml-btn pri" data-a="wsaveall"><i class="fa-solid fa-floppy-disk"></i>Save all to My Words</button>' : '<div class="ml-empty sm"><i class="fa-solid fa-language"></i><b>No words yet</b><span>Tap any word in the book. The words you look up appear here.</span></div>') + '</div>';
+        }
+        return '';
+    }
+    function tabHTML(k) {
+        const d = R.doc;
+        if (k === 'ch') {
+            const cur = curOff(); let at = -1; d.chapters.forEach((c, i) => { if (c.off <= cur) at = i; });
+            return d.chapters.length ? '<div class="ml-list">' + d.chapters.slice(0, 400).map((c, i) => '<button class="ml-li ' + (i === at ? 'on' : '') + '" data-a="jump" data-o="' + c.off + '"><span>' + esc(c.name) + '</span><small>' + Math.round(c.off / d.T * 100) + '%</small></button>').join('') + '</div>' : '<div class="ml-empty sm"><i class="fa-solid fa-list"></i><b>No chapters found</b><span>Use the slider at the bottom to move through the book.</span></div>';
+        }
+        if (k === 'bm') {
+            const bm = (JG('ml_bm', {})[R.b.id] || []).slice().sort((a, b) => a - b);
+            return bm.length ? '<div class="ml-list">' + bm.map(o => '<button class="ml-li" data-a="jump" data-o="' + o + '"><span>' + esc(snip(o, 70)) + '…</span><small>' + Math.round(o / d.T * 100) + '%</small></button>').join('') + '</div>' : '<div class="ml-empty sm"><i class="fa-regular fa-bookmark"></i><b>No bookmarks yet</b><span>Tap the bookmark icon at the top to mark a page.</span></div>';
+        }
+        return '<label class="ml-search sm"><i class="fa-solid fa-magnifying-glass"></i><input id="ml-ps" type="search" placeholder="Search inside this book" autocomplete="off"></label><div class="ml-list" id="ml-pr"></div>';
+    }
+    function snip(off, n) { const d = R.doc, i = pIndex(off); let o = ''; for (let j = i; j < d.P.length && o.length < n; j++) { const p = d.P[j], s = j === i ? off - d.pStart[j] : 0; o += (o ? ' ' : '') + p.w.slice(s).join(' '); } return o.slice(0, n); }
+    function searchBook(q) {
+        const out = $('#ml-pr'); if (!out) return; q = q.trim().toLowerCase(); if (q.length < 2) { out.innerHTML = ''; return; }
+        const d = R.doc, res = [];
+        for (let i = 0; i < d.P.length && res.length < 40; i++) { const t = d.P[i].w.join(' '), l = t.toLowerCase(); let p = l.indexOf(q); if (p >= 0) { const wi = l.slice(0, p).split(' ').length - 1, a = Math.max(0, p - 30); res.push({ off: d.pStart[i] + Math.max(0, wi), txt: (a > 0 ? '…' : '') + t.slice(a, p + q.length + 50) + '…', pre: t.slice(a, p), hit: t.slice(p, p + q.length), post: t.slice(p + q.length, p + q.length + 50) }); } }
+        out.innerHTML = res.length ? res.map(r => '<button class="ml-li" data-a="jump" data-o="' + r.off + '"><span>' + (r.pre ? '…' : '') + esc(r.pre) + '<mark>' + esc(r.hit) + '</mark>' + esc(r.post) + '…</span><small>' + Math.round(r.off / d.T * 100) + '%</small></button>').join('') : '<div class="ml-empty sm"><b>No match</b></div>';
+    }
+    function toggleMark() {
+        const all = JG('ml_bm', {}), L = all[R.b.id] || [], vis = visiblePages(); if (!vis.length) return;
+        const inR = (o) => vis.some(p => o >= R.starts[p] && o < (R.ends[p] != null ? R.ends[p] : R.starts[p] + 1));
+        const had = L.filter(inR);
+        if (had.length) all[R.b.id] = L.filter(o => !inR(o)); else { L.push(R.starts[vis[0]]); all[R.b.id] = L; }
+        JS('ml_bm', all); afterShow(); toast(had.length ? 'Bookmark removed' : 'Bookmark added');
+    }
+    function highlightMarks() { }
+
+    /* ======================= TAP A WORD ======================= */
+    const cleanW = (s) => String(s || '').replace(/^[^\p{L}\p{N}]+|[^\p{L}\p{N}]+$/gu, '').replace(/[’]/g, "'");
+    const langs = () => ((window.LRW && Array.isArray(LRW.langs) && LRW.langs.length) ? LRW.langs : [{ c: 'uz', n: 'Uzbek', nat: 'Oʻzbekcha', f: '🇺🇿', sp: 'uz-UZ' }, { c: 'ru', n: 'Russian', nat: 'Русский', f: '🇷🇺', sp: 'ru-RU' }]);
+    const curLang = () => { const c = LSg('ml_lang', '') || LSg('wf_lang', '') || U().xLang || 'uz'; return langs().find(l => l.c === c) || langs()[0]; };
+    async function fjson(url, ms) { const c = new AbortController(), to = setTimeout(() => c.abort(), ms || 6000); try { const r = await fetch(url, { signal: c.signal }); return await r.json(); } finally { clearTimeout(to); } }
+    async function gtx(text, c) { try { const d = await fjson('https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=' + encodeURIComponent(c) + '&dt=t&q=' + encodeURIComponent(text), 7000); return (d[0] || []).map(x => x && x[0]).filter(Boolean).join('').trim(); } catch (e) { return ''; } }
+    async function transWord(w, c) {
+        try { if (window.LRW && LRW.tr) { const t = await LRW.tr(w, c); if (t && t.m) return t; } } catch (e) { }
+        const m = await gtx(w, c); return m ? { m, a: [], r: '' } : null;
+    }
+    async function dictInfo(w) {
+        try {
+            const d = await fjson('https://api.dictionaryapi.dev/api/v2/entries/en/' + encodeURIComponent(w), 6500), e = d && d[0]; if (!e) return null;
+            const ph = (e.phonetics || []).find(p => p.text && p.audio) || (e.phonetics || []).find(p => p.text) || {}, au = (e.phonetics || []).find(p => p.audio) || {};
+            const ms = (e.meanings || []).slice(0, 3).map(m => { const df = (m.definitions || [])[0] || {}; return { pos: m.partOfSpeech || '', def: df.definition || '', ex: df.example || '' }; });
+            return { ipa: e.phonetic || ph.text || '', audio: au.audio || '', ms };
+        } catch (e) { return null; }
+    }
+    function sentenceAround(i) {
+        const d = R.doc, p = pIndex(i), ws = d.P[p].w, at = i - d.pStart[p]; let a = at, b = at;
+        while (a > 0 && !/[.!?]["”’')]*$/.test(ws[a - 1])) a--; while (b < ws.length - 1 && !/[.!?]["”’')]*$/.test(ws[b])) b++;
+        return ws.slice(a, b + 1).join(' ');
+    }
+    function openWord(span) {
+        const raw = span.textContent, w = cleanW(raw).toLowerCase(); if (!w || w.length > 40) return;
+        stopSpeech(); $$('.w.sel').forEach(x => x.classList.remove('sel')); span.classList.add('sel');
+        const i = +span.dataset.i, sent = sentenceAround(i), L = curLang(), tok = ++wpTok, wp = $('#ml-wp');
+        wp.hidden = false; wp.className = 'ml-wp on'; wp.innerHTML = wpShell(w, L); wp._w = w; wp._sent = sent;
+        // keep the word visible above the sheet
+        try { const r = span.getBoundingClientRect(), h = wp.getBoundingClientRect().height; if (r.bottom > innerHeight - h - 10) { const sh = r.bottom - (innerHeight - h - 24); stage.style.transform = 'translateY(' + (-Math.min(sh, 220)) + 'px)'; wp._shift = 1; } } catch (e) { }
+        wpFill(w, L, tok);
+    }
+    function wpShell(w, L) {
+        return '<div class="ml-wp-grab"></div><div class="ml-wp-h"><div class="ml-wp-w"><b>' + esc(w) + '</b><span class="ml-ipa" id="ml-ipa"><i class="ml-dots"></i></span><em id="ml-pos"></em></div><div class="ml-wp-b"><button class="ml-ib acc" data-a="say" aria-label="Hear the word" title="Hear it"><i class="fa-solid fa-volume-high"></i></button><button class="ml-ib" data-a="slow" aria-label="Hear it slowly" title="Slowly"><i class="fa-solid fa-hippo"></i></button><button class="ml-ib" data-a="practice" id="ml-pr-b" aria-label="Say it yourself" title="Say it"><i class="fa-solid fa-microphone"></i></button><button class="ml-ib" data-a="wpclose" aria-label="Close"><i class="fa-solid fa-xmark"></i></button></div></div><div class="ml-wp-fb" id="ml-pfb" hidden></div>' +
+            '<div class="ml-wp-l" role="radiogroup" aria-label="Translate into">' + langs().map(l => '<button role="radio" aria-checked="' + (l.c === L.c) + '" class="' + (l.c === L.c ? 'on' : '') + '" data-a="lang" data-c="' + esc(l.c) + '"><i>' + l.f + '</i><span>' + esc(l.n) + '</span></button>').join('') + '</div>' +
+            '<div class="ml-wp-t" id="ml-trb"><i class="ml-dots"></i></div><div class="ml-wp-d" id="ml-def"></div>' +
+            '<div class="ml-wp-s"><small>In the book</small><p id="ml-sent">“' + esc(wp0Sent()) + '”</p><div class="ml-wp-sb"><button class="ml-btn sm" data-a="sentsay"><i class="fa-solid fa-volume-high"></i>Hear it</button><button class="ml-btn sm" data-a="senttr"><i class="fa-solid fa-language"></i>Translate</button></div><div class="ml-wp-st" id="ml-sentt"></div></div>' +
+            '<div class="ml-wp-a"><button class="ml-btn pri" data-a="wsave" id="ml-sv"><i class="fa-regular fa-star"></i>Save to My Words</button><button class="ml-btn ghost" data-a="wall"><i class="fa-solid fa-globe"></i>All 14 languages</button></div><div class="ml-wp-all" id="ml-all" hidden></div>';
+    }
+    const wp0Sent = () => { const w = $('.w.sel'); return w ? sentenceAround(+w.dataset.i) : ''; };
+    async function wpFill(w, L, tok) {
+        const [info, tr] = await Promise.all([dictInfo(w), transWord(w, L.c)]);
+        if (tok !== wpTok) return; const wp = $('#ml-wp'); if (!wp || wp.hidden) return;
+        wp._info = info; $('#ml-ipa').textContent = info && info.ipa ? info.ipa : ''; if (!info || !info.ipa) $('#ml-ipa').innerHTML = '<small class="ml-mu">no phonetics found</small>';
+        $('#ml-pos').textContent = info && info.ms[0] ? info.ms[0].pos : '';
+        paintTr(tr, L);
+        $('#ml-def').innerHTML = info && info.ms.length ? info.ms.map(m => '<div class="ml-df">' + (m.pos ? '<em>' + esc(m.pos) + '</em>' : '') + '<span>' + esc(m.def) + '</span>' + (m.ex ? '<i>“' + esc(m.ex) + '”</i>' : '') + '</div>').join('') : '';
+        if (tr && tr.m) R.looked.set(w, { m: tr.m, c: L.c }); const n = R.looked.size, wn = $('#ml-wn'); if (wn) { wn.hidden = !n; wn.textContent = n; }
+        const sv = $('#ml-sv'); if (sv && savedWords().includes(w)) { sv.innerHTML = '<i class="fa-solid fa-star"></i>Saved'; sv.classList.add('done'); }
+    }
+    function paintTr(tr, L) {
+        const b = $('#ml-trb'); if (!b) return;
+        b.innerHTML = tr && tr.m ? '<span class="ml-fl">' + L.f + '</span><div><b' + (L.rtl ? ' dir="rtl"' : '') + '>' + esc(tr.m) + '</b>' + (tr.r ? '<small>' + esc(tr.r) + '</small>' : '') + ((tr.a && tr.a.length) ? '<div class="ml-alt">' + tr.a.slice(0, 4).map(x => '<span>' + esc(x) + '</span>').join('') + '</div>' : '') + '</div><button class="ml-ib" data-a="trsay" data-t="' + esc(tr.m) + '" aria-label="Hear the translation"><i class="fa-solid fa-volume-high"></i></button>' : '<div class="ml-off"><i class="fa-solid fa-wifi"></i>The ' + esc(L.n) + ' translation needs the internet.<button class="ml-btn sm" data-a="retry">Try again</button></div>';
+    }
+    function closeWp() { const wp = $('#ml-wp'); if (!wp || wp.hidden) return; wpTok++; wp.hidden = true; wp.className = 'ml-wp'; wp.innerHTML = ''; stopSpeech(); if (stage) stage.style.transform = ''; $$('.w.sel').forEach(x => x.classList.remove('sel')); }
+    const savedWords = () => { try { return (U().words || []).map(x => String(x.w || x.word || x).toLowerCase()); } catch (e) { return []; } };
+
+    /* ----- speech (English voice for the book, native voice for translations) ----- */
+    function voices() { try { return speechSynthesis.getVoices() || []; } catch (e) { return []; } }
+    function enVoice() {
+        const S = settings(), vs = voices().filter(v => /^en[-_]/i.test(v.lang)); if (!vs.length) return null;
+        if (S.voice) { const f = vs.find(v => v.name === S.voice); if (f) return f; }
+        const pref = ['Samantha', 'Google US English', 'Google UK English Female', 'Microsoft Aria', 'Microsoft Jenny', 'Daniel', 'Karen', 'Serena', 'Moira'];
+        for (const n of pref) { const f = vs.find(v => v.name.indexOf(n) >= 0); if (f) return f; }
+        return vs.find(v => /en-US/i.test(v.lang)) || vs[0];
+    }
+    let spTok = 0;
+    function stopSpeech() { spTok++; try { speechSynthesis.cancel(); } catch (e) { } try { if (typeof VOICE !== 'undefined') VOICE.stop(); } catch (e) { } if (window.__mlAud) { try { window.__mlAud.pause(); } catch (e) { } } }
+    function speak(text, o) {
+        o = o || {}; return new Promise(res => {
+            const my = ++spTok; let done = false; const fin = () => { if (!done) { done = true; res(my === spTok); } };
+            try {
+                if (window.speechSynthesis && (voices().length || !o.lang)) {
+                    const u = new SpeechSynthesisUtterance(text); u.lang = o.lang || 'en-US'; u.rate = o.rate || 1; const v = o.lang ? voices().find(x => x.lang && x.lang.toLowerCase().indexOf(o.lang.slice(0, 2).toLowerCase()) === 0) : enVoice(); try { if (v) u.voice = v; } catch (e) { }
+                    u.onend = fin; u.onerror = fin; if (o.onb) u.onboundary = o.onb; if (o.onstart) u.onstart = o.onstart; speechSynthesis.cancel(); speechSynthesis.speak(u);
+                    setTimeout(fin, 2500 + text.length * 160 / Math.max(.4, (o.rate || 1))); return;
+                }
+            } catch (e) { }
+            try { if (typeof VOICE !== 'undefined') { VOICE.say(text, { st: 'coach', wait: 2200, end: fin }); setTimeout(fin, 2500 + text.length * 120); return; } } catch (e) { }
+            fin();
+        });
+    }
+    function playWord(slow) {
+        const wp = $('#ml-wp'); if (!wp || !wp._w) return; const w = wp._w, info = wp._info;
+        if (!slow && info && info.audio) { try { stopSpeech(); const a = window.__mlAud = new Audio(info.audio.indexOf('//') === 0 ? 'https:' + info.audio : info.audio); a.onerror = () => speak(w, { rate: .9 }); a.play().catch(() => speak(w, { rate: .9 })); return; } catch (e) { } }
+        speak(w, { rate: slow ? .45 : .9 });
+    }
+    function practice() {
+        const wp = $('#ml-wp'), b = $('#ml-pr-b'), fb = $('#ml-pfb'); if (!wp) return; const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+        fb.hidden = false; if (!SR) { fb.className = 'ml-wp-fb'; fb.textContent = 'Speech checking isn’t supported in this browser.'; return; }
+        stopSpeech(); let r; try { r = new SR(); } catch (e) { fb.textContent = 'The microphone isn’t available.'; return; }
+        r.lang = 'en-US'; r.maxAlternatives = 5; r.interimResults = false; b.classList.add('rec'); fb.className = 'ml-wp-fb'; fb.textContent = 'Listening… say “' + wp._w + '”';
+        const end = () => b.classList.remove('rec');
+        r.onresult = (e) => { end(); const al = []; for (let i = 0; i < e.results[0].length; i++) al.push(e.results[0][i].transcript.toLowerCase().replace(/[^a-z' ]/g, '').trim()); const ok = al.some(x => x === wp._w || x.split(' ').includes(wp._w)); fb.className = 'ml-wp-fb ' + (ok ? 'ok' : 'no'); fb.innerHTML = ok ? '<i class="fa-solid fa-circle-check"></i> Clear! That sounded right.' : '<i class="fa-solid fa-circle-info"></i> I heard “' + esc(al[0] || '…') + '”. Listen again and try once more.'; };
+        r.onerror = () => { end(); fb.textContent = 'I could not hear you. Check the microphone permission and try again.'; }; r.onend = end; try { r.start(); } catch (e) { end(); }
+    }
+
+    /* ======================= READ ALOUD ======================= */
+    function collectSentences() {
+        const spans = $$('#ml-book .ml-pg .w').filter(s => !s.closest('.ml-leaf')), out = []; let cur = [];
+        const flush = () => { if (cur.length) out.push(cur); cur = []; };
+        spans.forEach((s, j) => { cur.push(s); const t = s.textContent; if (/[.!?]["”’')]*$/.test(t) || cur.length >= 30 || s.parentElement.tagName === 'H3' && (!spans[j + 1] || spans[j + 1].parentElement !== s.parentElement)) flush(); }); flush();
+        return out;
+    }
+    function ttsUI() {
+        const el = $('#ml-tts'); if (!el) return; const S = settings();
+        if (!TT.on) { el.hidden = true; el.innerHTML = ''; const lb = $('#ml-lb'); if (lb) { lb.classList.remove('on'); lb.innerHTML = '<i class="fa-solid fa-headphones"></i>'; } return; }
+        el.hidden = false; const lb = $('#ml-lb'); if (lb) { lb.classList.add('on'); }
+        const vs = voices().filter(v => /^en[-_]/i.test(v.lang));
+        el.innerHTML = '<button class="ml-ib acc" data-a="tpp" aria-label="' + (TT.paused ? 'Resume' : 'Pause') + '"><i class="fa-solid ' + (TT.paused ? 'fa-play' : 'fa-pause') + '"></i></button><button class="ml-ib" data-a="tstop" aria-label="Stop reading"><i class="fa-solid fa-stop"></i></button>' +
+            '<label class="ml-rate" title="Speed"><i class="fa-solid fa-gauge-high"></i><input type="range" min="60" max="160" step="10" value="' + Math.round(S.rate * 100) + '" id="ml-rate" aria-label="Reading speed"><b id="ml-ratev">' + S.rate.toFixed(1) + '×</b></label>' +
+            (vs.length > 1 ? '<select id="ml-voice" aria-label="Voice">' + vs.map(v => '<option value="' + esc(v.name) + '"' + ((enVoice() || {}).name === v.name ? ' selected' : '') + '>' + esc(v.name.replace(/^(Microsoft|Google) /, '').slice(0, 22)) + '</option>').join('') + '</select>' : '');
+    }
+    async function ttsStart() {
+        if (!R.doc) return; closeWp(); closePanel(); TT.on = true; TT.paused = false; const my = ++TT.tok; ttsUI(); document.getElementById('ml-rd').classList.remove('imm');
+        ttsLoop(my);
+    }
+    async function ttsLoop(my) {
+        while (TT.on && my === TT.tok) {
+            const sents = collectSentences(); TT.sents = sents; if (TT.i >= sents.length) TT.i = 0;
+            for (; TT.i < sents.length && TT.on && my === TT.tok; TT.i++) {
+                if (TT.paused) return; const s = sents[TT.i]; markRead(s, null); const text = s.map(x => x.textContent).join(' ');
+                const idx = []; let c = 0; s.forEach((x, k) => { idx.push(c); c += x.textContent.length + 1; });
+                const ok = await speak(text, { rate: settings().rate, onb: (ev) => { if (ev.name && ev.name !== 'word') return; let k = 0; for (let q = 0; q < idx.length; q++) if (idx[q] <= ev.charIndex) k = q; markRead(s, s[k]); } });
+                if (my !== TT.tok) return; if (!ok && !TT.on) return;
+            }
+            if (!TT.on || my !== TT.tok || TT.paused) return;
+            clearRead(); TT.i = 0;
+            if (!canTurn(1)) { ttsStop(); toast('Finished reading.'); return; }
+            turn(1); await sleep(settings().anim === 'flip' ? 780 : 350); if (my !== TT.tok) return;
+        }
+    }
+    function markRead(s, w) { $$('#ml-book .w.rd,#ml-book .w.rdw').forEach(x => x.classList.remove('rd', 'rdw')); s.forEach(x => x.classList.add('rd')); if (w) w.classList.add('rdw'); }
+    function clearRead() { $$('#ml-book .w.rd,#ml-book .w.rdw').forEach(x => x.classList.remove('rd', 'rdw')); }
+    function ttsPause() { if (!TT.on) return; TT.paused = true; TT.tok++; stopSpeech(); ttsUI(); }
+    function ttsResume() { if (!TT.on) return; TT.paused = false; const my = ++TT.tok; ttsUI(); ttsLoop(my); }
+    function ttsStop() { const was = TT.on; TT.on = false; TT.paused = false; TT.tok++; TT.i = 0; stopSpeech(); clearRead(); if (was) ttsUI(); }
+    function ttsRestartHere() { if (!TT.on || TT.paused) return; const my = ++TT.tok; stopSpeech(); ttsLoop(my); }
+
+    /* ======================= events ======================= */
+    function onKey(e) {
+        if (!root || !root.classList.contains('open')) return; const rd = $('#ml-rd'); if (rd.hidden) { if (e.key === 'Escape') { if (!$('#ml-sheet').hidden) closeSheet(); else close(); } return; }
+        if (e.target && /input|select|textarea/i.test(e.target.tagName)) return;
+        if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); turn(1); } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); turn(-1); }
+        else if (e.key === 'Escape') { if ($('#ml-wp') && !$('#ml-wp').hidden) closeWp(); else if (R.panel) closePanel(); else showCat(); }
+    }
+    function toggleFav(id) { const F = favs(), i = F.indexOf(id); if (i >= 0) F.splice(i, 1); else F.push(id); JS('ml_fav', F); }
+    function onInput(e) {
+        const t = e.target;
+        if (t.id === 'ml-q') { C.q = t.value; clearTimeout(onInput.t); onInput.t = setTimeout(paintCat, 160); }
+        else if (t.id === 'ml-sort') { C.sort = t.value; paintCat(); }
+        else if (t.id === 'ml-ps') searchBook(t.value);
+        else if (t.id === 'ml-rate') { const v = +t.value / 100; saveSet({ rate: v }); $('#ml-ratev').textContent = v.toFixed(1) + '×'; if (e.type === 'change') ttsRestartHere(); }
+        else if (t.id === 'ml-voice') { saveSet({ voice: t.value }); ttsRestartHere(); }
+    }
+    async function onClick(e) {
+        if (stage && stage.contains(e.target) && !e.target.closest('[data-a]')) { onStageClick(e); return; }
+        const b = e.target.closest('[data-a]'); if (!b) return; const a = b.dataset.a, id = b.dataset.id;
+        if (a === 'fav') { e.stopPropagation(); toggleFav(id); if (!$('#ml-sheet').hidden) detail(id); paintCat(); return; }
+        if (a === 'close') return close();
+        if (a === 'detail') return detail(id);
+        if (a === 'shclose') return closeSheet();
+        if (a === 'read') return readBook(id);
+        if (a === 'genre') { C.g = b.dataset.g; return paintCat(); }
+        if (a === 'level') { C.lv = b.dataset.l; return paintCat(); }
+        if (a === 'clear') { C.g = 'All'; C.lv = 'All'; C.q = ''; return paintCat(); }
+        if (a === 'import') return importText();
+        if (a === 'delmy') { JS('ml_my', JG('ml_my', []).filter(m => m.id !== id)); closeSheet(); return paintCat(); }
+        if (a === 'back') return showCat();
+        if (a === 'prev') return turn(-1);
+        if (a === 'next') return turn(1);
+        if (a === 'aa') return R.panel === 'aa' ? closePanel() : openPanel('aa');
+        if (a === 'toc') return R.panel === 'toc' ? closePanel() : openPanel('toc');
+        if (a === 'words') return R.panel === 'words' ? closePanel() : openPanel('words');
+        if (a === 'pclose') return closePanel();
+        if (a === 'mark') return toggleMark();
+        if (a === 'tab') { $$('.ml-tabs button').forEach(x => x.classList.toggle('on', x === b)); $('#ml-tb').innerHTML = tabHTML(b.dataset.k); if (b.dataset.k === 'se') { const i = $('#ml-ps'); if (i) i.focus(); } return; }
+        if (a === 'jump') return jump(+b.dataset.o);
+        if (a === 'theme') { saveSet({ th: b.dataset.k }); applyStyle(); return openPanel('aa'); }
+        if (a === 'font') { saveSet({ font: b.dataset.k }); applyStyle(); openPanel('aa'); return relayout(); }
+        if (a === 'fs') { const S = settings(); saveSet({ fs: clamp(S.fs + (+b.dataset.d), 14, 32) }); applyStyle(); openPanel('aa'); clearTimeout(R.fsT); R.fsT = setTimeout(relayout, 220); return; }
+        if (a === 'lh') { saveSet({ lh: +b.dataset.v }); applyStyle(); openPanel('aa'); return relayout(); }
+        if (a === 'anim') { saveSet({ anim: b.dataset.k }); return openPanel('aa'); }
+        if (a === 'lay') { saveSet({ lay: b.dataset.k }); applyStyle(); openPanel('aa'); return relayout(); }
+        if (a === 'just') { saveSet({ just: +b.dataset.v }); applyStyle(); openPanel('aa'); return relayout(); }
+        if (a === 'listen') { return TT.on ? ttsStop() : ttsStart(); }
+        if (a === 'tpp') return TT.paused ? ttsResume() : ttsPause();
+        if (a === 'tstop') return ttsStop();
+        if (a === 'wpclose') return closeWp();
+        if (a === 'say') return playWord(false);
+        if (a === 'slow') return playWord(true);
+        if (a === 'practice') return practice();
+        if (a === 'sentsay') { const wp = $('#ml-wp'); return speak(wp._sent || '', { rate: .95 }); }
+        if (a === 'trsay') { const L = curLang(); return speak(b.dataset.t, { lang: L.sp || L.c, rate: .9 }); }
+        if (a === 'lang') { LSs('ml_lang', b.dataset.c); const wp = $('#ml-wp'), L = curLang(), tok = ++wpTok; $$('.ml-wp-l button').forEach(x => { const on = x === b; x.classList.toggle('on', on); x.setAttribute('aria-checked', on); }); $('#ml-trb').innerHTML = '<i class="ml-dots"></i>'; const tr = await transWord(wp._w, L.c); if (tok !== wpTok) return; paintTr(tr, L); if (tr && tr.m) R.looked.set(wp._w, { m: tr.m, c: L.c }); const sent = $('#ml-sentt'); if (sent && sent.dataset.on) senttr(); return; }
+        if (a === 'retry') { const wp = $('#ml-wp'), L = curLang(); $('#ml-trb').innerHTML = '<i class="ml-dots"></i>'; paintTr(await transWord(wp._w, L.c), L); return; }
+        if (a === 'senttr') return senttr();
+        if (a === 'wsave') { const wp = $('#ml-wp'); try { saveWord(wp._w); b.innerHTML = '<i class="fa-solid fa-star"></i>Saved'; b.classList.add('done'); toast('Saved “' + wp._w + '”'); } catch (x) { toast('Could not save this word.'); } return; }
+        if (a === 'wall') return allLangs(b);
+        if (a === 'wsay') return speak(b.dataset.w, { rate: .9 });
+        if (a === 'wsaveall') { let n = 0; R.looked.forEach((o, w) => { try { saveWord(w); n++; } catch (x) { } }); b.innerHTML = '<i class="fa-solid fa-check"></i>Saved ' + n + ' words'; toast('Saved ' + n + ' words to My Words'); return; }
+    }
+    async function senttr() {
+        const wp = $('#ml-wp'), L = curLang(), out = $('#ml-sentt'); if (!wp || !out) return; out.dataset.on = 1; out.innerHTML = '<i class="ml-dots"></i>';
+        const t = await gtx(wp._sent, L.c); out.innerHTML = t ? '<span class="ml-fl">' + L.f + '</span><p' + (L.rtl ? ' dir="rtl"' : '') + '>' + esc(t) + '</p>' : '<span class="ml-off">The translation needs the internet.</span>';
+    }
+    async function allLangs(btn) {
+        const box = $('#ml-all'), wp = $('#ml-wp'); if (!box) return; if (!box.hidden) { box.hidden = true; return; } box.hidden = false; const w = wp._w, tok = wpTok;
+        box.innerHTML = langs().map(l => '<div class="ml-ar" data-c="' + esc(l.c) + '"><i>' + l.f + '</i><span>' + esc(l.n) + '</span><b><i class="ml-dots"></i></b></div>').join('');
+        langs().forEach(async l => { const tr = await transWord(w, l.c); if (tok !== wpTok) return; const row = box.querySelector('[data-c="' + l.c + '"] b'); if (row) row.innerHTML = tr && tr.m ? '<span' + (l.rtl ? ' dir="rtl"' : '') + '>' + esc(tr.m) + '</span>' : '<small>offline</small>'; });
+        try { box.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); } catch (e) { }
+    }
+
+    window.ML = { open, close, _TT: TT, _R: R, _parse: parse, _B: all, _C: C };
 })();
 
 </script><!--/hs:js-->
