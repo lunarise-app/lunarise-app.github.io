@@ -28,8 +28,8 @@ jobs:
                   except Exception:
                       time.sleep(2 + 3 * i)
               return None
-          def jget(u):
-              b = get(u)
+          def jget(u, tries=5):
+              b = get(u, 45, tries)
               try: return json.loads(b) if b else None
               except Exception: return None
           os.makedirs('books', exist_ok=True)
@@ -40,18 +40,38 @@ jobs:
           books = {str(r[0]): r for r in old.get('books', [])}
           authors = old.get('authors', {})
           have = set(f[:-4] for f in os.listdir('books') if f.endswith('.txt'))
+          JUNK = re.compile(r"dictionar|encyclop|cyclop|lexicon|gazetteer|almanac|bulletin|magazine|\bjournal\b|proceedings|catalog|bibliograph|\bvol(ume)?\.?\s*[\dIVX]+|\bpart\s+[\dIVX]+|\bno\.\s*\d|\bnumber\s+\d|\(of \d+\)|weird tales|statutes|report of|transactions|punch,|index of|\bissue\b", re.I)
+          def junk(b):
+              t = b.get('title', '')
+              sub = ' '.join(b.get('subjects', []) + b.get('bookshelves', [])).lower()
+              return bool(JUNK.search(t)) or any(k in sub for k in ('periodicals', 'dictionar', 'encyclop', 'reference'))
+          for i in list(books):
+              if JUNK.search(books[i][1]):
+                  del books[i]
+                  try: os.remove('books/%s.txt' % i)
+                  except Exception: pass
+          have = set(f[:-4] for f in os.listdir('books') if f.endswith('.txt'))
+          print('kept after cleanup', len(books))
           TOPICS = ['', 'adventure', 'fantasy', 'science fiction', 'mystery', 'detective', 'horror', 'ghost', 'romance', 'love', 'children', 'fairy tales', 'humor', 'satire', 'history', 'war', 'biography', 'philosophy', 'psychology', 'essays', 'poetry', 'drama', 'short stories', 'sea stories', 'western', 'gothic', 'travel', 'politics', 'nature', 'animals', 'sports', 'cooking', 'art', 'music', 'education', 'mythology', 'legends', 'domestic fiction', 'historical fiction', 'christmas', 'folklore', 'adventure stories', 'crime', 'science']
           cands = {}
-          for tp in TOPICS:
-              for page in (1, 2, 3, 4, 5):
-                  u = 'https://gutendex.com/books/?languages=en&copyright=false&sort=popular&page=%d' % page + ('&topic=' + urllib.parse.quote(tp) if tp else '')
-                  j = jget(u)
-                  if not j: break
-                  for b in j.get('results', []):
-                      if b.get('media_type') != 'Text': continue
-                      cands.setdefault(str(b['id']), b)
-                  if not j.get('next'): break
-                  time.sleep(1)
+          def add(j):
+              for b in (j or {}).get('results', []):
+                  if b.get('media_type') != 'Text' or junk(b): continue
+                  cands.setdefault(str(b['id']), b)
+          u = 'https://gutendex.com/books/?languages=en&copyright=false&sort=popular'; n = 0
+          while u and n < 80:
+              j = jget(u, 6)
+              if not j: print('index page failed', n); break
+              add(j); u = j.get('next'); n += 1; time.sleep(1)
+          print('popular list pages', n, 'candidates so far', len(cands))
+          if len(cands) < WANT * 1.4:
+              for tp in TOPICS[1:]:
+                  for page in (1, 2, 3):
+                      j = jget('https://gutendex.com/books/?languages=en&copyright=false&sort=popular&page=%d&topic=%s' % (page, urllib.parse.quote(tp)))
+                      if not j: break
+                      add(j)
+                      if not j.get('next'): break
+                      time.sleep(1)
           print('candidates', len(cands))
           if not cands: sys.exit('Could not reach the book index (gutendex.com). Run the action again later.')
           order = sorted(cands.values(), key=lambda b: -b.get('download_count', 0))
@@ -69,9 +89,14 @@ jobs:
           def clean_title(t):
               t = re.split(r'[;:]\s', t)[0] if len(t) > 48 else t
               return re.sub(r'\s+', ' ', t.replace('\r', ' ').replace('\n', ' ')).strip()
-          def text_of(i):
-              for u in ('https://www.gutenberg.org/cache/epub/%s/pg%s.txt' % (i, i), 'https://www.gutenberg.org/files/%s/%s-0.txt' % (i, i)):
-                  b = get(u, 60, 2)
+          def text_of(i, b0):
+              f = b0.get('formats', {}); urls = []
+              for k in ('text/plain; charset=utf-8', 'text/plain; charset=us-ascii', 'text/plain'):
+                  if f.get(k) and f[k] not in urls: urls.append(f[k])
+              d = '/'.join(list(i[:-1])) or '0'
+              urls += ['https://www.gutenberg.org/cache/epub/%s/pg%s.txt' % (i, i), 'https://aleph.gutenberg.org/%s/%s/%s-0.txt' % (d, i, i), 'https://aleph.gutenberg.org/%s/%s/%s.txt' % (d, i, i)]
+              for u in urls[:5]:
+                  b = get(u, 40, 2)
                   if b and len(b) > 20000: return b.decode('utf-8', 'ignore')
               return None
           def wiki(q, must):
@@ -97,18 +122,24 @@ jobs:
               asl = len(w) / s; awl = sum(len(x) for x in w) / len(w)
               sc = asl * 0.6 + awl * 4
               return 'Easy' if sc < 25.5 else ('Hard' if sc > 29.5 else 'Medium')
-          added = []; k = 0
+          added = []; k = 0; fails = 0; stat = {'download failed': 0, 'too short': 0, 'too long': 0}
           for b in order:
               if len(added) >= WANT: break
               i = str(b['id']); au = name((b['authors'] or [{}])[0].get('name'))
-              txt = text_of(i)
+              txt = text_of(i, b)
               time.sleep(1.5)
-              if not txt: continue
+              if not txt:
+                  stat['download failed'] += 1; fails += 1
+                  if fails % 10 == 0: print('download failures in a row', fails)
+                  if fails >= 40: print('The book server keeps refusing downloads. Stopping here; run again later.'); break
+                  continue
+              fails = 0
               m = re.search(r'\*\*\* ?START OF (?:THE|THIS) PROJECT GUTENBERG[^\n]*\n', txt, re.I)
               e = re.search(r'\*\*\* ?END OF (?:THE|THIS) PROJECT GUTENBERG', txt, re.I)
               body = txt[m.end():e.start()] if (m and e) else txt
               words = len(body.split())
-              if words < 9000 or words > 300000: continue
+              if words < 9000: stat['too short'] += 1; continue
+              if words > 300000: stat['too long'] += 1; continue
               head = 'Title: %s\nAuthor: %s\n\n*** START OF THE PROJECT GUTENBERG EBOOK ***\n\n' % (clean_title(b['title']), au)
               open('books/%s.txt' % i, 'w', encoding='utf-8').write(head + body.strip() + '\n\n*** END OF THE PROJECT GUTENBERG EBOOK ***\n')
               title = clean_title(b['title']); g = genre(b)
@@ -132,7 +163,7 @@ jobs:
           for n, i in enumerate(ids):
               books[i][5] = round(3.6 + 1.1 * (n / max(1, len(ids) - 1)), 1)
           json.dump({'books': list(books.values()), 'authors': authors}, open('books/catalog.json', 'w'), ensure_ascii=False)
-          print('added', len(added), 'total', len(books))
+          print('added', len(added), 'total', len(books), 'skipped', stat)
           PY
           python3 fetch2.py
       - name: Save everything in the site
