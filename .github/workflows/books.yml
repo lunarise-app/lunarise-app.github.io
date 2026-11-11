@@ -1,0 +1,17 @@
+name: Books
+on: workflow_dispatch
+permissions:
+  contents: write
+jobs:
+  b:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          mkdir books
+          for i in 1342 11 84 345 2701 1400 98 730 46 1661 2852 76 74 174 1260 768 158 161 105 37106 35 36 5230 120 236 16 55 45 113 215 910 103 164 18857 219 844 1513 1524 1533 5200 2554 1399 2600 28054 600 43 25344 205 829 521 145 599 766 1184 135 1257 132 1232 2680 64317 14838 2781 271 1448 1450 1952 1080 1064; do curl -fsSL -A x https://www.gutenberg.org/cache/epub/$i/pg$i.txt -o books/$i.txt || true; sleep 2; done
+          git config user.name a
+          git config user.email a@a.a
+          git add books
+          git commit -m b
+          git push
