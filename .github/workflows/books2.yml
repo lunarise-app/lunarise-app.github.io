@@ -1,0 +1,146 @@
+name: Books 2
+on:
+  workflow_dispatch:
+    inputs:
+      count:
+        description: "How many new books to add"
+        default: "400"
+permissions:
+  contents: write
+jobs:
+  get:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    steps:
+      - uses: actions/checkout@v4
+      - name: Find and download more books
+        env:
+          COUNT: ${{ github.event.inputs.count }}
+        run: |
+          cat > fetch2.py <<'PY'
+          import json, os, re, sys, time, math, subprocess, urllib.request, urllib.parse
+          UA = {'User-Agent': 'Mozilla/5.0 LunaRise (education)'}
+          WANT = int(os.environ.get('COUNT') or 400)
+          def get(u, t=45, tries=3):
+              for i in range(tries):
+                  try:
+                      return urllib.request.urlopen(urllib.request.Request(u, headers=UA), timeout=t).read()
+                  except Exception:
+                      time.sleep(2 + 3 * i)
+              return None
+          def jget(u):
+              b = get(u)
+              try: return json.loads(b) if b else None
+              except Exception: return None
+          os.makedirs('books', exist_ok=True)
+          old = {}
+          if os.path.exists('books/catalog.json'):
+              try: old = json.load(open('books/catalog.json'))
+              except Exception: old = {}
+          books = {str(r[0]): r for r in old.get('books', [])}
+          authors = old.get('authors', {})
+          have = set(f[:-4] for f in os.listdir('books') if f.endswith('.txt'))
+          TOPICS = ['', 'adventure', 'fantasy', 'science fiction', 'mystery', 'detective', 'horror', 'ghost', 'romance', 'love', 'children', 'fairy tales', 'humor', 'satire', 'history', 'war', 'biography', 'philosophy', 'psychology', 'essays', 'poetry', 'drama', 'short stories', 'sea stories', 'western', 'gothic', 'travel', 'politics']
+          cands = {}
+          for tp in TOPICS:
+              for page in (1, 2, 3):
+                  u = 'https://gutendex.com/books/?languages=en&copyright=false&sort=popular&page=%d' % page + ('&topic=' + urllib.parse.quote(tp) if tp else '')
+                  j = jget(u)
+                  if not j: break
+                  for b in j.get('results', []):
+                      if b.get('media_type') != 'Text': continue
+                      cands.setdefault(str(b['id']), b)
+                  if not j.get('next'): break
+                  time.sleep(1)
+          print('candidates', len(cands))
+          if not cands: sys.exit('Could not reach the book index (gutendex.com). Run the action again later.')
+          order = sorted(cands.values(), key=lambda b: -b.get('download_count', 0))
+          order = [b for b in order if str(b['id']) not in books and str(b['id']) not in have]
+          def genre(b):
+              t = ' '.join(b.get('subjects', []) + b.get('bookshelves', [])).lower()
+              for g, ks in [('Sci-Fi', ['science fiction']), ('Fantasy', ['fantasy', 'fairy tale', 'mythology']), ('Mystery & Horror', ['detective', 'mystery', 'horror', 'ghost', 'gothic', 'crime']), ('Romance', ['love stor', 'romance', 'courtship']), ('Kids & Family', ["children's", 'juvenile']), ('Plays', ['drama', 'plays', 'comedies', 'tragedies']), ('Poetry', ['poetry', 'poems']), ('Humor', ['humor', 'satire', 'humour']), ('History', ['history', 'biograph', 'war', 'travel']), ('Ideas', ['philosoph', 'psycholog', 'essays', 'political', 'economics', 'ethics', 'religion', 'science']), ('Adventure', ['adventure', 'sea stor', 'western', 'pirate']), ('Short Stories', ['short stor'])]:
+                  if any(k in t for k in ks): return g
+              return 'Classics'
+          def name(a):
+              a = a or 'Unknown'
+              if ',' in a:
+                  l, f = a.split(',', 1); a = (f.strip() + ' ' + l.strip()).strip()
+              return re.sub(r'\s*\([^)]*\)', '', a).strip()
+          def clean_title(t):
+              t = re.split(r'[;:]\s', t)[0] if len(t) > 48 else t
+              return re.sub(r'\s+', ' ', t.replace('\r', ' ').replace('\n', ' ')).strip()
+          def text_of(i):
+              for u in ('https://www.gutenberg.org/cache/epub/%s/pg%s.txt' % (i, i), 'https://www.gutenberg.org/files/%s/%s-0.txt' % (i, i)):
+                  b = get(u, 60, 2)
+                  if b and len(b) > 20000: return b.decode('utf-8', 'ignore')
+              return None
+          def wiki(q, must):
+              j = jget('https://en.wikipedia.org/w/api.php?action=query&list=search&format=json&srlimit=1&srsearch=' + urllib.parse.quote(q))
+              try: title = j['query']['search'][0]['title']
+              except Exception: return ''
+              s = jget('https://en.wikipedia.org/api/rest_v1/page/summary/' + urllib.parse.quote(title.replace(' ', '_')))
+              ex = (s or {}).get('extract', '')
+              if not ex or not any(m.lower() in ex.lower() for m in must): return ''
+              return ex
+          def sentences(t, n, cap):
+              t = re.sub(r'\s*\([^)]*\)', '', t)
+              ss = re.split(r'(?<=[.!?])\s+(?=[A-Z])', t)
+              out = ''
+              for s in ss[:n]:
+                  if len(out) + len(s) > cap: break
+                  out += (' ' if out else '') + s
+              return out or t[:cap]
+          def level(txt):
+              body = txt[len(txt) // 5: len(txt) // 5 + 60000]
+              w = re.findall(r"[A-Za-z']+", body); s = max(1, len(re.findall(r'[.!?]+(?:\s|$)', body)))
+              if not w: return 'Medium'
+              asl = len(w) / s; awl = sum(len(x) for x in w) / len(w)
+              sc = asl * 0.6 + awl * 4
+              return 'Easy' if sc < 25.5 else ('Hard' if sc > 29.5 else 'Medium')
+          added = []; k = 0
+          for b in order:
+              if len(added) >= WANT: break
+              i = str(b['id']); au = name((b['authors'] or [{}])[0].get('name'))
+              txt = text_of(i)
+              time.sleep(1.5)
+              if not txt: continue
+              m = re.search(r'\*\*\* ?START OF (?:THE|THIS) PROJECT GUTENBERG[^\n]*\n', txt, re.I)
+              e = re.search(r'\*\*\* ?END OF (?:THE|THIS) PROJECT GUTENBERG', txt, re.I)
+              body = txt[m.end():e.start()] if (m and e) else txt
+              words = len(body.split())
+              if words < 9000 or words > 380000: continue
+              head = 'Title: %s\nAuthor: %s\n\n*** START OF THE PROJECT GUTENBERG EBOOK ***\n\n' % (clean_title(b['title']), au)
+              open('books/%s.txt' % i, 'w', encoding='utf-8').write(head + body.strip() + '\n\n*** END OF THE PROJECT GUTENBERG EBOOK ***\n')
+              title = clean_title(b['title']); g = genre(b)
+              bl = wiki(title + ' ' + au, [au.split()[-1]]) if au != 'Unknown' else ''
+              blurb = sentences(bl, 2, 230) if bl else ('A %s by %s.' % ({'Plays': 'play', 'Poetry': 'collection of poems', 'Short Stories': 'collection of short stories', 'Ideas': 'work of ideas', 'History': 'work of history and life writing'}.get(g, 'classic ' + g.lower() + ' story'), au))
+              a0 = (b['authors'] or [{}])[0]
+              if au not in authors and au != 'Unknown':
+                  yrs = ('%s–%s' % (a0.get('birth_year') or '', a0.get('death_year') or '')) if a0.get('birth_year') else ''
+                  bio = wiki(au + ' writer', [au.split()[-1]])
+                  authors[au] = [yrs, sentences(bio, 3, 300) if bio else 'Author of ' + title + '.']
+              books[i] = [int(i), title, au, 0, g, 0, level(body), max(1, round(words / 1000)), blurb]
+              added.append(i); k += 1
+              if k % 40 == 0:
+                  json.dump({'books': list(books.values()), 'authors': authors}, open('books/catalog.json', 'w'), ensure_ascii=False)
+                  subprocess.run('git config user.name github-actions; git config user.email actions@github.com; git add books; git commit -m "Add books (batch)" -q; git pull --rebase -q; git push -q', shell=True)
+                  print('saved', k)
+          # estimated ratings from how often each book is downloaded
+          dl = {str(b['id']): b.get('download_count', 0) for b in cands.values()}
+          ids = [i for i in books if books[i][5] == 0]
+          ids.sort(key=lambda i: dl.get(i, 0))
+          for n, i in enumerate(ids):
+              books[i][5] = round(3.6 + 1.1 * (n / max(1, len(ids) - 1)), 1)
+          json.dump({'books': list(books.values()), 'authors': authors}, open('books/catalog.json', 'w'), ensure_ascii=False)
+          print('added', len(added), 'total', len(books))
+          PY
+          python3 fetch2.py
+      - name: Save everything in the site
+        run: |
+          rm -f fetch2.py
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add -A books
+          git commit -m "Add books and catalogue" || true
+          git pull --rebase || true
+          git push
