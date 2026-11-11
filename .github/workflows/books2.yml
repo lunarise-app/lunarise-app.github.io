@@ -4,7 +4,7 @@ on:
     inputs:
       count:
         description: "How many new books to add"
-        default: "400"
+        default: "1100"
 permissions:
   contents: write
 jobs:
@@ -20,7 +20,7 @@ jobs:
           cat > fetch2.py <<'PY'
           import json, os, re, sys, time, math, subprocess, urllib.request, urllib.parse
           UA = {'User-Agent': 'Mozilla/5.0 LunaRise (education)'}
-          WANT = int(os.environ.get('COUNT') or 400)
+          WANT = int(os.environ.get('COUNT') or 1100)
           def get(u, t=45, tries=3):
               for i in range(tries):
                   try:
@@ -40,10 +40,10 @@ jobs:
           books = {str(r[0]): r for r in old.get('books', [])}
           authors = old.get('authors', {})
           have = set(f[:-4] for f in os.listdir('books') if f.endswith('.txt'))
-          TOPICS = ['', 'adventure', 'fantasy', 'science fiction', 'mystery', 'detective', 'horror', 'ghost', 'romance', 'love', 'children', 'fairy tales', 'humor', 'satire', 'history', 'war', 'biography', 'philosophy', 'psychology', 'essays', 'poetry', 'drama', 'short stories', 'sea stories', 'western', 'gothic', 'travel', 'politics']
+          TOPICS = ['', 'adventure', 'fantasy', 'science fiction', 'mystery', 'detective', 'horror', 'ghost', 'romance', 'love', 'children', 'fairy tales', 'humor', 'satire', 'history', 'war', 'biography', 'philosophy', 'psychology', 'essays', 'poetry', 'drama', 'short stories', 'sea stories', 'western', 'gothic', 'travel', 'politics', 'nature', 'animals', 'sports', 'cooking', 'art', 'music', 'education', 'mythology', 'legends', 'domestic fiction', 'historical fiction', 'christmas', 'folklore', 'adventure stories', 'crime', 'science']
           cands = {}
           for tp in TOPICS:
-              for page in (1, 2, 3):
+              for page in (1, 2, 3, 4, 5):
                   u = 'https://gutendex.com/books/?languages=en&copyright=false&sort=popular&page=%d' % page + ('&topic=' + urllib.parse.quote(tp) if tp else '')
                   j = jget(u)
                   if not j: break
@@ -108,7 +108,7 @@ jobs:
               e = re.search(r'\*\*\* ?END OF (?:THE|THIS) PROJECT GUTENBERG', txt, re.I)
               body = txt[m.end():e.start()] if (m and e) else txt
               words = len(body.split())
-              if words < 9000 or words > 380000: continue
+              if words < 9000 or words > 300000: continue
               head = 'Title: %s\nAuthor: %s\n\n*** START OF THE PROJECT GUTENBERG EBOOK ***\n\n' % (clean_title(b['title']), au)
               open('books/%s.txt' % i, 'w', encoding='utf-8').write(head + body.strip() + '\n\n*** END OF THE PROJECT GUTENBERG EBOOK ***\n')
               title = clean_title(b['title']); g = genre(b)
