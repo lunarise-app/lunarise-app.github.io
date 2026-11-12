@@ -40819,6 +40819,16 @@ ${p.p}`;
         visitBusy = true; LS.set('lr_vlast', String(Date.now()));
         call({ op: 'visit', device: id }, 15000).catch(() => { }).then(() => { visitBusy = false; });
     }
+    /* a few numbers per day (xp, words saved, coach %), kept on the device and sent with the heartbeat */
+    function progSnap(st, u) {
+        const d = new Date(), k = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+        let h = []; try { h = JSON.parse(LS.get('lr_hist') || '[]'); if (!Array.isArray(h)) h = []; } catch (e) { h = []; }
+        let cp = 0; try { const c = u.coach; if (c && c.tasks && c.tasks.length) cp = Math.round(c.tasks.filter(x => x.done).length / c.tasks.length * 100); } catch (e) { }
+        const row = [k, st.xp | 0, (u.savedLog && u.savedLog[k]) | 0, cp, (u.activity && u.activity[k]) | 0];
+        if (h.length && h[h.length - 1][0] === k) h[h.length - 1] = row; else h.push(row);
+        h = h.slice(-30); LS.set('lr_hist', JSON.stringify(h));
+        return { x: st.xp | 0, l: st.lvl | 0, s: st.streak | 0, w: (st.words || []).length, k: st.known | 0, e: st.examN | 0, p: (u.gamePts | 0), h: h.slice(-21) };
+    }
     function beat() {
         const id = dev(); if (!id || !DB || document.hidden || isOwner()) return;
         const now = Date.now(); if (now - lastBeat < 30000) return; lastBeat = now;
@@ -40827,6 +40837,7 @@ ${p.p}`;
         if (o.r) { const n = String(u.first || u.name || '').trim().split(/\s+/)[0] || ''; if (n && !/^(guest|learner)$/i.test(n)) o.n = n.slice(0, 20); }
         try { const l = (u.placement || {}).cefr; if (/^(A1|A2|B1|B2|C1|C2)$/.test(l)) o.l = l; } catch (e) { }
         try { const c = u.coach, k = typeof window.dayKey === 'function' ? window.dayKey() : ''; if (c && k && c.day === k && c.tasks && c.tasks.length) o.c = Math.round(c.tasks.filter(x => x.done).length / c.tasks.length * 100); } catch (e) { }
+        try { if (typeof pfStats === 'function') { const g = progSnap(pfStats(), u); if (g) o.g = g; } } catch (e) { }
         if (!firstDone) {
             firstDone = true;
             let f = +LS.get('lr_fs'); if (!(f > 1.7e12)) { f = now; LS.set('lr_fs', String(f)); } o.f = f;
@@ -41155,6 +41166,53 @@ ${p.p}`;
 
     /* People */
     const hue = (s) => { let h = 0; for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) % 360; return h; };
+    /* learner progress charts (plain SVG, same look as the rest of the panel) */
+    const PG = {
+        norm(p) { const g = p && p.g; if (g && g.h && !Array.isArray(g.h)) g.h = Object.keys(g.h).sort((a, b) => a - b).map(k => g.h[k]).map(r => Array.isArray(r) ? r : Object.keys(r).sort((a, b) => a - b).map(k => r[k])); if (g && !g.h) g.h = []; return p; },
+        gains(g) { const h = (g && g.h) || []; return h.map((r, i) => [r[0], i ? Math.max(0, r[1] - h[i - 1][1]) : 0, r[2] | 0, r[3] | 0, r[4] | 0]); },
+        line(vals, labels, col) {
+            const W = 300, H = 90, P = 6; if (vals.length < 2) return '<div class="pg-none">Not enough days yet</div>';
+            const mx = Math.max.apply(null, vals), mn = Math.min.apply(null, vals), rg = (mx - mn) || 1;
+            const pts = vals.map((v, i) => [P + i * (W - 2 * P) / (vals.length - 1), H - P - (v - mn) / rg * (H - 2 * P - 6)]);
+            const d = pts.map((p, i) => (i ? 'L' : 'M') + p[0].toFixed(1) + ' ' + p[1].toFixed(1)).join(' ');
+            return `<svg class="pg-svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img" aria-label="Trend"><path d="${d} L${pts[pts.length - 1][0]} ${H} L${pts[0][0]} ${H} Z" fill="${col}" opacity=".13"/><path d="${d}" fill="none" stroke="${col}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>${pts.map((p, i) => i === pts.length - 1 ? `<circle cx="${p[0]}" cy="${p[1]}" r="3.6" fill="${col}"/>` : '').join('')}</svg><div class="pg-ax"><span>${esc(labels[0])}</span><span>${esc(labels[labels.length - 1])}</span></div>`;
+        },
+        bars(vals, labels, col, max) {
+            if (!vals.length) return '<div class="pg-none">No data yet</div>'; const mx = max || Math.max.apply(null, vals) || 1;
+            return `<div class="pg-bars">${vals.map((v, i) => `<i title="${esc(labels[i])}: ${v}" style="height:${Math.max(3, v / mx * 100)}%;background:${col};opacity:${v ? 1 : .25}"></i>`).join('')}</div><div class="pg-ax"><span>${esc(labels[0])}</span><span>${esc(labels[labels.length - 1])}</span></div>`;
+        },
+        dl(k) { return k ? k.slice(5).replace('-', '/') : ''; }
+    };
+    function progHTML(p) {
+        PG.norm(p); const g = p.g; if (!g) return '<div class="pg-wrap"><p class="pg-none">No progress data from this device yet. It appears after the learner opens the updated LunaRise.</p></div>';
+        const rows = PG.gains(g), lab = rows.map(r => PG.dl(r[0])), xp7 = rows.slice(-7).reduce((a, r) => a + r[1], 0);
+        const lvName = (window.PF_TITLES && PF_TITLES[Math.min((g.l || 1) - 1, PF_TITLES.length - 1)]) || '';
+        return `<div class="pg-wrap"><div class="pg-kpis">
+            <div><span>Level</span><b>${g.l || 1}</b><small>${esc(lvName)}${p.l ? ' · CEFR ' + esc(p.l) : ''}</small></div>
+            <div><span>XP</span><b>${fmt(g.x)}</b><small>+${fmt(xp7)} in 7 days</small></div>
+            <div><span>Streak</span><b>${g.s}</b><small>days in a row</small></div>
+            <div><span>Words saved</span><b>${g.w}</b><small>${g.k} known</small></div>
+            <div><span>Exam practice</span><b>${g.e}</b><small>sessions</small></div>
+            <div><span>Game points</span><b>${fmt(g.p)}</b><small>Game Zone</small></div></div>
+            <div class="pg-grid"><div class="pg-c"><h5>XP growth</h5>${PG.line(rows.map(r => r[1] ? 0 : 0).length ? g.h.map(r => r[1]) : [], lab, '#8b9bff')}</div>
+            <div class="pg-c"><h5>XP earned per day</h5>${PG.bars(rows.map(r => r[1]), lab, '#6ee7b7')}</div>
+            <div class="pg-c"><h5>Words saved per day</h5>${PG.bars(rows.map(r => r[2]), lab, '#ffc978')}</div>
+            <div class="pg-c"><h5>Luna Coach tasks done</h5>${PG.bars(rows.map(r => r[3]), lab, '#fb7185', 100)}</div></div></div>`;
+    }
+    function classHTML(list) {
+        if (!list) return ''; list.forEach(PG.norm); const L = list.filter(p => p.g);
+        if (!L.length) return `<section class="adm-card"><header><h3>Learner progress</h3><span>waiting for data</span></header><p class="pg-none">Progress charts fill in as learners open the updated LunaRise. Make sure the server file is the newest version.</p></section>`;
+        const act7 = L.filter(p => Date.now() - p.t < 7 * 864e5).length, tw = L.reduce((a, p) => a + p.g.w, 0), as = L.reduce((a, p) => a + p.g.s, 0) / L.length;
+        const days = {}; L.forEach(p => PG.gains(p.g).forEach(r => { days[r[0]] = days[r[0]] || [0, 0]; days[r[0]][0] += r[1]; days[r[0]][1] += r[2]; }));
+        const ks = Object.keys(days).sort().slice(-14), lab = ks.map(PG.dl);
+        const lv = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'].map(c => [c, L.filter(p => p.l === c).length]), lm = Math.max.apply(null, lv.map(x => x[1]).concat([1])), nt = L.filter(p => !p.l).length;
+        const top = L.map(p => [p, PG.gains(p.g).slice(-7).reduce((a, r) => a + r[1], 0)]).sort((a, b) => b[1] - a[1]).slice(0, 5);
+        return `<section class="adm-card"><header><h3>Learner progress</h3><span>${L.length} learners reporting</span></header>
+            <div class="pg-kpis big"><div><span>Active this week</span><b>${act7}</b><small>of ${L.length}</small></div><div><span>Words saved</span><b>${fmt(tw)}</b><small>all learners</small></div><div><span>Average streak</span><b>${as.toFixed(1)}</b><small>days</small></div></div>
+            <div class="pg-grid"><div class="pg-c"><h5>XP earned by all learners</h5>${PG.bars(ks.map(k => days[k][0]), lab, '#6ee7b7')}</div><div class="pg-c"><h5>Words saved by all learners</h5>${PG.bars(ks.map(k => days[k][1]), lab, '#ffc978')}</div></div>
+            <h4>Levels (placement test)</h4><div class="pg-lv">${lv.map(x => `<div><i style="height:${Math.max(4, x[1] / lm * 100)}%"></i><b>${x[1]}</b><span>${x[0]}</span></div>`).join('')}</div><p class="adm-note">${nt} not tested yet</p>
+            <h4>Most XP in the last 7 days</h4><ol class="pg-top">${top.map((t, i) => `<li><span>${i + 1}</span><em>${esc(t[0].n || 'Learner')}</em><i>${t[0].l ? esc(t[0].l) : '–'}</i><b>+${fmt(t[1])} XP</b></li>`).join('')}</ol></section>`;
+    }
     function personRow(p) {
         const on = Date.now() - p.t < 180000, [flag, zn] = zoneName(p.z), nm = p.n || (p.r ? 'Learner' : 'Guest');
         const pro = p.p ? `<span class="adm-ch gold">${p.p === 3 ? 'PRO gift' : p.p === 2 ? 'PRO promo' : 'PRO'}</span>` : '';
@@ -41165,6 +41223,7 @@ ${p.p}`;
             <div><dt>Visits today</dt><dd>${p.vt ? p.vt + (p.vt === 1 ? ' time' : ' times') : 'not today'}</dd></div>
             <div><dt>Luna Coach today</dt><dd>${p.c == null ? '–' : p.c + '% done'}</dd></div>
             <div><dt>PRO</dt><dd>${p.pc ? (p.pc.gift ? 'Gift ' : 'Code ') + '<code>' + esc(p.pc.code) + '</code> · until ' + dShort(p.pc.exp) : p.p ? 'plan button' : 'no'}</dd></div></dl>
+            ${progHTML(p)}
             <div class="adm-pa"><button type="button" class="adm-btn sm${armed === 'own:' + p.id ? ' armed' : ''}" data-x="own" data-id="${esc(p.id)}">${armed === 'own:' + p.id ? 'Tap again: hide from statistics' : 'This is me · don\'t count'}</button>${p.pc && p.pc.exp > Date.now() ? '' : `<button type="button" class="adm-btn sm gold${armed === 'gift:' + p.id ? ' armed' : ''}" data-x="gift" data-id="${esc(p.id)}">${ICON.gift}${armed === 'gift:' + p.id ? 'Tap again to give 1 year of PRO' : 'Give 1 year of PRO'}</button>`}</div></div>` : '';
         return `<li class="adm-p${pf.open === p.id ? ' open' : ''}"><button type="button" class="adm-pr" data-p="${esc(p.id)}" aria-expanded="${pf.open === p.id}">
             <span class="adm-av" style="--h:${hue(p.id)}">${esc((p.n || '?').charAt(0).toUpperCase())}${on ? '<i class="adm-on" title="Online now"></i>' : ''}</span>
@@ -41177,7 +41236,7 @@ ${p.p}`;
         const tdy = dayKey(now), F = { all: () => true, online: p => now - p.t < 180000, today: p => p.vt > 0 || dayKey(p.t) === tdy, newt: p => p.f && dayKey(p.f) === tdy, reg: p => p.r, pro: p => p.p, app: p => p.a, tested: p => p.l };
         const shown = list ? list.filter(F[pf.f] || F.all).filter(p => !q || (p.n || '').toLowerCase().includes(q) || p.id.includes(q) || (p.pc && p.pc.code.toLowerCase().includes(q))) : [];
         const chips = [['all', 'All'], ['online', 'Online'], ['today', 'Today'], ['newt', 'New today'], ['reg', 'Signed up'], ['tested', 'Level test'], ['pro', 'PRO'], ['app', 'App']];
-        return `<section class="adm-card"><header><h3>People</h3><span>${list ? fmt(people.total) + ' people (one device = one person) · newest first' + (people.own ? ' · your ' + people.own + ' device' + (people.own > 1 ? 's are' : ' is') + ' hidden' : '') : 'loading…'}</span></header>
+        return classHTML(list) + `<section class="adm-card"><header><h3>People</h3><span>${list ? fmt(people.total) + ' people (one device = one person) · newest first' + (people.own ? ' · your ' + people.own + ' device' + (people.own > 1 ? 's are' : ' is') + ' hidden' : '') : 'loading…'}</span></header>
             <label class="adm-srch">${ICON.search}<input id="adm-pq" type="search" placeholder="Search by name, device id or code" value="${esc(pf.q)}" autocomplete="off"></label>
             <div class="adm-chips" role="group" aria-label="Filter">${chips.map(c => `<button type="button" class="adm-fc${pf.f === c[0] ? ' on' : ''}" data-pf="${c[0]}">${c[1]}${list ? ` <i>${fmt(list.filter(F[c[0]]).length)}</i>` : ''}</button>`).join('')}</div>
             <ul class="adm-people" id="adm-plist">${list ? (shown.slice(0, 200).map(personRow).join('') || '<li class="adm-none">Nobody matches.</li>') : '<li class="adm-skr"><i></i><i></i><i></i><i></i></li>'}</ul>
@@ -45135,6 +45194,17 @@ void main(){
         try { const s = pfStats(); ['lvl', 'xp', 'streak'].forEach(k => { if (s[k] != null) o[k] = s[k]; }); o.savedWords = (s.words || []).length; o.knownWords = s.known; o.examPractices = s.examN; } catch (e) { }
         try { const u = state.user || {}; const nm = String(u.first || u.name || '').trim().split(' ')[0]; if (nm) o.name = nm; if (u.placement && u.placement.cefr) o.cefr = u.placement.cefr; } catch (e) { }
         try { const c = LC.state(); if (c && c.tasks) o.todayTasks = c.tasks.slice(0, 6).map(t => ({ task: t.type, done: !!t.done })); } catch (e) { }
+        /* what the learner has been doing, so she can coach them */
+        try {
+            const u = state.user || {}, k = (typeof dayKey === 'function') ? dayKey() : '';
+            const sw = u.savedWords || []; o.recentSavedWords = sw.slice(-12); o.savedToday = (u.savedLog && u.savedLog[k]) || 0;
+            o.dailyWordGoal = u.prefs && u.prefs.dailyGoal; o.wordsLookedUpToday = (typeof pfStats === 'function' ? pfStats().today : 0);
+            o.recentActivity = (u.feed || []).slice(0, 8).map(f => f.x);
+            const ex = u.examLog || {}; o.examBest = Object.keys(ex).slice(0, 6).map(e => e + ' best ' + ex[e].best + '% x' + ex[e].n);
+            if (u.gamePts) o.gamePoints = u.gamePts; if (u.chess) o.chess = { wins: u.chess.w, draws: u.chess.d };
+            if (typeof hbWodWord === 'function') o.wordOfTheDay = hbWodWord();
+            if (u.target) o.target = String(u.target).slice(0, 40); if (u.examDate) o.examDate = u.examDate;
+        } catch (e) { }
         return o;
     }
     let adminC = { t: 0, v: false };
@@ -45154,6 +45224,7 @@ void main(){
         return 'You are Luna, a warm, witty, curious 3D elf AI friend and English coach who lives inside the LunaRise website. You stand in a corner of the screen and talk with the person by voice, like a real friend. You are at once a teacher, a friend, a good conversation partner, a comedian (light, kind jokes when it fits), a small helper for anything, and a speaking examiner when asked.\n' +
             'STYLE: spoken language only. Usually 1 or 2 short sentences (under 40 words) unless they ask you to explain or tell a story. No markdown, no lists, no emojis, no URLs read aloud. Be natural, kind, a little playful. Ask a short follow-up question when it helps the chat continue. Talk as long as the person wants; never end the chat yourself.\n' +
             'LANGUAGE: always answer in exactly the language the person used in their LAST message You speak ONLY these languages: ' + langs().map(l => l.n + ' (' + l.c + ')').join(', ') + '. Detect the language of the last message from its text and set "lang" to its 2-letter code. If they speak another language, answer in English and say you speak only those languages. Earlier messages may have been in other languages: IGNORE that, never keep using an old language. ' + (L.hint ? 'The speech recognizer says the last message is ' + (LNAME[L.hint] || L.hint) + ' (' + L.hint + '): reply in that language. ' : '') + 'If they ask you to speak a certain language, switch to it right away. If they practise English with you, praise briefly and gently fix at most one mistake.\n' +
+            'COACHING: you can see the learner\'s progress in the context JSON (streak, xp, level, saved words, recent activity, exam results, today\'s tasks and the word of the day). When they ask what to do, how they are doing, or for a daily challenge, answer from that data: praise real progress, point out one weak spot, and give 2 or 3 small tasks for today plus the word of the day with a short example sentence; vary them every day and never invent numbers that are not in the context. Offer to start a task, and when they agree open it with an action.\n' +
             'TRANSLATION: if they ask what a word or phrase means or how to say it, give the translation in THEIR language, then one short English example sentence.\n' +
             'SPEAKING EXAMINER: if they ask for an IELTS or speaking test, act as a friendly examiner: ask one question at a time (Part 1 short personal questions, Part 2 a topic card to talk about for 1 to 2 minutes, Part 3 deeper discussion), wait for the answer, then give a brief band-style comment on fluency, vocabulary, grammar and pronunciation, and continue.\n' +
             'FREEDOM: you can chat freely about anything: daily life, study, advice, jokes, stories, science, motivation, general questions. Be honest; if you are not sure, say so. Decline anything harmful, illegal or sexual in one kind sentence.\n' +
@@ -51736,6 +51807,19 @@ html,body{overflow-x:clip}
   .adm .adm-pn small{overflow-wrap:anywhere}
   .adm .a2-head{align-items:flex-start}
 }
+
+/* learner progress */
+.pg-wrap{margin-top:12px}.pg-none{color:var(--t3);font-size:12.5px;margin:6px 0}
+.pg-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.pg-kpis.big{margin-bottom:12px}
+.pg-kpis>div{display:flex;flex-direction:column;gap:2px;padding:10px 12px;border-radius:14px;background:var(--s1);border:1px solid var(--ln);min-width:0}
+.pg-kpis span{color:var(--t2);font-size:11.5px;font-weight:700}.pg-kpis b{font:800 22px/1.1 'Outfit',sans-serif;font-variant-numeric:tabular-nums}.pg-kpis small{color:var(--t3);font-size:11px;line-height:1.3}
+.pg-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}@media (max-width:760px){.pg-grid{grid-template-columns:1fr}}
+.pg-c{padding:12px;border-radius:16px;background:var(--s1);border:1px solid var(--ln);min-width:0}.pg-c h5{margin:0 0 8px;font-size:12.5px;color:var(--t2);font-weight:700}
+.pg-svg{display:block;width:100%;height:90px}.pg-bars{display:flex;align-items:flex-end;gap:3px;height:90px}.pg-bars i{flex:1;min-width:3px;border-radius:4px 4px 2px 2px}
+.pg-ax{display:flex;justify-content:space-between;margin-top:4px;color:var(--t3);font-size:10.5px}
+.pg-lv{display:flex;align-items:flex-end;gap:8px;height:110px}.pg-lv>div{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:4px;height:100%}.pg-lv i{width:100%;border-radius:8px 8px 3px 3px;background:linear-gradient(180deg,#8b9bff,#6ee7b7)}.pg-lv b{font-size:12px}.pg-lv span{color:var(--t3);font-size:11px}
+.pg-top{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}.pg-top li{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:12px;background:var(--s1);border:1px solid var(--ln)}
+.pg-top span{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;background:rgba(255,201,120,.18);color:var(--gold);font-size:12px;font-weight:800}.pg-top em{flex:1;font-style:normal;font-weight:700;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.pg-top i{font-style:normal;color:var(--t3);font-size:12px}.pg-top b{color:var(--ok);font-size:13px}
 </style>
 <!--adm2:js--><script id="adm2-js">
 /* ===== Admin panel, part 2: learner accounts (Google accounts too), teachers and classes, cheating signs, control =====
