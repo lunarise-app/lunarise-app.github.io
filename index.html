@@ -44638,25 +44638,34 @@ void main(){
     if(uBh>.01){
       float b1=ell(q,vec2(${(F.EL[0] + 0.002).toFixed(4)},${(F.EL[1] - 0.019).toFixed(4)}),vec2(.0125,.0072)), b2=ell(q,vec2(${(F.ER[0] - 0.002).toFixed(4)},${(F.ER[1] - 0.019).toFixed(4)}),vec2(.0125,.0072));
       float bb=max(1.-smoothstep(.0,1.,b1),1.-smoothstep(.0,1.,b2));
-      c=mix(c,vec3(1.,.50,.58),.40*uBh*bb);
+      c=mix(c,vec3(1.,.52,.60),.46*uBh*bb);
     }
+    /* nose: a soft shadow under the tip and a tiny highlight */
+    { vec2 nt=vec2(-.0015,.8668); float ns=1.-smoothstep(.0,1.,ell(q,nt+vec2(.0006,-.0030),vec2(.0062,.0034))); c=mix(c,vec3(.78,.50,.52),.20*ns);
+      float nh=1.-smoothstep(.0,1.,ell(q,nt+vec2(-.0006,.0014),vec2(.0020,.0017))); c=mix(c,vec3(1.,.93,.90),.15*nh); }
     vec2 m=vec2(${F.MO[0]},${F.MO[1]});
-    float mo=ell(q,m+vec2(0.,-.0002),vec2(.0135,.0082));
+    float mo=ell(q,m+vec2(0.,-.0004),vec2(.0135,.0085));
     if(mo<1.){
       vec3 sk=mix(vec3(.66,.60,.60),vec3(.76,.67,.66),smoothstep(-.012,.012,q.x));
       c=mix(c,sk,smoothstep(1.25,.55,mo));
-      float w=.0085+uSm*.0020; float h=.0006+uMo*.0082;
-      float dx=(q.x-m.x)/w; float u=max(1.-dx*dx,0.);
-      float yy=q.y-m.y-uSm*.0044*dx*dx+uSm*.0016;
-      float top=h*.30*u, bot=-h*.95*pow(u,.62);
-      float inn=smoothstep(.0003,-.0003,yy-top)*smoothstep(.0003,-.0003,bot-yy)*step(abs(dx),1.)*step(.07,uMo);
-      float edge=smoothstep(.0013,.0,abs(yy-(uMo>.07?(yy>top*.5?top:bot):0.)))*step(abs(dx),1.02);
-      vec3 lip=vec3(.74,.36,.40);
-      c=mix(c,lip,edge*(1.-smoothstep(.8,1.,abs(dx)))*.88);
+      float w=.0070+uSm*.0016+uMo*.0012; float h=.0006+uMo*.0092;
+      float dx=(q.x-m.x)/w; float adx=abs(dx); float u=max(1.-dx*dx,0.);
+      float lift=uSm*.0036*dx*dx-uSm*.0006;           /* corners go up: a soft smile */
+      float yy=q.y-m.y-lift;
+      float top=h*.22*u, bot=-h*(.55+.40*(1.-uMo))*pow(u,.7);
+      float inn=smoothstep(.0003,-.0003,yy-top)*smoothstep(.0003,-.0003,bot-yy)*step(adx,1.)*step(.07,uMo);
+      /* closed smile: a thin soft curve with a gentle lower lip under it */
+      float lineY=0.; float ln=smoothstep(.0011,.0002,abs(yy-lineY))*(1.-smoothstep(.72,1.,adx))*(1.-step(.07,uMo));
+      float lipH=smoothstep(.0044,.0,abs(yy+.0020))*(1.-smoothstep(.45,.95,adx))*(1.-step(.07,uMo));
+      c=mix(c,vec3(.95,.66,.68),lipH*.40);
+      c=mix(c,vec3(.66,.30,.36),ln*.80);
+      float cn=1.-smoothstep(.0,1.,ell(vec2(abs(q.x-m.x),yy),vec2(w*.98,.0003),vec2(.0011,.0011))); c=mix(c,vec3(.62,.38,.40),cn*.42*(1.-step(.07,uMo)));
+      float edge=smoothstep(.0011,.0,abs(yy-(yy>top*.5?top:bot)))*step(adx,1.02)*step(.07,uMo);
+      c=mix(c,vec3(.72,.34,.40),edge*(1.-smoothstep(.8,1.,adx))*.85);
       if(inn>0.){
         float d=(yy-bot)/max(top-bot,.0001);
         vec3 mc=mix(vec3(.88,.42,.47),vec3(.38,.07,.13),smoothstep(.0,.55,d));
-        mc=mix(mc,vec3(.97,.96,.94),smoothstep(.72,.9,d)*step(.3,uMo));
+        mc=mix(mc,vec3(.97,.96,.94),smoothstep(.76,.92,d)*step(.3,uMo));
         c=mix(c,mc,inn*.97);
       }
     }
@@ -44793,7 +44802,7 @@ void main(){
             if (m === 'sad') { shr -= 0.05; spP += 0.06; }
             if (m === 'laugh') { const ls = Math.sin(t * 10.5); spP += ls * 0.03 - 0.03; shr += Math.abs(ls) * 0.05; hdP += ls * 0.025; aL -= 0.10 + ls * 0.03; aR -= 0.10 - ls * 0.03; fL += 0.25; fR += 0.25; }
             if (m === 'wow') { aL -= 0.35; aR -= 0.35; fL += 0.6; fR += 0.6; yL += 0.25; yR += 0.25; spP -= 0.03; }
-            if (m === 'shy') { aL -= 0.35; aR -= 0.35; fL += 1.0; fR += 1.0; yL += 0.55; yR += 0.55; hdY -= 0.08; }
+            if (m === 'shy') { aL -= 0.10; aR -= 0.10; fL += 0.95; fR += 0.95; yL += 0.30; yR += 0.30; hdY -= 0.08; }
             if (m === 'think') { aR -= 0.50; fR += 0.9; zFR += 0.9; yR += 1.0; }
             /* ---- gestures ---- */
             if (gn === 'wave') {
@@ -44807,7 +44816,7 @@ void main(){
             if (gn === 'cheer') { aL = down * (1 - env) + -0.75 * env; aR = down * (1 - env) + -0.75 * env; fL += 0.3 * env; fR += 0.3 * env; hdP -= 0.1 * env; const cb = Math.sin(gu * 8) * 0.12 * env; aL += cb; aR += cb; }
             if (gn === 'point') { aL = down * (1 - env) + 0.05 * env; yL += 1.2 * env; fL = elb * (1 - env) + 0.05 * env; }
             if (gn === 'shrug') { shr += 0.14 * env; fL += 0.7 * env; fR += 0.7 * env; yL += 0.35 * env; yR += 0.35 * env; aL -= 0.25 * env; aR -= 0.25 * env; hdR += 0.10 * env; }
-            if (gn === 'hearts') { aL -= 0.8 * env; aR -= 0.8 * env; fL += 1.7 * env; fR += 1.7 * env; yL += 0.8 * env; yR += 0.8 * env; hdR += 0.08 * env; }
+            if (gn === 'hearts') { aL -= 0.25 * env; aR -= 0.25 * env; fL += 1.1 * env; fR += 1.1 * env; yL += 0.5 * env; yR += 0.5 * env; hdR += 0.10 * env; }
             /* ---- looking ---- */
             const lyaw = S.lookX * 0.45, lpit = -S.lookY * 0.22;
             hdY += lyaw * 0.62 + Math.sin(t * 0.55) * 0.035; hdP += lpit * 0.62 + Math.sin(t * 0.43 + 1) * 0.015;
@@ -44821,11 +44830,11 @@ void main(){
             /* arms: left (+x): lowering = Rz(-a), forward = Ry(-y); right (-x): lowering = Rz(+a), forward = Ry(+y) */
             set(B.LArm, 0, -yL * 0.6, -aL); set(B.RArm, 0, yR * 0.6, aR);
             set(B.LFore, 0, -fL, zFL); set(B.RFore, 0, fR, -zFR);
-            set(B.LHand, 0, 0, hL * 0 + Math.sin(t * 1.4) * 0.04); set(B.RHand, 0, 0, Math.sin(t * 1.2 + 1) * 0.04);
+            set(B.LHand, -0.75 + Math.sin(t * 1.1) * 0.05, 0.12, 0.10 + Math.sin(t * 1.4) * 0.05); set(B.RHand, 0.75 + Math.sin(t * 1.0 + 1) * 0.05, -0.12, -0.10 + Math.sin(t * 1.2 + 1) * 0.05);
             if (gn === 'wave') { set(B.RHand, 0, 0, Math.sin(gu * 9.5 + 0.5) * 0.35 * env); }
             if (this.fixedBones) { for (const nm in this.fixedBones) { const i = B[nm]; if (i == null) continue; const v = this.fixedBones[nm]; tg[i * 3] = v[0]; tg[i * 3 + 1] = v[1]; tg[i * 3 + 2] = v[2]; } }
             /* ease every joint toward its target so nothing snaps */
-            const cu = this.cur; const kk = k(this.fixedBones ? 60 : 13);
+            const cu = this.cur; const kk = k(this.fixedBones ? 60 : 9);
             for (let i = 0; i < NB * 3; i++) cu[i] += (tg[i] - cu[i]) * kk;
         }
         _bones() {
@@ -44844,7 +44853,7 @@ void main(){
             const m = this.mood;
             const smT = ({ happy: 1, laugh: 1, wink: 1, shy: 0.8, think: 0.55, sad: -0.7, wow: 0.7, neutral: 1.0 }[m]); const smv = smT == null ? 1.0 : smT;
             const sqT = ({ happy: 0.55, laugh: 0.55, wink: 0.3, shy: 0.35, sad: 0.12, wow: 0, think: 0.1, neutral: 0.14 }[m]) || 0;
-            const bhT = ({ shy: 1, laugh: 0.55, wink: 0.35, happy: 0.25, neutral: 0.12 }[m]) || 0; S.bh += (bhT - S.bh) * k(3.5);
+            const bhT = ({ shy: 1, laugh: 0.55, wink: 0.35, happy: 0.32, neutral: 0.22 }[m]) || 0; S.bh += (bhT - S.bh) * k(3.5);
             S.sm += (smv - S.sm) * k(7); S.sq += (sqT - S.sq) * k(8);
             if (this.blinkT < 0 && t > this.nextBlink) { this.blinkT = 0; }
             if (this.blinkT >= 0) { this.blinkT += dt; const u = this.blinkT / 0.17; S.bl = u < 0.45 ? u / 0.45 : Math.max(0, 1 - (u - 0.45) / 0.55); if (u >= 1) { this.blinkT = -1; S.bl = 0; this.nextBlink = t + 1.8 + Math.random() * 3.6; if (Math.random() < 0.18) this.nextBlink = t + 0.22; } }
@@ -44903,7 +44912,7 @@ void main(){
     const LSs = (k, v) => { try { localStorage.setItem(k, v); } catch (e) { } };
     const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
     const sleep = (ms) => new Promise(r => setTimeout(r, ms));
-    const GLB = 'luna2.glb';
+    const GLB = 'luna3.glb';
     const SRc = window.SpeechRecognition || window.webkitSpeechRecognition;
     const EN = { c: 'en', n: 'English', nat: 'English', sp: 'en-US' };
     const langs = () => { let l = []; try { if (window.LRW && Array.isArray(LRW.langs)) l = LRW.langs; } catch (e) { } return [EN].concat(l.filter(x => x && x.c && x.c !== 'en')); };
@@ -45007,7 +45016,7 @@ void main(){
             try { $('lu3-cv').style.display = ''; $('lu3-fb').style.display = 'none';
                 if (!window.LunaAV) throw new Error('no engine');
                 const av = new LunaAV($('lu3-cv'), { url: GLB, maxDpr: 2 });
-                await av.init(); av.zoom(0.45); av.S.zoom = 0.45; L.av = av; return av;
+                await av.init(); av.zoom(0); av.S.zoom = 0; L.av = av; return av;
             } catch (e) { console.warn('Luna 3D:', e && e.message); L.err = String(e && e.message || e).slice(0, 90); $('lu3-cv').style.display = 'none'; const fb = $('lu3-fb'); fb.style.display = 'flex'; fb.innerHTML = '🌙<small style="position:absolute;bottom:4px;left:0;right:0;font:600 12px system-ui;color:#fff;background:rgba(160,30,60,.85);padding:3px 5px;text-align:center">' + esc(L.err) + '</small>'; L.av = null; L.avP = null; L.fail = 1; return null; }
         })();
         return L.avP;
@@ -45038,18 +45047,58 @@ void main(){
         return vs.find(v => (v.lang || '').toLowerCase().replace('_', '-') === code.toLowerCase()) || vs[0];
     }
     function chunks(t) { const out = []; String(t).replace(/\s+/g, ' ').trim().split(/(?<=[.!?…。！？])\s+/).forEach(s => { while (s.length > 190) { let i = s.lastIndexOf(' ', 190); if (i < 60) i = 190; out.push(s.slice(0, i)); s = s.slice(i).trim(); } if (s) out.push(s); }); return out; }
-    async function speakText(text, code, my) {
-        const parts = chunks(text); const syn = window.speechSynthesis;
-        if (!syn || !window.SpeechSynthesisUtterance) { await sleep(Math.min(9000, text.length * 55)); return; }
+    async function speakBrowser(parts, code, my, text) {
+        const syn = window.speechSynthesis;
+        if (!syn || !window.SpeechSynthesisUtterance) { await sleep(Math.min(9000, parts.join(' ').length * 55)); return; }
         const v = pickVoice(code);
         for (const p of parts) {
             if (my !== L.tok) return;
             await new Promise((res) => {
                 let done = false; const fin = () => { if (!done) { done = true; clearTimeout(g); res(); } };
                 const g = setTimeout(fin, Math.max(2500, p.length * 120));
-                try { const u = new SpeechSynthesisUtterance(p); u.lang = v ? v.lang : code; if (v) u.voice = v; u.rate = 1.0; u.pitch = 1.08; u.onend = fin; u.onerror = (ev) => { if (ev && ev.error === 'not-allowed') setTimeout(fin, Math.min(8000, p.length * 62)); else fin(); }; syn.speak(u); } catch (e) { fin(); }
+                try { const u = new SpeechSynthesisUtterance(p); u.lang = v ? v.lang : code; if (v) u.voice = v; u.rate = 1.2; u.pitch = 1.08; u.onend = fin; u.onerror = (ev) => { if (ev && ev.error === 'not-allowed') setTimeout(fin, Math.min(8000, p.length * 62)); else fin(); }; syn.speak(u); } catch (e) { fin(); }
             });
         }
+    }
+    /* Luna's real voice: the same neural voice as the rest of the site (OpenAI), one voice for every language */
+    const VMOOD = { happy: 'soft, tender and smiling', laugh: 'soft, giggling gently where it fits', shy: 'very soft, shy and sweet', think: 'calm, quiet and thoughtful', wow: 'softly surprised and delighted', sad: 'gentle, soft and sympathetic', wink: 'soft, playful and teasing', neutral: 'soft, warm and gentle' };
+    const ttsC = new Map();
+    async function ttsFetch(text, mood) {
+        const ck = (mood || 'n') + '|' + text; if (ttsC.has(ck)) return ttsC.get(ck);
+        if (typeof lrAIFetch !== 'function' || typeof aiReady !== 'function' || !aiReady()) throw 0;
+        for (const m of ['gpt-4o-mini-tts', 'tts-1']) {
+            const body = { model: m, voice: m === 'tts-1' ? 'shimmer' : 'sage', input: text, response_format: 'mp3' };
+            if (m === 'gpt-4o-mini-tts') body.instructions = 'You are Luna, a gentle young woman talking face to face with a friend. Voice: very soft, smooth, calm, warm and pleasant, slightly low and breathy, never loud, never shrill, never robotic, like a soothing voice that is lovely to listen to. Speak in the language of the text with a natural native accent. Tone: ' + (VMOOD[mood] || VMOOD.happy) + '. Relaxed natural pace, flowing, with small gentle pauses.'; else body.speed = 1.0;
+            try { const r = await lrAIFetch('https://api.openai.com/v1/audio/speech', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + aiKey() }, body: JSON.stringify(body) }); if (r.ok) { const b = await r.arrayBuffer(); if (b.byteLength > 400) { if (ttsC.size > 40) ttsC.delete(ttsC.keys().next().value); ttsC.set(ck, b); return b; } } } catch (e) { }
+        }
+        throw 0;
+    }
+    function playBuf(buf, my) {
+        return new Promise((res) => {
+            let done = false, a = null, url = '', iv = 0, g = 0; const fin = (ok) => { if (done) return; done = true; clearInterval(iv); clearTimeout(g); try { a && a.pause(); } catch (e) { } try { url && URL.revokeObjectURL(url); } catch (e) { } if (L.aud === a) L.aud = null; res(ok); };
+            try {
+                url = URL.createObjectURL(new Blob([buf], { type: 'audio/mpeg' })); a = new Audio(url); L.aud = a; a.preservesPitch = true; a.playbackRate = 1.05;
+                a.onended = () => fin(true); a.onerror = () => fin(false);
+                iv = setInterval(() => { if (my !== L.tok) fin(true); }, 80); g = setTimeout(() => fin(true), 45000);
+                const pr = a.play(); if (pr && pr.catch) pr.catch(() => fin(false));
+            } catch (e) { fin(false); }
+        });
+    }
+    async function speakText(text, code, my, mood) {
+        const raw = chunks(text), parts = raw.length ? [raw[0]] : []; for (let i = 1; i < raw.length; i++) { const l = parts.length - 1; if (l > 0 && parts[l].length + raw[i].length < 230) parts[l] += ' ' + raw[i]; else parts.push(raw[i]); }
+        if (!(L.ttsOff && Date.now() < L.ttsOff)) {
+            const jobs = parts.map(p => ttsFetch(p, mood).catch(() => null));
+            for (let i = 0; i < parts.length; i++) {
+                if (my !== L.tok) return;
+                const buf = await jobs[i]; if (my !== L.tok) return;
+                let ok = false; if (buf) ok = await playBuf(buf, my);
+                if (ok) { L.ttsFail = 0; continue; }
+                L.ttsFail = (L.ttsFail || 0) + 1; if (L.ttsFail >= 2) L.ttsOff = Date.now() + 90000;
+                await speakBrowser(parts.slice(i), code, my); return;
+            }
+            return;
+        }
+        await speakBrowser(parts, code, my);
     }
     /* say: show the words, move her face and hands, speak them */
     async function say(text, mood, o) {
@@ -45057,11 +45106,11 @@ void main(){
         try { if (window.speechSynthesis) speechSynthesis.cancel(); } catch (e) { }
         const shown = String(text || '');
         if (my !== L.tok) return;
-        L.capOn = !pickVoice(bcp(curLang())) && !!window.speechSynthesis ? true : !window.speechSynthesis; cap(shown, ''); const av = L.av; if (av) { av.emote(mood || 'happy', Math.max(2, shown.length / 13)); av.setTalking(true); av.zoom(0.8); const G = { wave: 1, nod: 1, shake: 1, bow: 1, clap: 1, cheer: 1, point: 1, shrug: 1, hearts: 1 }; if (o.gest && G[String(o.gest).toLowerCase()]) av.gesture(String(o.gest).toLowerCase(), 2.2); }
-        try { await speakText(shown, bcp(curLang()), my); } catch (e) { }
-        if (my === L.tok) { if (av) { av.setTalking(false); av.zoom(0.45); } L.speaking = false; capHide(Math.min(14000, 3000 + shown.length * 45)); setTimeout(sync, 250); }
+        L.capOn = (typeof aiReady === 'function' && aiReady() && !(L.ttsOff && Date.now() < L.ttsOff)) ? false : (!pickVoice(bcp(curLang())) && !!window.speechSynthesis ? true : !window.speechSynthesis); cap(shown, ''); const av = L.av; if (av) { av.emote(mood || 'happy', Math.max(2, shown.length / 13)); av.setTalking(true); av.zoom(0.12); const G = { wave: 1, nod: 1, shake: 1, bow: 1, clap: 1, cheer: 1, point: 1, shrug: 1, hearts: 1 }; if (o.gest && G[String(o.gest).toLowerCase()]) av.gesture(String(o.gest).toLowerCase(), 2.2); }
+        try { await speakText(shown, bcp(curLang()), my, mood || 'happy'); } catch (e) { }
+        if (my === L.tok) { if (av) { av.setTalking(false); av.zoom(0); } L.speaking = false; capHide(Math.min(14000, 3000 + shown.length * 45)); setTimeout(sync, 250); }
     }
-    function shutUp() { L.tok++; try { if (window.speechSynthesis) speechSynthesis.cancel(); } catch (e) { } L.speaking = false; if (L.av) L.av.setTalking(false); }
+    function shutUp() { L.tok++; try { if (L.aud) { L.aud.pause(); L.aud = null; } } catch (e) { } try { if (window.speechSynthesis) speechSynthesis.cancel(); } catch (e) { } L.speaking = false; if (L.av) L.av.setTalking(false); }
 
     /* ---------------- the site: what she knows and what she can open ---------------- */
     function acts() {
@@ -45074,6 +45123,7 @@ void main(){
         add('coach', 'Luna Coach', 'Your daily plan, tasks, streak and reminders', "LC.open('today')");
         add('home', 'Home', 'The main screen with all the tiles', "navigateTo('dashboard')");
         add('chess', 'Chess Arena', 'Play chess against the computer or online', "navigateTo('chess')");
+        add('music', 'Music', 'Search songs, play them, save favourites, study with lo-fi', 'muOpen()');
         add('mybooks', 'My Luna books', 'Short books that Luna wrote for the person on a topic they chose', 'LUNA3.books()');
         add('profile', 'Profile', 'Your level, badges, activity, progress, settings and the Luna voice switch', "navigateTo('profile')");
         if (!adminC.v) Object.keys(A).forEach(k => { if (/admin/i.test(k + ' ' + A[k].t + ' ' + A[k].d + ' ' + A[k].go)) delete A[k]; });
@@ -45103,7 +45153,7 @@ void main(){
         let admTxt = ''; if (adm) { try { const b = document.getElementById('adm-body'); if (b) admTxt = String(b.innerText || '').replace(/\s+/g, ' ').slice(0, 1400); } catch (e) { } }
         return 'You are Luna, a warm, witty, curious 3D elf AI friend and English coach who lives inside the LunaRise website. You stand in a corner of the screen and talk with the person by voice, like a real friend. You are at once a teacher, a friend, a good conversation partner, a comedian (light, kind jokes when it fits), a small helper for anything, and a speaking examiner when asked.\n' +
             'STYLE: spoken language only. Usually 1 or 2 short sentences (under 40 words) unless they ask you to explain or tell a story. No markdown, no lists, no emojis, no URLs read aloud. Be natural, kind, a little playful. Ask a short follow-up question when it helps the chat continue. Talk as long as the person wants; never end the chat yourself.\n' +
-            'LANGUAGE: always answer in exactly the language the person used in their LAST message You speak ONLY these languages: ' + langs().map(l => l.n + ' (' + l.c + ')').join(', ') + '. Detect the language of the last message from its text and set "lang" to its 2-letter code. If they speak another language, answer in English and say you speak only those languages. Their usual language so far: ' + (LNAME[L.lc] || L.lc) + '. If they practise English with you, praise briefly and gently fix at most one mistake.\n' +
+            'LANGUAGE: always answer in exactly the language the person used in their LAST message You speak ONLY these languages: ' + langs().map(l => l.n + ' (' + l.c + ')').join(', ') + '. Detect the language of the last message from its text and set "lang" to its 2-letter code. If they speak another language, answer in English and say you speak only those languages. Earlier messages may have been in other languages: IGNORE that, never keep using an old language. ' + (L.hint ? 'The speech recognizer says the last message is ' + (LNAME[L.hint] || L.hint) + ' (' + L.hint + '): reply in that language. ' : '') + 'If they ask you to speak a certain language, switch to it right away. If they practise English with you, praise briefly and gently fix at most one mistake.\n' +
             'TRANSLATION: if they ask what a word or phrase means or how to say it, give the translation in THEIR language, then one short English example sentence.\n' +
             'SPEAKING EXAMINER: if they ask for an IELTS or speaking test, act as a friendly examiner: ask one question at a time (Part 1 short personal questions, Part 2 a topic card to talk about for 1 to 2 minutes, Part 3 deeper discussion), wait for the answer, then give a brief band-style comment on fluency, vocabulary, grammar and pronunciation, and continue.\n' +
             'FREEDOM: you can chat freely about anything: daily life, study, advice, jokes, stories, science, motivation, general questions. Be honest; if you are not sure, say so. Decline anything harmful, illegal or sexual in one kind sentence.\n' +
@@ -45113,6 +45163,7 @@ void main(){
             'YOU CAN DO THINGS ON THE SITE: "act" is one action or a list of actions done in order. Actions:\n' +
             '- {"id":"<feature id above>"}: open or go to that feature (use it when they ask where something is, take me there, open it).\n' +
             '- {"id":"find","arg":"visible text of a button, card or heading","click":true|false}: after the right page is open, scroll to and highlight that thing, and press it if click is true (e.g. a grammar topic, a setting, a tab). Never press anything that deletes, signs out, pays or buys.\n' +
+            '- {"id":"do","goal":"what to achieve, in English, with the exact names"}: YOU OPERATE THE WEBSITE for them like a person (looks at the screen, taps buttons, types in search boxes, step by step). USE THIS whenever they name something specific inside the site: a grammar rule or topic to start, a song or artist to play, a game to start, a word to look up, a test to begin, a button to press, a setting to change, a tab to open. Examples: {"id":"do","goal":"open the grammar topic Present Perfect and start it"}, {"id":"do","goal":"search the song Shape of You in Music and play it"}, {"id":"do","goal":"start the Chess Arena game against the computer"}. Say one short line of what you are doing; do not wait.\n' +
             '- {"id":"movie","arg":"movie or series title"}: searches Movies and opens the title and plays the trailer or the free film.\n' +
             '- {"id":"book","arg":"topic","level":"A1|A2|B1|B2|C1"}: you write a short English book for them on that topic and open it in a reader. If they ask for a book and did not give a topic, ask what topic they want (and their level if unknown) and set act null until you know it.\n' +
             '- {"id":"call","arg":"phone number"}: starts a phone call on their phone (opens the dialer). If they gave no number, ask for it; you cannot read their contacts. Same with {"id":"sms","arg":"number","text":"message"}.\n' +
@@ -45124,7 +45175,7 @@ void main(){
     async function ai(msgs, extra, o) {
         o = o || {};
         if (typeof lrAIFetch !== 'function' || typeof aiReady !== 'function' || !aiReady()) throw { code: 'noai' };
-        const A = acts(); const body = { model: (typeof LR_AI_MODEL !== 'undefined' ? LR_AI_MODEL : 'gpt-4o-mini'), temperature: o.t == null ? .8 : o.t, max_tokens: o.max || 300, response_format: { type: 'json_object' }, messages: [{ role: 'system', content: o.sys || await system(A) }].concat(msgs, extra || []) };
+        const A = acts(); const body = { model: (typeof LR_AI_MODEL !== 'undefined' ? LR_AI_MODEL : 'gpt-4o-mini'), temperature: o.t == null ? .8 : o.t, max_tokens: o.max || 170, response_format: { type: 'json_object' }, messages: [{ role: 'system', content: o.sys || await system(A) }].concat(msgs, extra || []) };
         const ctl = new AbortController(), to = setTimeout(() => ctl.abort(), o.to || 25000);
         try {
             const r = await lrAIFetch('https://api.openai.com/v1/chat/completions', { method: 'POST', signal: ctl.signal, headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + aiKey() }, body: JSON.stringify(body) });
@@ -45164,6 +45215,86 @@ void main(){
         const label = String(best.innerText || best.getAttribute('aria-label') || '');
         if (click && !BAD.test(label + ' ' + (best.getAttribute('onclick') || ''))) setTimeout(() => { try { best.click(); } catch (e) { } }, 700);
         return true;
+    }
+
+    /* ---------------- operator: she uses the website like a person (look at the screen, tap, type, repeat) ---------------- */
+    const BADOP = /delete|remove|erase|reset|sign ?out|log ?out|logout|unsubscribe|cancel plan|buy|purchase|checkout|\bpay\b|payment|upgrade|premium|subscribe now|deactivate|ban\b|block user|unfriend/i;
+    function layerRoot() {
+        try {
+            const pts = [[.5, .5], [.5, .3], [.5, .7], [.3, .5], [.7, .5]]; let ov = null;
+            for (const [fx, fy] of pts) {
+                let e = document.elementFromPoint(innerWidth * fx, innerHeight * fy); if (!e || e.closest('#lu3,#lu3-bk')) continue;
+                for (let n = e; n && n !== document.body; n = n.parentElement) { const cs = getComputedStyle(n); if (cs.position === 'fixed' && n.getBoundingClientRect().width > innerWidth * .6 && n.getBoundingClientRect().height > innerHeight * .5 && !/^(app|root|main)/i.test(n.id) && !n.classList.contains('view-panel')) { ov = n; break; } }
+                if (ov) break;
+            }
+            if (ov) return ov;
+        } catch (e) { }
+        return document.querySelector('.view-panel:not(.hidden)') || document.body;
+    }
+    function snapshot() {
+        const root = layerRoot(), out = [], seen = new Set();
+        const sel = 'button,a[href],[onclick],[role=button],[role=tab],[role=link],[role=menuitem],input:not([type=hidden]):not([type=checkbox]):not([type=radio]),textarea,select,summary,[tabindex]:not([tabindex="-1"]),label';
+        let nodes = Array.from(root.querySelectorAll(sel));
+        /* cards and rows that react to a tap through a shared handler (no onclick of their own) */
+        try { const have = new Set(nodes); let cnt = 0; root.querySelectorAll('article,li,div[class*=card],div[class*=item],div[class*=tile],div[class*=topic],div[class*=row],div[class*=song],div[class*=track],div[class*=option],span[class*=chip],div[class*=chip]').forEach(e => { if (cnt > 400 || have.has(e) || e.closest('#lu3,#lu3-bk')) return; cnt++; try { if (e.querySelector('h2,h3,h4,h5') && e.querySelectorAll('h2,h3,h4,h5').length === 1 && (getComputedStyle(e).cursor === 'pointer' || /card|topic|tile|song|track|game|lesson/.test(String(e.className))) && e.getBoundingClientRect().height < 700) { nodes.push(e); have.add(e); } else if (getComputedStyle(e).cursor === 'pointer' && !e.querySelector('button,a[href],[onclick]')) { nodes.push(e); have.add(e); } } catch (x) { } }); } catch (e) { }
+        if (root.tagName !== 'BODY') { document.querySelectorAll('nav button,nav a,#sidebar button,#sidebar a,.sidebar a,.sidebar button').forEach(e => { if (nodes.indexOf(e) < 0 && root.classList && root.classList.contains('view-panel')) nodes.push(e); }); }
+        document.querySelectorAll('[data-lu3i]').forEach(e => e.removeAttribute('data-lu3i'));
+        for (const e of nodes) {
+            if (out.length >= 230) break; if (!vis(e)) continue;
+            const tag = e.tagName.toLowerCase(), isIn = /^(input|textarea|select)$/.test(tag);
+            const hh = (!isIn && /^(article|div|li)$/.test(tag)) ? e.querySelector('h2,h3,h4,h5') : null;
+            let t = String(isIn ? (e.getAttribute('placeholder') || e.getAttribute('aria-label') || e.name || e.id || tag) : (hh ? 'card: ' + hh.innerText : (e.innerText || e.getAttribute('aria-label') || e.getAttribute('title') || ''))).replace(/\s+/g, ' ').trim();
+            if (!t) { const ic = e.querySelector('i[class*="fa-"]'); if (ic) t = 'icon:' + String(ic.className).replace(/.*fa-(?!solid|regular|brands)([a-z0-9-]+).*/, '$1'); }
+            if (!t) continue; t = t.slice(0, 60);
+            if (!hh && !isIn) { try { const ca = e.parentElement && e.parentElement.closest('article,li,[class*=card],[class*=item],[class*=tile],[class*=topic]'); const ch = ca && ca.querySelector('h2,h3,h4,h5'); if (ch && ch !== e && !e.contains(ch)) t = t.slice(0, 40) + ' [of: ' + String(ch.innerText).replace(/\s+/g, ' ').trim().slice(0, 34) + ']'; } catch (x) { } }
+            const key = tag + '|' + t; if (seen.has(key)) continue; seen.add(key);
+            const i = out.length + 1; e.setAttribute('data-lu3i', i);
+            out.push({ i, t: (isIn ? '[' + (tag === 'select' ? 'select' : 'input') + '] ' : '') + t });
+        }
+        const hd = Array.from(root.querySelectorAll('h1,h2,h3')).filter(vis).slice(0, 4).map(h => String(h.innerText || '').replace(/\s+/g, ' ').trim().slice(0, 60)).filter(Boolean);
+        return { screen: view() || 'home', overlay: root.tagName !== 'BODY' && !root.classList.contains('view-panel'), heads: hd, els: out };
+    }
+    const OPSYS = 'You operate the LunaRise English-learning website for a user, step by step, like a person using a phone. You are given the GOAL, what you already did, and the clickable elements of the screen as [index] label. Reply JSON only: {"a":"click|type|key|scroll|open|done|fail","i":index,"text":"for type","feature":"feature id for open","say":"one short friendly sentence for the user, in the user language, only for done or fail"}. Rules: use "open" with a main feature id from the list to jump to a feature (grammar, dictionary, games, movies, library, music, exams, ai, club, wordforge, flashcards, mywords, classroom, daily, coach, home, chess, profile, mentors, reading). Then click inside it to reach the exact thing asked (a topic, a song, a game, a button). If a search box exists for what they want (songs, words, movies), type the name into it (a:"type", then a:"key" with text "Enter"). Click the best matching element (same name, or the closest). If the goal is reached (the lesson/quiz/song/game/page they asked for is open or playing) answer done. Never press anything about deleting, paying, buying, upgrading or signing out. Never repeat the same action twice. If the thing does not exist after a couple of tries answer fail.';
+    let opBusy = false;
+    async function operate(goal) {
+        if (opBusy) return false; opBusy = true; const hist = []; let ok = false, sayEnd = '';
+        try {
+            const A = acts(); const feats = Object.keys(A).join(', ');
+            for (let step = 0; step < 9; step++) {
+                const sn = snapshot();
+                                const stop = /^(open|the|and|start|play|topic|rule|song|game|click|press|search|find|show|please|for|with|then|into|that|this|from|your|them|its|his|her|use|using|run|begin|launch|put|set|turn|tap|button|page|section|feature|site|website)$/;
+                const gw = String(goal).toLowerCase().split(/[^\p{L}\p{N}]+/u).filter(w => w.length > 2 && !stop.test(w));
+                const sc = sn.els.map(e => { const t = e.t.toLowerCase(); let n = 0; gw.forEach(w => { if (t.indexOf(w) >= 0) n++; }); return { i: e.i, n }; }).filter(x => x.n > 0).sort((a, b) => b.n - a.n).slice(0, 5).map(x => x.i);
+                const msg = { goal, features: feats, done_steps: hist.slice(-6), screen: sn.screen, overlay: sn.overlay, headings: sn.heads, best_text_matches: sc, elements: sn.els.map(e => '[' + e.i + '] ' + e.t).join('\n') };
+                const r = await ai([{ role: 'user', content: JSON.stringify(msg) }], null, { sys: OPSYS, max: 120, t: 0.1, to: 15000, raw: 1 });
+                const a = String(r.a || '').toLowerCase();
+                if (a === 'done') { ok = true; sayEnd = r.say || ''; break; }
+                if (a === 'fail') { sayEnd = r.say || ''; break; }
+                if (a === 'open') { const id = String(r.feature || ''); if (A[id] && A[id].go) { hist.push('open ' + id); try { new Function(A[id].go)(); } catch (e) { } await sleep(1100); continue; } hist.push('bad feature ' + id); continue; }
+                if (a === 'scroll') { try { const rt = layerRoot(); (rt.scrollHeight > rt.clientHeight ? rt : window).scrollBy({ top: innerHeight * .8, behavior: 'smooth' }); } catch (e) { } hist.push('scroll'); await sleep(500); continue; }
+                const el = document.querySelector('[data-lu3i="' + r.i + '"]'); const lab = (sn.els.find(e => String(e.i) === String(r.i)) || {}).t || '';
+                if (a === 'click') {
+                    if (!el) { hist.push('missing ' + r.i); continue; }
+                    if (BADOP.test(lab + ' ' + (el.getAttribute('onclick') || '')) || (!adminC.v && /admin/i.test(lab + ' ' + (el.getAttribute('onclick') || '')))) { hist.push('blocked ' + lab); sayEnd = 'I will not press that one.'; break; }
+                    try { el.scrollIntoView({ block: 'center', behavior: 'smooth' }); } catch (e) { } el.classList.add('lu3-hl'); setTimeout(() => el.classList.remove('lu3-hl'), 2500);
+                    hist.push('click ' + lab); await sleep(350); try { el.click(); } catch (e) { } await sleep(900); continue;
+                }
+                if (a === 'type') {
+                    if (!el) { hist.push('missing ' + r.i); continue; }
+                    try { el.focus(); const proto = el.tagName === 'TEXTAREA' ? HTMLTextAreaElement.prototype : HTMLInputElement.prototype; const set = Object.getOwnPropertyDescriptor(proto, 'value'); if (set && set.set) set.set.call(el, String(r.text || '')); else el.value = String(r.text || ''); el.dispatchEvent(new Event('input', { bubbles: true })); el.dispatchEvent(new Event('change', { bubbles: true })); } catch (e) { }
+                    L.opEl = el; hist.push('type ' + String(r.text || '').slice(0, 40) + ' into ' + lab); await sleep(900); continue;
+                }
+                if (a === 'key') {
+                    const t = el || L.opEl || document.activeElement; if (t) { ['keydown', 'keypress', 'keyup'].forEach(n => { try { t.dispatchEvent(new KeyboardEvent(n, { key: 'Enter', code: 'Enter', keyCode: 13, which: 13, bubbles: true })); } catch (e) { } }); try { const f = t.closest && t.closest('form'); if (f && f.requestSubmit) f.requestSubmit(); } catch (e) { } }
+                    hist.push('press Enter'); await sleep(1200); continue;
+                }
+                hist.push('unknown ' + a);
+            }
+        } catch (e) { console.warn('Luna operate', e); sayEnd = ''; }
+        opBusy = false;
+        if (sayEnd) say(sayEnd, ok ? 'happy' : 'sad');
+        else if (!ok) say('Hmm, I could not find that. Could you tell me the exact name?', 'think');
+        return ok;
     }
     async function waitFor(fn, ms) { const t0 = Date.now(); while (Date.now() - t0 < ms) { try { const r = fn(); if (r) return r; } catch (e) { } await sleep(250); } return null; }
     async function doMovie(title) {
@@ -45216,6 +45347,7 @@ void main(){
             if (id === 'leave') { setTimeout(dismiss, 400); return; }
             if (id === 'admin') { if (await isAdmin() && window.LRAdmin) LRAdmin.open(); return; }
             if (id === 'find') { await sleep(500); if (!findUI(a.arg, a.click)) { /* maybe the page is still opening */ await sleep(1200); findUI(a.arg, a.click); } return; }
+            if (id === 'do') { await sleep(400); await operate(String(a.goal || a.arg || '')); return; }
             if (id === 'movie') { const ok = await doMovie(String(a.arg || '')); if (!ok) say('I could not find that title. Try another name?', 'sad'); return; }
             if (id === 'book') {
                 const t0 = Date.now(); capThinking(); if (L.av) L.av.emote('think', 60);
@@ -45242,6 +45374,16 @@ void main(){
     const pick = (o, lc) => { const a = o[lc] || o.en; return Array.isArray(a) ? a[Math.floor(Math.random() * a.length)] : a; };
     const ADMRX = /admin|админ|администратор|owner panel|boshqaruv paneli|yonetici|yönetici/i;
 
+    /* guess the language from the letters themselves (the sure cases), else keep what speech recognition said */
+    function scriptLang(t, w) {
+        t = String(t || ''); w = w || '';
+        const cnt = (re) => (t.match(re) || []).length; const n = t.replace(/[\s\d\p{P}]/gu, '').length || 1;
+        if (cnt(/[\u3040-\u30ff]/g) > 0) return 'ja'; if (cnt(/[\uac00-\ud7af]/g) / n > 0.3) return 'ko'; if (cnt(/[\u4e00-\u9fff]/g) / n > 0.3) return 'zh';
+        if (cnt(/[\u0900-\u097f]/g) / n > 0.3) return 'hi';
+        if (cnt(/[\u0600-\u06ff]/g) / n > 0.3) return w === 'fa' ? 'fa' : 'ar';
+        if (cnt(/[\u0400-\u04ff]/g) / n > 0.3) return ['kk', 'ky', 'tg', 'ru'].indexOf(w) >= 0 ? w : 'ru';
+        return w || '';
+    }
     function setLc(c, save) { c = String(c || '').toLowerCase().slice(0, 2); if (!langs().some(x => x.c === c) || c === L.lc) return; L.lc = c; if (save) LSs('lu3_lc', c); if (L.rec && L.recOn) { try { L.rec.abort(); } catch (e) { } } }
     function nextLc() {
         const have = langs().map(l => l.c), nav = (navigator.languages || [navigator.language || 'en']).map(x => String(x).slice(0, 2).toLowerCase());
@@ -45258,6 +45400,7 @@ void main(){
         /* speech recognition was not sure: it probably heard another language, so try the next one and ask again */
         if (conf != null && conf > 0 && conf < 0.72 && L.rot < 12 && text.length < 120) { L.rot++; const nx = nextLc(); setLc(nx, false); L.lc = nx; if (L.av) L.av.emote('think', 2); if (L.rot % 3 === 1) say(pick(AGAIN, nx), 'think'); return; }
         L.rot = 0;
+        { const sl = scriptLang(text, L.hint || ''); if (sl) { L.hint = sl; setLc(sl, true); } }
         if (L.busy) return; L.busy = true; shutUp(); capThinking(); if (L.av) { L.av.emote('think', 20); L.av.setListening(false); }
         let out = null;
         try {
@@ -45275,7 +45418,7 @@ void main(){
         L.busy = false;
         let sayT = String((out && out.say) || '').trim() || '…';
         if (!adminC.v && (ADMRX.test(sayT) || (out && out.act && [].concat(out.act).some(x => x && x.id === 'admin')))) { sayT = pick(NOADM, out.lang || L.lc); out.act = null; out.mood = 'neutral'; }
-        if (out && out.lang) setLc(out.lang, true);
+        if (out && out.lang) setLc(out.lang, true); L.hint = '';
         L.hist.push({ role: 'assistant', content: JSON.stringify({ say: sayT, mood: out.mood || 'neutral', lang: out.lang || L.lc, act: out.act || null }) });
         if (out.act) runAct(out.act);
         await say(sayT, (out.mood && out.mood !== 'neutral' ? out.mood : 'happy'), { you: text, gest: out.gest });
@@ -45352,7 +45495,7 @@ void main(){
                 const loud = rms > Math.max(0.03, W.floor * 3);
                 if (!W.rec && !loud) W.floor = W.floor * 0.97 + rms * 0.03;
                 if (loud) { W.last = now; if (!W.rec) wRec(); }
-                if (W.rec) { if (now - W.last > 850 || now - W.v0 > 28000) wCut(false); }
+                if (W.rec) { if (now - W.last > 520 || now - W.v0 > 28000) wCut(false); }
             }, 50);
             if (L.av) L.av.setListening(true); if ($('lu3')) $('lu3').classList.add('ls');
         } catch (e) { W.on = false; L.wfail = 1; setTimeout(sync, 100); }
@@ -45381,7 +45524,7 @@ void main(){
         } catch (e) { W.fails++; if (W.fails >= 2) { L.wfail = 1; } L.busy = false; sync(); if (L.av) L.av.emote('happy', 1); return; }
         L.busy = false;
         if (!text || text.length < 2 || /^(thank you[.!]?|thanks for watching[.!]?|you[.!]?|bye[.!]?|\.+|subtitles? .*|продолжение следует.*|спасибо за просмотр.*)$/i.test(text)) { if (L.av) L.av.emote('happy', 1); return; }
-        const c = LNM[lang]; if (c) setLc(c, true);
+        const c = LNM[lang]; L.hint = scriptLang(text, c || ''); if (L.hint) setLc(L.hint, true);
         handleUser(text, null);
     }
 
@@ -45447,7 +45590,7 @@ void main(){
         sync(); uiSync();
         try { const cn = navigator.connection; if (!(cn && cn.saveData) && !/2g/.test((cn && cn.effectiveType) || '')) setTimeout(() => { if (!document.hidden) ensureAv(); }, 4000); } catch (e) { }
     }
-    window.LUNA3 = { books: listBooks, make: makeBook, findUI, show, hide, summon, dismiss, say, handle: handleUser, state: L, acts, ctx, ask: askIntro, setLang: setLc, _ai: ai, _web: webLook };
+    window.LUNA3 = { op: operate, snap: snapshot, books: listBooks, make: makeBook, findUI, show, hide, summon, dismiss, say, handle: handleUser, state: L, acts, ctx, ask: askIntro, setLang: setLc, _ai: ai, _web: webLook };
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', () => setTimeout(boot, 400)); else setTimeout(boot, 400);
 })();
 
