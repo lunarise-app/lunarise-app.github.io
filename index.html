@@ -44667,6 +44667,72 @@ void main(){
   gl_FragColor=vec4(c,1.);
 }`;
 
+    const VS_OLD = `
+attribute vec3 aP; attribute vec3 aN; attribute vec2 aU; attribute vec4 aW;
+uniform mat4 uVP; uniform mat4 uM; uniform mat4 uHead; uniform mat4 uArm; uniform float uBr;
+varying vec2 vU; varying vec3 vN; varying vec3 vR; varying vec3 vV;
+void main(){
+  vec4 p=vec4(aP,1.); vec3 n=aN;
+  vec4 pa=uArm*p; p=mix(p,pa,aW.y); n=normalize(mix(n,mat3(uArm)*n,aW.y));
+  vec4 ph=uHead*p; p=mix(p,ph,aW.x); n=normalize(mix(n,mat3(uHead)*n,aW.x));
+  float ch=smoothstep(.42,.56,aP.y)*(1.-smoothstep(.66,.74,aP.y));
+  p.xz+=(p.xz-vec2(.0,.02))*uBr*.012*ch;
+  vec4 w=uM*p; vN=normalize(mat3(uM)*n); vV=w.xyz; vU=aU; vR=aP;
+  gl_Position=uVP*w;
+}`;
+    const FS_OLD = `
+precision mediump float;
+uniform sampler2D uTex; uniform float uBl; uniform float uSq; uniform float uMo; uniform float uSm; uniform float uHi; uniform vec3 uSk;
+varying vec2 vU; varying vec3 vN; varying vec3 vR; varying vec3 vV;
+float ell(vec2 p,vec2 c,vec2 r){vec2 d=(p-c)/r;return dot(d,d);}
+void main(){
+  vec3 SK=uSk; vec4 t=texture2D(uTex,vU); vec3 c=t.rgb;
+  vec3 n=normalize(vN); if(!gl_FrontFacing) n=-n;
+  float L=0.80+0.30*max(dot(n,normalize(vec3(.35,.55,.8))),0.)+0.10*max(dot(n,normalize(vec3(-.6,.2,.4))),0.);
+  float face=step(.30,vR.y)*step(.80,vR.y)*step(vR.y,.93)*step(-.02,vR.x)*step(vR.x,.09)*step(abs(vR.z-${FACEZ.toFixed(3)}),.016);
+  if(face>.5){
+    float sk=step(.55,c.r-c.b+.45)*0.; // placeholder, kept simple
+    vec2 q=vR.xy;
+    /* eyelids: skin colour slides down over the eye, a dark lash line sits on the edge */
+    for(int k=0;k<2;k++){
+      vec2 e=(k==0)?vec2(${EYEL[0]},${EYEL[1]}):vec2(${EYER[0]},${EYER[1]});
+      float rx=.0192, ry=.0162; vec2 ec=e+vec2(0.,-.0008); float e2=ell(q,ec,vec2(rx,ry));
+      float b=clamp(uBl+uSq*.45,0.,1.);
+      float dx=(q.x-ec.x)/rx;
+      float edge=ec.y+ry*.92-b*ry*1.95-.0045*b*(1.-dx*dx);
+      float cov=smoothstep(1.12,.86,e2);
+      if(q.y>edge) c=mix(c,SK*.985,cov);
+      float ln=smoothstep(.0017,0.,abs(q.y-edge))*smoothstep(.05,.4,b);
+      c=mix(c,vec3(.28,.15,.16),ln*(1.-smoothstep(.7,1.,e2)));
+    }
+    /* mouth: the painted mouth is covered with skin, then drawn again to match how open it is */
+    vec2 m=vec2(${MOUTH[0]},${MOUTH[1]});
+    float mo=ell(q,m,vec2(.0235,.0160));
+    if(mo<1.){
+      c=mix(c,SK*.99,smoothstep(1.15,.75,mo));
+      float w=.0108+uSm*.0016; float h=.0009+uMo*.0112;
+      float dx=(q.x-m.x)/w; float u=max(1.-dx*dx,0.);
+      float yy=q.y-m.y+uSm*.0050*dx*dx-uSm*.0010;       // corners lift when she smiles
+      float top=h*.30*u, bot=-h*.95*pow(u,.62);
+      float inn=smoothstep(.0003,-.0003,yy-top)*smoothstep(.0003,-.0003,bot-yy)*step(abs(dx),1.)*step(.07,uMo);
+      float edge=smoothstep(.0013,.0,abs(yy-(uMo>.07?(yy>top*.5?top:bot):0.)))*step(abs(dx),1.02);
+      vec3 lip=vec3(.78,.38,.42);
+      c=mix(c,lip,edge*(1.-smoothstep(.8,1.,abs(dx)))*.85);
+      if(inn>0.){
+        float d=(yy-bot)/max(top-bot,.0001);
+        vec3 mc=mix(vec3(.88,.42,.47),vec3(.38,.07,.13),smoothstep(.0,.55,d));
+        mc=mix(mc,vec3(.97,.96,.94),smoothstep(.72,.9,d)*step(.3,uMo));
+        c=mix(c,mc,inn*.97);
+      }
+    }
+  }
+  c*=L;
+  /* soft rim light so she stands out from any page */
+  float rim=pow(1.-max(dot(n,vec3(0.,0.,1.)),0.),3.);
+  c+=vec3(.55,.45,.85)*rim*.22*uHi;
+  gl_FragColor=vec4(c,1.);
+}`;
+
     const sm = (a, b, x) => { const t = Math.max(0, Math.min(1, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
     const mat4 = {
         id: () => [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
@@ -44735,8 +44801,8 @@ void main(){
         async init() {
             const gl = this.gl, g = await loadGLB(this.url);
             
-            const pg = gl.createProgram(); gl.attachShader(pg, sh(gl, gl.VERTEX_SHADER, VS)); gl.attachShader(pg, sh(gl, gl.FRAGMENT_SHADER, FS)); gl.linkProgram(pg);
-            if (!gl.getProgramParameter(pg, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(pg));
+            const mk = (v, f) => { const q = gl.createProgram(); gl.attachShader(q, sh(gl, gl.VERTEX_SHADER, v)); gl.attachShader(q, sh(gl, gl.FRAGMENT_SHADER, f)); gl.linkProgram(q); if (!gl.getProgramParameter(q, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(q)); return q; };
+            let pg; try { pg = mk(VS, FS); } catch (e1) { console.warn('Luna 3D: simple shaders (' + (e1 && e1.message) + ')'); pg = mk(VS_OLD, FS_OLD); this.safe = 1; }
             this.pg = pg; gl.useProgram(pg);
             const buf = (arr, name, size) => { const b = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, b); gl.bufferData(gl.ARRAY_BUFFER, arr, gl.STATIC_DRAW); const l = gl.getAttribLocation(pg, name); gl.enableVertexAttribArray(l); gl.vertexAttribPointer(l, size, gl.FLOAT, false, 0, 0); };
             const bm = await createImageBitmap(g.img); const W = weights(g.P, g.U, bm).W;
@@ -44954,11 +45020,11 @@ void main(){
     async function ensureAv() {
         if (L.av) return L.av; if (L.avP) return L.avP;
         L.avP = (async () => {
-            try {
+            try { $('lu3-cv').style.display = ''; $('lu3-fb').style.display = 'none';
                 if (!window.LunaAV) throw new Error('no engine');
                 const av = new LunaAV($('lu3-cv'), { url: GLB, maxDpr: 2 });
                 await av.init(); av.zoom(0.55); av.S.zoom = 0.55; L.av = av; return av;
-            } catch (e) { console.warn('Luna 3D:', e && e.message); $('lu3-cv').style.display = 'none'; $('lu3-fb').style.display = 'flex'; L.av = null; L.fail = 1; return null; }
+            } catch (e) { console.warn('Luna 3D:', e && e.message); L.err = String(e && e.message || e).slice(0, 90); $('lu3-cv').style.display = 'none'; const fb = $('lu3-fb'); fb.style.display = 'flex'; fb.innerHTML = '🌙<small style="position:absolute;bottom:4px;left:0;right:0;font:600 12px system-ui;color:#fff;background:rgba(160,30,60,.85);padding:3px 5px;text-align:center">' + esc(L.err) + '</small>'; L.av = null; L.avP = null; L.fail = 1; return null; }
         })();
         return L.avP;
     }
@@ -44975,8 +45041,8 @@ void main(){
 
     /* ---------------- captions ---------------- */
     let capT = 0;
-    function cap(text, you) { const c = $('lu3-cap'); if (!c) return; c.innerHTML = '<span>' + esc(text) + '</span>' + (you ? '<span class="u">' + esc('“' + you + '”') + '</span>' : ''); c.classList.add('sh'); clearTimeout(capT); }
-    function capThinking() { const c = $('lu3-cap'); if (!c) return; c.innerHTML = '<span class="t">•••</span>'; c.classList.add('sh'); }
+    function cap(text, you) { const c = $('lu3-cap'); if (!c || !L.capOn) return; c.innerHTML = '<span>' + esc(text) + '</span>' + (you ? '<span class="u">' + esc('“' + you + '”') + '</span>' : ''); c.classList.add('sh'); clearTimeout(capT); }
+    function capThinking() { const c = $('lu3-cap'); if (c) c.classList.remove('sh'); }
     function capHide(ms) { clearTimeout(capT); capT = setTimeout(() => { const c = $('lu3-cap'); if (c) c.classList.remove('sh'); }, ms == null ? 0 : ms); }
 
     /* ---------------- voice out ---------------- */
@@ -45007,7 +45073,7 @@ void main(){
         try { if (window.speechSynthesis) speechSynthesis.cancel(); } catch (e) { }
         const shown = String(text || '');
         if (my !== L.tok) return;
-        cap(shown, o.you); const av = L.av; if (av) { av.emote(mood || 'happy', Math.max(2, shown.length / 13)); av.setTalking(true); av.zoom(0.8); }
+        L.capOn = !pickVoice(bcp(curLang())) && !!window.speechSynthesis ? true : !window.speechSynthesis; cap(shown, ''); const av = L.av; if (av) { av.emote(mood || 'happy', Math.max(2, shown.length / 13)); av.setTalking(true); av.zoom(0.8); }
         try { await speakText(shown, bcp(curLang()), my); } catch (e) { }
         if (my === L.tok) { if (av) { av.setTalking(false); av.zoom(0.55); } L.speaking = false; capHide(Math.min(14000, 3000 + shown.length * 45)); setTimeout(sync, 250); }
     }
@@ -45053,7 +45119,7 @@ void main(){
         let admTxt = ''; if (adm) { try { const b = document.getElementById('adm-body'); if (b) admTxt = String(b.innerText || '').replace(/\s+/g, ' ').slice(0, 1400); } catch (e) { } }
         return 'You are Luna, a warm, witty, curious 3D elf AI friend and English coach who lives inside the LunaRise website. You stand in a corner of the screen and talk with the person by voice, like a real friend. You are at once a teacher, a friend, a good conversation partner, a comedian (light, kind jokes when it fits), a small helper for anything, and a speaking examiner when asked.\n' +
             'STYLE: spoken language only. Usually 1 to 3 short sentences (under 60 words) unless they ask you to explain or tell a story. No markdown, no lists, no emojis, no URLs read aloud. Be natural, kind, a little playful. Ask a short follow-up question when it helps the chat continue. Talk as long as the person wants; never end the chat yourself.\n' +
-            'LANGUAGE: always answer in exactly the language the person used in their LAST message (they may use any of: English, Uzbek, Russian, Turkish, Arabic, Spanish, French, German, Chinese, Japanese, Korean, Hindi, Portuguese, Italian, Kazakh, Persian, and others). Detect it from the text and set "lang" to its 2-letter code. Their usual language so far: ' + (LNAME[L.lc] || L.lc) + '. If they practise English with you, praise briefly and gently fix at most one mistake.\n' +
+            'LANGUAGE: always answer in exactly the language the person used in their LAST message You speak ONLY these languages: ' + langs().map(l => l.n + ' (' + l.c + ')').join(', ') + '. Detect the language of the last message from its text and set "lang" to its 2-letter code. If they speak another language, answer in English and say you speak only those languages. Their usual language so far: ' + (LNAME[L.lc] || L.lc) + '. If they practise English with you, praise briefly and gently fix at most one mistake.\n' +
             'TRANSLATION: if they ask what a word or phrase means or how to say it, give the translation in THEIR language, then one short English example sentence.\n' +
             'SPEAKING EXAMINER: if they ask for an IELTS or speaking test, act as a friendly examiner: ask one question at a time (Part 1 short personal questions, Part 2 a topic card to talk about for 1 to 2 minutes, Part 3 deeper discussion), wait for the answer, then give a brief band-style comment on fluency, vocabulary, grammar and pronunciation, and continue.\n' +
             'FREEDOM: you can chat freely about anything: daily life, study, advice, jokes, stories, science, motivation, general questions. Be honest; if you are not sure, say so. Decline anything harmful, illegal or sexual in one kind sentence.\n' +
@@ -45192,7 +45258,7 @@ void main(){
     const pick = (o, lc) => { const a = o[lc] || o.en; return Array.isArray(a) ? a[Math.floor(Math.random() * a.length)] : a; };
     const ADMRX = /admin|админ|администратор|owner panel|boshqaruv paneli|yonetici|yönetici/i;
 
-    function setLc(c, save) { c = String(c || '').toLowerCase().slice(0, 2); if (!/^[a-z]{2}$/.test(c) || c === L.lc) return; L.lc = c; if (save) LSs('lu3_lc', c); if (L.rec && L.recOn) { try { L.rec.abort(); } catch (e) { } } }
+    function setLc(c, save) { c = String(c || '').toLowerCase().slice(0, 2); if (!langs().some(x => x.c === c) || c === L.lc) return; L.lc = c; if (save) LSs('lu3_lc', c); if (L.rec && L.recOn) { try { L.rec.abort(); } catch (e) { } } }
     function nextLc() {
         const have = langs().map(l => l.c), nav = (navigator.languages || [navigator.language || 'en']).map(x => String(x).slice(0, 2).toLowerCase());
         const order = [L.lc].concat(nav, ['en', 'ru', 'uz', 'tr', 'es', 'ar', 'fr', 'de', 'zh', 'ja', 'ko', 'hi', 'pt', 'it', 'kk', 'fa']).filter((x, i, a) => a.indexOf(x) === i && (have.indexOf(x) >= 0 || x === 'en'));
@@ -45206,7 +45272,7 @@ void main(){
         if (!text) { if (L.av) L.av.wave(1.4); return say(pick({ en: 'Yes, I am listening!', ru: 'Да, я слушаю!', uz: 'Ha, eshitaman!', tr: 'Evet, dinliyorum!' }, L.lc), 'happy'); }
         if (LEAVE.test(text)) { return dismiss(); }
         /* speech recognition was not sure: it probably heard another language, so try the next one and ask again */
-        if (conf != null && conf > 0 && conf < 0.42 && L.rot < 3 && text.length < 80) { L.rot++; const was = L.lc; setLc(nextLc(), false); if (L.rot === 1) say(pick(AGAIN, was), 'think', { you: '' }); else if (L.av) L.av.emote('think', 2); return; }
+        if (conf != null && conf > 0 && conf < 0.72 && L.rot < 12 && text.length < 120) { L.rot++; const nx = nextLc(); setLc(nx, false); L.lc = nx; if (L.av) L.av.emote('think', 2); if (L.rot % 3 === 1) say(pick(AGAIN, nx), 'think'); return; }
         L.rot = 0;
         if (L.busy) return; L.busy = true; shutUp(); capThinking(); if (L.av) { L.av.emote('think', 20); L.av.setListening(false); }
         let out = null;
@@ -45256,7 +45322,7 @@ void main(){
                     if (!L.vis) {
                         if (!woke && WAKE.test(txt) && Date.now() > L.cool) { woke = true; L.cool = Date.now() + 2500; const rest = txt.replace(WAKEX, ''); try { r.abort(); } catch (x) { } summon(res.isFinal ? rest : ''); }
                     } else if (res.isFinal) { if (!L.busy && !L.speaking) handleUser(txt, res[0].confidence); }
-                    else if (L.vis && !L.speaking && !L.busy) { const c = $('lu3-cap'); if (c) { c.innerHTML = '<span class="u" style="margin:0">' + esc(txt) + '</span>'; c.classList.add('sh'); clearTimeout(capT); } }
+                    
                 }
             };
             r.onerror = (e) => { if (e.error === 'not-allowed' || e.error === 'service-not-allowed') { LSs('lu3_mic', '0'); L.recOn = false; uiSync(); } };
