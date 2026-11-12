@@ -2,7 +2,7 @@
    and the page itself kept for offline use (this also lets the browser offer "Install app").
    A call alert rings (sound + vibration) every few seconds until the call is answered, ends or times out.
    A reminder is one friendly notification; it is skipped if LunaRise is already open on screen. */
-const VERSION = 'lr-sw-48';
+const VERSION = 'lr-sw-51';
 const PAGES = 'lr-pages-1';
 const ICON = './icon-192.png';
 const BADGE = './badge-96.png';   // the small white moon in the phone's status bar
