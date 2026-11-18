@@ -1,0 +1,9 @@
+{
+  "name": "LunaRise",
+  "description": "Free English-learning app with an AI examiner and a 3D assistant named Luna.",
+  "url": "https://lunarise-app.github.io/",
+  "resources": [
+    {"name": "llms.txt", "url": "https://lunarise-app.github.io/llms.txt", "type": "text/plain"},
+    {"name": "sitemap", "url": "https://lunarise-app.github.io/sitemap.xml", "type": "application/xml"}
+  ]
+}
