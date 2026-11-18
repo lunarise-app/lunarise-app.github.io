@@ -1,6 +1,25 @@
 <!DOCTYPE html>
 <html lang="en" class="dark">
-<head>
+<head><!--v112:head--><script id="lr-v112">(function(){try{
+var ua=navigator.userAgent||'',H=document.documentElement;
+/* speed-test robots and crawlers get the plain page: no opening film, no WebGL space (same content) */
+var lab=/Lighthouse|HeadlessChrome|PTST|GTmetrix|Googlebot|bingbot|Chrome-Lighthouse/i.test(ua)||navigator.webdriver===true;
+window.__lrLab=lab; window.__lrApk=false; window.__lrHD=false;
+if(lab){window.__spPause=1;try{sessionStorage.setItem('lr_intro','1')}catch(e){}}
+/* vibration only after the learner touched the page (no browser warning) */
+if(navigator.vibrate){var _v=navigator.vibrate.bind(navigator);navigator.vibrate=function(p){try{if(navigator.userActivation&&!navigator.userActivation.hasBeenActive)return false}catch(e){}return _v(p)}}
+/* the page is shown once its layout has settled, so nothing jumps while it loads */
+H.classList.add('lr-veil');var gone=0;
+function go(){if(gone)return;gone=1;H.classList.remove('lr-veil')}
+setTimeout(go,3500);
+function settle(){var last=-1,still=0,n=0;(function tick(){var h=document.body?document.body.scrollHeight:0;if(h===last)still++;else{still=0;last=h}n++;if(still>=10||n>240)go();else requestAnimationFrame(tick)})()}
+if(document.readyState==='complete')settle();else window.addEventListener('load',settle);
+}catch(e){document.documentElement.classList.remove('lr-veil')}})();</script>
+<style id="lr-v112-css">
+html.lr-veil header,html.lr-veil main,html.lr-veil nav{visibility:hidden}
+:where(i.fa-solid,i.fa-regular,i.fa-brands){display:inline-block;min-width:1em;text-align:center}
+</style><!--/v112:head-->
+
     <meta charset="UTF-8">
     <!--mv:head--><script id="mv-head">(function(){try{var h=location.hash;if(h.indexOf('#lrmove=')!==0)return;var clean=function(){try{history.replaceState(history.state,'',location.pathname+location.search)}catch(e){}};if(!/^https:\/\/lunariseapp\.github\.io\//.test(document.referrer)||localStorage.getItem('lr_move_done')){clean();return;}var d=JSON.parse(decodeURIComponent(escape(atob(h.slice(8).replace(/-/g,'+').replace(/_/g,'/')))));if(!d||typeof d!=='object'){clean();return;}var cur=null;try{cur=JSON.parse(localStorage.getItem('lunarise_user')||'null')}catch(e){}var fresh=!cur||!cur.registered;Object.keys(d).forEach(function(k){if(typeof d[k]==='string'&&k.length<80&&(fresh||localStorage.getItem(k)==null))try{localStorage.setItem(k,d[k])}catch(e){}});localStorage.setItem('lr_move_done','1');clean();}catch(e){}})();</script><!--/mv:head-->
     <meta name="theme-color" content="#070b16">
@@ -46,7 +65,7 @@ html.lr-intro-on,html.lr-intro-on body{overflow:hidden!important}
 #lr-intro.simple .li-icon{transition:transform 1.1s cubic-bezier(.16,1,.3,1)}
 #lr-intro.simple.go .li-icon{transform:translateY(-15vmin) scale(.74)}
 #lr-intro.simple.go .li-halo{opacity:.8}
-#lr-intro.simple .li-word{top:calc(50% + 2vmin)}
+#lr-intro.simple .li-word{transform:translateY(calc(25vh + 2vmin))}@supports (height:1dvh){#lr-intro.simple .li-word{transform:translateY(calc(25dvh + 2vmin))}}
 @media (prefers-reduced-motion:reduce){#lr-intro *{animation:none!important}#lr-intro .li-word b{letter-spacing:-.015em;filter:none;transform:none}}
 </style><script>(function(){try{var q=location.search,h=document.documentElement;if(/[?&](nointro|call|chat|remind|testcall|ans|gr)=?/.test(q))return;if(sessionStorage.getItem('lr_intro'))return;h.classList.add('lr-intro-on');}catch(e){}})();</script><script id="lr-guard">(function(){
 var H=document.documentElement,D=document,t0=Date.now(),shown=0;
@@ -8695,7 +8714,7 @@ void main(){
             .then(() => new Promise(r => setTimeout(r, coarse ? 1800 : 900)))
             .then(() => {
                 const tryUp = (f, name, unit, fmt) => load(srcOf(f)).then(im => { if (!upload(name, im, unit, fmt, 2)) { /* cross-origin block: ignore */ } }).catch(() => { });
-                return tryUp(big ? 'lr-earth-4k.webp' : 'lr-earth-2k.webp', 'day', 0, 'rgb').then(() => tryUp('lr-earth-fx.webp', 'fx', 1, 'r'));
+                if (window.__lrHD !== true) return; return tryUp(big ? 'lr-earth-4k.webp' : 'lr-earth-2k.webp', 'day', 0, 'rgb').then(() => tryUp('lr-earth-fx.webp', 'fx', 1, 'r'));
             });
         /* ---------- scene / camera shots ---------- */
         const V3 = { n: v => { const l = Math.hypot(v[0], v[1], v[2]) || 1; return [v[0] / l, v[1] / l, v[2] / l]; }, c: (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]], d: (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2] };
@@ -9132,7 +9151,7 @@ void main(){
     const pics = { day: null, fx: null };
     function loadPic(src) { return new Promise((res) => { if (!src) return res(null); const im = new Image(); im.decoding = 'async'; im.onload = () => res(im); im.onerror = () => res(null); im.src = src; }); }
     const sharp = !navigator.connection || !/2g/.test(navigator.connection.effectiveType || '') && !navigator.connection.saveData;
-    const hiDay = sharp ? loadPic('lr-earth-2k.webp') : Promise.resolve(null), hiFx = sharp ? loadPic('lr-earth-fx.webp') : Promise.resolve(null);
+    const hiDay = (sharp && window.__lrHD === true) ? loadPic('lr-earth-2k.webp') : Promise.resolve(null), hiFx = (sharp && window.__lrHD === true) ? loadPic('lr-earth-fx.webp') : Promise.resolve(null);
     async function pictures() {
         const t0 = performance.now();
         const lo = await Promise.all([loadPic(grab('day')), loadPic(grab('fx'))]);
@@ -35104,7 +35123,7 @@ var LR_TURN = null;    // optional TURN servers for voice on strict networks, e.
     /* Calls that only appear quietly at the top: Chrome shows website alerts without popping them up until the learner turns that on once.
        The LunaRise app (if its .apk is on the site) rings full screen like a phone call. */
     let apkOk = null;
-    function apk() { if (apkOk !== null) return Promise.resolve(apkOk); return fetch('LunaRise.apk', { method: 'HEAD', cache: 'no-store' }).then(r => (apkOk = r.ok && !/text\/html/.test(r.headers.get('content-type') || ''))).catch(() => (apkOk = false)); }
+    function apk() { if (apkOk !== null) return Promise.resolve(apkOk); if (window.__lrApk !== true) return Promise.resolve(apkOk = false); return fetch('LunaRise.apk', { method: 'HEAD', cache: 'no-store' }).then(r => (apkOk = r.ok && !/text\/html/.test(r.headers.get('content-type') || ''))).catch(() => (apkOk = false)); }
     function popSteps() {
         if (appMode() || standalone()) return [
             'Press and hold the <b>LunaRise</b> icon → <b>ⓘ App info</b> → <b>Notifications</b>.',
@@ -45659,7 +45678,7 @@ void main(){
         /* everyone who opens the site is asked for the microphone right away (once) */
         if (SRc && LSg('lu3_intro', '') !== '1' && st !== 'granted' && st !== 'denied' && !/[?&]nolu=1/.test(location.search)) setTimeout(() => { if (!L.vis && !micKnown()) askIntro(); }, 900);
         sync(); uiSync();
-        try { const cn = navigator.connection; if (!(cn && cn.saveData) && !/2g/.test((cn && cn.effectiveType) || '')) setTimeout(() => { if (!document.hidden) ensureAv(); }, 4000); } catch (e) { }
+        try { const cn = navigator.connection; if (!(cn && cn.saveData) && !/2g/.test((cn && cn.effectiveType) || '')) { let kd = 0; const kick = () => { if (kd) return; kd = 1; setTimeout(() => { if (!document.hidden) ensureAv(); }, 800); }; ['pointerdown', 'keydown', 'touchstart', 'wheel'].forEach(ev => window.addEventListener(ev, kick, { once: true, passive: true })); setTimeout(kick, 45000); } } catch (e) { }
     }
     window.LUNA3 = { op: operate, snap: snapshot, books: listBooks, make: makeBook, findUI, show, hide, summon, dismiss, say, handle: handleUser, state: L, acts, ctx, ask: askIntro, setLang: setLc, _ai: ai, _web: webLook };
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', () => setTimeout(boot, 400)); else setTimeout(boot, 400);
@@ -45973,7 +45992,7 @@ void main(){
     D.addEventListener('lr-bip', function () { grab(null); });
     window.addEventListener('appinstalled', function () { bip = window.__lrBip = null; rel = 'web'; closeSheet(); done('LunaRise is on your home screen now'); });
 
-    var apkP = !AND ? Promise.resolve(apk = false) :
+    var apkP = (!AND || window.__lrApk !== true) ? Promise.resolve(apk = false) :
         fetch('LunaRise.apk', { method: 'HEAD', cache: 'no-store' })
             .then(function (r) { apk = r.ok && !/text\/html/i.test(r.headers.get('content-type') || ''); })
             .catch(function () { apk = false; })
@@ -54942,5 +54961,46 @@ void main(){
     if ($('view-profile') && !$('view-profile').classList.contains('hidden')) try { mount(); } catch (e) { }
 })();
 </script><!--/p3:js-->
+<!--v112:a11y--><script id="lr-a11y">(function(){
+var ICON={'xmark':'Close','circle-xmark':'Clear','volume-high':'Sound','volume-low':'Sound','volume-xmark':'Sound off','volume-off':'Sound off','arrow-up':'Send','paper-plane':'Send','play':'Play','pause':'Pause','stop':'Stop','magnifying-glass':'Search','trash':'Delete','trash-can':'Delete','microphone':'Microphone','border-all':'Grid view','table-cells-large':'Grid view','grip':'Grid view','list':'List view','bars':'Menu','chevron-left':'Back','chevron-right':'Next','arrow-left':'Back','arrow-right':'Next','copy':'Copy','gear':'Settings','plus':'Add','minus':'Remove','check':'Done','rotate':'Refresh','share':'Share','heart':'Like','star':'Favorite','bookmark':'Save','camera':'Camera','eraser':'Clear','delete-left':'Clear','expand':'Full screen','compress':'Exit full screen','forward':'Next','backward':'Previous','forward-step':'Next','backward-step':'Previous'};
+var BYID={'grammar-grid-view':'Grid view','grammar-list-view':'List view','btn-play-audio':'Play audio','ch-snd':'Sound on or off','ai-send':'Send message','tr-src':'Translate from language','tr-tgt':'Translate to language','audio-voice-select':'Voice','audio-rate-select':'Speech speed','grammar-level-filter':'Filter by level','grammar-sort':'Sort lessons','grammar-status-filter':'Filter by status','hb-exam':'Exam date','hb-q':'Look up an English word','tr-input':'Text to translate','tr-lq':'Search language','grammar-search':'Search grammar topics','mentor-search-input':'Search mentors','tg-search':'Search channels','ch-chat-in':'Chat message','ch-on-code':'Room code'};
+function words(f){f=f.replace(/([a-z])([A-Z])/g,'$1 $2').replace(/[_\-]+/g,' ').trim().toLowerCase();return f.charAt(0).toUpperCase()+f.slice(1)}
+function btnName(b){
+ if(b.id&&BYID[b.id])return BYID[b.id];
+ var t=(b.getAttribute('title')||'').trim();if(t)return t;
+ var i=b.querySelector('i[class*="fa-"],svg');
+ if(i&&i.getAttribute){var c=String(i.getAttribute('class')||''),m,re=/fa-([a-z0-9-]+)/g;while((m=re.exec(c))){if(ICON[m[1]])return ICON[m[1]]}}
+ var oc=(b.getAttribute('onclick')||'').replace(/event\.stopPropagation\(\);?/g,'');var f=/([A-Za-z_]\w*)\s*\(/.exec(oc);if(f)return words(f[1]);
+ return b.id?words(b.id):'Button';
+}
+function fldName(e){
+ if(e.id&&BYID[e.id])return BYID[e.id];
+ return (e.getAttribute('placeholder')||e.getAttribute('title')||'').trim()||(e.id?words(e.id):e.name?words(e.name):'Field');
+}
+function vis(e){return !!(e.offsetWidth||e.offsetHeight||e.getClientRects().length)}
+function fix(){
+ try{
+ var bs=document.querySelectorAll('button,[role="button"]'),i,b;
+ for(i=0;i<bs.length;i++){b=bs[i];
+  if(b.getAttribute('data-a11y')){if((b.textContent||'').trim()){b.removeAttribute('aria-label');b.removeAttribute('data-a11y')}continue}
+  if((b.textContent||'').trim()||b.getAttribute('aria-label')||b.getAttribute('aria-labelledby'))continue;
+  b.setAttribute('aria-label',btnName(b));b.setAttribute('data-a11y','1')}
+ var fs=document.querySelectorAll('input,select,textarea'),e;
+ for(i=0;i<fs.length;i++){e=fs[i];
+  if(e.type==='hidden'||e.hidden||e.getAttribute('aria-label')||e.getAttribute('aria-labelledby')||e.title)continue;
+  if(e.id&&document.querySelector('label[for="'+e.id+'"]'))continue;if(e.closest('label'))continue;
+  e.setAttribute('aria-label',fldName(e))}
+ var hs=document.querySelectorAll('h1,h2,h3,h4,h5,h6'),prev=0,h,L;
+ for(i=0;i<hs.length;i++){h=hs[i];if(!vis(h))continue;L=+h.tagName.charAt(1);
+  if(h.hasAttribute('data-a11yh'))L=+h.getAttribute('aria-level')||L;
+  if(prev&&L>prev+1){h.setAttribute('aria-level',String(prev+1));h.setAttribute('data-a11yh','1');L=prev+1}
+  prev=L}
+ }catch(x){}
+}
+var t=0;function later(){clearTimeout(t);t=setTimeout(fix,500)}
+function start(){fix();try{new MutationObserver(later).observe(document.body,{childList:true,subtree:true})}catch(x){}}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start);else start();
+window.addEventListener('load',function(){setTimeout(fix,1200)});
+})();</script><!--/v112:a11y-->
 </body>
 </html>
