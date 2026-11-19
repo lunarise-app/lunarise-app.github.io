@@ -2,7 +2,7 @@
   "name": "LunaRise — Learn English",
   "short_name": "LunaRise",
   "description": "Learn English for IELTS and CEFR: grammar, dictionary, games and a speaking club with calls.",
-  "start_url": "./?source=app",
+  "start_url": "./app.html?source=app",
   "scope": "./",
   "display": "standalone",
   "orientation": "any",

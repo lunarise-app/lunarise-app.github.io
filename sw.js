@@ -2,7 +2,7 @@
    and the page itself kept for offline use (this also lets the browser offer "Install app").
    A call alert rings (sound + vibration) every few seconds until the call is answered, ends or times out.
    A reminder is one friendly notification; it is skipped if LunaRise is already open on screen. */
-const VERSION = 'lr-sw-60';
+const VERSION = 'lr-sw-61';
 const PAGES = 'lr-pages-1';
 const ICON = './icon-192.png';
 const BADGE = './badge-96.png';   // the small white moon in the phone's status bar
@@ -18,7 +18,8 @@ self.addEventListener('activate', (e) => e.waitUntil((async () => {
 
 /* Opening a page: always fresh from the internet; a copy of the main page is kept, and opens when there is no internet.
    Everything else (pictures, sounds, the database, uploads) goes straight to the internet as before. */
-const MAIN = (p) => /\/(index\.html)?$/.test(p);
+const MAIN = (p) => /\/(index\.html|app\.html)?$/.test(p);
+const keyOf = (p) => new URL(/app\.html$/.test(p) ? './app.html' : './', self.registration.scope).href;
 const OFFLINE = '<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>LunaRise</title>' +
     '<body style="margin:0;min-height:100vh;display:grid;place-items:center;background:#070b16;color:#e2e8f0;font:16px/1.5 system-ui,sans-serif;text-align:center">' +
     '<div style="padding:24px"><div style="font-size:44px;line-height:1">🌙</div><h1 style="font-size:20px;margin:14px 0 6px">No internet</h1>' +
@@ -35,11 +36,11 @@ self.addEventListener('fetch', (e) => {
             let res;
             if (MAIN(url.pathname)) {
                 /* a slow connection: the copy saved last time opens after 3.5 s, the fresh page is still saved for next time */
-                const hit = await caches.open(PAGES).then(c => c.match(new URL('./', self.registration.scope).href)).catch(() => null);
+                const hit = await caches.open(PAGES).then(c => c.match(keyOf(url.pathname))).catch(() => null);
                 if (hit) {
                     res = await Promise.race([net.catch(() => null), sleep(3500).then(() => 'slow')]);
                     if (res === 'slow' || !res) {
-                        e.waitUntil(net.then(r => { if (r && r.ok && r.type === 'basic') return caches.open(PAGES).then(c => c.put(new URL('./', self.registration.scope).href, r.clone())); }).catch(() => { }));
+                        e.waitUntil(net.then(r => { if (r && r.ok && r.type === 'basic') return caches.open(PAGES).then(c => c.put(keyOf(url.pathname), r.clone())); }).catch(() => { }));
                         return hit;
                     }
                 }
@@ -47,12 +48,12 @@ self.addEventListener('fetch', (e) => {
             if (!res) res = await net;
             if (res && res.ok && res.type === 'basic' && MAIN(url.pathname)) {
                 const copy = res.clone();
-                caches.open(PAGES).then(c => c.put(new URL('./', self.registration.scope).href, copy)).catch(() => { });
+                caches.open(PAGES).then(c => c.put(keyOf(url.pathname), copy)).catch(() => { });
             }
             return res;
         } catch (err) {
             try {
-                if (MAIN(url.pathname)) { const hit = await (await caches.open(PAGES)).match(new URL('./', self.registration.scope).href); if (hit) return hit; }
+                if (MAIN(url.pathname)) { const hit = await (await caches.open(PAGES)).match(keyOf(url.pathname)); if (hit) return hit; }
             } catch (x) { }
             return new Response(OFFLINE, { status: 503, headers: { 'Content-Type': 'text/html; charset=utf-8' } });
         }
