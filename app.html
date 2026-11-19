@@ -69,16 +69,18 @@ html.lr-intro-on,html.lr-intro-on body{overflow:hidden!important}
 @media (prefers-reduced-motion:reduce){#lr-intro *{animation:none!important}#lr-intro .li-word b{letter-spacing:-.015em;filter:none;transform:none}}
 </style><script>(function(){try{var q=location.search,h=document.documentElement;if(/[?&](nointro|call|chat|remind|testcall|ans|gr)=?/.test(q))return;if(sessionStorage.getItem('lr_intro'))return;h.classList.add('lr-intro-on');}catch(e){}})();</script><script id="lr-guard">(function(){
 var H=document.documentElement,D=document,t0=Date.now(),shown=0;
-function ready(){try{return typeof window.navigateTo==='function'&&D.body&&D.body.children.length>3&&!H.classList.contains('lr-intro-on')}catch(e){return false}}
+function ready(){try{return typeof window.navigateTo==='function'&&D.body&&D.body.children.length>3&&(!H.classList.contains('lr-intro-on')||Date.now()-t0>30000)}catch(e){return false}}
 function wipe(){try{if('serviceWorker' in navigator)navigator.serviceWorker.getRegistrations().then(function(r){r.forEach(function(x){x.unregister()})});if(window.caches)caches.keys().then(function(k){k.forEach(function(n){caches.delete(n)})})}catch(e){}}
 function box(){if(shown||D.getElementById('lr-recover'))return;shown=1;var d=D.createElement('div');d.id='lr-recover';d.setAttribute('role','alertdialog');
 d.style.cssText='position:fixed;inset:0;z-index:2147483000;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;padding:24px;background:#070b16;color:#e8eaff;font:600 16px/1.4 system-ui,sans-serif;text-align:center';
-d.innerHTML='<div style="font-size:20px;font-weight:800">LunaRise is taking longer than usual</div><div style="opacity:.75;max-width:340px">Your connection may be slow. You can wait, or reload to get a fresh copy.</div><button id="lr-recover-b" style="all:unset;cursor:pointer;padding:14px 28px;border-radius:14px;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;font-weight:700">Reload</button>';
+d.innerHTML='<div style="font-size:20px;font-weight:800">LunaRise is taking longer than usual</div><div style="opacity:.75;max-width:340px">Your connection looks slow. The app is large, so please wait a little, or reload to get a fresh copy.</div><button id="lr-recover-b" style="all:unset;cursor:pointer;padding:14px 28px;border-radius:14px;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;font-weight:700">Reload</button>';
 (D.body||H).appendChild(d);D.getElementById('lr-recover-b').onclick=function(){wipe();setTimeout(function(){location.reload()},250)}}
+/* instant splash: the page paints at once while the big app loads */
+try{if(!H.classList.contains('lr-intro-on')){var sp=D.createElement('div');sp.id='lr-splash';sp.setAttribute('aria-hidden','true');sp.style.cssText='position:fixed;inset:0;z-index:2147482000;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:18px;background:#070b16;color:#e8eaff;font:800 22px system-ui,sans-serif;letter-spacing:.3px';sp.innerHTML='<img src="icon-192.png" width="72" height="72" alt="" style="border-radius:20px"><div>LunaRise</div><div style="width:120px;height:4px;border-radius:4px;background:#1b2347;overflow:hidden"><i style="display:block;width:40%;height:100%;background:#8b9dff;border-radius:4px;animation:lrsp 1.1s ease-in-out infinite"></i></div><style>@keyframes lrsp{0%{transform:translateX(-100%)}100%{transform:translateX(260%)}}</style>';H.appendChild(sp)}}catch(e){}
 var iv=setInterval(function(){
  try{
-  if(ready()){var r=D.getElementById('lr-recover');if(r)r.remove()}
-  else if(Date.now()-t0>16000)box();
+  if(ready()){var q=D.getElementById('lr-splash');if(q)q.remove();var r=D.getElementById('lr-recover');if(r)r.remove()}
+  else if(Date.now()-t0>60000)box();
   /* a game or panel that closed badly must never leave the page hidden or locked */
   if((H.classList.contains('mg-lock')||H.classList.contains('mg-lite-lock'))&&!D.getElementById('mg')){H.classList.remove('mg-lock','mg-lite-lock')}
  }catch(e){}
@@ -86,7 +88,7 @@ var iv=setInterval(function(){
 /* a broken saved copy: two failed starts in a row clear the saved files once */
 try{var k='lr_boot',n=+(localStorage.getItem(k)||0);localStorage.setItem(k,String(n+1));
  addEventListener('lr:intro-done',function(){try{localStorage.setItem(k,'0')}catch(e){}});
- setTimeout(function(){if(ready())try{localStorage.setItem(k,'0')}catch(e){}},9000);
+ var okT=setInterval(function(){if(ready()){clearInterval(okT);try{localStorage.setItem(k,'0')}catch(e){}}},1000);setTimeout(function(){clearInterval(okT)},120000);
  if(n>=2&&!sessionStorage.getItem('lr_wiped')){sessionStorage.setItem('lr_wiped','1');localStorage.setItem(k,'0');wipe();setTimeout(function(){location.reload()},400)}}catch(e){}
 })();</script><!--/intro:head-->
     <title>LunaRise — Learn English for IELTS &amp; CEFR</title>
