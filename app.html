@@ -55127,12 +55127,15 @@ html.lyt-lite .lyt-card,html.lite .lyt-card{-webkit-backdrop-filter:none;backdro
 /* v119: the card becomes the real feature */
 .lyt-track{--cw:min(94vw,1000px);--ch:min(84vh,860px)}
 @media(max-width:640px){.lyt-track{--cw:94vw;--ch:min(82vh,780px)}}
-.lyt-card.lyt-live{height:auto;min-height:0;max-height:var(--ch);align-self:center}
+.lyt-live{--w:var(--cw)}
+.lyt-card.lyt-live{height:var(--ch);min-height:0;max-height:none;align-self:flex-start;padding:12px;border:1px solid rgba(255,255,255,.12);background:linear-gradient(165deg,#1d1946,#0e0c25);box-shadow:0 30px 50px -26px #000,inset 0 1px 0 rgba(255,255,255,.12)}
+.lyt-live>*{border-radius:18px}
 .lyt-hasqa .lyt-art{height:min(250px,36vh)}
 .lyt-face{display:none;flex-direction:column;gap:10px;flex:1;min-height:0}
 .lyt-card.lyt-on>.lyt-face{display:flex}
 .lyt-card.lyt-on>.lyt-art,.lyt-card.lyt-on>.lyt-meta{display:none}
-.lyt-card.lyt-on{transform:none!important;opacity:1!important;gap:10px;cursor:default;will-change:auto}
+.lyt-card.lyt-on{gap:10px;cursor:default}
+.lyt-card.lyt-act{transform:none!important;opacity:1!important;will-change:auto}
 .lyt-bar{display:flex;align-items:center;gap:10px;padding:2px 6px 0}
 .lyt-bi{width:34px;height:34px;border-radius:11px;background:var(--g);display:grid;place-items:center;color:#fff;font-size:15px;flex:none}
 .lyt-bar b{flex:1;min-width:0;font:800 17px/1.2 'Plus Jakarta Sans',system-ui,sans-serif;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -55164,17 +55167,95 @@ html.lyt-lite .lyt-card,html.lite .lyt-card{-webkit-backdrop-filter:none;backdro
 html.lr-bgsafe.th-space #lr-bg{background:radial-gradient(75% 60% at 72% 36%,#14265a 0%,#0a1233 46%,#040613 100%)!important}
 html.lr-bgsafe.th-space #lr-bg::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.85;background-image:radial-gradient(1.3px 1.3px at 8% 18%,#fff,transparent),radial-gradient(1px 1px at 21% 64%,#cfe0ff,transparent),radial-gradient(1.4px 1.4px at 34% 33%,#fff,transparent),radial-gradient(1px 1px at 47% 82%,#dbe7ff,transparent),radial-gradient(1.3px 1.3px at 58% 12%,#fff,transparent),radial-gradient(1px 1px at 66% 55%,#cfe0ff,transparent),radial-gradient(1.4px 1.4px at 79% 27%,#fff,transparent),radial-gradient(1px 1px at 88% 71%,#dbe7ff,transparent),radial-gradient(1.2px 1.2px at 93% 9%,#fff,transparent),radial-gradient(1px 1px at 14% 90%,#cfe0ff,transparent),radial-gradient(1.2px 1.2px at 72% 92%,#fff,transparent),radial-gradient(1px 1px at 41% 48%,#dbe7ff,transparent)}
 html.lr-bgsafe.th-space #lr-bg>*:not(.lq-earth-cv){display:none!important}
+
+/* v121: one size for every card, solid look, always showing the real thing */
+.lyt-card{background:linear-gradient(165deg,#1d1946,#0e0c25);-webkit-backdrop-filter:none;backdrop-filter:none;width:var(--cw)}
+.lyt-card[data-view]{content-visibility:auto;contain-intrinsic-size:auto var(--cw) var(--ch)}
+.lyt-card:not(.lyt-act) .lyt-stage *{animation-play-state:paused!important}
+.lyt-card[data-view]:not(.lyt-ready) .lyt-stage::before{content:"Getting ready…";display:grid;place-items:center;height:100%;min-height:220px;color:#a9b2d6;font:600 14px 'Plus Jakarta Sans',system-ui,sans-serif}
+.lyt-opn{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:12px;height:100%;min-height:260px;padding:20px}
+.lyt-oi{width:84px;height:84px;border-radius:26px;background:var(--g);display:grid;place-items:center;color:#fff;font-size:34px;box-shadow:0 20px 40px -18px #000}
+.lyt-opn h3{margin:0;font:800 24px 'Plus Jakarta Sans',system-ui,sans-serif;color:#fff}
+.lyt-opn p{margin:0;max-width:420px;font:500 15px/1.5 'Plus Jakarta Sans',system-ui,sans-serif;color:#b6bedf}
+.lyt-go2{all:unset;box-sizing:border-box;height:48px;padding:0 26px;border-radius:15px;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;font:800 15px 'Plus Jakarta Sans',system-ui,sans-serif;cursor:pointer;display:inline-flex;align-items:center}
+.lyt-go2:focus-visible{outline:2px solid #a5b4fc;outline-offset:3px}
+.lyt-stage>.view-panel{animation:none!important}
+.lyt-stage>.view-panel.hidden{display:block!important}
+
+#lyt-first{margin:0 0 20px;padding:20px;border-radius:26px;border:1px solid rgba(165,180,252,.4);background:linear-gradient(165deg,#251f5c,#100d2c);box-shadow:0 30px 60px -30px #000,inset 0 1px 0 rgba(255,255,255,.14);transition:opacity .25s,transform .25s}
+#lyt-first.out{opacity:0;transform:translateY(-8px)}
+#lyt-first h2{margin:0;font:800 clamp(20px,3vw,26px)/1.2 'Plus Jakarta Sans',system-ui,sans-serif;color:#fff;letter-spacing:-.01em}
+#lyt-first>p{margin:6px 0 16px;font:500 14px/1.5 'Plus Jakarta Sans',system-ui,sans-serif;color:#b6bedf}
+#lyt-first .lyt-op{position:relative}
+#lyt-first .lyt-op:hover{border-color:#a5b4fc}
+
+/* v122: Settings - Home screen, with pictures */
+#lyt-set{padding:20px!important}
+.lyt-sh{margin-bottom:16px}
+.lyt-st{font:800 20px/1.2 'Plus Jakarta Sans',system-ui,sans-serif;color:#fff;letter-spacing:-.01em}
+.lyt-sh p{margin:5px 0 0;font:500 13.5px/1.5 'Plus Jakarta Sans',system-ui,sans-serif;color:#a9b2d6}
+.lyt-sl{display:flex;align-items:center;justify-content:space-between;margin:18px 0 10px;font:700 12px 'Plus Jakarta Sans',system-ui,sans-serif;color:#9aa4cf;letter-spacing:.04em;text-transform:uppercase}
+.lyt-rs{all:unset;cursor:pointer;padding:5px 11px;border-radius:99px;background:rgba(255,255,255,.08);color:#c7cdf0;font:700 11px 'Plus Jakarta Sans',system-ui,sans-serif;text-transform:none;letter-spacing:0}
+.lyt-sops{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:560px){.lyt-sops{grid-template-columns:1fr}}
+.lyt-sop{all:unset;box-sizing:border-box;position:relative;cursor:pointer;display:flex;flex-direction:column;gap:6px;padding:10px 10px 14px;border-radius:20px;border:1.5px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);transition:border-color .2s,background .2s,transform .15s}
+.lyt-sop:hover{border-color:rgba(165,180,252,.55)}
+.lyt-sop:active{transform:scale(.985)}
+.lyt-sop[aria-checked=true]{border-color:#a5b4fc;background:rgba(129,140,248,.14);box-shadow:0 14px 34px -18px #6366f1}
+.lyt-sop:focus-visible,.lyt-ft:focus-visible,.lyt-rs:focus-visible{outline:2px solid #a5b4fc;outline-offset:2px}
+.lyt-sop b{font:800 16px 'Plus Jakarta Sans',system-ui,sans-serif;color:#fff;padding:6px 6px 0}
+.lyt-sop small{font:500 12.5px/1.45 'Plus Jakarta Sans',system-ui,sans-serif;color:#aab3d8;padding:0 6px}
+.lyt-sop .ck{position:absolute;right:16px;top:16px;z-index:3;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:#818cf8;color:#0b0a1c;font-size:12px;opacity:0;transform:scale(.6);transition:all .2s}
+.lyt-sop[aria-checked=true] .ck{opacity:1;transform:none}
+.lyt-sp{display:block;position:relative;height:150px;border-radius:14px;overflow:hidden;background:radial-gradient(120% 90% at 70% 10%,#3b2f8f 0%,#1a1642 55%,#0b0a22 100%)}
+.lyt-sp i,.lyt-sp u,.lyt-sp span{display:block;position:absolute;text-decoration:none}
+.lyt-spc{left:10px;right:10px;top:10px;height:14px}
+.lyt-spc i{top:0;height:14px;border-radius:99px;background:rgba(255,255,255,.16)}
+.lyt-spc i:nth-child(1){left:0;width:22%;background:linear-gradient(90deg,#6366f1,#8b5cf6)}
+.lyt-spc i:nth-child(2){left:25%;width:18%}.lyt-spc i:nth-child(3){left:46%;width:24%}.lyt-spc i:nth-child(4){left:73%;width:20%}
+.lyt-spk{border-radius:12px;border:1px solid rgba(255,255,255,.18);background:linear-gradient(165deg,#2b2566,#14102f);overflow:hidden}
+.lyt-spk u{left:10%;right:10%;height:5px;border-radius:9px;background:rgba(255,255,255,.22)}
+.lyt-spk.m{left:25%;right:25%;top:34px;bottom:-6px;z-index:2;box-shadow:0 14px 26px -10px #000}
+.lyt-spk.m::before{content:"";position:absolute;left:8px;right:8px;top:8px;height:34px;border-radius:8px;background:linear-gradient(135deg,#14b8a6,#6366f1)}
+.lyt-spk.m u:nth-child(1){top:54px}.lyt-spk.m u:nth-child(2){top:66px;right:34%}.lyt-spk.m u:nth-child(3){top:78px;right:20%}
+.lyt-spk.l,.lyt-spk.r{top:48px;bottom:-14px;width:24%;opacity:.8}
+.lyt-spk.l{left:5%;transform:rotate(-5deg)}.lyt-spk.r{right:5%;transform:rotate(5deg)}
+.lyt-spk.l::before,.lyt-spk.r::before{content:"";position:absolute;left:6px;right:6px;top:6px;height:26px;border-radius:7px}
+.lyt-spk.l::before{background:linear-gradient(135deg,#f59e0b,#ef4444)}.lyt-spk.r::before{background:linear-gradient(135deg,#ec4899,#8b5cf6)}
+.lyt-spk.l u:nth-child(1),.lyt-spk.r u:nth-child(1){top:42px}.lyt-spk.l u:nth-child(2),.lyt-spk.r u:nth-child(2){top:52px;right:30%}
+.lyt-spb{left:10px;right:10px;top:10px;height:16px;border-radius:9px;background:rgba(255,255,255,.12)}
+.lyt-spg{left:10px;right:10px;top:36px;bottom:10px}
+.lyt-spg i{width:calc(25% - 6px);height:calc(50% - 5px);border-radius:10px}
+.lyt-spg i:nth-child(4n+1){left:0}.lyt-spg i:nth-child(4n+2){left:calc(25% + 2px)}.lyt-spg i:nth-child(4n+3){left:calc(50% + 4px)}.lyt-spg i:nth-child(4n){left:calc(75% + 6px)}
+.lyt-spg i:nth-child(-n+4){top:0}.lyt-spg i:nth-child(n+5){top:calc(50% + 5px)}
+.lyt-spg i:nth-child(1){background:linear-gradient(135deg,#f59e0b,#ef4444)}.lyt-spg i:nth-child(2){background:linear-gradient(135deg,#14b8a6,#6366f1)}.lyt-spg i:nth-child(3){background:linear-gradient(135deg,#ec4899,#8b5cf6)}.lyt-spg i:nth-child(4){background:linear-gradient(135deg,#38bdf8,#6366f1)}
+.lyt-spg i:nth-child(5){background:linear-gradient(135deg,#34d399,#0ea5e9)}.lyt-spg i:nth-child(6){background:linear-gradient(135deg,#fbbf24,#f97316)}.lyt-spg i:nth-child(7){background:linear-gradient(135deg,#a78bfa,#6366f1)}.lyt-spg i:nth-child(8){background:linear-gradient(135deg,#fb7185,#f59e0b)}
+.lyt-sfg{display:grid;grid-template-columns:repeat(auto-fill,minmax(168px,1fr));gap:10px;transition:opacity .2s}
+.lyt-sfg.dim{opacity:.5}
+.lyt-ft{all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:16px;border:1.5px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);transition:border-color .2s,background .2s,opacity .2s}
+.lyt-ft:hover{border-color:rgba(165,180,252,.5)}
+.lyt-ft:not(.on){opacity:.55}
+.lyt-ft.on{border-color:rgba(165,180,252,.45);background:rgba(129,140,248,.1)}
+.lyt-fi{flex:none;width:38px;height:38px;border-radius:12px;background:var(--g);display:grid;place-items:center;color:#fff;font-size:16px;box-shadow:0 10px 20px -10px #000}
+.lyt-ft b{flex:1;min-width:0;font:700 13.5px/1.25 'Plus Jakarta Sans',system-ui,sans-serif;color:#fff}
+.lyt-sw{flex:none;width:36px;height:22px;border-radius:99px;background:rgba(255,255,255,.18);position:relative;transition:background .2s}
+.lyt-sw::after{content:"";position:absolute;left:3px;top:3px;width:16px;height:16px;border-radius:50%;background:#fff;transition:transform .2s}
+.lyt-ft.on .lyt-sw{background:linear-gradient(135deg,#6366f1,#8b5cf6)}
+.lyt-ft.on .lyt-sw::after{transform:translateX(14px)}
 </style><script id="lr-layout">(function(){
 var LS='lr_layout',H=document.documentElement,D=document;
 function get(){try{return localStorage.getItem(LS)}catch(e){return null}}
 function put(v){try{localStorage.setItem(LS,v)}catch(e){}}
 var mode=get()==='cards'?'cards':'bar';
+var OFF=(function(){try{var a=JSON.parse(localStorage.getItem('lr_gal_off')||'[]');return Array.isArray(a)?a:[]}catch(e){return[]}})();
+function isOff(k){return OFF.indexOf(k)>-1}
+function saveOff(){try{localStorage.setItem('lr_gal_off',JSON.stringify(OFF))}catch(e){}}
 function apply(m){mode=m;H.classList.toggle('lr-cards',m==='cards');H.classList.toggle('lr-bar',m!=='cards');if(m==='cards'){build();adopt();poll()}else release()}
 var pt=0;function poll(){var n=0;clearInterval(pt);pt=setInterval(function(){n++;adopt();if(n>50||mode!=='cards')clearInterval(pt)},400)}
 var ORDER=['exams','reading','dictionary','grammar','games','ai','movies','club','mentors','wordforge','library','cards','profile'];
 var MOTIF={dictionary:'a',exams:'d',grammar:'a',mentors:'b',ai:'c',games:'b',wordforge:'b',library:'b',movies:'b',club:'c',profile:'d',reading:'a',cards:'b'};
 function tiles(){var T=[];try{T=HB_TILES.slice()}catch(e){}
- var by={};T.forEach(function(t){by[t.id]=t});var out=[];ORDER.forEach(function(id){if(by[id]){out.push(by[id]);delete by[id]}});Object.keys(by).forEach(function(k){out.push(by[k])});return out}
+ var by={};T.forEach(function(t){by[t.id]=t});var out=[];ORDER.forEach(function(id){if(by[id]){out.push(by[id]);delete by[id]}});Object.keys(by).forEach(function(k){out.push(by[k])});return out.filter(function(t){return !isOff(t.id)})}
 
 /* live widgets from the Hub move into the gallery, so they work right there */
 var LIVE=[
@@ -55193,14 +55274,14 @@ function order(el){return +el.getAttribute('data-o')}
 function place(tr,el){var o=order(el),cs=tr.children,i;for(i=0;i<cs.length;i++){if(order(cs[i])>o){tr.insertBefore(el,cs[i]);return}}tr.appendChild(el)}
 function adopt(){
  var v=D.getElementById('view-dashboard'),tr=D.querySelector('#lyt-hub .lyt-track');if(!v||!tr||mode!=='cards')return;
- LIVE.forEach(function(L,i){if(tr.querySelector('[data-k="'+L[0]+'"]'))return;var n=L[1](v);if(!n||n.closest('#lyt-hub'))return;
+ LIVE.forEach(function(L,i){if(tr.querySelector('[data-k="'+L[0]+'"]'))return;var n=L[1](v);if(!n||n.closest('#lyt-hub'))return;if(isOff(L[0])){n.classList.add('lyt-hide');return}
   var ph=D.createComment('lyt:'+L[0]);n.parentNode.insertBefore(ph,n);
   var s=D.createElement('div');s.className='lyt-card lyt-live';s.setAttribute('data-k',L[0]);s.setAttribute('data-o',String(i));s.setAttribute('role','group');
   s.__ph=ph;s.__n=n;s.appendChild(n);place(tr,s)});
  var bt=D.getElementById('hb-bento');if(bt){var x=bt;while(x&&x.parentElement&&x.parentElement!==v)x=x.parentElement;if(x&&x.parentElement===v)x.classList.add('lyt-hide')}
  tr.dispatchEvent(new Event('scroll'));
 }
-function release(){try{window.__lytUnhost&&window.__lytUnhost()}catch(e){}
+function release(){try{window.__lytUnmountAll&&window.__lytUnmountAll()}catch(e){}
  var tr=D.querySelector('#lyt-hub .lyt-track');if(tr){Array.prototype.slice.call(tr.querySelectorAll('.lyt-live')).forEach(function(s){try{if(s.__ph&&s.__ph.parentNode)s.__ph.parentNode.replaceChild(s.__n,s.__ph);else if(s.__n.parentNode===s)s.remove()}catch(e){}s.remove()})}
  D.querySelectorAll('.lyt-hide').forEach(function(e){e.classList.remove('lyt-hide')});
 }
@@ -55214,14 +55295,17 @@ var QA={
 };
 function qaHtml(t){var q=QA[t.id];if(!q)return '';
  return '<div class="lyt-qa"><form class="lyt-qf" data-q="'+t.id+'" autocomplete="off"><input type="text" name="q" placeholder="'+esc(q.ph)+'" enterkeyhint="go" autocapitalize="off" spellcheck="false" aria-label="'+esc(q.ph)+'"><button type="submit">Go</button></form><div class="lyt-qr" aria-live="polite"></div><button type="button" class="lyt-qo" onclick="'+t.go+'">Open full page</button></div>'}
-function card(t){var m=MOTIF[t.id]||'a',live='';try{if(typeof t.live==='function')live=t.live()}catch(e){}
+function cardOld(t){var m=MOTIF[t.id]||'a',live='';try{if(typeof t.live==='function')live=t.live()}catch(e){}
  var body='<s></s><s></s><s></s><s></s>';if(m==='b')body='<s></s><s></s><s></s><s></s><s></s><s></s>';if(m==='c')body='<s></s><s></s><s></s>';if(m==='d')body='<s></s><s></s><s></s><s></s><s></s>';
  var qa='';
  return '<div class="lyt-card'+(t.custom&&!inSheet?' lyt-on lyt-cust':'')+'" data-id="'+t.id+'" data-o="'+(100+(card.i=(card.i||0)+1))+'" style="--c:'+(t.c||'rgba(129,140,248,.3)')+'" role="group" aria-label="'+esc(t.title)+'">'+
  '<span class="lyt-art" onclick="'+t.go+'" style="--g:'+t.g+'">'+(t.isNew?'<span class="lyt-new">NEW</span>':'')+'<span class="lyt-ic"><i class="fa-solid '+t.icon+'" aria-hidden="true"></i></span><span class="lyt-win"><b><i></i><i></i><i></i></b><span class="lyt-body lyt-m-'+m+'">'+body+'</span></span></span>'+
  '<span class="lyt-meta" onclick="'+t.go+'"><b>'+t.title+'</b><span>'+t.desc+'</span>'+(live?'<em>'+esc(live)+'</em>':'')+'</span>'+face(t)+'</div>'}
+function viewId(t){var m=/navigateTo\('([\w-]+)'\)/.exec(t.go||''),id=m&&m[1];return(id&&id!=='dashboard'&&id!=='chess'&&D.getElementById('view-'+id))?id:null}
+function card(t){if(inSheet)return cardOld(t);var vid=viewId(t);
+ return '<div class="lyt-card lyt-on" data-o="'+(100+(card.i=(card.i||0)+1))+'" data-id="'+t.id+'"'+(vid?' data-view="'+vid+'"':'')+' style="--c:'+(t.c||'rgba(129,140,248,.3)')+'" role="group" aria-label="'+esc(t.title)+'">'+face(t,vid)+'</div>'}
 var inSheet=0;
-function face(t){return '<div class="lyt-face"><div class="lyt-bar"><span class="lyt-bi" style="--g:'+t.g+'"><i class="fa-solid '+t.icon+'" aria-hidden="true"></i></span><b>'+t.title+'</b>'+(t.custom?'':'<button type="button" class="lyt-fs" onclick="'+t.go+'"><i class="fa-solid fa-up-right-and-down-left-from-center" aria-hidden="true"></i><span>Full screen</span></button>')+'</div><div class="lyt-stage">'+(t.custom?trHtml():'')+'</div></div>'}
+function face(t,vid){return '<div class="lyt-face"><div class="lyt-bar"><span class="lyt-bi" style="--g:'+t.g+'"><i class="fa-solid '+t.icon+'" aria-hidden="true"></i></span><b>'+t.title+'</b>'+(vid?'<button type="button" class="lyt-fs" onclick="'+t.go+'"><i class="fa-solid fa-up-right-and-down-left-from-center" aria-hidden="true"></i><span>Full screen</span></button>':'')+'</div><div class="lyt-stage">'+(vid?'':'<div class="lyt-opn"><span class="lyt-oi" style="--g:'+t.g+'"><i class="fa-solid '+t.icon+'" aria-hidden="true"></i></span><h3>'+t.title+'</h3><p>'+t.desc+'</p><button type="button" class="lyt-go2" onclick="'+t.go+'">Open '+t.title+'</button></div>')+'</div></div>'}
 function trHtml(){return '<form class="lyt-tr" autocomplete="off"><label class="lyt-trl" for="lyt-tr-in">Type an English sentence or word</label><textarea id="lyt-tr-in" rows="3" placeholder="Hello, how are you today?" spellcheck="false"></textarea><div class="lyt-trb"><button type="submit" class="lyt-trg">Translate</button><button type="button" class="lyt-trs" data-a="say">Listen</button><button type="button" class="lyt-trs" data-a="clear">Clear</button></div><div class="lyt-trr" aria-live="polite"></div></form>'}
 function trRun(f){var ta=f.querySelector('textarea'),w=(ta.value||'').trim(),box=f.querySelector('.lyt-trr');if(!w){ta.focus();return}
  box.innerHTML='<p class="lyt-qw">Translating…</p>';var e=function(x){return esc(x)};
@@ -55247,7 +55331,7 @@ function track(){card.i=0;return '<div class="lyt-track" tabindex="0" role="regi
 function wire(root){var tr=root.querySelector('.lyt-track'),bar=root.querySelector('.lyt-prog i');if(!tr)return;
  var raf=0;function upd(){raf=0;var r=tr.getBoundingClientRect(),cx=r.left+r.width/2,cs=tr.children;
   for(var i=0;i<cs.length;i++){var b=cs[i].getBoundingClientRect(),dx=(b.left+b.width/2-cx)/(b.width*.8),d=Math.min(1.5,Math.abs(dx)),sg=dx<0?-1:1,st=cs[i].style;
-   st.setProperty('--s',(1-.14*d).toFixed(3));st.setProperty('--o',(1-.34*Math.min(1,d)).toFixed(3));st.setProperty('--r',(-sg*Math.min(1,d)*16).toFixed(1)+'deg');st.setProperty('--y',(Math.min(1,d)*26).toFixed(1)+'px');st.setProperty('--z',String(100-Math.round(d*10)))}
+   st.setProperty('--s',(1-.14*d).toFixed(3));st.setProperty('--o',(1-.12*Math.min(1,d)).toFixed(3));st.setProperty('--r',(-sg*Math.min(1,d)*16).toFixed(1)+'deg');st.setProperty('--y',(Math.min(1,d)*26).toFixed(1)+'px');st.setProperty('--z',String(100-Math.round(d*10)))}
   var max=tr.scrollWidth-tr.clientWidth,p=max>0?tr.scrollLeft/max:0,w=Math.max(.12,tr.clientWidth/tr.scrollWidth);if(bar){bar.style.width=(w*100)+'%';bar.style.transform='translateX('+(p*(1/w-1)*100)+'%)'}}
  function sched(){if(!raf)raf=requestAnimationFrame(upd)}
  tr.addEventListener('scroll',sched,{passive:true});addEventListener('resize',sched);setTimeout(upd,30);setTimeout(upd,400);
@@ -55265,8 +55349,8 @@ function wire(root){var tr=root.querySelector('.lyt-track'),bar=root.querySelect
 function hubHtml(){return '<div class="lyt-h"><div><h2>Explore LunaRise</h2><p>Swipe sideways. Everything works right here.</p></div><div class="lyt-ctl"><button type="button" class="lyt-lay" aria-label="Change layout"><i class="fa-solid fa-sliders" aria-hidden="true"></i><span>Layout</span></button><button type="button" class="lyt-a" data-d="-1" aria-label="Previous"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i></button><button type="button" class="lyt-a" data-d="1" aria-label="Next"><i class="fa-solid fa-chevron-right" aria-hidden="true"></i></button></div></div><div class="lyt-chips" role="tablist" aria-label="Jump to a feature"></div>'+track()}
 function build(){
  var v=D.getElementById('view-dashboard');
- if(v){var s=D.getElementById('lyt-hub');if(!s){s=D.createElement('section');s.id='lyt-hub';s.className='lc';s.setAttribute('aria-label','Features');v.insertBefore(s,v.firstChild)}
-  if(!s.__n||s.__n!==tiles().length){s.innerHTML=hubHtml();s.__n=tiles().length;wire(s);
+ if(v){var s=D.getElementById('lyt-hub');if(!s){s=D.createElement('section');s.id='lyt-hub';s.className='lc';s.setAttribute('aria-label','Features');var hero=v.querySelector(':scope > .hb-hero');if(hero)v.insertBefore(s,hero.nextSibling);else v.insertBefore(s,v.firstChild)}
+  if(!s.__n||s.__n!==tiles().length){try{window.__lytUnmountAll&&window.__lytUnmountAll()}catch(e){}s.innerHTML=hubHtml();s.__n=tiles().length;wire(s);
    s.querySelectorAll('.lyt-a').forEach(function(b){b.onclick=function(){s.__step(+b.dataset.d)}});s.querySelector('.lyt-lay').onclick=function(){openPick(false)}}}
 }
 var sheet=null;
@@ -55301,11 +55385,20 @@ window.lrLayout={open:function(){openPick(false)},set:function(m){apply(m);put(m
 function busy(){try{if(H.classList.contains('lr-intro-on')||H.classList.contains('o3-open'))return true;
  var m=D.querySelectorAll('[id^="modal-"]');for(var i=0;i<m.length;i++){if(!m[i].classList.contains('hidden')&&m[i].offsetParent!==null)return true}
  var dl=D.querySelectorAll('[role="dialog"][aria-modal="true"]');for(var j=0;j<dl.length;j++){var e=dl[j];if(e.id==='lyt-pick'||e.id==='lyt-sheet')continue;var cs=getComputedStyle(e),r=e.getBoundingClientRect();if(cs.display!=='none'&&cs.visibility!=='hidden'&&+cs.opacity>.5&&r.width>0&&r.height>0)return true}
- if(D.querySelector('#lc-pn,#lu3-intro,#lr-ibs,#lr-news,#lr-gift,#lr-recover,#adm'))return true}catch(e){}return false}
+ var ids=['lc-pn','lu3-intro','lr-ibs','lr-news','lr-gift','lr-recover','adm'];for(var k=0;k<ids.length;k++){var o=D.getElementById(ids[k]);if(o&&vis(o))return true}}catch(e){}return false}
+function vis(e){var cs=getComputedStyle(e),r=e.getBoundingClientRect();return cs.display!=='none'&&cs.visibility!=='hidden'&&+cs.opacity>.05&&r.width>4&&r.height>4&&!e.classList.contains('hidden')}
 function registered(){try{return !!(state&&state.user&&state.user.registered)}catch(e){return false}}
 function hubVisible(){var v=D.getElementById('view-dashboard');return !!v&&!v.classList.contains('hidden')}
-function wait(){if(get())return;var n=0,t=setInterval(function(){n++;if(get()||n>600){clearInterval(t);return}
- if(registered()&&hubVisible()&&!busy()){clearInterval(t);setTimeout(function(){if(!get()&&!busy())openPick(true)},1200)}},1500)}
+function asked(){try{return !!localStorage.getItem('lr_layout_asked')}catch(e){return false}}
+function firstShow(){var v=D.getElementById('view-dashboard');if(!v||D.getElementById('lyt-first'))return;
+ var f=D.createElement('section');f.id='lyt-first';f.setAttribute('aria-label','Choose your Hub style');
+ f.innerHTML='<h2>How should your Hub look?</h2><p>Pick one now. You can change it any time in Profile → Settings → Home screen.</p><div class="lyt-ops">'+
+  '<button type="button" class="lyt-op" data-m="cards"><span class="lyt-pv pv-c1"><s class="tb"></s><i></i><i></i><i></i></span><b>Swipe gallery</b><span>Every feature is a card you can use right there. Swipe sideways to browse.</span></button>'+
+  '<button type="button" class="lyt-op" data-m="bar"><span class="lyt-pv pv-b1"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span><b>Classic</b><span>The feature grid, as it is now.</span></button></div>';
+ var hero=v.querySelector(':scope > .hb-hero');if(hero)v.insertBefore(f,hero.nextSibling);else v.insertBefore(f,v.firstChild);
+ f.querySelectorAll('.lyt-op').forEach(function(b){b.onclick=function(){var m=b.getAttribute('data-m');try{localStorage.setItem('lr_layout_asked','1')}catch(e){}put(m);if(m!==mode)apply(m);f.classList.add('out');setTimeout(function(){f.remove()},260)}})}
+function wait(){if(get()||asked())return;var n=0,t=setInterval(function(){n++;if(get()||asked()||n>800){clearInterval(t);var f=D.getElementById('lyt-first');if(f&&(get()||asked()))f.remove();return}
+ if(registered()&&hubVisible()&&!H.classList.contains('lr-intro-on')){clearInterval(t);firstShow()}},900)}
 function init(){apply(mode);wait();
  /* the hub can be redrawn: keep the cards in place */
  var v=D.getElementById('view-dashboard');if(v&&window.MutationObserver){new MutationObserver(function(){if(mode==='cards'&&!D.getElementById('lyt-hub'))build()}).observe(v,{childList:true})}}
@@ -55340,38 +55433,73 @@ if(D.getElementById('view-dashboard')||D.readyState!=='loading')init();else D.ad
 D.addEventListener('submit',function(e){var f=e.target;if(f&&f.classList&&f.classList.contains('lyt-qf')){e.preventDefault();qaRun(f)}});
 D.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('.lyt-qb button');if(!b)return;var a=b.getAttribute('data-a'),w=b.getAttribute('data-w');try{if(a==='say')speakText(w);else if(a==='save')saveWord(w);else if(a==='more')openSavedWord(w)}catch(x){}});
 
-/* ===== v119: each card becomes the real feature: use it right here ===== */
-var origNav=null,hosted=null,hT=0;
+/* ===== v121: every card is the real feature, ready before you get there ===== */
+var origNav=null,mnt={},warmed={},act=null,hT=0,lastSc=0,warmT=0;
 function trk(){return D.querySelector('#lyt-hub .lyt-track')}
 function dashOn(){var v=D.getElementById('view-dashboard');return !!v&&!v.classList.contains('hidden')}
-function viewOf(c){var a=c.querySelector('.lyt-art'),m=a&&/navigateTo\('([\w-]+)'\)/.exec(a.getAttribute('onclick')||'');if(!m)return null;var id=m[1];if(id==='dashboard'||id==='chess'||!D.getElementById('view-'+id))return null;return id}
 function ctr(){var tr=trk();if(!tr)return null;var r=tr.getBoundingClientRect(),cx=r.left+r.width/2,bi=null,bd=1e9;Array.prototype.forEach.call(tr.children,function(c){var b=c.getBoundingClientRect(),d=Math.abs(b.left+b.width/2-cx);if(d<bd){bd=d;bi=c}});return bi}
-function navMark(){D.querySelectorAll('.nav-btn').forEach(function(b){var on=b.dataset.target==='dashboard',cl=['bg-slate-800','text-white','border','border-slate-700'];cl.forEach(function(k){b.classList.toggle(k,on)})})}
-function keepPos(fn){var tr=trk(),sl=tr?tr.scrollLeft:0,y=window.pageYOffset,sb=tr?tr.style.scrollBehavior:'';if(tr)tr.style.scrollBehavior='auto';try{fn()}finally{if(tr){tr.scrollLeft=sl;tr.style.scrollBehavior=sb}try{window.scrollTo({top:y,behavior:'instant'})}catch(e){window.scrollTo(0,y)}}}
-function unhost(){if(!hosted||!origNav)return;var h=hosted;hosted=null;
- keepPos(function(){try{h.view.classList.add('hidden');if(h.ph.parentNode)h.ph.parentNode.replaceChild(h.view,h.ph)}catch(e){}
-  h.card.classList.remove('lyt-on');try{origNav('dashboard')}catch(e){console.error(e)}})}
-function host(c,id){if(!origNav)return;if(hosted)unhost();
- keepPos(function(){try{origNav(id)}catch(e){console.error(e)}
-  var v=D.getElementById('view-'+id),st=c.querySelector('.lyt-stage');if(!v||!st)return;
-  var ph=D.createComment('lyt-view:'+id);v.parentNode.insertBefore(ph,v);st.appendChild(v);v.classList.remove('hidden');
-  var d=D.getElementById('view-dashboard');if(d)d.classList.remove('hidden');navMark();if(id!=='games'){try{lbSetView('dashboard')}catch(e){D.body.dataset.view='dashboard'}}
-  c.classList.add('lyt-on');hosted={card:c,view:v,ph:ph,id:id}})}
-function settle(){if(mode!=='cards')return;var c=ctr();if(!c||(!dashOn()&&!hosted))return;if(hosted&&hosted.card===c)return;
- var id=c.classList.contains('lyt-cust')?null:viewOf(c);if(!id){unhost();return}host(c,id)}
+function navMark(){D.querySelectorAll('.nav-btn').forEach(function(b){var on=b.dataset.target==='dashboard';['bg-slate-800','text-white','border','border-slate-700'].forEach(function(k){b.classList.toggle(k,on)})})}
+var lastUser=0;['touchstart','wheel','pointerdown','keydown'].forEach(function(ev){addEventListener(ev,function(){lastUser=performance.now()},{passive:true,capture:true})});
+function keepPos(fn){var t0=performance.now(),tr=trk(),sl=tr?tr.scrollLeft:0,y=window.pageYOffset,sb=tr?tr.style.scrollBehavior:'';if(tr)tr.style.scrollBehavior='auto';try{fn()}finally{if(tr){tr.scrollLeft=sl;tr.style.scrollBehavior=sb}try{window.scrollTo({top:y,behavior:'instant'})}catch(e){window.scrollTo(0,y)}}
+ /* a feature that grabs the keyboard or scrolls the page by itself must not move the learner */
+ [40,160,420,900].forEach(function(d){setTimeout(function(){if(lastUser>t0)return;var a=D.activeElement;if(a&&a!==D.body&&a.closest&&a.closest('.lyt-stage')){try{a.blur()}catch(e){}}
+  if(Math.abs(window.pageYOffset-y)>2){try{window.scrollTo({top:y,behavior:'instant'})}catch(e){window.scrollTo(0,y)}}},d)})}
+function mount(c,id){var v=D.getElementById('view-'+id),st=c.querySelector('.lyt-stage');if(!v||!st)return;if(mnt[id]&&mnt[id].view===v&&v.parentNode===st)return;
+ var ph=D.createComment('lyt-view:'+id);if(v.parentNode)v.parentNode.insertBefore(ph,v);st.appendChild(v);mnt[id]={card:c,view:v,ph:ph};c.classList.add('lyt-ready')}
+function unmount(id){var m=mnt[id];if(!m)return;delete mnt[id];try{m.view.classList.add('hidden');if(m.ph.parentNode)m.ph.parentNode.replaceChild(m.view,m.ph)}catch(e){}m.card.classList.remove('lyt-ready')}
+function unhideAll(){Object.keys(mnt).forEach(function(k){mnt[k].view.classList.remove('hidden')})}
+function after(id){var d=D.getElementById('view-dashboard');if(d)d.classList.remove('hidden');unhideAll();navMark();if(id!=='games'){try{lbSetView('dashboard')}catch(e){D.body.dataset.view='dashboard'}}}
+function setAct(c){var tr=trk();if(!tr)return;Array.prototype.forEach.call(tr.querySelectorAll('.lyt-act'),function(x){if(x!==c)x.classList.remove('lyt-act')});if(c)c.classList.add('lyt-act')}
+function cardOf(id){var tr=trk();return tr&&tr.querySelector('.lyt-card[data-view="'+id+'"]')}
+function enter(c,id){if(!origNav)return;keepPos(function(){try{origNav(id)}catch(e){console.error(e)}mount(c,id);warmed[id]=1;after(id)});act=id;setAct(c)}
+function leaveAll(){if(!origNav)return;keepPos(function(){try{origNav('dashboard')}catch(e){console.error(e)}after('dashboard')});act=null}
+function warm(c,id){if(mnt[id]||!origNav)return;keepPos(function(){try{origNav(id);mount(c,id);warmed[id]=1;origNav('dashboard')}catch(e){console.error(e)}after('dashboard')})}
+function settle(){if(mode!=='cards')return;var c=ctr();if(!c||!dashOn())return;var id=c.getAttribute('data-view');
+ if(id){if(act===id&&c.classList.contains('lyt-act'))return;enter(c,id)}else{if(act)leaveAll();setAct(c)}}
+function unmountAll(){Object.keys(mnt).forEach(unmount);act=null;var tr=trk();if(tr)Array.prototype.forEach.call(tr.querySelectorAll('.lyt-act'),function(x){x.classList.remove('lyt-act')})}
+function remountAll(){var tr=trk();if(!tr)return;Array.prototype.forEach.call(tr.querySelectorAll('.lyt-card[data-view]'),function(c){var id=c.getAttribute('data-view');if(warmed[id]&&!mnt[id])mount(c,id)});unhideAll()}
+function warmNext(){clearTimeout(warmT);if(mode!=='cards')return;
+ var tr=trk();if(!tr||D.hidden||H.classList.contains('lr-intro-on')||!dashOn()||performance.now()-lastSc<500||busy()){warmT=setTimeout(warmNext,1500);return}
+ var cs=Array.prototype.slice.call(tr.children),m=cs.indexOf(ctr()),best=null,bd=1e9;
+ cs.forEach(function(c,i){var id=c.getAttribute('data-view');if(!id||mnt[id]||id==='club')return;var d=Math.abs(i-m);if(d<bd){bd=d;best=c}});
+ if(!best){warmT=setTimeout(warmNext,4000);return}
+ var run=function(){try{warm(best,best.getAttribute('data-view'))}catch(e){console.error(e)}warmT=setTimeout(warmNext,500)};
+ if(window.requestIdleCallback)requestIdleCallback(run,{timeout:2500});else run()}
 function chipsRefresh(){var tr=trk(),box=D.querySelector('#lyt-hub .lyt-chips');if(!tr||!box)return;
  var NM={coach:'Today',lookup:'Quick lookup',wod:'Word of the day',week:'This week',exam:'Exam countdown',timer:'Study timer',music:'Music',tip:'Study tip'},cs=Array.prototype.slice.call(tr.children),sig=cs.map(function(c){return c.getAttribute('data-k')||c.getAttribute('data-id')||''}).join();
  if(box.__sig===sig)return;box.__sig=sig;box.innerHTML='';
- cs.forEach(function(c,i){var k=c.getAttribute('data-k'),nm=k?NM[k]:(c.getAttribute('aria-label')||'');if(!nm)return;var b=D.createElement('button');b.type='button';b.className='lyt-chip';b.setAttribute('role','tab');b.textContent=nm;b.__c=c;box.appendChild(b)})}
+ cs.forEach(function(c){var k=c.getAttribute('data-k'),nm=k?NM[k]:(c.getAttribute('aria-label')||'');if(!nm)return;var b=D.createElement('button');b.type='button';b.className='lyt-chip';b.setAttribute('role','tab');b.textContent=nm;b.__c=c;box.appendChild(b)})}
 function chipsOn(){var box=D.querySelector('#lyt-hub .lyt-chips');if(!box)return;var c=ctr(),on=null;Array.prototype.forEach.call(box.children,function(b){var a=b.__c===c;b.classList.toggle('on',a);b.setAttribute('aria-selected',String(a));if(a)on=b});
  if(on){var l=on.offsetLeft-(box.clientWidth-on.offsetWidth)/2;box.scrollTo?box.scrollTo({left:l,behavior:'smooth'}):box.scrollLeft=l}}
 function hookTrack(){var tr=trk();if(!tr||tr.__h)return;tr.__h=1;
- tr.addEventListener('scroll',function(){clearTimeout(hT);hT=setTimeout(function(){settle();chipsOn()},220)},{passive:true});chipsRefresh();setTimeout(chipsOn,300)}
+ tr.addEventListener('scroll',function(){lastSc=performance.now();clearTimeout(hT);hT=setTimeout(function(){settle();chipsOn()},140)},{passive:true});chipsRefresh();setTimeout(chipsOn,300);clearTimeout(warmT);warmT=setTimeout(warmNext,3500)}
 function installNav(){if(origNav||typeof window.navigateTo!=='function')return;origNav=window.navigateTo;
- window.navigateTo=function(id){if(hosted)unhost();var r=origNav.apply(this,arguments);if(id==='dashboard'&&mode==='cards'){clearTimeout(hT);hT=setTimeout(function(){settle();chipsOn()},260)}return r}}
-window.__lytUnhost=unhost;
-setInterval(function(){if(mode!=='cards')return;installNav();hookTrack();chipsRefresh()},700);
+ window.navigateTo=function(id){if(id!=='dashboard'&&mnt[id])unmount(id);if(id!=='dashboard'){act=null;setAct(null)}
+  var r=origNav.apply(this,arguments);if(id==='dashboard'&&mode==='cards'){remountAll();clearTimeout(hT);hT=setTimeout(function(){settle();chipsOn()},200)}return r}}
+window.__lytUnmountAll=unmountAll;
+/* settings: choose how the Hub looks */
+function setHtml(){var T=tiles0(),L=[['coach','Today','fa-wand-magic-sparkles','linear-gradient(135deg,#8b5cf6,#6366f1)'],['lookup','Quick lookup','fa-bolt','linear-gradient(135deg,#f59e0b,#ef4444)'],['wod','Word of the day','fa-sun','linear-gradient(135deg,#fbbf24,#f97316)'],['week','This week','fa-calendar-week','linear-gradient(135deg,#38bdf8,#6366f1)'],['timer','Study timer','fa-stopwatch','linear-gradient(135deg,#34d399,#0ea5e9)'],['music','Music','fa-music','linear-gradient(135deg,#ec4899,#8b5cf6)'],['tip','Study tip','fa-lightbulb','linear-gradient(135deg,#facc15,#f59e0b)']],items=L.slice();
+ T.forEach(function(t){items.push([t.id,t.title,t.icon,t.g])});
+ var tile=function(x){return '<button type="button" class="lyt-ft" data-f="'+x[0]+'" aria-pressed="true"><span class="lyt-fi" style="--g:'+x[3]+'"><i class="fa-solid '+x[2]+'" aria-hidden="true"></i></span><b>'+esc(x[1])+'</b><span class="lyt-sw" aria-hidden="true"></span></button>'};
+ return '<div class="lyt-sh"><div class="lyt-st">Home screen</div><p>Choose how your Hub looks and which features you see.</p></div>'+
+ '<div class="lyt-sl">Style</div><div class="lyt-sops" role="radiogroup" aria-label="Hub style">'+
+ '<button type="button" class="lyt-sop" role="radio" data-lm="cards"><span class="ck"><i class="fa-solid fa-check" aria-hidden="true"></i></span><span class="lyt-sp lyt-sp-g"><span class="lyt-spc"><i></i><i></i><i></i><i></i></span><span class="lyt-spk l"><u></u><u></u></span><span class="lyt-spk m"><u></u><u></u><u></u></span><span class="lyt-spk r"><u></u><u></u></span></span><b>Swipe gallery</b><small>Every feature is a big card you use right there. Swipe sideways.</small></button>'+
+ '<button type="button" class="lyt-sop" role="radio" data-lm="bar"><span class="ck"><i class="fa-solid fa-check" aria-hidden="true"></i></span><span class="lyt-sp lyt-sp-c"><span class="lyt-spb"></span><span class="lyt-spg"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span></span><b>Classic</b><small>A clean grid of features. Tap one to open it.</small></button></div>'+
+ '<div class="lyt-sl">Features in the gallery <button type="button" class="lyt-rs" data-reset="1">Show all</button></div><div class="lyt-sfg" id="lyt-tg">'+items.map(tile).join('')+'</div>'}
+function tiles0(){var T=[];try{T=HB_TILES.slice()}catch(e){}return T}
+function setSync(c){c.querySelectorAll('[data-lm]').forEach(function(b){var on=b.getAttribute('data-lm')===mode;b.setAttribute('aria-checked',String(on));b.classList.toggle('on',on)});c.querySelectorAll('[data-f]').forEach(function(b){var on=!isOff(b.getAttribute('data-f'));b.classList.toggle('on',on);b.setAttribute('aria-pressed',String(on))});var g=c.querySelector('.lyt-sfg');if(g)g.classList.toggle('dim',mode!=='cards')}
+function refresh(){unmountAll();release();var s=D.getElementById('lyt-hub');if(s)s.__n=0;if(mode==='cards'){build();adopt();poll();warmed={};clearTimeout(warmT);warmT=setTimeout(warmNext,2500)}}
+function injectSet(){var p=D.querySelector('.pf-panel[data-panel="settings"]');if(!p)return;var c=D.getElementById('lyt-set');
+ if(!c){c=D.createElement('div');c.className='pf-card';c.id='lyt-set';c.innerHTML=setHtml();p.insertBefore(c,p.firstChild);
+  c.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('button');if(!b)return;var lm=b.getAttribute('data-lm'),f=b.getAttribute('data-f');if(b.getAttribute('data-reset')){OFF.length=0;saveOff();if(mode==='cards')refresh();setSync(c);return}
+   if(lm){if(lm!==mode){apply(lm);put(lm);try{localStorage.setItem('lr_layout_asked','1')}catch(x){}}}
+   else if(f){var i=OFF.indexOf(f);if(i>-1)OFF.splice(i,1);else OFF.push(f);saveOff();if(mode==='cards')refresh()}
+   setSync(c)})}
+ setSync(c)}
+window.__lytRefresh=refresh;
+setInterval(function(){injectSet();if(mode!=='cards')return;installNav();hookTrack();chipsRefresh()},700);
 D.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('.lyt-chip');if(!b||!b.__c)return;e.preventDefault();b.__c.scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'})});
+
 D.addEventListener('submit',function(e){var f=e.target;if(f&&f.classList&&f.classList.contains('lyt-tr')){e.preventDefault();trRun(f)}});
 D.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('.lyt-tr button[data-a]');if(!b)return;var f=b.closest('form'),ta=f.querySelector('textarea'),a=b.getAttribute('data-a');
  try{if(a==='say')speakText(ta.value);else if(a==='clear'){ta.value='';f.querySelector('.lyt-trr').innerHTML='';ta.focus()}else if(a==='cp'){var t=b.getAttribute('data-t');if(navigator.clipboard)navigator.clipboard.writeText(t);b.textContent='Copied';setTimeout(function(){b.textContent='Copy'},1200)}}catch(x){}});
