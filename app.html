@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" class="dark">
-<head><meta charset="UTF-8"><!--v112:head--><script id="lr-v112">(function(){try{
+<head><meta charset="UTF-8"><script>try{if(localStorage.getItem('lr_layout')==='cards')document.documentElement.classList.add('lr-cards')}catch(e){}</script><!--v112:head--><script id="lr-v112">(function(){try{
 var ua=navigator.userAgent||'',H=document.documentElement;
 /* speed-test robots and crawlers get the plain page: no opening film, no WebGL space (same content) */
 var lab=/Lighthouse|HeadlessChrome|PTST|GTmetrix|Googlebot|bingbot|Chrome-Lighthouse/i.test(ua)||navigator.webdriver===true;
@@ -47189,7 +47189,7 @@ void main(){
     /* ---------- the reminder in the middle of the screen ---------- */
     function busyScreen() {
         const h = D.documentElement;
-        if (h.classList.contains('lr-intro-on') || h.classList.contains('o3-open') || $('lc-pn') || $('lc-nag') || $('lr-ibs') || $('lr-news') || $('lr-gift') || $('adm')) return true;
+        if (h.classList.contains('lr-intro-on') || h.classList.contains('o3-open') || $('lc-pn') || $('lc-nag') || $('lr-ibs') || $('lr-news') || $('lr-gift') || $('adm') || document.querySelector('#lyt-pick.on')) return true;
         const gm = $('grammar-lesson-modal'); if (gm && !gm.classList.contains('hidden')) return true;
         if (D.querySelector('.sc-call.on, .sc-incall, #sc-call.on, .ch-modal.show, .fc-modal:not(.hidden)')) return true;
         return false;
@@ -55004,5 +55004,171 @@ function start(){fix();try{new MutationObserver(later).observe(document.body,{ch
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start);else start();
 window.addEventListener('load',function(){setTimeout(fix,1200)});
 })();</script><!--/v112:a11y-->
-</body>
+<style id="lr-layout-css">/* ===== LunaRise layout: swipe cards ===== */
+html.lr-cards #hb-bento,html.lr-cards #hb-bento-h{display:none!important}
+html:not(.lr-cards) #lyt-hub,html:not(.lr-cards) #lr-menu-btn,html:not(.lr-cards) #lyt-sheet{display:none!important}
+#lr-menu-btn{display:inline-flex;align-items:center;gap:8px;height:40px;padding:0 16px;margin-left:auto;margin-right:12px;border-radius:999px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.07);color:#eef0ff;font:700 13.5px 'Plus Jakarta Sans',system-ui,sans-serif;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background .2s,transform .2s}
+#lr-menu-btn:hover{background:rgba(255,255,255,.13)}
+#lr-menu-btn:active{transform:scale(.96)}
+#lr-menu-btn:focus-visible,.lyt-card:focus-visible,.lyt-a:focus-visible,.lyt-lay:focus-visible,#lyt-pick button:focus-visible{outline:2px solid #a5b4fc;outline-offset:3px}
+.lc{position:relative;margin:0 0 6px}
+.lyt-h{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;padding:0 4px 14px}
+.lyt-h h2{margin:0;font:800 clamp(20px,3.2vw,26px)/1.15 'Plus Jakarta Sans',system-ui,sans-serif;letter-spacing:-.01em;color:#fff}
+.lyt-h p{margin:4px 0 0;font:500 13.5px/1.4 'Plus Jakarta Sans',system-ui,sans-serif;color:#a9b2d6}
+.lyt-ctl{display:flex;align-items:center;gap:8px;flex:none}
+.lyt-lay,.lyt-a{height:38px;border-radius:999px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);color:#e8ebff;font:700 12.5px 'Plus Jakarta Sans',system-ui,sans-serif;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:7px;-webkit-tap-highlight-color:transparent;transition:background .2s,transform .15s}
+.lyt-lay{padding:0 14px}.lyt-a{width:38px}
+.lyt-lay:hover,.lyt-a:hover{background:rgba(255,255,255,.12)}.lyt-lay:active,.lyt-a:active{transform:scale(.94)}
+.lyt-track{--cw:min(74vw,352px);display:flex;align-items:flex-start;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scroll-behavior:smooth;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;padding:18px max(16px,calc(50% - var(--cw)/2)) 34px;margin:0 -4px;scrollbar-width:none;touch-action:pan-x pan-y;perspective:1100px;perspective-origin:50% 40%}
+.lyt-track::-webkit-scrollbar{display:none}
+.lyt-track.drag{scroll-snap-type:none;scroll-behavior:auto;cursor:grabbing}
+.lyt-card{all:unset;box-sizing:border-box;flex:0 0 auto;width:var(--cw);margin-right:calc(var(--cw)*-.2);scroll-snap-align:center;display:flex;flex-direction:column;gap:14px;padding:10px 10px 18px;border-radius:26px;border:1px solid rgba(255,255,255,.12);background:linear-gradient(165deg,rgba(30,26,62,.82),rgba(12,10,28,.72));box-shadow:0 30px 50px -26px #000,inset 0 1px 0 rgba(255,255,255,.12);cursor:pointer;-webkit-tap-highlight-color:transparent;transition:box-shadow .35s,border-color .35s;transform:translate3d(0,var(--y,0),0) rotateY(var(--r,0deg)) scale(var(--s,1));opacity:var(--o,1);z-index:var(--z,1);position:relative;backface-visibility:hidden;will-change:transform,opacity}
+@media(hover:hover){.lyt-card:hover{border-color:var(--bc,rgba(165,180,252,.6));box-shadow:0 30px 50px -24px var(--c,#000),inset 0 1px 0 rgba(255,255,255,.14)}}
+
+.lyt-art{position:relative;height:210px;border-radius:18px;background:var(--g);overflow:hidden}
+.lyt-art:before{content:"";position:absolute;inset:0;background:radial-gradient(120% 90% at 85% -10%,rgba(255,255,255,.38),transparent 55%),radial-gradient(90% 80% at 0 110%,rgba(0,0,0,.35),transparent 60%)}
+.lyt-win{position:absolute;left:18px;right:18px;top:54px;bottom:-14px;border-radius:14px 14px 0 0;background:rgba(9,10,26,.74);border:1px solid rgba(255,255,255,.2);border-bottom:0;box-shadow:0 -10px 30px -12px rgba(0,0,0,.5)}
+.lyt-win>b{display:flex;gap:5px;padding:9px 11px}.lyt-win>b i{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.35)}
+.lyt-body{padding:2px 12px 0;display:grid;gap:7px}
+.lyt-body s{display:block;height:9px;border-radius:5px;background:rgba(255,255,255,.2);text-decoration:none}
+.lyt-body s:nth-child(1){width:78%;background:rgba(255,255,255,.34)}.lyt-body s:nth-child(2){width:92%}.lyt-body s:nth-child(3){width:64%}.lyt-body s:nth-child(4){width:84%}
+.lyt-m-b{grid-template-columns:repeat(3,1fr);gap:7px}.lyt-m-b s{height:34px;width:auto!important;border-radius:9px}
+.lyt-m-c s{height:15px;border-radius:9px;width:62%!important}.lyt-m-c s:nth-child(2n){margin-left:auto;background:rgba(255,255,255,.34)}
+.lyt-m-d{grid-template-columns:repeat(5,1fr);align-items:end;height:62px;gap:8px}.lyt-m-d s{width:auto!important;border-radius:6px 6px 0 0}
+.lyt-m-d s:nth-child(1){height:26px}.lyt-m-d s:nth-child(2){height:44px}.lyt-m-d s:nth-child(3){height:34px}.lyt-m-d s:nth-child(4){height:58px}.lyt-m-d s:nth-child(5){height:40px}
+.lyt-ic{position:absolute;right:12px;top:12px;width:46px;height:46px;border-radius:15px;display:grid;place-items:center;font-size:19px;color:#fff;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.34);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.lyt-new{position:absolute;left:12px;top:14px;padding:4px 9px;border-radius:99px;background:rgba(0,0,0,.34);color:#fff;font:800 10px 'Plus Jakarta Sans',system-ui,sans-serif;letter-spacing:.06em}
+.lyt-meta{display:flex;flex-direction:column;gap:5px;padding:0 8px}
+.lyt-meta b{font:800 17px/1.25 'Plus Jakarta Sans',system-ui,sans-serif;color:#fff;letter-spacing:-.005em}
+.lyt-meta span{min-height:0;font:500 13px/1.45 'Plus Jakarta Sans',system-ui,sans-serif;color:#a9b2d6;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2.9em}
+.lyt-meta em{font:700 12px 'Plus Jakarta Sans',system-ui,sans-serif;font-style:normal;color:#d9c48d;margin-top:2px}
+.lyt-prog{height:3px;border-radius:3px;background:rgba(255,255,255,.1);margin:0 4px;overflow:hidden}
+.lyt-prog i{display:block;height:100%;width:20%;border-radius:3px;background:linear-gradient(90deg,#818cf8,#c4b5fd);transform-origin:0 0;will-change:transform}
+/* the sheet (menu on every other page) */
+#lyt-sheet{position:fixed;inset:0;z-index:9000;display:flex;align-items:flex-end;justify-content:center;background:rgba(4,5,14,.62);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);opacity:0;pointer-events:none;transition:opacity .25s}
+#lyt-sheet.on{opacity:1;pointer-events:auto}
+#lyt-sheet .lyt-p{width:min(100%,1100px);max-height:92dvh;overflow:hidden;padding:22px 18px calc(18px + env(safe-area-inset-bottom));border-radius:28px 28px 0 0;background:linear-gradient(180deg,#14112c,#0a0919);border:1px solid rgba(255,255,255,.1);border-bottom:0;transform:translateY(40px);transition:transform .35s cubic-bezier(.2,.8,.2,1)}
+#lyt-sheet.on .lyt-p{transform:none}
+@media(min-width:900px){#lyt-sheet{align-items:center}#lyt-sheet .lyt-p{border-radius:28px;border-bottom:1px solid rgba(255,255,255,.1);padding-bottom:22px}}
+/* layout chooser */
+#lyt-pick{position:fixed;inset:0;z-index:9100;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(4,5,14,.7);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);opacity:0;pointer-events:none;transition:opacity .3s}
+#lyt-pick.on{opacity:1;pointer-events:auto}
+#lyt-pick .lyt-d{width:min(100%,640px);max-height:94dvh;overflow:auto;padding:26px 22px 22px;border-radius:28px;background:linear-gradient(170deg,#1a1640,#0b0a1c 70%);border:1px solid rgba(255,255,255,.14);box-shadow:0 40px 80px -30px #000;transform:translateY(14px) scale(.98);transition:transform .35s cubic-bezier(.2,.8,.2,1);color:#fff;font-family:'Plus Jakarta Sans',system-ui,sans-serif}
+#lyt-pick.on .lyt-d{transform:none}
+#lyt-pick h2{margin:0;font:800 22px/1.2 'Plus Jakarta Sans',system-ui,sans-serif;letter-spacing:-.01em}
+#lyt-pick p{margin:8px 0 18px;color:#aab3d8;font:500 14px/1.5 'Plus Jakarta Sans',system-ui,sans-serif}
+.lyt-ops{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:520px){.lyt-ops{grid-template-columns:1fr}}
+.lyt-op{all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex-direction:column;gap:11px;padding:10px 10px 14px;border-radius:20px;border:1.5px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);position:relative;transition:border-color .25s,background .25s,transform .2s;-webkit-tap-highlight-color:transparent}
+.lyt-op:active{transform:scale(.98)}
+.lyt-op[aria-checked=true]{border-color:#a5b4fc;background:rgba(129,140,248,.14)}
+.lyt-op .ck{position:absolute;right:16px;top:16px;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:#818cf8;color:#0b0a1c;font-size:12px;opacity:0;transform:scale(.6);transition:.25s}
+.lyt-op[aria-checked=true] .ck{opacity:1;transform:none}
+.lyt-pv{height:128px;border-radius:14px;background:linear-gradient(135deg,#1e1b4b,#312e81 60%,#4c1d95);position:relative;overflow:hidden}
+.lyt-pv i{position:absolute;display:block}
+.pv-c1 i{top:30px;width:46px;height:78px;border-radius:10px;background:linear-gradient(160deg,#fbbf24,#ea580c);opacity:.8;transform:scale(.88)}
+.pv-c1 i:nth-child(1){left:-14px}.pv-c1 i:nth-child(2){left:50%;margin-left:-32px;width:64px;height:92px;top:22px;transform:none;opacity:1;background:linear-gradient(160deg,#818cf8,#c084fc);box-shadow:0 10px 22px rgba(0,0,0,.4)}
+.pv-c1 i:nth-child(3){right:-14px;background:linear-gradient(160deg,#34d399,#0891b2)}
+.pv-c1 u{position:absolute;left:50%;bottom:9px;width:44px;height:5px;margin-left:-22px;border-radius:4px;background:rgba(255,255,255,.55)}
+.pv-b1 i:nth-child(1){left:12px;right:12px;top:12px;height:20px;border-radius:99px;background:rgba(255,255,255,.18)}
+.pv-b1 i:nth-child(n+2){width:calc(33% - 12px);height:34px;border-radius:9px;background:rgba(255,255,255,.2)}
+.pv-b1 i:nth-child(2){left:12px;top:44px}.pv-b1 i:nth-child(3){left:calc(33% + 4px);top:44px}.pv-b1 i:nth-child(4){right:12px;top:44px}
+.pv-b1 i:nth-child(5){left:12px;top:86px}.pv-b1 i:nth-child(6){left:calc(33% + 4px);top:86px}.pv-b1 i:nth-child(7){right:12px;top:86px}
+.lyt-op b{font:800 16px 'Plus Jakarta Sans',system-ui,sans-serif;padding:0 6px}
+.lyt-op span{font:500 12.5px/1.45 'Plus Jakarta Sans',system-ui,sans-serif;color:#aab3d8;padding:0 6px}
+.lyt-go{all:unset;box-sizing:border-box;cursor:pointer;margin-top:18px;width:100%;text-align:center;padding:15px;border-radius:16px;background:linear-gradient(135deg,#e0e7ff,#a5b4fc);color:#14163a;font:800 15px 'Plus Jakarta Sans',system-ui,sans-serif;-webkit-tap-highlight-color:transparent;transition:transform .15s}
+.lyt-go:active{transform:scale(.98)}
+.lyt-note{margin-top:12px;text-align:center;color:#8d96bd;font:500 12.5px 'Plus Jakarta Sans',system-ui,sans-serif}
+html.lyt-lite .lyt-card,html.lite .lyt-card{-webkit-backdrop-filter:none;backdrop-filter:none}
+@media(prefers-reduced-motion:reduce){.lyt-track{scroll-behavior:auto}.lyt-card,#lyt-sheet,#lyt-pick,#lyt-pick .lyt-d,#lyt-sheet .lyt-p{transition:none}}
+
+@media(max-width:640px){#lr-menu-btn{padding:0 13px;margin-right:6px}#lr-menu-btn span{display:none}.lyt-lay span{display:none}.lyt-lay{width:38px;padding:0}}
+
+.lyt-pv .tb{position:absolute;left:12px;right:12px;top:10px;height:14px;border-radius:99px;background:rgba(255,255,255,.2)}
+.pv-c1 i{top:44px!important}.pv-c1 i:nth-child(2){top:36px!important}
+.pv-c1 u{display:none}
+</style><script id="lr-layout">(function(){
+var LS='lr_layout',H=document.documentElement,D=document;
+function get(){try{return localStorage.getItem(LS)}catch(e){return null}}
+function put(v){try{localStorage.setItem(LS,v)}catch(e){}}
+var mode=get()==='cards'?'cards':'bar';
+function apply(m){mode=m;H.classList.toggle('lr-cards',m==='cards');H.classList.toggle('lr-bar',m!=='cards');if(m==='cards')build()}
+var ORDER=['exams','reading','dictionary','grammar','games','ai','movies','club','mentors','wordforge','library','cards','profile'];
+var MOTIF={dictionary:'a',exams:'d',grammar:'a',mentors:'b',ai:'c',games:'b',wordforge:'b',library:'b',movies:'b',club:'c',profile:'d',reading:'a',cards:'b'};
+function tiles(){var T=[];try{T=HB_TILES.slice()}catch(e){}
+ var by={};T.forEach(function(t){by[t.id]=t});var out=[];ORDER.forEach(function(id){if(by[id]){out.push(by[id]);delete by[id]}});Object.keys(by).forEach(function(k){out.push(by[k])});return out}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function card(t){var m=MOTIF[t.id]||'a',live='';try{if(typeof t.live==='function')live=t.live()}catch(e){}
+ var body='<s></s><s></s><s></s><s></s>';if(m==='b')body='<s></s><s></s><s></s><s></s><s></s><s></s>';if(m==='c')body='<s></s><s></s><s></s>';if(m==='d')body='<s></s><s></s><s></s><s></s><s></s>';
+ return '<button type="button" class="lyt-card" style="--c:'+(t.c||'rgba(129,140,248,.3)')+'" onclick="'+t.go+'" aria-label="'+esc(t.title)+'">'+
+ '<span class="lyt-art" style="--g:'+t.g+'">'+(t.isNew?'<span class="lyt-new">NEW</span>':'')+'<span class="lyt-ic"><i class="fa-solid '+t.icon+'" aria-hidden="true"></i></span><span class="lyt-win"><b><i></i><i></i><i></i></b><span class="lyt-body lyt-m-'+m+'">'+body+'</span></span></span>'+
+ '<span class="lyt-meta"><b>'+t.title+'</b><span>'+t.desc+'</span>'+(live?'<em>'+esc(live)+'</em>':'')+'</span></button>'}
+function track(){return '<div class="lyt-track" tabindex="0" role="region" aria-label="Features. Swipe sideways or use the arrow keys.">'+tiles().map(card).join('')+'</div><div class="lyt-prog"><i></i></div>'}
+function wire(root){var tr=root.querySelector('.lyt-track'),bar=root.querySelector('.lyt-prog i');if(!tr)return;
+ var raf=0;function upd(){raf=0;var r=tr.getBoundingClientRect(),cx=r.left+r.width/2,cs=tr.children,cw=cs[0]?cs[0].getBoundingClientRect().width:300;
+  for(var i=0;i<cs.length;i++){var b=cs[i].getBoundingClientRect(),dx=(b.left+b.width/2-cx)/(cw*.8),d=Math.min(1.5,Math.abs(dx)),sg=dx<0?-1:1,st=cs[i].style;
+   st.setProperty('--s',(1-.14*d).toFixed(3));st.setProperty('--o',(1-.34*Math.min(1,d)).toFixed(3));st.setProperty('--r',(-sg*Math.min(1,d)*16).toFixed(1)+'deg');st.setProperty('--y',(Math.min(1,d)*26).toFixed(1)+'px');st.setProperty('--z',String(100-Math.round(d*10)))}
+  var max=tr.scrollWidth-tr.clientWidth,p=max>0?tr.scrollLeft/max:0,w=Math.max(.12,tr.clientWidth/tr.scrollWidth);if(bar){bar.style.width=(w*100)+'%';bar.style.transform='translateX('+(p*(1/w-1)*100)+'%)'}}
+ function sched(){if(!raf)raf=requestAnimationFrame(upd)}
+ tr.addEventListener('scroll',sched,{passive:true});addEventListener('resize',sched);setTimeout(upd,30);setTimeout(upd,400);
+ function step(dir){var c=tr.children[0];if(!c)return;tr.scrollBy({left:dir*(c.getBoundingClientRect().width+16),behavior:'smooth'})}
+ root.__step=step;
+ tr.addEventListener('keydown',function(e){if(e.key==='ArrowRight'){e.preventDefault();step(1)}else if(e.key==='ArrowLeft'){e.preventDefault();step(-1)}});
+ /* mouse drag (touch already swipes natively) */
+ var down=false,sx=0,sl=0,moved=0;
+ tr.addEventListener('pointerdown',function(e){if(e.pointerType!=='mouse'||e.button)return;down=true;moved=0;sx=e.clientX;sl=tr.scrollLeft});
+ addEventListener('pointermove',function(e){if(!down)return;var dx=e.clientX-sx;if(Math.abs(dx)>5){moved=Math.abs(dx);tr.classList.add('drag')}if(moved)tr.scrollLeft=sl-dx});
+ addEventListener('pointerup',function(){if(!down)return;down=false;if(moved){var c=tr.children[0],w=c?c.getBoundingClientRect().width+16:300;tr.classList.remove('drag');tr.scrollTo({left:Math.round(tr.scrollLeft/w)*w,behavior:'smooth'})}});
+ tr.addEventListener('click',function(e){if(moved){e.preventDefault();e.stopPropagation();moved=0;return}var c=e.target.closest&&e.target.closest('.lyt-card');if(!c)return;var r=tr.getBoundingClientRect(),b=c.getBoundingClientRect();if(Math.abs(b.left+b.width/2-(r.left+r.width/2))>b.width*.22){e.preventDefault();e.stopPropagation();c.scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'})}},true);
+}
+function hubHtml(){return '<div class="lyt-h"><div><h2>Explore LunaRise</h2><p>Swipe to browse every feature</p></div><div class="lyt-ctl"><button type="button" class="lyt-lay" aria-label="Change layout"><i class="fa-solid fa-sliders" aria-hidden="true"></i><span>Layout</span></button><button type="button" class="lyt-a" data-d="-1" aria-label="Previous"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i></button><button type="button" class="lyt-a" data-d="1" aria-label="Next"><i class="fa-solid fa-chevron-right" aria-hidden="true"></i></button></div></div>'+track()}
+function build(){
+ var v=D.getElementById('view-dashboard');
+ if(v){var s=D.getElementById('lyt-hub');if(!s){s=D.createElement('section');s.id='lyt-hub';s.className='lc';s.setAttribute('aria-label','Features');v.insertBefore(s,v.firstChild)}
+  if(!s.__n||s.__n!==tiles().length){s.innerHTML=hubHtml();s.__n=tiles().length;wire(s);
+   s.querySelectorAll('.lyt-a').forEach(function(b){b.onclick=function(){s.__step(+b.dataset.d)}});s.querySelector('.lyt-lay').onclick=function(){openPick(false)}}}
+}
+var sheet=null;
+function openSheet(){if(!sheet){sheet=D.createElement('div');sheet.id='lyt-sheet';sheet.setAttribute('role','dialog');sheet.setAttribute('aria-modal','true');sheet.setAttribute('aria-label','All features');
+  sheet.innerHTML='<div class="lyt-p"><div class="lyt-h"><div><h2>All features</h2><p>Swipe, then tap to open</p></div><div class="lyt-ctl"><button type="button" class="lyt-lay"><i class="fa-solid fa-sliders" aria-hidden="true"></i><span>Layout</span></button><button type="button" class="lyt-a" data-d="-1" aria-label="Previous"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i></button><button type="button" class="lyt-a" data-d="1" aria-label="Next"><i class="fa-solid fa-chevron-right" aria-hidden="true"></i></button><button type="button" class="lyt-a lyt-x" aria-label="Close"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button></div></div>'+track()+'</div>';
+  D.body.appendChild(sheet);var p=sheet.querySelector('.lyt-p');wire(p);
+  p.querySelectorAll('.lyt-a[data-d]').forEach(function(b){b.onclick=function(){p.__step(+b.dataset.d)}});
+  p.querySelector('.lyt-x').onclick=closeSheet;p.querySelector('.lyt-lay').onclick=function(){closeSheet();openPick(false)};
+  sheet.addEventListener('click',function(e){if(e.target===sheet||e.target.closest('.lyt-card'))setTimeout(closeSheet,0)});
+  D.addEventListener('keydown',function(e){if(e.key==='Escape'&&sheet.classList.contains('on'))closeSheet()})}
+ requestAnimationFrame(function(){sheet.classList.add('on')});setTimeout(function(){var c=sheet.querySelector('.lyt-card');if(c)c.focus({preventScroll:true})},60)}
+function closeSheet(){if(sheet)sheet.classList.remove('on')}
+/* the chooser */
+var pick=null,before=null;
+function openPick(first){
+ if(!pick){pick=D.createElement('div');pick.id='lyt-pick';pick.setAttribute('role','dialog');pick.setAttribute('aria-modal','true');pick.setAttribute('aria-labelledby','lyt-pt');
+  pick.innerHTML='<div class="lyt-d"><h2 id="lyt-pt">Choose how your Hub looks</h2><p>The top buttons stay in both styles. It changes right away, and you can switch any time with the Layout button.</p>'+
+  '<div class="lyt-ops" role="radiogroup" aria-label="Menu style">'+
+  '<button type="button" class="lyt-op" role="radio" data-m="cards"><span class="ck"><i class="fa-solid fa-check" aria-hidden="true"></i></span><span class="lyt-pv pv-c1"><s class="tb"></s><i></i><i></i><i></i></span><b>Swipe gallery</b><span>Top buttons plus a gallery of picture cards. Swipe sideways to browse every feature.</span></button>'+
+  '<button type="button" class="lyt-op" role="radio" data-m="bar"><span class="ck"><i class="fa-solid fa-check" aria-hidden="true"></i></span><span class="lyt-pv pv-b1"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span><b>Classic</b><span>Top buttons with the feature grid on the Hub, as it is now.</span></button></div>'+
+  '<button type="button" class="lyt-go">Use this style</button><div class="lyt-note">You can change this later from the Layout button.</div></div>';
+  D.body.appendChild(pick);
+  pick.querySelectorAll('.lyt-op').forEach(function(b){b.onclick=function(){apply(b.dataset.m);mark()}});
+  pick.querySelector('.lyt-go').onclick=function(){put(mode);closePick()};
+  pick.addEventListener('click',function(e){if(e.target===pick){put(mode);closePick()}});
+  D.addEventListener('keydown',function(e){if(e.key==='Escape'&&pick.classList.contains('on')){put(mode);closePick()}})}
+ mark();requestAnimationFrame(function(){pick.classList.add('on')});setTimeout(function(){var c=pick.querySelector('.lyt-op[aria-checked=true]');if(c)c.focus({preventScroll:true})},80)}
+function mark(){if(!pick)return;pick.querySelectorAll('.lyt-op').forEach(function(b){b.setAttribute('aria-checked',String(b.dataset.m===mode))})}
+function closePick(){if(pick)pick.classList.remove('on')}
+window.lrLayout={open:function(){openPick(false)},set:function(m){apply(m);put(m)},mode:function(){return mode}};
+/* first time: after sign-up and the level test, once the Hub is in front of the learner */
+function busy(){try{if(H.classList.contains('lr-intro-on')||H.classList.contains('o3-open'))return true;
+ var m=D.querySelectorAll('[id^="modal-"]');for(var i=0;i<m.length;i++){if(!m[i].classList.contains('hidden')&&m[i].offsetParent!==null)return true}
+ var dl=D.querySelectorAll('[role="dialog"][aria-modal="true"]');for(var j=0;j<dl.length;j++){var e=dl[j];if(e.id==='lyt-pick'||e.id==='lyt-sheet')continue;var cs=getComputedStyle(e),r=e.getBoundingClientRect();if(cs.display!=='none'&&cs.visibility!=='hidden'&&+cs.opacity>.5&&r.width>0&&r.height>0)return true}
+ if(D.querySelector('#lc-pn,#lu3-intro,#lr-ibs,#lr-news,#lr-gift,#lr-recover,#adm'))return true}catch(e){}return false}
+function registered(){try{return !!(state&&state.user&&state.user.registered)}catch(e){return false}}
+function hubVisible(){var v=D.getElementById('view-dashboard');return !!v&&!v.classList.contains('hidden')}
+function wait(){if(get())return;var n=0,t=setInterval(function(){n++;if(get()||n>600){clearInterval(t);return}
+ if(registered()&&hubVisible()&&!busy()){clearInterval(t);setTimeout(function(){if(!get()&&!busy())openPick(true)},1200)}},1500)}
+function init(){apply(mode);wait();
+ /* the hub can be redrawn: keep the cards in place */
+ var v=D.getElementById('view-dashboard');if(v&&window.MutationObserver){new MutationObserver(function(){if(mode==='cards'&&!D.getElementById('lyt-hub'))build()}).observe(v,{childList:true})}}
+if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',init);else init();
+})();
+</script></body>
 </html>
