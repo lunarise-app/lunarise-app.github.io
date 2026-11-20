@@ -31914,7 +31914,8 @@ window.kgLive = function () {
         const t = cur(); if (!t) return;
         au.src = t.s === 'a' ? `${AU}/tracks/${encodeURIComponent(t.id)}/stream?app_name=${APP}` : t.u;
         au.volume = S().vol; au.playbackRate = 1;
-        const pr = au.play(); if (pr && pr.catch) pr.catch(() => { });
+        userPause = false; wasPlay = true; meta(); try { navigator.mediaSession.playbackState = 'playing'; } catch (e) { }
+        const pr = au.play(); if (pr && pr.catch) pr.catch(() => { const go = () => { au.removeEventListener('canplay', go); if (!userPause && au.paused) au.play().catch(() => { }); }; au.addEventListener('canplay', go); });
         const m = S(); m.rec = [t].concat(m.rec.filter(x => key(x) !== key(t))).slice(0, 40); save();
         ui(); meta();
         try { logLookupMusic(); } catch (e) { }
@@ -31968,7 +31969,7 @@ window.kgLive = function () {
         try {
             if ('mediaSession' in navigator) {
                 navigator.mediaSession.metadata = new MediaMetadata({ title: t.t, artist: t.a, album: 'LunaRise Music', artwork: t.art ? [{ src: t.art, sizes: '400x400', type: 'image/jpeg' }] : [] });
-                navigator.mediaSession.setActionHandler('play', toggle); navigator.mediaSession.setActionHandler('pause', toggle);
+                navigator.mediaSession.setActionHandler('play', () => { userPause = false; au.play().catch(() => { }); try { navigator.mediaSession.playbackState = 'playing'; } catch (e) { } }); navigator.mediaSession.setActionHandler('pause', () => { userPause = true; au.pause(); }); try { navigator.mediaSession.setActionHandler('stop', () => { userPause = true; au.pause(); }); } catch (e) { }
                 navigator.mediaSession.setActionHandler('nexttrack', () => next(false)); navigator.mediaSession.setActionHandler('previoustrack', prev);
                 try { navigator.mediaSession.setActionHandler('seekto', d => { if (d && isFinite(d.seekTime)) au.currentTime = d.seekTime; }); } catch (e) { }
             }
@@ -31989,6 +31990,7 @@ window.kgLive = function () {
         const ce = $('mu-cur'), de = $('mu-dur'); if (ce) ce.textContent = fmt(c); if (de) de.textContent = fmt(d);
         try { if ('mediaSession' in navigator && navigator.mediaSession.setPositionState && d > 0 && isFinite(d)) navigator.mediaSession.setPositionState({ duration: d, playbackRate: 1, position: Math.min(c, d) }); } catch (e) { }
     });
+    setInterval(() => { try { if (cur() && wasPlay && !userPause && au.paused && !au.ended && au.readyState > 0) { au.play().catch(() => { }); } if (cur() && !au.paused) { navigator.mediaSession.playbackState = 'playing'; } } catch (e) { } }, 4000);
     function setSleep() {
         const opts = [0, 15, 30, 60]; sleepMin = opts[(opts.indexOf(sleepMin) + 1) % opts.length];
         clearTimeout(sleepT); const b = $('mu-sleep');
@@ -40179,39 +40181,31 @@ ${p.p}`;
     }
     function stop(fromPop) { const p = $('mv-play'); if (!p) return; p.id = ''; p.classList.remove('open'); p.querySelectorAll('video').forEach((v) => { try { v.pause(); } catch (e) { } }); setTimeout(() => p.remove(), 220); if (!fromPop && history.state && history.state.mv === 'p') { stack--; history.back(); } }
     function playYT(key, note) {
-        player(`<div class="mv-frame"><iframe src="https://www.youtube-nocookie.com/embed/${encodeURIComponent(key)}?autoplay=1&rel=0&modestbranding=1&playsinline=1&cc_load_policy=0&enablejsapi=1&origin=${encodeURIComponent(location.origin)}&hl=en&vq=hd1080" title="Video" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe></div><p class="mv-pn">${E(note || 'English subtitles are on.')} For the sharpest picture choose ⚙ → Quality → 1080p.</p>`);
+        const p = player(`<div class="mv-frame"><iframe src="${CN2.ytSrc(key)}" title="Video" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe></div>`);
+        CN2.begin(p, { k: 'yt', id: key, title: (S.cur && S.cur.title) || '' }); CN2.ready(p);
     }
-    /* a free film from the Internet Archive: the sharpest file that still starts at once, or the Archive player */
-    async function playIA(id, title) {
-        const p = player(`<div class="mv-frame"><div class="mv-load"><i class="fa-solid fa-circle-notch fa-spin"></i> Opening the film…</div></div>`);
-        let src = '';
+    /* a free film from the Internet Archive: the sharpest file that still starts at once */
+    async function iaSrc(id, lim, last) {
         try {
             const r = await fetch('https://archive.org/metadata/' + encodeURIComponent(id)); const j = await r.json();
             const vids = (j.files || []).filter((f) => /\.mp4$/i.test(f.name) || /mpeg4|h\.264/i.test(f.format || ''));
-            vids.sort((a, b) => (+b.size || 0) - (+a.size || 0)); const best = vids.find((f) => (+f.size || 0) < 1.4e9) || vids[vids.length - 1];
-            if (best) src = 'https://archive.org/download/' + encodeURIComponent(id) + '/' + best.name.split('/').map(encodeURIComponent).join('/');
+            vids.sort((a, b) => (+b.size || 0) - (+a.size || 0)); const best = vids.find((f) => (+f.size || 0) < lim) || (last ? vids[vids.length - 1] : vids[0]);
+            if (best) return 'https://archive.org/download/' + encodeURIComponent(id) + '/' + best.name.split('/').map(encodeURIComponent).join('/');
         } catch (e) { }
-        const fr = p.querySelector('.mv-frame'); if (!fr) return;
-        const embed = `<iframe src="https://archive.org/embed/${encodeURIComponent(id)}" title="${E(title)}" allow="autoplay; fullscreen" allowfullscreen></iframe>`;
-        fr.innerHTML = src ? `<video controls autoplay playsinline preload="metadata" poster="${thumb('ia:' + id)}" src="${E(src)}"></video>` : embed;
-        const v = fr.querySelector('video'); if (v) v.addEventListener('error', () => { fr.innerHTML = embed; }, { once: true });
-        p.querySelector('.mv-pbox').insertAdjacentHTML('beforeend', `<p class="mv-pn">${E(title)} · free · public domain · Internet Archive</p>`);
+        return '';
+    }
+    async function playIA(id, title) {
+        const p = player(`<div class="mv-frame"><div class="mv-load"><i class="fa-solid fa-circle-notch fa-spin"></i> Opening the film…</div></div>`);
+        CN2.begin(p, { k: 'ia', id, title });
+        const src = await iaSrc(id, 1.4e9, true); if (!p.isConnected) return;
+        CN2.html5(p, { src, poster: thumb('ia:' + id), embed: `<iframe src="https://archive.org/embed/${encodeURIComponent(id)}" title="${E(title)}" allow="autoplay; fullscreen" allowfullscreen></iframe>` });
     }
     async function playFull() {
         const d = S.cur; if (!d || !d.ia) return;
         const p = player(`<div class="mv-frame"><div class="mv-load"><i class="fa-solid fa-circle-notch fa-spin"></i> Opening the film…</div></div>`);
-        let src = '';
-        try {
-            const r = await fetch('https://archive.org/metadata/' + encodeURIComponent(d.ia)); const j = await r.json();
-            const vids = (j.files || []).filter((f) => /\.mp4$/i.test(f.name) || /mpeg4|h\.264/i.test(f.format || ''));
-            vids.sort((a, b) => (+b.size || 0) - (+a.size || 0)); const best = vids.find((f) => (+f.size || 0) < 3.5e9) || vids[0];
-            if (best) src = 'https://archive.org/download/' + encodeURIComponent(d.ia) + '/' + best.name.split('/').map(encodeURIComponent).join('/');
-        } catch (e) { }
-        const fr = p.querySelector('.mv-frame'); if (!fr) return;
-        const embed = `<iframe src="https://archive.org/embed/${encodeURIComponent(d.ia)}" title="${E(d.title)}" allow="autoplay; fullscreen" allowfullscreen></iframe>`;
-        fr.innerHTML = src ? `<video controls autoplay playsinline preload="metadata" poster="${P(d.backdrop_path, 'w1280')}" src="${E(src)}"></video>` : embed;
-        const v = fr.querySelector('video'); if (v) v.addEventListener('error', () => { fr.innerHTML = embed; }, { once: true });
-        p.querySelector('.mv-pbox').insertAdjacentHTML('beforeend', `<p class="mv-pn">${E(d.title)} (${E(year(d))}) · public domain · Internet Archive</p>`);
+        CN2.begin(p, { k: 'ia', id: d.ia, title: d.title + ' (' + year(d) + ')' });
+        const src = await iaSrc(d.ia, 3.5e9, false); if (!p.isConnected) return;
+        CN2.html5(p, { src, poster: P(d.backdrop_path, 'w1280'), embed: `<iframe src="https://archive.org/embed/${encodeURIComponent(d.ia)}" title="${E(d.title)}" allow="autoplay; fullscreen" allowfullscreen></iframe>` });
     }
     addEventListener('popstate', () => { const st = history.state && history.state.mv; if ($('mv-play') && st !== 'p') { stop(true); stack = Math.max(0, stack - 1); return; } if ($('mv-sheet') && st !== 'd' && st !== 'p') { closeSheet(true); stack = Math.max(0, stack - 1); } });
     document.addEventListener('keydown', (e) => { if (e.key !== 'Escape') return; if ($('mv-play')) stop(false); else if ($('mv-sheet')) closeSheet(false); else if ($('mv-all')) allClose(); });
@@ -46450,7 +46444,7 @@ void main(){
             plan_level: CEFR[lv], difficulty: c.diff, last_days: days, yesterday_tasks: (c.prev || {}).sig || [],
             exam_best: Object.keys(log).reduce((o, k) => { o[k] = log[k].best; return o; }, {}),
             recent_mistakes: c.mis.slice(0, 10).map(m => ({ topic: m.top, q: shortOf(m.q, 90), you: m.you, right: m.ok })),
-            saved_words: (u.savedWords || []).length, grammar_modules: fit, games: GAMES
+            saved_words: (u.savedWords || []).length, recent_saved_words: (u.savedWords || []).slice(-15), film_words: (function () { try { return JSON.parse(localStorage.getItem('lr_cinema_cards') || '[]').slice(0, 12).map(c => ({ w: c.w, meaning: c.en || '', line: c.line })); } catch (e) { return []; } })(), grammar_modules: fit, games: GAMES
         };
     }
     const PLAN_SYS = `You are Luna, a warm and expert English coach inside the LunaRise app. Plan TODAY's practice for one learner so their level rises step by step.
@@ -46463,6 +46457,7 @@ Choose 4 tasks (5 if difficulty is 2 or more). Use ONLY these task types and fie
 {"type":"vocab","topic":"<word topic>"}
 {"type":"lookup","n":<3-12>} {"type":"save","n":<2-8>} {"type":"cards"} {"type":"read"} {"type":"shadow","min":<60-90>} {"type":"tutor","topic":"<what to ask>"} {"type":"game","g":"<one of games>"} {"type":"timer","min":<10-45>}
 Rules: work on the weakest areas first (level_test.improve, low exam_best, recent_mistakes); mix skills; include 1 or 2 of write/speak/fix/vocab; do not repeat yesterday_tasks exactly; make it a little harder after a fully done day with good scores, easier after a missed day; the whole plan should take 25-40 minutes.
+If recent_saved_words or film_words exist, use those exact words in the vocab, write, speak or tutor tasks (put them in the prompt or topic) so the learner revises words met in films, and say so in "why".
 Each task gets "why": one short personal sentence to the learner (max 14 words).
 Also write: "focus" (today's theme, max 6 words), "hello" (what you say aloud: 2 short warm natural sentences, use the first name once if given), "tip" (one practical sentence), "cheers" (4 different short praise lines, max 9 words each).
 Reply with JSON only: {"focus":"...","hello":"...","tip":"...","cheers":["..."],"tasks":[{...,"why":"..."}]}`;
@@ -47193,7 +47188,7 @@ void main(){
     /* ---------- the reminder in the middle of the screen ---------- */
     function busyScreen() {
         const h = D.documentElement;
-        if (h.classList.contains('lr-intro-on') || h.classList.contains('o3-open') || $('lc-pn') || $('lc-nag') || $('lr-ibs') || $('lr-news') || $('lr-gift') || $('adm') || document.querySelector('#lyt-pick.on')) return true;
+        if (h.classList.contains('lr-intro-on') || h.classList.contains('o3-open') || $('lc-pn') || $('lc-nag') || $('lr-ibs') || $('lr-news') || $('lr-gift') || $('adm') || document.querySelector('#lyt-pick.on') || $('mv-play')) return true;
         const gm = $('grammar-lesson-modal'); if (gm && !gm.classList.contains('hidden')) return true;
         if (D.querySelector('.sc-call.on, .sc-incall, #sc-call.on, .ch-modal.show, .fc-modal:not(.hidden)')) return true;
         return false;
@@ -55589,6 +55584,9 @@ html.lr-bgsafe.th-space #lr-bg>*:not(.lq-earth-cv){display:none!important}
 }
 @media(prefers-reduced-motion:reduce){#lyt-hub .lyt-card,#lyt-hub .lyt-pa,#lyt-hub .lyt-mh,#lyt-hub .lyt-ph{animation:none!important}}
 #lyt-hub .lyt-card:not(.lyt-act){box-shadow:0 0 0 1px rgba(165,180,252,.3),0 0 36px -8px rgba(139,92,246,.5)!important}
+
+/* v130 · while the track moves, the few decorative loops rest */
+#lyt-hub.lyt-sc .lyt-eq i,#lyt-hub.lyt-sc .lyt-mv{animation-play-state:paused}
 </style><script id="lr-layout">(function(){
 var LS='lr_layout',H=document.documentElement,D=document;
 function get(){try{return localStorage.getItem(LS)}catch(e){return null}}
@@ -55830,7 +55828,14 @@ function chipsRefresh(){var tr=trk(),box=D.querySelector('#lyt-hub .lyt-chips');
 function chipsOn(){var box=D.querySelector('#lyt-hub .lyt-chips');if(!box)return;var c=ctr(),on=null;Array.prototype.forEach.call(box.children,function(b){var a=b.__c===c;b.classList.toggle('on',a);b.setAttribute('aria-selected',String(a));if(a)on=b});
  if(on){var l=on.offsetLeft-(box.clientWidth-on.offsetWidth)/2;box.scrollTo?box.scrollTo({left:l,behavior:'smooth'}):box.scrollLeft=l}}
 function hookTrack(){var tr=trk();if(!tr||tr.__h)return;tr.__h=1;
- tr.addEventListener('scroll',function(){lastSc=performance.now();clearTimeout(hT);hT=setTimeout(function(){settle();chipsOn()},140)},{passive:true});chipsRefresh();setTimeout(chipsOn,300);clearTimeout(warmT);warmT=setTimeout(warmNext,3500)}
+ var hubEl=D.getElementById('lyt-hub')||tr.parentNode,scOn=false,touching=false,idleH=0;
+ function calm(on){if(on===scOn)return;scOn=on;try{(hubEl||tr).classList.toggle('lyt-sc',on)}catch(e){}}
+ function later(){if(idleH){try{(window.cancelIdleCallback||clearTimeout)(idleH)}catch(e){}idleH=0}
+  var run=function(){idleH=0;if(touching||performance.now()-lastSc<180){hT=setTimeout(later,120);return}calm(false);settle();chipsOn()};
+  idleH=window.requestIdleCallback?requestIdleCallback(run,{timeout:350}):setTimeout(run,60)}
+ tr.addEventListener('touchstart',function(){touching=true;clearTimeout(hT);if(idleH){try{(window.cancelIdleCallback||clearTimeout)(idleH)}catch(e){}idleH=0}},{passive:true});
+ ['touchend','touchcancel'].forEach(function(n){tr.addEventListener(n,function(){touching=false;clearTimeout(hT);hT=setTimeout(later,260)},{passive:true})});
+ tr.addEventListener('scroll',function(){lastSc=performance.now();calm(true);if(touching)return;clearTimeout(hT);hT=setTimeout(function(){calm(false);later()},180)},{passive:true});chipsRefresh();setTimeout(chipsOn,300);clearTimeout(warmT);warmT=setTimeout(warmNext,3500)}
 function installNav(){if(origNav||typeof window.navigateTo!=='function')return;origNav=window.navigateTo;
  window.navigateTo=function(id){if(id!=='dashboard'&&mnt[id])unmount(id);if(id!=='dashboard'){act=null;setAct(null)}
   var r=origNav.apply(this,arguments);if(id==='dashboard'&&mode==='cards'){remountAll();clearTimeout(hT);hT=setTimeout(function(){settle();chipsOn()},200)}return r}}
@@ -55930,6 +55935,158 @@ D.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest(
 .lcs-big{font:900 clamp(22px,4vw,34px)/1.4 system-ui;text-align:center;margin:18px 0}.lcs-big u{text-decoration:none;display:inline-block;min-width:110px;border-bottom:3px solid #facc15;color:transparent}.lcs-big u.show{color:#fde047}
 .lcs-empty{padding:34px 10px;text-align:center;color:#a5b4fc;font:600 14px/1.5 system-ui}
 @media(prefers-reduced-motion:reduce){.lcs-banner::after,.lcs-w.u,.lcs-pill i{animation:none}}
+/* ===== Cinema v2 · film page with Smart subtitles ===== */
+.mv-play.cn2{padding:0!important;display:block!important;background:#000;--pw:clamp(268px,21vw,340px);--cn-a:#fbbf24;--cn-ink:#f4f6ff;--cn-dim:#9aa3c7;-webkit-tap-highlight-color:transparent}
+.mv-play.cn2 .mv-pbg{background:#000}
+.cn2 .mv-pbox{position:absolute;inset:0;width:auto;max-width:none;display:flex;flex-direction:row;gap:0}
+.cn2 .cn-stage{position:relative;flex:1 1 auto;min-width:0;min-height:0;background:#000;overflow:hidden;isolation:isolate}
+.cn2 .mv-frame{position:absolute;inset:0;width:auto;aspect-ratio:auto;border-radius:0;box-shadow:none;background:#000}
+.cn2 .mv-frame video{object-fit:contain;background:#000}
+.cn2.cn-fill .mv-frame video{object-fit:cover}
+.cn2 .mv-pn{display:none!important}
+/* YouTube: its own title bar and bottom strip are pushed outside the visible area */
+.cn2.cn-yt .mv-frame{overflow:hidden}
+.cn2.cn-yt .mv-frame iframe{top:-64px;height:calc(100% + 128px)}
+.cn2.cn-native .mv-frame iframe{top:0;height:100%}
+.cn2 .cn-veil{position:absolute;inset:0;z-index:2;cursor:pointer;touch-action:manipulation}
+.cn2.cn-native .cn-veil,.cn2.cn-native .cn-bar,.cn2.cn-native .cn-cap{display:none}
+/* top bar */
+.cn2 .cn-top{position:absolute;left:0;right:0;top:0;z-index:4;display:flex;align-items:center;gap:10px;padding:max(10px,env(safe-area-inset-top)) 62px 24px 16px;background:linear-gradient(180deg,rgba(0,0,0,.72),rgba(0,0,0,0));opacity:0;transform:translateY(-6px);transition:opacity .25s,transform .25s;pointer-events:none}
+.cn2.cn-ui .cn-top,.cn2.cn-paused .cn-top{opacity:1;transform:none}
+.cn2 .cn-ti{flex:1;min-width:0;font:700 15px/1.2 'Plus Jakarta Sans',system-ui,sans-serif;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow:0 2px 12px rgba(0,0,0,.6)}
+.cn2 .cn-tr{display:flex;gap:8px;pointer-events:auto}
+.cn2 .cn-b{appearance:none;border:0;background:none;color:#fff;cursor:pointer;font:inherit;display:inline-grid;place-items:center;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.cn2 .cn-b svg{width:22px;height:22px;fill:currentColor}
+.cn2 .cn-bt{width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.18);transition:background .2s,transform .15s}
+.cn2 .cn-bt:active{transform:scale(.92)}
+.cn2 .cn-bt:hover{background:rgba(255,255,255,.22)}
+.cn2.cn-fill .cn-bt[data-a=fit]{background:rgba(251,191,36,.28);border-color:rgba(251,191,36,.6)}
+.cn2:not(.pclosed) .cn-top .cn-bt[data-a=panel]{background:rgba(251,191,36,.28);border-color:rgba(251,191,36,.6)}
+.cn2 .cn-x{position:absolute;top:max(10px,env(safe-area-inset-top));right:14px;z-index:6;width:42px;height:42px;border-radius:50%;background:rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.22);color:#fff;display:grid;place-items:center;transition:opacity .25s,transform .15s}
+.cn2 .cn-x svg{width:20px;height:20px;fill:currentColor}
+.cn2 .cn-x:active{transform:scale(.92)}
+/* bottom: caption + controls */
+.cn2 .cn-bar{position:absolute;left:0;right:0;bottom:0;z-index:4;padding:34px 16px max(10px,env(safe-area-inset-bottom));background:linear-gradient(0deg,rgba(0,0,0,.82),rgba(0,0,0,.5) 55%,rgba(0,0,0,0));opacity:0;transform:translateY(8px);transition:opacity .25s,transform .25s;pointer-events:none}
+.cn2.cn-ui .cn-bar,.cn2.cn-paused .cn-bar{opacity:1;transform:none;pointer-events:auto}
+.cn2.cn-paused.cn-yt .cn-bar{padding-top:150px;background:linear-gradient(0deg,#000 0,rgba(0,0,0,.94) 52%,rgba(0,0,0,0))}
+.cn2 .cn-seek{position:relative;height:22px;display:flex;align-items:center}
+.cn2 .cn-seek:before{content:"";position:absolute;left:0;right:0;height:4px;border-radius:4px;background:rgba(255,255,255,.22)}
+.cn2 .cn-seek i{position:absolute;left:0;height:4px;border-radius:4px;background:linear-gradient(90deg,#fbbf24,#fb7185);pointer-events:none;width:0}
+.cn2 .cn-seek input{position:relative;z-index:1;width:100%;margin:0;height:22px;background:none;-webkit-appearance:none;appearance:none;cursor:pointer}
+.cn2 .cn-seek input::-webkit-slider-runnable-track{background:none;height:22px}
+.cn2 .cn-seek input::-webkit-slider-thumb{-webkit-appearance:none;width:15px;height:15px;margin-top:3.5px;border-radius:50%;background:#fff;box-shadow:0 0 0 4px rgba(251,191,36,.35)}
+.cn2 .cn-seek input::-moz-range-track{background:none}
+.cn2 .cn-seek input::-moz-range-thumb{width:15px;height:15px;border:0;border-radius:50%;background:#fff}
+.cn2 .cn-row{display:flex;align-items:center;gap:4px;margin-top:2px}
+.cn2 .cn-row .cn-b{width:44px;height:44px;border-radius:50%}
+.cn2 .cn-row .cn-b:active{background:rgba(255,255,255,.14)}
+.cn2 .cn-pp{width:52px!important;height:52px!important;background:#fff!important;color:#0b0d1a!important;margin-right:4px}
+.cn2 .cn-pp svg{width:26px;height:26px}
+.cn2 .cn-tm{font:600 13px/1 'Plus Jakarta Sans',system-ui,sans-serif;color:#e5e9ff;font-variant-numeric:tabular-nums;margin-left:8px;white-space:nowrap}
+.cn2 .cn-sp{flex:1}
+.cn2 .cn-rate{width:auto!important;padding:0 12px;border-radius:999px!important;font:800 13px/1 system-ui,sans-serif;border:1px solid rgba(255,255,255,.22)}
+/* the line that is spoken now, on the film itself */
+.cn2 .cn-cap{position:absolute;left:50%;bottom:calc(112px + env(safe-area-inset-bottom));transform:translate(-50%,6px);z-index:3;max-width:min(78%,820px);padding:8px 16px;border-radius:12px;background:rgba(6,8,20,.66);color:#fff;font:600 clamp(15px,1.8vw,22px)/1.35 'Plus Jakarta Sans',system-ui,sans-serif;text-align:center;text-shadow:0 1px 8px #000;opacity:0;transition:opacity .2s,transform .2s,bottom .25s;pointer-events:none}
+.cn2 .cn-cap.on{opacity:1;transform:translate(-50%,0)}
+.cn2:not(.cn-ui):not(.cn-paused) .cn-cap{bottom:calc(22px + env(safe-area-inset-bottom))}
+.cn2:not(.pclosed) .cn-cap{display:none}
+/* the small "turn on" button when the panel is off */
+.cn2 .cn-open{position:absolute;z-index:5;right:14px;bottom:calc(86px + env(safe-area-inset-bottom));display:none;align-items:center;gap:8px;height:44px;padding:0 16px 0 12px;border-radius:999px;background:linear-gradient(135deg,rgba(251,191,36,.95),rgba(251,113,133,.95));color:#1a1030;font:800 13px/1 'Plus Jakarta Sans',system-ui,sans-serif;border:0;box-shadow:0 14px 30px -10px rgba(251,113,133,.7);cursor:pointer;transition:transform .15s;animation:cnPop .35s cubic-bezier(.2,1.3,.4,1) both}
+.cn2 .cn-open svg{width:20px;height:20px;fill:#1a1030}
+.cn2 .cn-open:active{transform:scale(.95)}
+.cn2.pclosed .cn-open{display:inline-flex}
+@keyframes cnPop{from{opacity:0;transform:scale(.8)}to{opacity:1;transform:none}}
+.cn2:not(.cn-ui):not(.cn-paused).pclosed .cn-open{opacity:.0;pointer-events:none}
+.cn2.cn-native .cn-open{display:none!important}
+/* ---- the right panel ---- */
+.cn2 .cn-panel{flex:0 0 var(--pw);width:var(--pw);min-width:0;position:relative;display:flex;flex-direction:column;background:radial-gradient(120% 60% at 100% 0,rgba(124,58,237,.22),transparent 60%),linear-gradient(180deg,#0f1230,#0a0b1e);border-left:1px solid rgba(255,255,255,.09);color:var(--cn-ink);font-family:'Plus Jakarta Sans',system-ui,sans-serif;overflow:hidden;animation:cnSlide .32s cubic-bezier(.2,.8,.2,1) both}
+@keyframes cnSlide{from{opacity:0;transform:translateX(18px)}to{opacity:1;transform:none}}
+.cn2.pclosed .cn-panel{display:none}
+.cn2 .cn-ph{flex:none;display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:max(10px,env(safe-area-inset-top)) 10px 10px 14px;border-bottom:1px solid rgba(255,255,255,.08)}
+.cn2 .cn-pt{display:flex;align-items:center;gap:8px;min-width:0;flex:1}
+.cn2 .cn-pt b{font-size:14px;font-weight:800;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cn2 .cn-live{flex:none;width:8px;height:8px;border-radius:50%;background:#34d399;box-shadow:0 0 0 0 rgba(52,211,153,.6);animation:cnLive 1.8s infinite}
+@keyframes cnLive{70%{box-shadow:0 0 0 8px rgba(52,211,153,0)}100%{box-shadow:0 0 0 0 rgba(52,211,153,0)}}
+.cn2 .cn-pa{display:flex;align-items:center;gap:6px;flex:1 0 100%}
+.cn2 .cn-sm{height:30px;padding:0 10px;border-radius:999px;font:700 11px/1 'Plus Jakarta Sans',system-ui,sans-serif;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:#dbe1ff;white-space:nowrap}
+.cn2 .cn-sm.off{opacity:.6}
+.cn2 .cn-panel .cn-bt{width:32px;height:32px}
+.cn2 .cn-panel .cn-bt svg{width:16px;height:16px}
+.cn2 .cn-list{position:relative;flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:14px 6px 70px 6px;scroll-behavior:auto;-webkit-overflow-scrolling:touch;mask-image:linear-gradient(180deg,transparent 0,#000 24px,#000 calc(100% - 40px),transparent 100%);-webkit-mask-image:linear-gradient(180deg,transparent 0,#000 24px,#000 calc(100% - 40px),transparent 100%)}
+.cn2 .cn-list::-webkit-scrollbar{width:4px}.cn2 .cn-list::-webkit-scrollbar-thumb{background:rgba(255,255,255,.18);border-radius:4px}
+.cn2 .cn-l{display:flex;gap:8px;align-items:flex-start;padding:9px 10px;margin:2px 4px;border-radius:14px;opacity:.5;transform:scale(.985);transform-origin:left center;transition:opacity .25s,transform .25s,background .25s;content-visibility:auto;contain-intrinsic-size:auto 56px}
+.cn2 .cn-l.on{opacity:1;transform:none;background:linear-gradient(135deg,rgba(251,191,36,.14),rgba(124,58,237,.16));box-shadow:inset 0 0 0 1px rgba(251,191,36,.28)}
+.cn2 .cn-t{flex:none;margin-top:3px;font:700 10.5px/1 system-ui,sans-serif;color:var(--cn-dim);padding:3px 6px;border-radius:6px;background:rgba(255,255,255,.07);font-variant-numeric:tabular-nums}
+.cn2 .cn-l.on .cn-t{color:#1a1030;background:var(--cn-a)}
+.cn2 .cn-tx{min-width:0;font-size:clamp(14px,1.25vw,16px);line-height:1.5;font-weight:600;color:#e8ecff;word-break:break-word}
+.cn2 .cn-w{display:inline;padding:1px 1px;border-radius:5px;cursor:pointer;transition:background .15s,color .15s}
+.cn2 .cn-w:hover{background:rgba(255,255,255,.14)}
+.cn2 .cn-w.u{color:#fde68a;background:rgba(251,191,36,.16);box-shadow:inset 0 -2px 0 rgba(251,191,36,.7)}
+.cn2 .cn-w.s{color:#86efac;box-shadow:inset 0 -2px 0 rgba(52,211,153,.7)}
+.cn2 .cn-gl{display:none;flex-wrap:wrap;gap:4px 10px;margin-top:5px;font-size:12px;font-weight:600;color:#c4b5fd}
+.cn2 .cn-gl.on{display:flex;animation:cnIn .3s both}
+.cn2 .cn-gl b{color:#fde68a;font-weight:800;margin-right:3px}
+@keyframes cnIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.cn2 .cn-empty{display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;padding:48px 18px;color:var(--cn-dim);font-size:13px;line-height:1.5}
+.cn2 .cn-empty b{color:#fff;font-size:14.5px}
+.cn2 .cn-wave{display:flex;gap:4px;align-items:flex-end;height:30px;margin-bottom:6px}
+.cn2 .cn-wave i{width:5px;border-radius:3px;background:linear-gradient(180deg,#fbbf24,#a78bfa);animation:cnWv 1.1s ease-in-out infinite}
+.cn2 .cn-wave i:nth-child(2){animation-delay:.15s}.cn2 .cn-wave i:nth-child(3){animation-delay:.3s}.cn2 .cn-wave i:nth-child(4){animation-delay:.45s}.cn2 .cn-wave i:nth-child(5){animation-delay:.6s}
+.cn2 .cn-wave.off i{animation:none;height:8px}
+@keyframes cnWv{0%,100%{height:8px}50%{height:30px}}
+.cn2 .cn-pill{height:36px;padding:0 14px;border-radius:999px;font:800 12.5px/1 'Plus Jakarta Sans',system-ui,sans-serif;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.16);color:#fff}
+.cn2 .cn-pill.go{background:linear-gradient(135deg,#fbbf24,#fb7185);color:#1a1030;border:0}
+.cn2 .cn-pill.run{background:rgba(52,211,153,.25);border-color:rgba(52,211,153,.6)}
+.cn2 .cn-pf{flex:none;display:flex;align-items:center;gap:8px;padding:8px 10px max(8px,env(safe-area-inset-bottom)) 14px;border-top:1px solid rgba(255,255,255,.08);background:rgba(8,9,24,.8)}
+.cn2 .cn-cnt{flex:1;min-width:0;font-size:11.5px;font-weight:700;color:var(--cn-dim)}
+/* ---- the word card ---- */
+.cn2 .cn-word{position:absolute;left:8px;right:8px;bottom:8px;z-index:8;max-height:calc(100% - 70px);overflow-y:auto;padding:14px 14px 12px;border-radius:22px;background:linear-gradient(165deg,#241a56,#14122e);border:1px solid rgba(255,255,255,.16);box-shadow:0 -20px 50px -10px rgba(0,0,0,.7),0 0 0 1px rgba(124,58,237,.25);animation:cnUp .3s cubic-bezier(.2,.9,.3,1) both}
+.cn2 .cn-word.out{animation:cnDown .22s ease-in both}
+.cn2 .cn-word[hidden]{display:none}
+@keyframes cnUp{from{opacity:0;transform:translateY(26px) scale(.98)}to{opacity:1;transform:none}}
+@keyframes cnDown{to{opacity:0;transform:translateY(26px)}}
+.cn2 .cn-wh{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.cn2 .cn-wh h3{margin:0;font:800 26px/1.1 'Outfit','Plus Jakarta Sans',system-ui,sans-serif;color:#fff;letter-spacing:-.02em;overflow-wrap:anywhere}
+.cn2 .cn-lv{font:800 10px/1 system-ui;padding:3px 7px;border-radius:7px;background:rgba(124,58,237,.35);color:#ddd6fe}
+.cn2 .cn-ipa{font:600 13px/1 'Plus Jakarta Sans',system-ui;color:#c4b5fd}
+.cn2 .cn-wh .cn-sp{flex:1}
+.cn2 .cn-ic{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.1)}
+.cn2 .cn-ic svg{width:18px;height:18px}
+.cn2 .cn-sv{display:flex;align-items:center;gap:8px;margin:10px 0 8px;padding:7px 10px;border-radius:12px;background:rgba(52,211,153,.14);border:1px solid rgba(52,211,153,.32);font-size:12px;font-weight:700;color:#a7f3d0;animation:cnIn .35s .1s both}
+.cn2 .cn-sv i{display:grid;place-items:center;width:18px;height:18px;border-radius:50%;background:#34d399}
+.cn2 .cn-sv i svg{width:13px;height:13px;fill:#05281b}
+.cn2 .cn-sv span{flex:1}
+.cn2 .cn-sv button{appearance:none;border:0;background:none;color:#fff;font:800 12px/1 system-ui;text-decoration:underline;cursor:pointer;padding:4px}
+.cn2 .cn-sv.rm{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.14);color:var(--cn-dim)}
+.cn2 .cn-sv.rm i{background:#64748b}.cn2 .cn-sv.rm button{display:none}
+.cn2 .cn-sc{margin:6px 0 10px;padding:9px 11px;border-radius:12px;background:rgba(0,0,0,.28);font-size:13px;line-height:1.5;color:#dfe4ff;font-style:italic}
+.cn2 .cn-sc mark{background:rgba(251,191,36,.28);color:#fde68a;border-radius:4px;padding:0 3px;font-style:normal;font-weight:800}
+.cn2 .cn-mn{display:grid;gap:6px}
+.cn2 .cn-r{padding:8px 11px;border-radius:12px;background:rgba(255,255,255,.07);font-size:13.5px;font-weight:600;line-height:1.4;color:#fff;animation:cnIn .3s both}
+.cn2 .cn-r small{display:block;font:800 9.5px/1 system-ui;letter-spacing:.08em;text-transform:uppercase;color:#a5b4fc;margin-bottom:4px}
+.cn2 .cn-sk{height:44px;border-radius:12px;background:linear-gradient(90deg,rgba(255,255,255,.06),rgba(255,255,255,.14),rgba(255,255,255,.06));background-size:200% 100%;animation:cnSh 1.2s linear infinite}
+.cn2 .cn-sk.s{height:30px;width:70%}
+@keyframes cnSh{to{background-position:-200% 0}}
+.cn2 .cn-wa{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.cn2 .cn-wa .cn-pill{flex:1 1 auto}
+/* ---- narrow / portrait: film on top, panel below ---- */
+@media (orientation:portrait),(max-width:760px){
+ .mv-play.cn2{--pw:100%}
+ .cn2 .mv-pbox{flex-direction:column}
+ .cn2 .cn-stage{flex:0 0 auto;width:100%;aspect-ratio:16/9;max-height:46%}
+ .cn2.pclosed .cn-stage{flex:1 1 auto;aspect-ratio:auto;max-height:none}
+ .cn2 .cn-panel{flex:1 1 0;width:100%;border-left:0;border-top:1px solid rgba(255,255,255,.1)}
+ .cn2 .cn-ph{padding-top:10px}
+ .cn2 .cn-cap{display:none}
+ .cn2.pclosed .cn-cap{display:block}
+ .cn2 .cn-open{bottom:calc(92px + env(safe-area-inset-bottom))}
+}
+/* full screen: the film uses every pixel */
+.cn2:fullscreen{background:#000}
+@media (prefers-reduced-motion:reduce){.cn2 *{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+
+html.cn-on #lu3-intro,html.cn-on #lc-nag{display:none!important}
+html.cn-on #lu3-fab{display:none!important}
 </style><script id="lcs-js">(function(){'use strict';
 if(window.LCS)return;
 var KC='lr_cinema_cards',KS='lr_cinema_set',KK='lr_cinema_known';
@@ -55947,7 +56104,7 @@ if(!SET.lvl){var tg=''+((window.state&&state.user&&state.user.target)||'');SET.l
 function userKnown(){var u=(window.state&&state.user)||{};var a=(u.known||[]).concat(jg(KK,[]));var o={};a.forEach(function(w){o[String(w).toLowerCase()]=1});return o}
 function userSaved(){var u=(window.state&&state.user)||{};var o={};(u.savedWords||[]).forEach(function(w){o[String(w).toLowerCase()]=1});jg(KC,[]).forEach(function(c){o[c.w]=1});return o}
 function forms(w){var o=[w],n=w.length;if(/'/.test(w))o.push(w.split(/['’]/)[0]);if(n>3&&/s$/.test(w))o.push(w.slice(0,-1));if(n>4&&/es$/.test(w))o.push(w.slice(0,-2));if(n>4&&/ies$/.test(w))o.push(w.slice(0,-3)+'y');if(n>4&&/ed$/.test(w)){o.push(w.slice(0,-2));o.push(w.slice(0,-1));if(w[n-3]===w[n-4])o.push(w.slice(0,-3))}if(n>5&&/ing$/.test(w)){o.push(w.slice(0,-3));o.push(w.slice(0,-3)+'e');if(w[n-4]===w[n-5])o.push(w.slice(0,-4))}if(n>4&&/ly$/.test(w))o.push(w.slice(0,-2));if(n>5&&/er$|st$/.test(w))o.push(w.slice(0,-2));return o}
-function isHard(w,cap){var K=userKnown(),f=forms(w),i;if(w.length<4)return false;for(i=0;i<f.length;i++){if(K[f[i]])return false;if(W1[f[i]])return false;if(SET.lvl>=2&&W2[f[i]])return false}if(SET.lvl>=3&&w.length<6)return false;if(cap)return false;return true}
+function isHard(w,cap){var K=userKnown(),f=forms(w),i;if(/['’](s|t|re|ll|ve|d|m)$/.test(w))return false;if(w.length<4)return false;for(i=0;i<f.length;i++){if(K[f[i]])return false;if(W1[f[i]])return false;if(SET.lvl>=2&&W2[f[i]])return false}if(SET.lvl>=3&&w.length<6)return false;if(cap)return false;return true}
 /* ---------- subtitle parsing ---------- */
 function tsec(s){var m=/(?:(\d+):)?(\d+):(\d+)[.,](\d+)/.exec(s);if(!m)return null;return (+m[1]||0)*3600+(+m[2])*60+(+m[3])+(+('0.'+m[4]))}
 function clean(t){return String(t).replace(/<[^>]+>/g,'').replace(/\{[^}]*\}/g,'').replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&#39;/g,"'").replace(/♪/g,'').replace(/\s+/g,' ').trim()}
@@ -55970,7 +56127,7 @@ async function subsYT(id){var c;
 var MC={};
 async function meaning(w,line,title){var k=w+'|'+line;if(MC[k])return MC[k];var out={};
  try{var key=aiKey();if(!key)throw 0;var c=new AbortController(),to=setTimeout(function(){c.abort()},14000);
-  var r=await lrAIFetch('https://api.openai.com/v1/chat/completions',{method:'POST',signal:c.signal,headers:{'Content-Type':'application/json',Authorization:'Bearer '+key},body:JSON.stringify({model:LR_AI_MODEL,temperature:.2,max_tokens:260,response_format:{type:'json_object'},messages:[{role:'system',content:'You are a precise English teacher. Reply JSON only: {"pos":"part of speech","en":"simple English meaning of the word AS USED in this exact line (max 14 words)","uz":"short Uzbek translation for this meaning","ru":"short Russian translation for this meaning","ex":"one short new example sentence"}'},{role:'user',content:'Word: '+w+'\nSubtitle line: '+line+(title?'\nFrom: '+title:'')}]})});clearTimeout(to);
+  var r=await lrAIFetch('https://api.openai.com/v1/chat/completions',{method:'POST',signal:c.signal,headers:{'Content-Type':'application/json',Authorization:'Bearer '+key},body:JSON.stringify({model:LR_AI_MODEL,temperature:.2,max_tokens:300,response_format:{type:'json_object'},messages:[{role:'system',content:'You are a precise English teacher. Reply JSON only: {"pos":"part of speech","en":"simple English meaning of the word AS USED in this exact line (max 14 words)","ipa":"IPA pronunciation like /ˈwɜːrd/","uz":"short Uzbek translation for this meaning","ru":"short Russian translation for this meaning","ex":"one short new example sentence"}'},{role:'user',content:'Word: '+w+'\nSubtitle line: '+line+(title?'\nFrom: '+title:'')}]})});clearTimeout(to);
   var j=await r.json(),t=j&&j.choices&&j.choices[0]&&j.choices[0].message&&j.choices[0].message.content;out=JSON.parse(t)}catch(e){out={}}
  if(!out.uz){try{var u=await translateToUz(w);if(u&&u.main)out.uz=u.main}catch(e){}}
  if(!out.ru){try{var ru=await translateToRu(w);if(ru&&ru.main)out.ru=ru.main}catch(e){}}
@@ -55980,54 +56137,158 @@ async function meaning(w,line,title){var k=w+'|'+line;if(MC[k])return MC[k];var 
 function adHTML(v){return{t:function(){return v.currentTime||0},pause:function(){v.pause()},play:function(){var p=v.play();if(p&&p.catch)p.catch(function(){})},seek:function(s){v.currentTime=s},paused:function(){return v.paused}}}
 var ytP=null;function ytAPI(){if(ytP)return ytP;ytP=new Promise(function(res){if(window.YT&&YT.Player)return res();var s=document.createElement('script');s.src='https://www.youtube.com/iframe_api';var prev=window.onYouTubeIframeAPIReady;window.onYouTubeIframeAPIReady=function(){try{prev&&prev()}catch(e){}res()};document.head.appendChild(s);setTimeout(res,10000)});return ytP}
 function adYT(ifr){return ytAPI().then(function(){return new Promise(function(res){if(!(window.YT&&YT.Player))return res(null);var pl=new YT.Player(ifr,{events:{onReady:function(){res({t:function(){try{return pl.getCurrentTime()||0}catch(e){return 0}},pause:function(){try{pl.pauseVideo()}catch(e){}},play:function(){try{pl.playVideo()}catch(e){}},seek:function(s){try{pl.seekTo(s,true)}catch(e){}},paused:function(){try{return pl.getPlayerState()!==1}catch(e){return true}},raw:pl})},onError:function(){res(null)}}});setTimeout(function(){res(null)},9000)})})}
-/* ---------- the smart layer on a player ---------- */
-function attach(frame,src,preset){if(!frame||frame.__lcs)return;frame.__lcs=1;if(getComputedStyle(frame).position==='static')frame.style.position='relative';
- var ov=mk('<div class="lcs-hud"><button type="button" class="lcs-pill" data-a="tog"><i></i><span>Smart subtitles</span></button><button type="button" class="lcs-pill" data-a="lvl"></button><button type="button" class="lcs-pill" data-a="file">Load .srt / .vtt</button><button type="button" class="lcs-pill" data-a="deck"></button><button type="button" class="lcs-pill" data-a="fs">Full screen</button></div><div class="lcs-sub"></div>','lcs-ov');
- frame.appendChild(ov);var sub=ov.querySelector('.lcs-sub'),cues=preset||null,ad=null,cur=-1,timer=0,sheet=null,busy=false,file=document.createElement('input');file.type='file';file.accept='.srt,.vtt,.txt,.json';file.style.display='none';ov.appendChild(file);
- var LV=['','All new words','Balanced','Only hard words'];
- function hud(){var p=ov.querySelector('[data-a=lvl]');p.textContent=LV[SET.lvl];ov.querySelector('[data-a=tog]').classList.toggle('off',!SET.on);ov.querySelector('[data-a=deck]').textContent='My cards · '+jg(KC,[]).length}hud();
- ov.classList.add('hud');setTimeout(function(){ov.classList.remove('hud')},4500);
- function note(h){sub.innerHTML='<div class="lcs-note" style="pointer-events:auto">'+h+'</div>'}
- function status(m){note('<span style="opacity:.9">'+m+'</span>')}
- function load(){if(cues)return;status('<b>Finding subtitles…</b>');
-  (src.k==='yt'?subsYT(src.id):src.k==='ia'?subsIA(src.id):Promise.resolve(null)).then(function(c){if(c&&c.length){cues=c;sub.innerHTML='';cur=-1;toast('Smart subtitles ready ✨')}else nosubs()}).catch(nosubs)}
- function nosubs(){cues=null;note('<b>No subtitles found for this video.</b><br>Load a .srt or .vtt file and the yellow words will appear.<br><button type="button" class="lcs-b p" data-a="file">Load subtitle file</button>')}
- file.onchange=function(){var f=file.files&&file.files[0];if(!f)return;var r=new FileReader();r.onload=function(){var c=parseSub(r.result);if(c.length){cues=c;cur=-1;sub.innerHTML='';toast('Subtitles loaded ✨')}else toast('That file has no subtitles')};r.readAsText(f);file.value=''};
- function find(t){var a=cues,lo=0,hi=a.length-1,r=-1;while(lo<=hi){var m=(lo+hi)>>1;if(a[m].s<=t){r=m;lo=m+1}else hi=m-1}if(r>=0&&a[r].e>=t-.15)return r;return -1}
- function render(i){if(i<0||!SET.on){sub.innerHTML='';return}var c=cues[i],K=userSaved(),n=0,h=c.t.replace(/([A-Za-z][A-Za-z'’-]*)/g,function(w,x,off){var lw=w.toLowerCase().replace(/[’]/g,"'").replace(/^[-']+|[-']+$/g,'');var cap=/^[A-Z]/.test(w)&&off>0&&!/[.!?]\s*$/.test(c.t.slice(0,off));var u=isHard(lw,cap),s=K[lw];return '<span class="lcs-w'+(u?' u':s?' s':'')+'" data-w="'+esc(lw)+'" style="--i:'+(n++)+'">'+esc(w)+'</span>'});sub.innerHTML='<span class="lcs-line">'+h+'</span>'}
- function tick(){if(!ad||!cues||sheet)return;var i=find(ad.t());if(i!==cur){cur=i;render(i)}}
- function clipOf(c){var mid=(c.s+c.e)/2,s=Math.max(0,Math.min(c.s-.4,mid-2.5));return{s:+s.toFixed(1),e:+(s+5).toFixed(1)}}
- function closeSheet(play){if(!sheet)return;var s=sheet;sheet=null;s.classList.add('out');setTimeout(function(){s.remove()},230);if(play&&ad)ad.play()}
- function playClip(cl,ring){if(!ad)return;ad.seek(cl.s);ad.play();var t0=Date.now(),iv=setInterval(function(){var t=ad.t(),p=Math.min(100,Math.max(0,(t-cl.s)/(cl.e-cl.s)*100));ring.style.setProperty('--p',p+'%');if(t>=cl.e||Date.now()-t0>9000){clearInterval(iv);ad.pause();ring.style.setProperty('--p','100%')}},80)}
- function openWord(w,c){if(!ad)return;ad.pause();var cl=clipOf(c);closeSheet(false);
-  var line=esc(c.t).replace(new RegExp('\\b('+w.replace(/[^a-z\']/g,'')+'[a-z\']*)','i'),'<mark>$1</mark>');
-  sheet=mk('<div class="lcs-sh"><h3>'+esc(w)+'</h3><span class="lcs-lv" id="lcs-lv" hidden></span><span class="lcs-sp"></span><button type="button" class="lcs-ic" data-a="say" aria-label="Pronounce">🔊</button><button type="button" class="lcs-ic" data-a="close" aria-label="Close">✕</button></div><p class="lcs-ctx">“'+line+'”</p><div class="lcs-mean" id="lcs-m"><div class="lcs-sk"></div><div class="lcs-sk"></div></div><div class="lcs-clip"><div class="lcs-ring" data-a="clip"><span>▶</span></div><div><b>5-second clip</b><small>'+cl.s.toFixed(0)+'s – '+cl.e.toFixed(0)+'s · saved with the card</small></div></div><div class="lcs-act"><button type="button" class="lcs-b p" data-a="save">⭐ Save to flashcards</button><button type="button" class="lcs-b" data-a="know">I know it</button><button type="button" class="lcs-b" data-a="go">Continue ▶</button></div>','lcs-sheet');
-  ov.appendChild(sheet);var sh=sheet;
-  meaning(w,c.t,src.title).then(function(m){if(sheet!==sh)return;sh.__m=m;var h='';if(m.en)h+='<div><small>'+esc(m.pos||'meaning')+' · in this scene</small>'+esc(m.en)+'</div>';if(m.uz)h+='<div><small>🇺🇿 Uzbek</small>'+esc(m.uz)+'</div>';if(m.ru)h+='<div><small>🇷🇺 Russian</small>'+esc(m.ru)+'</div>';if(m.ex)h+='<div><small>Example</small>'+esc(m.ex)+'</div>';sh.querySelector('#lcs-m').innerHTML=h||'<div>Could not load the meaning. Check your internet.</div>';if(m.lv){var l=sh.querySelector('#lcs-lv');l.hidden=false;l.textContent=m.lv}});
-  sh.addEventListener('click',function(e){var b=e.target.closest('[data-a]');if(!b)return;var a=b.dataset.a;
-   if(a==='close'||a==='go'){closeSheet(true)}
-   else if(a==='say'){try{speakText(w)}catch(x){}}
-   else if(a==='clip'){playClip(cl,b)}
-   else if(a==='know'){var K=jg(KK,[]);if(K.indexOf(w)<0)K.push(w);js(KK,K);try{state.user.known=state.user.known||[];if(state.user.known.indexOf(w)<0)state.user.known.push(w);pfSave()}catch(x){}toast('Got it — “'+w+'” will not be highlighted again');cur=-1;closeSheet(true)}
-   else if(a==='save'){var m=sh.__m||{},cards=jg(KC,[]);if(!cards.some(function(x){return x.w===w&&x.src&&x.src.id===src.id&&Math.abs(x.s-cl.s)<3})){cards.unshift({id:Date.now(),w:w,line:c.t,pos:m.pos||'',en:m.en||'',uz:m.uz||'',ru:m.ru||'',ex:m.ex||'',src:{k:src.k,id:src.id,url:src.url||'',title:src.title||''},s:cl.s,e:cl.e,due:Date.now(),n:0});js(KC,cards.slice(0,400))}
-    try{saveWord(w)}catch(x){}fly(b,ov.querySelector('[data-a=deck]'),w);hud();cur=-1;setTimeout(function(){closeSheet(true)},650)}});}
- function fly(from,to,w){try{var a=from.getBoundingClientRect(),b=to.getBoundingClientRect(),f=mk(esc(w),'lcs-fly');f.style.left=a.left+a.width/2-60+'px';f.style.top=a.top+'px';document.body.appendChild(f);var an=f.animate([{transform:'translate(0,0) scale(1) rotate(0)',opacity:1},{transform:'translate('+(b.left+b.width/2-a.left-a.width/2)+'px,'+(b.top-a.top)+'px) scale(.25) rotate(14deg)',opacity:.2}],{duration:620,easing:'cubic-bezier(.5,-.2,.3,1)'});an.onfinish=function(){f.remove()}}catch(e){}}
- ov.addEventListener('click',function(e){var w=e.target.closest('.lcs-w');if(w&&cues&&cur>=0){openWord(w.dataset.w,cues[cur]);return}var b=e.target.closest('[data-a]');if(!b||b.closest('.lcs-sheet'))return;var a=b.dataset.a;
-  if(a==='tog'){SET.on=!SET.on;js(KS,SET);hud();cur=-1;if(!SET.on)sub.innerHTML=''}
-  else if(a==='lvl'){SET.lvl=SET.lvl%3+1;js(KS,SET);hud();cur=-1;tick()}
-  else if(a==='file'){file.click()}
-  else if(a==='deck'){if(ad)ad.pause();window.LCS.deck()}
-  else if(a==='fs'){try{if(document.fullscreenElement)document.exitFullscreen();else (frame.requestFullscreen||frame.webkitRequestFullscreen).call(frame)}catch(x){}}});
- var hv=0;frame.addEventListener('pointermove',function(){ov.classList.add('hud');clearTimeout(hv);hv=setTimeout(function(){ov.classList.remove('hud')},3000)});
- (function boot(){var v=frame.querySelector('video'),f=frame.querySelector('iframe');
-  if(v){ad=adHTML(v);load();timer=setInterval(function(){if(!document.body.contains(frame)){clearInterval(timer);return}tick()},110)}
-  else if(f&&src.k==='yt'){adYT(f).then(function(a){if(!a){note('<b>This player does not allow smart subtitles.</b>');return}ad=a;load();timer=setInterval(function(){if(!document.body.contains(frame)){clearInterval(timer);return}tick()},110)})}
-  else note('<b>Smart subtitles need a direct video or a YouTube video.</b>')})();
-}
-/* ---------- finding players that appear in the Movies section ---------- */
-function scan(){document.querySelectorAll('.mv-play .mv-frame').forEach(function(fr){if(fr.__lcs)return;var v=fr.querySelector('video'),f=fr.querySelector('iframe');
-  if(v&&v.getAttribute('src')){var m=/archive\.org\/download\/([^\/]+)\//.exec(v.getAttribute('src')||'');var t=((fr.parentNode.querySelector('.mv-pn')||{}).textContent||'').split('·')[0].trim();attach(fr,{k:m?'ia':'url',id:m?decodeURIComponent(m[1]):v.getAttribute('src'),url:v.getAttribute('src'),title:t})}
-  else if(f&&/youtube(-nocookie)?\.com\/embed\//.test(f.src||'')&&/enablejsapi=1/.test(f.src)){var id=/embed\/([^?]+)/.exec(f.src)[1];attach(fr,{k:'yt',id:id,title:''})}})}
+/* ================= Cinema v2 : the smart layer for every film on the site ================= */
+var GL={};/* gloss cache */
+function ipaOf(w){return ft('https://api.dictionaryapi.dev/v2/entries/en/'+encodeURIComponent(w),4500).then(function(r){return r.ok?r.json():null}).then(function(j){if(!j||!j[0])return null;var o={ipa:'',au:''};(j[0].phonetics||[]).forEach(function(p){if(!o.ipa&&p.text)o.ipa=p.text;if(!o.au&&p.audio)o.au=p.audio});if(!o.ipa&&j[0].phonetic)o.ipa=j[0].phonetic;return o}).catch(function(){return null})}
+function glossOf(w){if(GL[w])return GL[w];var p=Promise.resolve().then(function(){return translateToUz(w)}).then(function(r){return r&&r.main?String(r.main):''}).catch(function(){return''});GL[w]=p;return p}
+function quietSave(w){var ok=false,st=window.showToast,tc=window.triggerConfetti;try{var had=((window.state&&state.user&&state.user.savedWords)||[]).indexOf(w)>=0;if(had)return false;window.showToast=function(){};window.triggerConfetti=function(){};saveWord(w);ok=true}catch(e){}finally{if(st)window.showToast=st;if(tc)window.triggerConfetti=tc}return ok}
+function quietUnsave(w){try{var u=state.user,a=u.savedWords||[],i=a.indexOf(w);if(i>=0){a.splice(i,1);var k=(typeof dayKey==='function')?dayKey():new Date().toISOString().slice(0,10);if(u.savedLog&&u.savedLog[k]>0)u.savedLog[k]--;pfSave();try{updateHeaderUI()}catch(e){}}}catch(e){}}
+function fmtT(t){t=Math.max(0,t|0);var h=(t/3600)|0,m=((t%3600)/60)|0,s=t%60;return (h?h+':'+(m<10?'0':''):'')+m+':'+(s<10?'0':'')+s}
+var HAS=function(a,b){return a&&a.indexOf(b)>=0};
+/* ---- YouTube adapter with everything the custom controls need ---- */
+function adYT2(ifr,onState){return ytAPI().then(function(){return new Promise(function(res){if(!(window.YT&&YT.Player))return res(null);var done=false,pl=new YT.Player(ifr,{events:{onReady:function(){if(done)return;done=true;res({t:function(){try{return pl.getCurrentTime()||0}catch(e){return 0}},dur:function(){try{return pl.getDuration()||0}catch(e){return 0}},pause:function(){try{pl.pauseVideo()}catch(e){}},play:function(){try{pl.playVideo()}catch(e){}},seek:function(s){try{pl.seekTo(s,true)}catch(e){}},paused:function(){try{var s=pl.getPlayerState();return s!==1&&s!==3}catch(e){return true}},rate:function(r){try{if(r==null)return pl.getPlaybackRate();pl.setPlaybackRate(r)}catch(e){}return 1},vol:function(v){try{if(v==null)return pl.getVolume()/100;pl.setVolume(v*100);if(v>0)pl.unMute()}catch(e){}return 1},yt:1})},onStateChange:function(e){try{onState&&onState(e.data)}catch(x){}},onError:function(){if(!done){done=true;res(null)}}}});setTimeout(function(){if(!done){done=true;res(null)}},9000)})})}
+function adHTML2(v,onState){['play','pause','playing','waiting','ended','seeked','timeupdate','durationchange'].forEach(function(n){v.addEventListener(n,function(){try{onState&&onState(n)}catch(x){}})});return{t:function(){return v.currentTime||0},dur:function(){return isFinite(v.duration)?v.duration:0},pause:function(){v.pause()},play:function(){var p=v.play();if(p&&p.catch)p.catch(function(){})},seek:function(s){v.currentTime=s},paused:function(){return v.paused},rate:function(r){if(r==null)return v.playbackRate;v.playbackRate=r;return r},vol:function(x){if(x==null)return v.muted?0:v.volume;v.muted=x===0;v.volume=x||v.volume;return x},html:v}}
+/* ---- more places to find captions ---- */
+function anyOk(ps){return new Promise(function(res){var n=ps.length,done=false;if(!n)return res(null);ps.forEach(function(p){Promise.resolve(p).then(function(v){if(v&&v.length&&!done){done=true;res(v)}else if(--n===0&&!done)res(null)},function(){if(--n===0&&!done)res(null)})})})}
+function viaPiped(id){return ft('https://pipedapi.kavin.rocks/streams/'+encodeURIComponent(id),9000).then(function(r){return r.json()}).then(function(j){var a=(j.subtitles||[]).filter(function(x){return /^en/i.test(x.code||'')&&!x.autoGenerated}).concat((j.subtitles||[]).filter(function(x){return /^en/i.test(x.code||'')}));if(!a.length)return null;return ft(a[0].url,9000).then(function(r){return r.text()}).then(function(t){var c=parseSub(t);return c.length?c:null})}).catch(function(){return null})}
+function viaInv(id){return ft('https://inv.nadeko.net/api/v1/captions/'+encodeURIComponent(id)+'?label=English',9000).then(function(r){return r.ok?r.text():''}).then(function(t){var c=parseSub(t);return c.length?c:null}).catch(function(){return null})}
+/* ---- hidden audio transcription (the film's own sound only, never the microphone) ---- */
+function whisperStart(v,onCues,isOn){
+ var W={stop:function(){W.dead=true;try{W.rec&&W.rec.state==='recording'&&W.rec.stop()}catch(e){}}},SEG=9000,mime='';
+ try{if(!window.MediaRecorder)return null;['audio/webm;codecs=opus','audio/webm','audio/mp4'].some(function(m){if(MediaRecorder.isTypeSupported(m)){mime=m;return true}})}catch(e){}
+ if(!mime)return null;var key;try{key=aiKey()}catch(e){}if(!key)return null;
+ var last='',busy=0;
+ function track(){var st;try{st=v.captureStream?v.captureStream():v.mozCaptureStream?v.mozCaptureStream():null}catch(e){}if(!st)return null;var a=st.getAudioTracks();return a.length?new MediaStream(a):null}
+ function send(blob,t0,rate){if(blob.size<3500)return;var fd=new FormData();fd.append('file',blob,'a.'+(/mp4/.test(mime)?'mp4':'webm'));fd.append('model','whisper-1');fd.append('response_format','verbose_json');fd.append('language','en');if(last)fd.append('prompt',last.slice(-180));busy++;
+  lrAIFetch('https://api.openai.com/v1/audio/transcriptions',{method:'POST',headers:{Authorization:'Bearer '+key},body:fd}).then(function(r){return r.ok?r.json():null}).then(function(j){busy--;if(!j||!j.segments)return;var out=[];j.segments.forEach(function(sg){var t=clean(sg.text||'');if(!t||t.length<2)return;if(sg.no_speech_prob>.6||sg.avg_logprob<-1.3)return;if(/^(thanks for watching|thank you\.?|you|bye\.?|\.+)$/i.test(t))return;out.push({s:+(t0+sg.start*rate).toFixed(2),e:+(t0+sg.end*rate).toFixed(2),t:t,live:1})});if(out.length){last=out.map(function(x){return x.t}).join(' ');onCues(out)}}).catch(function(){busy--})}
+ function seg(){if(W.dead)return;if(!isOn()||v.paused||v.seeking||v.readyState<3){W.tm=setTimeout(seg,500);return}
+  var tr=track();if(!tr){W.tm=setTimeout(seg,1500);return}
+  var rec;try{rec=new MediaRecorder(tr,{mimeType:mime,audioBitsPerSecond:48000})}catch(e){return}var ch=[],t0=v.currentTime,rate=v.playbackRate||1,w0=Date.now();W.rec=rec;
+  rec.ondataavailable=function(e){if(e.data&&e.data.size)ch.push(e.data)};
+  rec.onstop=function(){var t1=v.currentTime,real=(Date.now()-w0)/1000,exp=t0+real*rate;if(Math.abs(t1-exp)<2.5&&ch.length)send(new Blob(ch,{type:mime}),t0,rate);if(!W.dead)W.tm=setTimeout(seg,20)};
+  try{rec.start()}catch(e){return}
+  W.tm=setTimeout(function(){try{rec.state==='recording'&&rec.stop()}catch(e){}},SEG)}
+ seg();return W}
+/* ---- the layer ---- */
+var CN={};window.CN2=CN;
+var ICON={play:'<svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg>',pause:'<svg viewBox="0 0 24 24"><path d="M7 5h3.6v14H7zm6.4 0H17v14h-3.6z"/></svg>',back:'<svg viewBox="0 0 24 24"><path d="M12 5V2L7 6.5 12 11V8a5 5 0 1 1-5 5H5a7 7 0 1 0 7-8z"/><text x="12" y="16.3" text-anchor="middle" font-size="6.6" font-weight="800" font-family="system-ui">10</text></svg>',fwd:'<svg viewBox="0 0 24 24"><path d="M12 5V2l5 4.5L12 11V8a5 5 0 1 0 5 5h2a7 7 0 1 1-7-8z"/><text x="12" y="16.3" text-anchor="middle" font-size="6.6" font-weight="800" font-family="system-ui">10</text></svg>',fs:'<svg viewBox="0 0 24 24"><path d="M4 9V4h5v2H6v3zm10-5h5v5h-2V6h-3zM6 15v3h3v2H4v-5zm13 0v5h-5v-2h3v-3z"/></svg>',fit:'<svg viewBox="0 0 24 24"><path d="M3 6h18v12H3zm2 2v8h14V8z"/></svg>',x:'<svg viewBox="0 0 24 24"><path d="M6.4 5 12 10.6 17.6 5 19 6.4 13.4 12l5.6 5.6-1.4 1.4-5.6-5.6L6.4 19 5 17.6l5.6-5.6L5 6.4z"/></svg>',sub:'<svg viewBox="0 0 24 24"><path d="M3 5h18v14H3zm2 2v10h14V7zm2 6h4v2H7zm6 0h4v2h-4zM7 9h6v2H7z"/></svg>',say:'<svg viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9zm11.5 3a4 4 0 0 0-2-3.5v7a4 4 0 0 0 2-3.5zM14 3.2v2.1a7 7 0 0 1 0 13.4v2.1a9 9 0 0 0 0-17.6z"/></svg>',check:'<svg viewBox="0 0 24 24"><path d="m9 16.2-3.5-3.5L4 14.1l5 5 11-11-1.5-1.4z"/></svg>'};
+CN.begin=function(p,src){if(p.__cn)return p.__cn;var box=p.querySelector('.mv-pbox'),fr=p.querySelector('.mv-frame');if(!box||!fr)return null;
+ document.documentElement.classList.add('cn-on');p.classList.add('cn2');if(src.k==='yt')p.classList.add('cn-yt');var C=p.__cn={p:p,src:src,cues:[],cur:-1,ad:null,lines:[],state:{},timers:[]};
+ var pc=false;try{pc=localStorage.getItem('lr_cn_panel')==='0'}catch(e){}
+ if(pc)p.classList.add('pclosed');
+ var stage=document.createElement('div');stage.className='cn-stage';box.insertBefore(stage,box.firstChild);stage.appendChild(fr);
+ var px=box.querySelector('.mv-px');if(px){px.innerHTML=ICON.x;px.classList.add('cn-x');stage.appendChild(px)}
+ var title=esc(src.title||'');
+ stage.insertAdjacentHTML('beforeend','<div class="cn-veil" data-a="veil"></div><div class="cn-top"><div class="cn-ti">'+title+'</div><div class="cn-tr"><button type="button" class="cn-b cn-bt" data-a="fit" aria-label="Fill the screen" title="Fill the screen">'+ICON.fit+'</button><button type="button" class="cn-b cn-bt" data-a="panel" aria-label="Smart subtitles" title="Smart subtitles">'+ICON.sub+'</button></div></div><div class="cn-cap" aria-live="off"></div><div class="cn-bar"><div class="cn-seek"><input type="range" min="0" max="1000" value="0" step="1" aria-label="Seek"><i></i></div><div class="cn-row"><button type="button" class="cn-b cn-pp" data-a="pp" aria-label="Play or pause">'+ICON.play+'</button><button type="button" class="cn-b" data-a="b10" aria-label="Back 10 seconds">'+ICON.back+'</button><button type="button" class="cn-b" data-a="f10" aria-label="Forward 10 seconds">'+ICON.fwd+'</button><span class="cn-tm">0:00 / 0:00</span><span class="cn-sp"></span><button type="button" class="cn-b cn-rate" data-a="rate">1×</button><button type="button" class="cn-b" data-a="fs" aria-label="Full screen">'+ICON.fs+'</button></div></div><div class="cn-hint"></div>');
+ box.insertAdjacentHTML('beforeend','<aside class="cn-panel" aria-label="Smart subtitles"><header class="cn-ph"><div class="cn-pt"><span class="cn-live"></span><b>Smart subtitles</b></div><button type="button" class="cn-b cn-bt" data-a="panel" aria-label="Turn off Smart subtitles" title="Turn off">'+ICON.x+'</button><div class="cn-pa"><button type="button" class="cn-b cn-sm" data-a="lvl" title="Which words to highlight"></button><button type="button" class="cn-b cn-sm" data-a="pz" title="Pause when I tap a word"></button></div></header><div class="cn-list" tabindex="0"><div class="cn-empty"></div></div><div class="cn-word" hidden></div><footer class="cn-pf"><span class="cn-cnt"></span><button type="button" class="cn-b cn-sm" data-a="deck">My movie words</button></footer></aside><button type="button" class="cn-open" data-a="panel" aria-label="Turn on Smart subtitles">'+ICON.sub+'<span>Smart subtitles</span></button><input type="file" class="cn-file" accept=".srt,.vtt,.txt,.json" hidden>');
+ C.stage=stage;C.box=box;C.fr=fr;C.list=p.querySelector('.cn-list');C.word=p.querySelector('.cn-word');C.cap=p.querySelector('.cn-cap');C.bar=p.querySelector('.cn-bar');C.rng=p.querySelector('.cn-seek input');C.prog=p.querySelector('.cn-seek i');C.tm=p.querySelector('.cn-tm');C.pp=p.querySelector('.cn-pp');C.hint=p.querySelector('.cn-hint');C.file=p.querySelector('.cn-file');
+ hudSync(C);emptyState(C,'listen');wireUI(C);
+ var iv=setInterval(function(){if(!document.body.contains(p)){destroy(C);return}tick(C)},120);C.timers.push(iv);
+ return C};
+function destroy(C){if(C.dead)return;C.dead=true;document.documentElement.classList.remove('cn-on');C.timers.forEach(clearInterval);if(C.wh)C.wh.stop();try{if(document.fullscreenElement)document.exitFullscreen()}catch(e){}document.removeEventListener('keydown',C.kd,true)}
+CN.ready=function(p,o){var C=p.__cn;if(!C)return;o=o||{};var v=p.querySelector('video'),f=p.querySelector('iframe');
+ if(v){C.video=v;C.ad=adHTML2(v,function(n){onState(C,n)});v.controls=false;v.removeAttribute('controls');autoFit(C);v.addEventListener('loadedmetadata',function(){autoFit(C)});findCues(C)}
+ else if(f&&C.src.k==='yt'){C.yt=true;adYT2(f,function(s){onState(C,s)}).then(function(a){if(!a){nativeMode(C);return}C.ad=a;findCues(C)})}
+ else if(f){nativeMode(C)}};
+function nativeMode(C){C.p.classList.add('cn-native');emptyState(C,'native')}
+function onState(C,s){C.state.last=s;uiPlay(C)}
+function uiPlay(C){if(!C.ad)return;var pl=!C.ad.paused();C.pp.innerHTML=pl?ICON.pause:ICON.play;C.p.classList.toggle('cn-paused',!pl)}
+function autoFit(C){var v=C.video;if(!v||!v.videoWidth)return;var r=C.stage.getBoundingClientRect();if(!r.width)return;var va=v.videoWidth/v.videoHeight,sa=r.width/r.height,crop=1-Math.min(va,sa)/Math.max(va,sa);C.p.classList.toggle('cn-fill',crop<.13||C.fill===true)}
+function hudSync(C){var LV=['','All new words','Balanced','Hard words'],q=C.p.querySelector('[data-a=lvl]'),z=C.p.querySelector('[data-a=pz]');if(q)q.textContent=LV[SET.lvl];if(z){z.textContent=SET.pz===false?'Keep playing':'Pause on tap';z.classList.toggle('off',SET.pz===false)}var nn=jg(KC,[]).length;C.p.querySelector('.cn-cnt').textContent=nn+(nn===1?' word':' words')+' saved from films'}
+function emptyState(C,k){if(C.cues&&C.cues.length)return;var h={listen:'<div class="cn-wave"><i></i><i></i><i></i><i></i><i></i></div><b>Getting the dialogue ready…</b><span>Every word will be tappable.</span>',whisper:'<div class="cn-wave"><i></i><i></i><i></i><i></i><i></i></div><b>Listening to the film…</b><span>Lines appear here a few seconds after they are spoken. Tap any word.</span>',native:'<b>This player keeps its own controls.</b><span>Smart subtitles work with YouTube videos and film files. You can still load your own subtitle file.</span><button type="button" class="cn-b cn-pill" data-a="file">Load .srt / .vtt</button>',none:'<div class="cn-wave off"><i></i><i></i><i></i><i></i><i></i></div><b>Dialogue appears while the film plays.</b><span>Have a subtitle file? Add it and every line shows up here.</span><button type="button" class="cn-b cn-pill" data-a="file">Load .srt / .vtt</button>'}[k]||'';C.list.innerHTML='<div class="cn-empty">'+h+'</div>';C.lines=[]}
+function findCues(C){var src=C.src,pre=src.cues;if(pre&&pre.length){setCues(C,pre);return}
+ var job=src.k==='yt'?anyOk([subsYT(src.id),viaPiped(src.id),viaInv(src.id)]):src.k==='ia'?subsIA(src.id).catch(function(){return null}):Promise.resolve(null);
+ job.then(function(c){if(C.dead)return;if(c&&c.length){setCues(C,c);return}noCaps(C)}).catch(function(){noCaps(C)})}
+function noCaps(C){if(C.cues.length)return;var v=C.video;
+ if(v&&!C.noCors){var w=whisperStart(v,function(add){addLive(C,add)},function(){return SET.auto!==false&&!C.dead});if(w){C.wh=w;emptyState(C,'whisper');return}}
+ emptyState(C,'none')}
+function setCues(C,c){C.cues=c.slice().sort(function(a,b){return a.s-b.s});C.cur=-1;buildList(C);C.p.classList.add('cn-has')}
+function addLive(C,add){var first=!C.cues.length;add.forEach(function(n){if(C.cues.some(function(x){return Math.abs(x.s-n.s)<1.2&&x.t.slice(0,12)===n.t.slice(0,12)}))return;C.cues.push(n)});C.cues.sort(function(a,b){return a.s-b.s});for(var i=0;i<C.cues.length-1;i++)if(C.cues[i].e>C.cues[i+1].s)C.cues[i].e=Math.max(C.cues[i].s+.4,C.cues[i+1].s);C.cur=-1;if(first)C.list.innerHTML='';buildList(C,true);C.p.classList.add('cn-has')}
+function lineHtml(c,i,K){var n=0,h=c.t.replace(/([A-Za-z][A-Za-z'’-]*)/g,function(w,x,off){var lw=w.toLowerCase().replace(/[’]/g,"'").replace(/^[-']+|[-']+$/g,'');if(!lw)return w;var cap=/^[A-Z]/.test(w)&&off>0&&!/[.!?]\s*$/.test(c.t.slice(0,off));var u=SET.on!==false&&isHard(lw,cap),s=K[lw];return '<span class="cn-w'+(u?' u':s?' s':'')+'" data-w="'+esc(lw)+'">'+esc(w)+'</span>'});return '<div class="cn-l" data-i="'+i+'"><button type="button" class="cn-t" data-a="go" aria-label="Go to this line">'+fmtT(c.s)+'</button><div class="cn-tx">'+h+'<div class="cn-gl"></div></div></div>'}
+function buildList(C,keep){var K=userSaved(),cs=C.cues,L=C.list,top=L.scrollTop;var html=[];for(var i=0;i<cs.length;i++)html.push(lineHtml(cs[i],i,K));L.innerHTML=html.join('');C.lines=L.children;if(keep)L.scrollTop=top;C.cur=-1;tick(C,true)}
+function findIdx(a,t){var lo=0,hi=a.length-1,r=-1;while(lo<=hi){var m=(lo+hi)>>1;if(a[m].s<=t){r=m;lo=m+1}else hi=m-1}if(r>=0&&a[r].e>=t-.2)return r;return -1}
+function tick(C,force){if(!C.ad||C.dead)return;var t=C.ad.t(),d=C.ad.dur();
+ if(!C.drag){var f=d?t/d:0;C.rng.value=Math.round(f*1000);C.prog.style.width=(f*100)+'%'}C.tm.textContent=fmtT(t)+' / '+fmtT(d);
+ if(C.ad.yt||C.state.last==='timeupdate'||force)uiPlay(C);
+ if(!C.cues.length)return;var i=findIdx(C.cues,t);if(i===C.cur&&!force)return;
+ if(C.lines&&C.lines.length){var o=C.lines[C.cur];if(o)o.classList.remove('on');var n=C.lines[i];if(n){n.classList.add('on');if(!C.userScroll||Date.now()-C.userScroll>4500)center(C,n);gloss(C,i)}}
+ C.cur=i;
+ var c=i>=0?C.cues[i]:null;C.cap.textContent=c?c.t:'';C.cap.classList.toggle('on',!!c)}
+function center(C,n){var L=C.list,y=n.offsetTop-(L.clientHeight-n.offsetHeight)*.38;C.auto=Date.now();try{L.scrollTo({top:y,behavior:'smooth'})}catch(e){L.scrollTop=y}}
+function gloss(C,i){for(var k=i;k<=i+3&&k<C.cues.length;k++){(function(k){var el=C.lines[k];if(!el||el.__g)return;el.__g=1;var seen={};var ws=[].slice.call(el.querySelectorAll('.cn-w.u')).filter(function(s){var w=s.dataset.w;if(seen[w])return false;seen[w]=1;return true}).slice(0,3);if(!ws.length)return;var box=el.querySelector('.cn-gl');Promise.all(ws.map(function(s){return glossOf(s.dataset.w).then(function(g){return g?'<span><b>'+esc(s.dataset.w)+'</b> '+esc(g)+'</span>':''})})).then(function(a){a=a.filter(Boolean);if(a.length&&box){box.innerHTML=a.join('');box.classList.add('on')}})})(k)}}
+function wireUI(C){var p=C.p,ad=function(){return C.ad};
+ function toggle(){var a=ad();if(!a)return;a.paused()?a.play():a.pause();setTimeout(function(){uiPlay(C)},60)}
+ function seekBy(d){var a=ad();if(!a)return;var dur=a.dur()||1e9;a.seek(Math.max(0,Math.min(dur,a.t()+d)));C.userScroll=0;setTimeout(function(){tick(C,true)},60)}
+ function panel(on){var closed=on==null?!p.classList.contains('pclosed'):!on;p.classList.toggle('pclosed',closed);try{localStorage.setItem('lr_cn_panel',closed?'0':'1')}catch(e){}setTimeout(function(){autoFit(C)},40)}
+ function fs(){try{if(document.fullscreenElement)document.exitFullscreen();else(p.requestFullscreen||p.webkitRequestFullscreen).call(p)}catch(e){}}
+ var shown=0;function show(){p.classList.add('cn-ui');clearTimeout(shown);shown=setTimeout(function(){if(ad()&&!ad().paused())p.classList.remove('cn-ui')},3200)}
+ C.stage.addEventListener('pointermove',show);C.stage.addEventListener('pointerdown',show);show();
+ var lastTap=0,lx=0;
+ p.addEventListener('click',function(e){var b=e.target.closest('[data-a]');if(!b||!p.contains(b))return;var a=b.dataset.a;
+  if(a==='veil'){var now=Date.now(),r=C.stage.getBoundingClientRect(),x=e.clientX-r.left;if(now-lastTap<320){lastTap=0;clearTimeout(C.tapT);seekBy(x<r.width/2?-10:10);show();return}lastTap=now;clearTimeout(C.tapT);C.tapT=setTimeout(function(){toggle();show()},300);return}
+  if(a==='pp')toggle();else if(a==='b10')seekBy(-10);else if(a==='f10')seekBy(10);
+  else if(a==='fs')fs();
+  else if(a==='panel')panel();
+  else if(a==='fit'){C.fill=!p.classList.contains('cn-fill');p.classList.toggle('cn-fill',C.fill)}
+  else if(a==='rate'){var rs=[.75,1,1.25,1.5],cur=ad()?ad().rate():1,i=rs.indexOf(cur);var nx=rs[(i+1)%rs.length];if(ad())ad().rate(nx);b.textContent=(nx===1?'1':nx)+'×'}
+  else if(a==='lvl'){SET.lvl=SET.lvl%3+1;js(KS,SET);hudSync(C);buildList(C,true)}
+  else if(a==='pz'){SET.pz=SET.pz===false;js(KS,SET);hudSync(C)}
+  else if(a==='file'){C.file.click()}
+  else if(a==='deck'){if(ad())ad().pause();window.LCS.deck()}
+  else if(a==='go'){var li=b.closest('.cn-l');if(li&&ad()){var c=C.cues[+li.dataset.i];ad().seek(Math.max(0,c.s-.1));ad().play();C.userScroll=0}}
+  else if(a==='wclose'){closeWord(C,true)}
+  else if(a==='wsay'){say(b.dataset.u||'',b.dataset.w)}
+  else if(a==='wclip'){playClip(C,b)}
+  else if(a==='wundo'){undo(C)}
+  else if(a==='wknow'){know(C)}
+  else if(a==='wnext'){closeWord(C,true)}},false);
+ C.list.addEventListener('click',function(e){var w=e.target.closest('.cn-w');if(!w)return;var li=w.closest('.cn-l');if(!li)return;openWord(C,w.dataset.w,C.cues[+li.dataset.i],w)});
+ C.list.addEventListener('wheel',function(){C.userScroll=Date.now()},{passive:true});C.list.addEventListener('touchmove',function(){C.userScroll=Date.now()},{passive:true});
+ C.rng.addEventListener('input',function(){C.drag=true;var a=ad();if(a){var d=a.dur();C.prog.style.width=(C.rng.value/10)+'%';C.tm.textContent=fmtT(d*C.rng.value/1000)+' / '+fmtT(d)}});
+ C.rng.addEventListener('change',function(){var a=ad();if(a)a.seek(a.dur()*C.rng.value/1000);C.drag=false;C.userScroll=0;setTimeout(function(){tick(C,true)},80)});
+ C.file.addEventListener('change',function(){var f=C.file.files&&C.file.files[0];if(!f)return;var r=new FileReader();r.onload=function(){var c=parseSub(r.result);if(c.length){if(C.wh){C.wh.stop();C.wh=null}C.cues=[];setCues(C,c);toast('Subtitles loaded ✨')}else toast('That file has no subtitles')};r.readAsText(f);C.file.value=''});
+ C.kd=function(e){if(C.dead||!document.body.contains(p))return;var t=e.target;if(t&&/INPUT|TEXTAREA|SELECT/.test(t.tagName)&&t!==C.rng)return;if(e.key===' '||e.key==='k'){e.preventDefault();toggle()}else if(e.key==='ArrowLeft'){e.preventDefault();seekBy(-5)}else if(e.key==='ArrowRight'){e.preventDefault();seekBy(5)}else if(e.key==='f'){fs()}else if(e.key==='s'){panel()}};
+ document.addEventListener('keydown',C.kd,true);
+ C.openWord=function(w,c){openWord(C,w,c)}}
+/* ---- tapping a word ---- */
+function say(url,w){if(url){try{var a=new Audio(url);a.play().catch(function(){try{speakText(w)}catch(e){}});return}catch(e){}}try{speakText(w)}catch(e){}}
+function clipOf(c){var mid=(c.s+c.e)/2,s=Math.max(0,Math.min(c.s-.4,mid-2.5));return{s:+s.toFixed(1),e:+(s+5).toFixed(1)}}
+function openWord(C,w,c,el){var ad=C.ad;if(!ad||!c)return;var wp=!ad.paused();C.resume=C.cw?C.resume:(wp&&SET.pz!==false);if(SET.pz!==false&&wp)ad.pause();setTimeout(function(){uiPlay(C)},60);
+ var cl=clipOf(c),line=esc(c.t).replace(new RegExp('\\b('+w.replace(/[^a-z\']/g,'')+'[a-z\']*)','i'),'<mark>$1</mark>');
+ var isNew=quietSave(w);C.cw={w:w,c:c,cl:cl,isNew:isNew,card:null};
+ var cards=jg(KC,[]),ex=cards.filter(function(x){return x.w===w})[0];
+ if(!ex){ex={id:Date.now(),w:w,line:c.t,pos:'',en:'',uz:'',ru:'',ex:'',ipa:'',src:{k:C.src.k,id:C.src.id,url:C.src.url||'',title:C.src.title||''},s:cl.s,e:cl.e,due:Date.now()+864e5,n:0};cards.unshift(ex);js(KC,cards.slice(0,500))}
+ C.cw.card=ex;
+ C.word.hidden=false;C.word.innerHTML='<div class="cn-wh"><h3>'+esc(w)+'</h3><span class="cn-lv" hidden></span><span class="cn-ipa"></span><span class="cn-sp"></span><button type="button" class="cn-b cn-ic" data-a="wsay" data-w="'+esc(w)+'" aria-label="Pronounce">'+ICON.say+'</button><button type="button" class="cn-b cn-ic" data-a="wclose" aria-label="Close">'+ICON.x+'</button></div><div class="cn-sv"><i>'+ICON.check+'</i><span>'+(isNew?'Saved to Flashcards and My words':'Already in your words')+'</span><button type="button" data-a="wundo">Undo</button></div><p class="cn-sc">“'+line+'”</p><div class="cn-mn"><div class="cn-sk"></div><div class="cn-sk s"></div></div><div class="cn-wa"><button type="button" class="cn-b cn-pill" data-a="wclip">▶ Replay scene</button><button type="button" class="cn-b cn-pill" data-a="wknow">I know it</button><button type="button" class="cn-b cn-pill go" data-a="wnext">Continue</button></div>';
+ C.word.classList.remove('out');C.p.classList.add('cn-wopen');
+ var box=C.word;
+ Promise.all([meaning(w,c.t,C.src.title),ipaOf(w)]).then(function(r){if(C.cw&&C.cw.w!==w)return;var m=r[0]||{},ip=r[1]||{};var ipa=ip.ipa||m.ipa||'';var h='';if(m.en)h+='<div class="cn-r"><small>'+esc(m.pos||'meaning')+' · in this scene</small>'+esc(m.en)+'</div>';if(m.uz)h+='<div class="cn-r"><small>Uzbek</small>'+esc(m.uz)+'</div>';if(m.ru)h+='<div class="cn-r"><small>Russian</small>'+esc(m.ru)+'</div>';if(m.ex)h+='<div class="cn-r"><small>Example</small>'+esc(m.ex)+'</div>';box.querySelector('.cn-mn').innerHTML=h||'<div class="cn-r">Could not load the meaning. Check your internet.</div>';if(ipa)box.querySelector('.cn-ipa').textContent=ipa;if(ip.au)box.querySelector('[data-a=wsay]').dataset.u=ip.au;if(m.lv){var l=box.querySelector('.cn-lv');l.hidden=false;l.textContent=m.lv}
+  var a=jg(KC,[]),k=a.findIndex(function(x){return x.id===ex.id});if(k>=0){a[k].pos=m.pos||'';a[k].en=m.en||'';a[k].uz=m.uz||'';a[k].ru=m.ru||'';a[k].ex=m.ex||'';a[k].ipa=ipa;js(KC,a)}hudSync(C)});
+ hudSync(C);buildMark(C,w);
+ try{say('',w)}catch(e){}}
+function buildMark(C,w){[].forEach.call(C.list.querySelectorAll('.cn-w[data-w="'+w.replace(/"/g,'')+'"]'),function(s){s.classList.add('s');s.classList.remove('u')})}
+function closeWord(C,resume){if(!C.cw)return;C.word.classList.add('out');var b=C.word;setTimeout(function(){if(!C.cw){b.hidden=true;b.classList.remove('out')}},230);C.p.classList.remove('cn-wopen');var r=C.resume;C.cw=null;C.resume=false;if(resume&&r&&C.ad)C.ad.play();setTimeout(function(){uiPlay(C)},80)}
+function undo(C){if(!C.cw)return;var w=C.cw.w;quietUnsave(w);var a=jg(KC,[]).filter(function(x){return x.w!==w});js(KC,a);[].forEach.call(C.list.querySelectorAll('.cn-w[data-w="'+w+'"]'),function(s){s.classList.remove('s');if(isHard(w))s.classList.add('u')});var sv=C.word.querySelector('.cn-sv span');if(sv)sv.textContent='Removed';C.word.querySelector('.cn-sv').classList.add('rm');hudSync(C);toast('Removed “'+w+'”')}
+function know(C){if(!C.cw)return;var w=C.cw.w,K=jg(KK,[]);if(K.indexOf(w)<0)K.push(w);js(KK,K);try{state.user.known=state.user.known||[];if(state.user.known.indexOf(w)<0)state.user.known.push(w);pfSave()}catch(x){}[].forEach.call(C.list.querySelectorAll('.cn-w[data-w="'+w+'"]'),function(s){s.classList.remove('u')});toast('Got it — “'+w+'” will not be highlighted again');closeWord(C,true)}
+function playClip(C,b){var ad=C.ad,cl=C.cw&&C.cw.cl;if(!ad||!cl)return;ad.seek(cl.s);ad.play();b.classList.add('run');var t0=Date.now(),iv=setInterval(function(){if(C.dead){clearInterval(iv);return}if(ad.t()>=cl.e||Date.now()-t0>9000){clearInterval(iv);ad.pause();b.classList.remove('run')}},80)}
+/* ---- opening a film: HTML5 file or embedded player ---- */
+CN.html5=function(p,o){var C=p.__cn;if(!C)return;var fr=p.querySelector('.mv-frame');if(!fr)return;
+ if(!o.src){fr.innerHTML=o.embed||'';p.classList.add('cn-native');emptyState(C,'native');return}
+ var v=document.createElement('video');v.setAttribute('playsinline','');v.setAttribute('preload','auto');v.setAttribute('crossorigin','anonymous');if(o.poster)v.poster=o.poster;v.autoplay=true;
+ var tried=false;v.addEventListener('error',function(){if(!tried&&v.getAttribute('crossorigin')){tried=true;C.noCors=true;var t=v.currentTime;v.removeAttribute('crossorigin');v.src=o.src;v.load();v.addEventListener('loadedmetadata',function(){if(t>1)v.currentTime=t},{once:true});v.play().catch(function(){});return}
+  fr.innerHTML=o.embed||'';p.classList.add('cn-native');C.video=null;C.ad=null;emptyState(C,'native')});
+ v.src=o.src;fr.innerHTML='';fr.appendChild(v);if(o.src)C.src.url=o.src;CN.ready(p,{});v.play().catch(function(){})};
+CN.yt=function(p,key,title){var C=CN.begin(p,{k:'yt',id:key,title:title||''});CN.ready(p,{})};
+CN.standalone=function(src){var p=document.getElementById('mv-play');if(p)return;p=document.createElement('div');p.id='mv-play';p.className='mv-play open';document.body.appendChild(p);
+ var close=function(){p.id='';p.classList.remove('open');p.querySelectorAll('video').forEach(function(v){try{v.pause()}catch(e){}});setTimeout(function(){p.remove()},200);window.removeEventListener('popstate',onpop);if(history.state&&history.state.cn===1)history.back()};
+ function onpop(){if(!(history.state&&history.state.cn===1)){p.id='';p.classList.remove('open');setTimeout(function(){p.remove()},200);window.removeEventListener('popstate',onpop)}}
+ try{history.pushState({cn:1},'')}catch(e){}window.addEventListener('popstate',onpop);
+ var frame;if(src.k==='yt'){frame='<div class="mv-frame"><iframe src="'+ytSrc(src.id)+'" title="Video" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe></div>'}else frame='<div class="mv-frame"></div>';
+ p.innerHTML='<div class="mv-pbg"></div><div class="mv-pbox"><button type="button" class="mv-px" aria-label="Close"></button>'+frame+'</div>';p.querySelector('.mv-px').onclick=close;
+ var C=CN.begin(p,src);if(src.k==='yt'){p.classList.add('cn-yt');CN.ready(p,{})}else CN.html5(p,{src:src.url||src.id,embed:''})};
+function ytSrc(id){return 'https://www.youtube-nocookie.com/embed/'+encodeURIComponent(id)+'?autoplay=1&controls=0&rel=0&modestbranding=1&playsinline=1&iv_load_policy=3&fs=0&disablekb=1&cc_load_policy=0&enablejsapi=1&origin='+encodeURIComponent(location.origin)+'&hl=en&vq=hd1080'}
+CN.ytSrc=ytSrc;
+
 /* ---------- banner in Movies ---------- */
 function banner(){var r=document.getElementById('mv-root');if(!r||!r.children.length||r.querySelector('.lcs-banner'))return;
  var b=mk('<span class="lcs-bi">✨</span><div class="lcs-bt"><b>Smart Subtitles</b><span>Watch any YouTube video or film. Words you may not know turn <mark>yellow</mark> — tap one to pause, see its meaning in the scene and save it with a 5-second clip.</span></div><button type="button" class="lcs-b p" data-a="open">Open a video</button><button type="button" class="lcs-b" data-a="deck">My cards</button>','lcs-banner');
@@ -56039,11 +56300,9 @@ function kill(m){m.style.transition='opacity .2s';m.style.opacity=0;setTimeout(f
 function studio(){var m=modal('<h2>Open a video</h2><p class="lcs-sm">Paste a YouTube link, or a direct video link (.mp4). Subtitles are found automatically when they exist; you can also load your own .srt / .vtt file.</p><input class="lcs-in" id="lcs-u" placeholder="https://www.youtube.com/watch?v=…" autocomplete="off"><div class="lcs-row"><div class="lcs-seg" id="lcs-l"><button data-l="1">All new words</button><button data-l="2">Balanced</button><button data-l="3">Only hard</button></div><span style="flex:1"></span><button type="button" class="lcs-b p" id="lcs-go">Watch</button></div><div id="lcs-st"></div>');
  var seg=m.querySelector('#lcs-l');function sg(){seg.querySelectorAll('button').forEach(function(b){b.classList.toggle('on',+b.dataset.l===SET.lvl)})}sg();seg.onclick=function(e){var b=e.target.closest('button');if(!b)return;SET.lvl=+b.dataset.l;js(KS,SET);sg()};
  function go(){var u=m.querySelector('#lcs-u').value.trim(),st=m.querySelector('#lcs-st'),id=ytId(u);if(!u){m.querySelector('#lcs-u').focus();return}
-  var stage=mk('','lcs-stage');st.innerHTML='';st.appendChild(stage);var src;
-  if(id){stage.innerHTML='<iframe src="https://www.youtube-nocookie.com/embed/'+id+'?autoplay=1&rel=0&playsinline=1&cc_load_policy=0&enablejsapi=1&origin='+encodeURIComponent(location.origin)+'" allow="autoplay; encrypted-media; picture-in-picture" referrerpolicy="strict-origin-when-cross-origin"></iframe>';src={k:'yt',id:id,title:'YouTube video'}}
-  else if(/^https?:\/\//.test(u)){stage.innerHTML='<video controls autoplay playsinline src="'+esc(u)+'"></video>';src={k:'url',id:u,url:u,title:'Video'}}
-  else{st.innerHTML='<p class="lcs-empty">That does not look like a YouTube or video link.</p>';return}
-  attach(stage,src)}
+  if(id){kill(m);CN.standalone({k:'yt',id:id,title:'YouTube video'})}
+  else if(/^https?:\/\//.test(u)){kill(m);CN.standalone({k:'url',id:u,url:u,title:'Video'})}
+  else{st.innerHTML='<p class="lcs-empty">That does not look like a YouTube or video link.</p>'}}
  m.querySelector('#lcs-go').onclick=go;m.querySelector('#lcs-u').onkeydown=function(e){if(e.key==='Enter')go()}}
 /* ---------- my cards + practice ---------- */
 function clipHtml(c){if(c.src.k==='yt')return '<iframe src="https://www.youtube-nocookie.com/embed/'+esc(c.src.id)+'?start='+Math.floor(c.s)+'&end='+Math.ceil(c.e)+'&autoplay=1&rel=0&playsinline=1&cc_load_policy=0" allow="autoplay; encrypted-media" referrerpolicy="strict-origin-when-cross-origin"></iframe>';return '<video controls autoplay playsinline src="'+esc(c.src.url||c.src.id)+'#t='+c.s+','+c.e+'"></video>'}
@@ -56059,12 +56318,10 @@ function practice(m,box,all){var due=all.filter(function(c){return (c.due||0)<=D
   function rate(g){var a=jg(KC,[]),k=a.findIndex(function(x){return x.id===c.id});if(k>=0){a[k].n=g?(a[k].n||0)+1:0;a[k].due=Date.now()+(g?[0,1,3,7,16,35][Math.min(5,a[k].n)]*864e5:6e5);js(KC,a)}i++;step()}
   box.querySelector('#lcs-ag').onclick=function(){rate(false)};box.querySelector('#lcs-gt').onclick=function(){rate(true)}}
  step()}
-window.LCS={attach:attach,studio:studio,deck:deck,parse:parseSub,hard:isHard,scan:scan};
-var seen=new WeakSet();
-function watchPlayers(){document.querySelectorAll('.mv-play').forEach(function(p){if(seen.has(p))return;seen.add(p);var o=new MutationObserver(function(){clearTimeout(o.t);o.t=setTimeout(scan,80)});o.observe(p,{childList:true,subtree:true});scan()})}
+window.LCS={studio:studio,deck:deck,parse:parseSub,hard:isHard,open:function(s){CN.standalone(s)}};
 var rootO=null;
 function watchRoot(){var r=document.getElementById('mv-root');if(!r)return;if(rootO&&rootO.r===r)return;if(rootO)rootO.disconnect();rootO=new MutationObserver(function(){clearTimeout(rootO.t);rootO.t=setTimeout(banner,150)});rootO.r=r;rootO.observe(r,{childList:true});banner()}
-function start(){new MutationObserver(function(){watchPlayers();watchRoot()}).observe(document.body,{childList:true});watchPlayers();watchRoot();setTimeout(watchRoot,3000);setTimeout(watchRoot,8000)}
+function start(){new MutationObserver(function(){watchRoot()}).observe(document.body,{childList:true});watchRoot();setTimeout(watchRoot,3000);setTimeout(watchRoot,8000)}
 if(document.body)start();else document.addEventListener('DOMContentLoaded',start);
 })();
 </script></body>
