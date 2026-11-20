@@ -31926,7 +31926,7 @@ window.kgLive = function () {
         if (m.rep === 2 && auto) { au.currentTime = 0; au.play().catch(() => { }); return; }
         let n;
         if (m.shuf && Q.length > 1) { do { n = Math.floor(Math.random() * Q.length); } while (n === qi); }
-        else { n = qi + 1; if (n >= Q.length) { if (m.rep === 1 || !auto) n = 0; else { au.pause(); ui(); return; } } }
+        else { n = qi + 1; if (n >= Q.length) { if (m.rep === 1 || !auto) n = 0; else { userPause = true; au.pause(); ui(); return; } } }
         qi = n; start();
     }
     function prev() {
@@ -31934,7 +31934,7 @@ window.kgLive = function () {
         if (au.currentTime > 4) { au.currentTime = 0; return; }
         qi = (qi - 1 + Q.length) % Q.length; start();
     }
-    let userPause = false, bgTry = 0; function toggle() { if (!cur()) return; if (au.paused) { userPause = false; au.play().catch(() => { }); } else { userPause = true; au.pause(); } }
+    let userPause = false, bgTry = 0, wasPlay = false; function toggle() { if (!cur()) return; if (au.paused) { userPause = false; au.play().catch(() => { }); } else { userPause = true; au.pause(); } }
     function ui() {
         const t = cur(), p = !!t && !au.paused;
         document.body.classList.toggle('mu-on', !!t);
@@ -31974,7 +31974,7 @@ window.kgLive = function () {
             }
         } catch (e) { }
     }
-    au.addEventListener('play', () => { bgTry = 0; ui(); awake(true); try { navigator.mediaSession.playbackState = 'playing'; } catch (e) { } }); au.addEventListener('pause', () => { if (document.hidden && !userPause && !au.ended && cur() && bgTry < 4) { bgTry++; setTimeout(() => { if (!userPause && au.paused) au.play().catch(() => { }); }, 250); } ui(); awake(false); try { navigator.mediaSession.playbackState = 'paused'; } catch (e) { } });
+    au.addEventListener('play', () => { bgTry = 0; wasPlay = true; ui(); awake(true); try { navigator.mediaSession.playbackState = 'playing'; } catch (e) { } }); au.addEventListener('pause', () => { if (!userPause && !au.ended && cur() && au.readyState > 0 && bgTry < 8) { bgTry++; const n = bgTry; setTimeout(() => { if (!userPause && au.paused && !au.ended) au.play().catch(() => { }); }, 200 * n); } ui(); awake(false); try { navigator.mediaSession.playbackState = 'paused'; } catch (e) { } });
     au.addEventListener('ended', () => next(true)); au.addEventListener('playing', () => { failRun = 0; });
     au.addEventListener('error', () => {
         if (!cur()) return;
@@ -32168,14 +32168,9 @@ window.kgLive = function () {
         const b = $('mu-awk'); if (b) { b.classList.toggle('on', S().awake !== false); b.setAttribute('aria-pressed', S().awake !== false ? 'true' : 'false'); }
     }
     function gpuRest() { const m = $('mu-modal'), open = !!(m && m.classList.contains('open')) || !!($('mu-np') && $('mu-np').classList.contains('open')); window.__spPause = open; document.body.classList.toggle('mu-lite', open); }
-    let lastShow = 0, lastUA = 0;
-    ['pointerdown', 'touchstart', 'mousedown', 'keydown'].forEach(ev => addEventListener(ev, () => { lastUA = Date.now(); }, true));
-    document.addEventListener('visibilitychange', () => {
-        if (document.hidden) { /* keep the sound playing, but never leave the player screens open behind the user's back */
-            try { const m = $('mu-modal'); if (m) m.classList.remove('open'); const n = $('mu-np'); if (n) n.classList.remove('open'); document.body.style.overflow = ''; gpuRest(); awake(false); } catch (e) { }
-        } else { lastShow = Date.now(); lyTick(true); }
-    });
-    window.muOpen = function () { if (Date.now() - lastUA > 1500 || Date.now() - lastShow < 700) return; build(); $('mu-modal').classList.add('open'); document.body.style.overflow = 'hidden'; if (!$('mu-body').children.length) discover(); ui(); gpuRest(); };
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) { if (wasPlay && !userPause && au.paused && cur() && !au.ended) au.play().catch(() => { }); awake(); lyTick(true); if (LY.on) lyLoop(); } });
+    addEventListener('pagehide', () => { if (!au.paused) wasPlay = true; }); addEventListener('pageshow', () => { if (wasPlay && !userPause && au.paused && cur() && !au.ended) au.play().catch(() => { }); });
+    window.muOpen = function () { build(); $('mu-modal').classList.add('open'); document.body.style.overflow = 'hidden'; if (!$('mu-body').children.length) discover(); ui(); gpuRest(); };
     window.muClose = function () { const m = $('mu-modal'); if (m) m.classList.remove('open'); muNp(false); document.body.style.overflow = ''; gpuRest(); };
     /* ---- lyrics (fetched live from public lyrics databases; nothing is stored in the app) ---- */
     function lyClean(t) {
@@ -32232,7 +32227,7 @@ window.kgLive = function () {
     }
     function lyLoop() { if (LY.raf) return; const f = () => { LY.raf = 0; if (!LY.on || au.paused || document.hidden) return; lyTick(); LY.raf = requestAnimationFrame(f); }; LY.raf = requestAnimationFrame(f); }
     au.addEventListener('timeupdate', () => lyTick()); au.addEventListener('playing', lyLoop); au.addEventListener('seeked', () => lyTick(true));
-    window.muNp = function (on) { if (on && (Date.now() - lastUA > 1500 || Date.now() - lastShow < 700)) return; build(); $('mu-np').classList.toggle('open', !!on); awake(); gpuRest(); };
+    window.muNp = function (on) { build(); $('mu-np').classList.toggle('open', !!on); awake(); gpuRest(); };
     window.muTab = function (t) { build(); $('mu-q').value = ''; $('mu-qx').style.display = 'none'; ({ disc: discover, fav: favs, rec: recent, pl: playlists, queue: queueView })[t](); };
     window.muQuick = function (q) { muOpen(); $('mu-q').value = q; search(q); };
     document.addEventListener('keydown', e => { const m = $('mu-modal'); if (e.key === 'Escape' && m && m.classList.contains('open')) muClose(); });
@@ -40184,7 +40179,7 @@ ${p.p}`;
     }
     function stop(fromPop) { const p = $('mv-play'); if (!p) return; p.id = ''; p.classList.remove('open'); p.querySelectorAll('video').forEach((v) => { try { v.pause(); } catch (e) { } }); setTimeout(() => p.remove(), 220); if (!fromPop && history.state && history.state.mv === 'p') { stack--; history.back(); } }
     function playYT(key, note) {
-        player(`<div class="mv-frame"><iframe src="https://www.youtube-nocookie.com/embed/${encodeURIComponent(key)}?autoplay=1&rel=0&modestbranding=1&playsinline=1&cc_load_policy=1&cc_lang_pref=en&hl=en&vq=hd1080" title="Video" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe></div><p class="mv-pn">${E(note || 'English subtitles are on.')} For the sharpest picture choose ⚙ → Quality → 1080p.</p>`);
+        player(`<div class="mv-frame"><iframe src="https://www.youtube-nocookie.com/embed/${encodeURIComponent(key)}?autoplay=1&rel=0&modestbranding=1&playsinline=1&cc_load_policy=0&enablejsapi=1&origin=${encodeURIComponent(location.origin)}&hl=en&vq=hd1080" title="Video" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe></div><p class="mv-pn">${E(note || 'English subtitles are on.')} For the sharpest picture choose ⚙ → Quality → 1080p.</p>`);
     }
     /* a free film from the Internet Archive: the sharpest file that still starts at once, or the Archive player */
     async function playIA(id, title) {
@@ -40890,6 +40885,7 @@ ${p.p}`;
         if (!token) { srvP = p; p.then(s => { if (!s) srvP = null; }); }
         return p;
     }
+    window.LRCALL = (b, ms) => call(b, ms);
     async function call(body, ms, token) {
         let url = await server(); if (!url && token) url = await server(token);
         if (!url) throw new Error('nosrv');
@@ -55526,8 +55522,8 @@ html.lr-bgsafe.th-space #lr-bg>*:not(.lq-earth-cv){display:none!important}
 
 /* v123: flat, light carousel. No 3D, no per-frame styles. Active card grows to its full content and the page scrolls normally. */
 #lyt-hub .lyt-track{perspective:none!important;align-items:flex-start;overflow-y:hidden;padding-bottom:28px}
-#lyt-hub .lyt-card{transform:none!important;opacity:1!important;filter:none!important;will-change:auto!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important;margin-right:12px!important;content-visibility:visible!important;contain:none!important;contain-intrinsic-size:none!important;overflow:hidden;transition:box-shadow .25s,border-color .25s!important}
-#lyt-hub .lyt-card:not(.lyt-act){height:min(var(--ah,640px),720px)!important;min-height:0!important;opacity:.78!important}
+#lyt-hub .lyt-card{filter:none!important;will-change:auto!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important;margin-right:12px!important;content-visibility:visible!important;contain:none!important;contain-intrinsic-size:none!important;overflow:hidden;transition:box-shadow .25s,border-color .25s!important}
+#lyt-hub .lyt-card:not(.lyt-act){height:min(var(--ah,640px),720px)!important;min-height:0!important}
 #lyt-hub .lyt-card:not(.lyt-act) .lyt-stage{pointer-events:none;overflow:hidden}
 #lyt-hub .lyt-card.lyt-act{height:auto!important;min-height:420px!important;max-height:none!important;overflow:visible!important;z-index:5;border-color:rgba(165,180,252,.45)}
 #lyt-hub .lyt-card.lyt-act .lyt-face{overflow:visible}
@@ -55576,17 +55572,23 @@ html.lr-bgsafe.th-space #lr-bg>*:not(.lq-earth-cv){display:none!important}
 .lyt-mp{border:0;border-radius:999px;padding:14px 34px;color:#fff;font:800 15px system-ui,sans-serif;background:linear-gradient(135deg,#8b5cf6,#6366f1);box-shadow:0 14px 28px -10px rgba(99,102,241,.9)}
 @media(prefers-reduced-motion:reduce){.lyt-mv,.lyt-eq i{animation:none}}
 
-/* ===== v126: depth carousel (selected card in front, neighbours behind) ===== */
+/* ===== v128: depth carousel driven by the compositor (no JS per frame) ===== */
 #lyt-hub .lyt-track{perspective:none!important;scroll-snap-type:x mandatory;padding:14px 0 36px!important}
-#lyt-hub .lyt-card{transform:var(--t,none)!important;opacity:var(--o,1)!important;transform-origin:50% 40%;z-index:var(--zi,1);will-change:transform,opacity;backface-visibility:hidden;scroll-snap-stop:always;transition:box-shadow .3s,border-color .3s!important}
-#lyt-hub .lyt-card:not(.lyt-act){opacity:var(--o,.6)!important;height:min(var(--ah,560px),560px)!important}
-#lyt-hub .lyt-card.lyt-act{box-shadow:0 40px 70px -28px rgba(0,0,0,.9),0 0 0 1px rgba(165,180,252,.5),0 0 60px -12px rgba(139,92,246,.55)!important}
-/* light sweep that glides across a card as it travels */
-#lyt-hub .lyt-card::before{content:"";position:absolute;inset:0;z-index:4;pointer-events:none;border-radius:inherit;background:linear-gradient(105deg,transparent calc(var(--sw,50%) - 22%),rgba(255,255,255,.14) var(--sw,50%),transparent calc(var(--sw,50%) + 22%));mix-blend-mode:screen}
-/* parallax: artwork drifts against the scroll */
-#lyt-hub .lyt-pa,#lyt-hub .lyt-mh{transform:translate3d(calc(var(--dd,0)*-46px),0,0)}
-#lyt-hub .lyt-ph,#lyt-hub .lyt-pf{transform:translate3d(calc(var(--dd,0)*-18px),0,0)}
-@media(prefers-reduced-motion:reduce){#lyt-hub .lyt-card{transform:none!important}#lyt-hub .lyt-card::before{display:none}}
+#lyt-hub .lyt-card{z-index:1;scroll-snap-stop:always;transition:box-shadow .3s,border-color .3s!important;transform-origin:50% 45%}
+#lyt-hub .lyt-card:not(.lyt-act){height:min(var(--ah,560px),560px)!important}
+#lyt-hub .lyt-card.lyt-act{z-index:6!important;box-shadow:0 36px 60px -30px rgba(0,0,0,.9),0 0 0 1px rgba(165,180,252,.5)!important}
+#lyt-hub .lyt-card::before{display:none}
+@keyframes lytDepth{
+ 0%,6%{transform:perspective(1200px) translate3d(-11%,10px,-170px) rotateY(-26deg) scale(.9);opacity:.72}
+ 50%{transform:perspective(1200px) translate3d(0,0,0) rotateY(0) scale(1);opacity:1}
+ 94%,100%{transform:perspective(1200px) translate3d(11%,10px,-170px) rotateY(26deg) scale(.9);opacity:.72}}
+@keyframes lytPar{from{transform:translate3d(56px,0,0)}to{transform:translate3d(-56px,0,0)}}
+@supports (animation-timeline:view()){
+ #lyt-hub .lyt-card{animation:lytDepth linear both;animation-timeline:view(inline)}
+ #lyt-hub .lyt-pa,#lyt-hub .lyt-mh,#lyt-hub .lyt-ph{animation:lytPar linear both;animation-timeline:view(inline)}
+}
+@media(prefers-reduced-motion:reduce){#lyt-hub .lyt-card,#lyt-hub .lyt-pa,#lyt-hub .lyt-mh,#lyt-hub .lyt-ph{animation:none!important}}
+#lyt-hub .lyt-card:not(.lyt-act){box-shadow:0 0 0 1px rgba(165,180,252,.3),0 0 36px -8px rgba(139,92,246,.5)!important}
 </style><script id="lr-layout">(function(){
 var LS='lr_layout',H=document.documentElement,D=document;
 function get(){try{return localStorage.getItem(LS)}catch(e){return null}}
@@ -55678,11 +55680,11 @@ function qaRun(f){var id=f.getAttribute('data-q'),q=QA[id],inp=f.querySelector('
  aiCall('tutor',[{role:'user',content:q.p(w)}]).then(function(t){done(aiMdHtml(t||''))}).catch(function(e){var m='Try again in a moment.';try{m=aiErrText(e)}catch(x){}done(err(m))})}
 function track(){card.i=0;return '<div class="lyt-track" tabindex="0" role="region" aria-label="Features. Swipe sideways or use the arrow keys.">'+tiles().filter(function(t){return !(inSheet&&t.custom)}).map(card).join('')+'</div><div class="lyt-prog"><i></i></div>'}
 function wire(root){var tr=root.querySelector('.lyt-track'),bar=root.querySelector('.lyt-prog i');if(!tr)return;
- var raf=0,flat=root.id==='lyt-hub',lastN=-1;function upd(){raf=0;var r=tr.getBoundingClientRect(),cx=r.left+r.width/2,cs=tr.children;
-  if(flat){var mc=tr.scrollLeft+tr.clientWidth/2,bi=0,bd=1e9;for(var k=0;k<cs.length;k++){var dd=Math.abs(cs[k].offsetLeft+cs[k].offsetWidth/2-mc);if(dd<bd){bd=dd;bi=k}}if(bi!==lastN){lastN=bi;for(var k2=0;k2<cs.length;k2++){var far=Math.abs(k2-bi)>2;if(cs[k2].classList.contains('lyt-far')!==far)cs[k2].classList.toggle('lyt-far',far);if(Math.abs(k2-bi)>3&&cs[k2].style.getPropertyValue('--t')){cs[k2].style.removeProperty('--t');cs[k2].style.removeProperty('--o')}}}
-   for(var k3=Math.max(0,bi-3);k3<=Math.min(cs.length-1,bi+3);k3++){var c3=cs[k3],w3=c3.offsetWidth+12,d3=(c3.offsetLeft+c3.offsetWidth/2-mc)/w3,a3=Math.min(1.8,Math.abs(d3)),g3=d3<0?-1:1,s3=c3.style;
-    if(a3<.015){s3.setProperty('--t','none');s3.setProperty('--o','1');s3.setProperty('--dd','0');s3.setProperty('--sw','50%');s3.setProperty('--zi','30')}
-    else{var m3=Math.min(1,a3);s3.setProperty('--t','perspective(1200px) translate3d('+(-g3*a3*w3*.1).toFixed(1)+'px,'+(a3*18).toFixed(1)+'px,'+(-a3*190).toFixed(0)+'px) rotateY('+(-g3*m3*28).toFixed(1)+'deg) scale('+(1-.07*a3).toFixed(3)+')');s3.setProperty('--o',(1-.42*m3).toFixed(3));s3.setProperty('--dd',d3.toFixed(3));s3.setProperty('--sw',(50-d3*60).toFixed(1)+'%');s3.setProperty('--zi',String(30-Math.round(a3*8)))}}
+ var spPrev,TL=!!(window.CSS&&CSS.supports&&CSS.supports('animation-timeline','view()')),scT=0,raf=0,flat=root.id==='lyt-hub',lastN=-1;function upd(){raf=0;if(!scT)spPrev=window.__spPause;window.__spPause=true;clearTimeout(scT);scT=setTimeout(function(){scT=0;window.__spPause=spPrev},160);var r=tr.getBoundingClientRect(),cx=r.left+r.width/2,cs=tr.children;
+  if(flat){var mc=tr.scrollLeft+tr.clientWidth/2,bi=0,bd=1e9;for(var k=0;k<cs.length;k++){var dd=Math.abs(cs[k].offsetLeft+cs[k].offsetWidth/2-mc);if(dd<bd){bd=dd;bi=k}}if(bi!==lastN){lastN=bi;for(var k2=0;k2<cs.length;k2++){var far=Math.abs(k2-bi)>2;if(cs[k2].classList.contains('lyt-far')!==far)cs[k2].classList.toggle('lyt-far',far);}}
+   if(!TL){for(var k3=Math.max(0,bi-3);k3<=Math.min(cs.length-1,bi+3);k3++){var c3=cs[k3],w3=c3.offsetWidth+12,d3=(c3.offsetLeft+c3.offsetWidth/2-mc)/w3,a3=Math.min(1.8,Math.abs(d3)),g3=d3<0?-1:1,s3=c3.style;
+    if(a3<.015){s3.transform='';s3.opacity=''}
+    else{var m3=Math.min(1,a3);s3.transform='perspective(1200px) translate3d('+(-g3*m3*11).toFixed(1)+'%,10px,'+(-m3*170).toFixed(0)+'px) rotateY('+(-g3*m3*26).toFixed(1)+'deg) scale('+(1-.1*m3).toFixed(3)+')';s3.opacity=(1-.28*m3).toFixed(2)}}}
    if(lastN!==bi||true){}
   }
   for(var i=0;i<cs.length&&!flat;i++){var b=cs[i].getBoundingClientRect(),dx=(b.left+b.width/2-cx)/(b.width*.8),d=Math.min(1.5,Math.abs(dx)),sg=dx<0?-1:1,st=cs[i].style;
@@ -55862,5 +55864,208 @@ D.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest(
 })();
 ;(function(){function g(){var e=document.getElementById('hb-greet');if(!e)return;var h=new Date().getHours(),t=h<5?'Good night':h<12?'Good morning':h<18?'Good afternoon':'Good evening';if(e.textContent!==t)e.textContent=t}g();setInterval(g,30000);document.addEventListener('visibilitychange',g)})();
 ;try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist()}catch(e){}
-</script><style>.ai-langcard{display:none!important}</style></body>
+</script><style>.ai-langcard{display:none!important}</style><style id="lcs-css">.lcs-banner{position:relative;display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin:0 0 16px;padding:16px 18px;border-radius:22px;overflow:hidden;color:#fff;background:radial-gradient(120% 140% at 0% 0%,rgba(250,204,21,.22),transparent 55%),radial-gradient(120% 140% at 100% 100%,rgba(139,92,246,.4),transparent 55%),linear-gradient(135deg,#17133f,#0c0a26);border:1px solid rgba(250,204,21,.28);box-shadow:0 20px 50px -26px rgba(250,204,21,.5)}
+.lcs-banner::after{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 35%,rgba(255,255,255,.1) 50%,transparent 65%);transform:translateX(-120%);animation:lcsShine 5.5s ease-in-out infinite;pointer-events:none}
+@keyframes lcsShine{0%,55%{transform:translateX(-120%)}100%{transform:translateX(120%)}}
+.lcs-bi{flex:none;width:52px;height:52px;border-radius:16px;display:grid;place-items:center;font-size:24px;background:linear-gradient(135deg,#facc15,#f59e0b);color:#1a1200;box-shadow:0 10px 24px -8px rgba(250,204,21,.7)}
+.lcs-bt{flex:1;min-width:200px}.lcs-bt b{display:block;font:800 17px/1.2 system-ui,sans-serif}.lcs-bt span{display:block;margin-top:4px;color:#c7c9ff;font-size:13px;line-height:1.4}
+.lcs-bt mark{background:none;color:#facc15;font-weight:800;border-bottom:2px solid rgba(250,204,21,.6)}
+.lcs-b{border:0;border-radius:14px;padding:11px 18px;font:800 14px system-ui,sans-serif;color:#fff;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);cursor:pointer;white-space:nowrap}
+.lcs-b.p{background:linear-gradient(135deg,#facc15,#f59e0b);color:#1a1200;border-color:transparent;box-shadow:0 10px 22px -8px rgba(250,204,21,.7)}
+.lcs-b:active{transform:scale(.97)}
+/* overlay on a video */
+.lcs-ov{position:absolute;inset:0;z-index:20;pointer-events:none;font-family:system-ui,-apple-system,'Segoe UI',sans-serif}
+.lcs-hud{position:absolute;left:10px;right:10px;top:10px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;pointer-events:none;opacity:0;transform:translateY(-6px);transition:.25s}
+.lcs-ov.hud .lcs-hud,.lcs-ov:hover .lcs-hud{opacity:1;transform:none}
+.lcs-pill{pointer-events:auto;display:inline-flex;align-items:center;gap:7px;height:34px;padding:0 13px;border-radius:999px;border:1px solid rgba(255,255,255,.2);background:rgba(12,10,38,.72);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);color:#fff;font:700 12px system-ui,sans-serif;cursor:pointer}
+.lcs-pill i{width:8px;height:8px;border-radius:50%;background:#facc15;box-shadow:0 0 10px #facc15;animation:lcsDot 1.6s ease-in-out infinite}
+.lcs-pill.off i{background:#64748b;box-shadow:none;animation:none}
+@keyframes lcsDot{50%{transform:scale(1.5);opacity:.6}}
+.lcs-sub{position:absolute;left:50%;bottom:62px;transform:translateX(-50%);width:min(92%,900px);text-align:center;pointer-events:none}
+.lcs-line{display:inline-block;max-width:100%;padding:9px 16px 11px;border-radius:16px;background:rgba(6,5,22,.74);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);color:#fff;font:600 clamp(16px,2.6vw,26px)/1.45 system-ui,sans-serif;text-shadow:0 2px 8px rgba(0,0,0,.6);box-shadow:0 14px 34px -14px #000;animation:lcsLine .3s cubic-bezier(.2,.8,.2,1) both}
+@keyframes lcsLine{from{opacity:0;transform:translateY(10px) scale(.97)}to{opacity:1;transform:none}}
+.lcs-w{pointer-events:auto;display:inline-block;margin:0 1px;border-radius:7px;cursor:pointer;animation:lcsW .4s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--i,0)*26ms)}
+@keyframes lcsW{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.lcs-w.u{color:#fde047;font-weight:800;padding:0 4px;background:linear-gradient(180deg,transparent 62%,rgba(250,204,21,.34) 62%);box-shadow:0 0 0 1px rgba(250,204,21,.0);animation:lcsW .4s cubic-bezier(.2,.8,.2,1) both,lcsGlow 2.4s ease-in-out infinite;animation-delay:calc(var(--i,0)*26ms),calc(var(--i,0)*26ms + .4s)}
+@keyframes lcsGlow{50%{text-shadow:0 0 14px rgba(250,204,21,.9);background:linear-gradient(180deg,transparent 40%,rgba(250,204,21,.4) 40%)}}
+.lcs-w.u:hover,.lcs-w.u:active{background:rgba(250,204,21,.9);color:#1a1200;text-shadow:none}
+.lcs-w.s{color:#c4b5fd;border-bottom:2px dotted rgba(196,181,253,.7)}
+.lcs-note{position:absolute;left:50%;bottom:62px;transform:translateX(-50%);max-width:92%;pointer-events:auto;text-align:center;padding:12px 16px;border-radius:16px;background:rgba(6,5,22,.86);color:#e5e7ff;font:600 13px/1.5 system-ui,sans-serif;border:1px solid rgba(250,204,21,.35)}
+.lcs-note b{color:#fde047}.lcs-note button{margin-top:8px}
+/* word sheet */
+.lcs-sheet{position:absolute;left:0;right:0;bottom:0;z-index:30;pointer-events:auto;padding:16px 16px calc(16px + env(safe-area-inset-bottom,0px));border-radius:26px 26px 0 0;color:#fff;background:linear-gradient(180deg,rgba(28,22,72,.96),rgba(10,8,30,.98));border-top:1px solid rgba(250,204,21,.4);box-shadow:0 -30px 70px -20px rgba(0,0,0,.9);max-height:78%;overflow:auto;animation:lcsUp .42s cubic-bezier(.2,1.1,.3,1) both}
+@keyframes lcsUp{from{transform:translateY(100%)}to{transform:none}}
+.lcs-sheet.out{animation:lcsDown .25s ease-in both}@keyframes lcsDown{to{transform:translateY(100%)}}
+.lcs-sh{display:flex;align-items:center;gap:12px}.lcs-sh h3{margin:0;font:900 28px/1.1 system-ui,sans-serif;color:#fde047;letter-spacing:-.01em}
+.lcs-sp{flex:1}.lcs-lv{padding:4px 10px;border-radius:999px;font:800 11px system-ui;background:rgba(250,204,21,.16);color:#fde047;border:1px solid rgba(250,204,21,.4)}
+.lcs-ic{width:40px;height:40px;border-radius:13px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);color:#fff;font-size:16px;cursor:pointer}
+.lcs-ctx{margin:12px 0 0;padding:11px 13px;border-radius:14px;background:rgba(255,255,255,.06);color:#d6d8ff;font:500 14px/1.5 system-ui,sans-serif;border-left:3px solid #facc15}
+.lcs-ctx mark{background:none;color:#fde047;font-weight:800}
+.lcs-mean{margin-top:12px;display:grid;gap:8px}
+.lcs-mean div{padding:11px 13px;border-radius:14px;background:rgba(255,255,255,.05);font:600 14px/1.45 system-ui,sans-serif}
+.lcs-mean small{display:block;color:#a5b4fc;font:800 10px system-ui;letter-spacing:.08em;text-transform:uppercase;margin-bottom:3px}
+.lcs-sk{height:46px;border-radius:14px;background:linear-gradient(90deg,rgba(255,255,255,.05),rgba(255,255,255,.14),rgba(255,255,255,.05));background-size:200% 100%;animation:lcsSk 1.2s linear infinite}
+@keyframes lcsSk{to{background-position:-200% 0}}
+.lcs-clip{margin-top:12px;display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:16px;background:rgba(139,92,246,.16);border:1px solid rgba(139,92,246,.4)}
+.lcs-ring{position:relative;flex:none;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;cursor:pointer;background:conic-gradient(#facc15 var(--p,0%),rgba(255,255,255,.14) 0);color:#fff}
+.lcs-ring::before{content:"";position:absolute;inset:4px;border-radius:50%;background:#1b1650}.lcs-ring span{position:relative;font-size:13px}
+.lcs-clip b{font:800 13px system-ui}.lcs-clip small{display:block;color:#b9bdf5;font:500 12px system-ui;margin-top:2px}
+.lcs-act{margin-top:14px;display:flex;gap:8px;flex-wrap:wrap}.lcs-act .lcs-b{flex:1;min-width:120px;text-align:center}
+.lcs-fly{position:fixed;z-index:99999;width:120px;height:74px;border-radius:14px;background:linear-gradient(135deg,#facc15,#f59e0b);color:#1a1200;display:grid;place-items:center;font:900 15px system-ui;box-shadow:0 20px 40px -10px rgba(250,204,21,.8);pointer-events:none}
+/* studio + deck */
+.lcs-modal{position:fixed;inset:0;z-index:99990;display:grid;place-items:center;padding:14px;background:rgba(3,2,14,.78);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);animation:lcsFade .25s both;color:#fff;font-family:system-ui,sans-serif}
+@keyframes lcsFade{from{opacity:0}}
+.lcs-box{position:relative;width:min(100%,880px);max-height:94vh;overflow:auto;border-radius:28px;padding:22px;background:linear-gradient(165deg,#1d1946,#0b0a24);border:1px solid rgba(255,255,255,.14);box-shadow:0 40px 90px -30px #000;animation:lcsPop .4s cubic-bezier(.2,1.1,.3,1) both}
+@keyframes lcsPop{from{opacity:0;transform:translateY(24px) scale(.96)}}
+.lcs-box h2{margin:0 0 4px;font:900 24px system-ui}.lcs-box .lcs-sm{color:#a5b4fc;font:500 13px/1.5 system-ui;margin:0 0 16px}
+.lcs-x{position:absolute;right:14px;top:14px;width:38px;height:38px;border-radius:12px;border:0;background:rgba(255,255,255,.1);color:#fff;font-size:16px;cursor:pointer;z-index:2}
+.lcs-in{width:100%;box-sizing:border-box;height:50px;border-radius:15px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.07);color:#fff;padding:0 15px;font:600 15px system-ui;outline:0}
+.lcs-in:focus{border-color:#facc15;box-shadow:0 0 0 3px rgba(250,204,21,.2)}
+.lcs-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;align-items:center}
+.lcs-seg{display:inline-flex;padding:4px;border-radius:14px;background:rgba(255,255,255,.07);gap:4px}.lcs-seg button{border:0;border-radius:10px;padding:8px 12px;background:none;color:#c7c9ff;font:700 12px system-ui;cursor:pointer}.lcs-seg button.on{background:#facc15;color:#1a1200}
+.lcs-stage{position:relative;width:100%;aspect-ratio:16/9;border-radius:18px;overflow:hidden;background:#000;margin-top:12px}.lcs-stage iframe,.lcs-stage video{position:absolute;inset:0;width:100%;height:100%;border:0}
+.lcs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px;margin-top:6px}
+.lcs-card{padding:14px;border-radius:18px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);cursor:pointer;transition:transform .2s,border-color .2s}.lcs-card:hover{transform:translateY(-3px);border-color:rgba(250,204,21,.6)}
+.lcs-card b{display:block;font:900 20px system-ui;color:#fde047}.lcs-card p{margin:6px 0 0;color:#c7c9ff;font:500 13px/1.45 system-ui}.lcs-card small{display:block;margin-top:8px;color:#8b90d6;font:600 11px system-ui}
+.lcs-big{font:900 clamp(22px,4vw,34px)/1.4 system-ui;text-align:center;margin:18px 0}.lcs-big u{text-decoration:none;display:inline-block;min-width:110px;border-bottom:3px solid #facc15;color:transparent}.lcs-big u.show{color:#fde047}
+.lcs-empty{padding:34px 10px;text-align:center;color:#a5b4fc;font:600 14px/1.5 system-ui}
+@media(prefers-reduced-motion:reduce){.lcs-banner::after,.lcs-w.u,.lcs-pill i{animation:none}}
+</style><script id="lcs-js">(function(){'use strict';
+if(window.LCS)return;
+var KC='lr_cinema_cards',KS='lr_cinema_set',KK='lr_cinema_known';
+function jg(k,d){try{var v=JSON.parse(localStorage.getItem(k));return v==null?d:v}catch(e){return d}}
+function js(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function toast(m){try{showToast(m)}catch(e){}}
+function mk(h,c){var d=document.createElement('div');if(c)d.className=c;d.innerHTML=h||'';return d}
+/* ---------- word knowledge ---------- */
+var T1=('a about above across act add after again against age ago agree air all allow almost alone along already also always am among an and angry animal another answer any anyone anything appear apple are area arm around arrive art as ask at away baby back bad bag ball bank bar base be beach bear beat beautiful because become bed been before begin behind believe bell best better between big bill bird birth bit black blood blue board boat body book born both bottom box boy break bring brother brown build burn bus business busy but buy by call came can car card care carry case cat catch cause center chair chance change check child children choose city class clean clear close clothes cloud coat cold color come company could country course cover cut dad dance dark daughter day dead dear death decide deep did die different dinner do doctor does dog done door down draw dream dress drink drive drop dry during each ear early earth easy eat egg else end enjoy enough even evening ever every everyone everything exactly except eye face fact fall family far farm fast father fear feel feet fell few field fight fill film final find fine finger finish fire first fish five floor fly follow food foot for forget form found four free friend from front full fun game garden gave get girl give glad glass go god gold gone good got great green ground group grow guess gun guy had hair half hand happen happy hard has hat hate have he head hear heart heat heavy held hello help her here hers herself hey hi high hill him himself his history hit hold hole home hope horse hospital hot hotel hour house how however hundred hurry husband i ice idea if important in inside into is it its itself job join just keep kept kid kill kind king kiss kitchen knew know lady land large last late laugh lay lead learn least leave left leg less let letter lie life light like line list listen little live long look lose lost lot love low luck lunch made make man many map mark market marry matter may maybe me mean meet men met middle might mile milk mind mine minute miss mom money month moon more morning most mother mouth move movie much music must my myself name near need never new news next nice night no none nor nose not note nothing notice now number of off office often oh oil ok old on once one only open or order other our out outside over own page paper parent part party pass past pay people per person phone pick picture piece place plan plane plant play please point police poor power pretty problem put queen question quick quiet quite radio rain ran read ready real really reason red remember rest rich ride right ring river road rock room round run sad safe said same sat save saw say school sea second see seem sell send sense set seven several shall she ship shirt shoe shoot shop short should show shut sick side sign simple since sing sister sit six sky sleep slow small smile snow so some someone something sometimes son song soon sorry sound speak special spend spoke stand star start state stay step stick still stop store story street strong student study such sun sure sweet table take talk tall tea teach teacher tell ten than thank that the their them then there these they thing think third this those though three through throw time tired to today together told tomorrow tonight too took top town train tree trip true try turn two uncle under understand until up upon us use usually very visit voice wait walk wall want war warm was wash watch water way we wear week well went were west what when where whether which while white who whole whose why wife will win wind window wish with without woman women won wonder word work world worry would write wrong yeah year yellow yes yesterday yet you young your yourself').split(' ');
+var T2=('able accept accident achieve action active actually add address admit adult advice afraid agent ahead aim alive amazing amount ancient announce annoy anyway apart apologize appearance argue army arrest arrive article ashamed attack attention attitude audience author available avoid award aware awful bake balance band bar bare basic battle beauty bedroom beer behave belong bend beyond bite blame blind blow bone bored borrow boss bother brain brave breath breathe brilliant broke bury button camera campaign cancel capital captain careful carefully cash castle celebrate century certain chain champion channel character charge chase cheap cheer chief choice church circle citizen claim clever climb clock club collect college comfort common complain complete confident connect consider contact continue control cook cool corner cost cottage count couple courage court crazy create crime cross crowd cry culture curious customer damage danger dare dear debt decision degree delay deliver demand deny depend describe desert deserve design destroy detail develop difference difficult dig direct dirty disappear discover discuss disease distance doubt drag drama dress drug dust duty eager earn edge education effect effort either elect electric empty enemy energy engine enter entire environment equal escape especially event evidence exam example excellent exchange excited excuse exist expect experience explain express extra fail fair faith fake familiar famous fashion fault favor favorite feature fee feed female fence festival fever figure fit fix flat flight flower fool force foreign forest forgive formal fortune frame freedom fresh frighten fuel future gain gap gate general gentle gift giant glory goal govern grab grade grand grateful guard guest guide guilty habit handle hang hardly harm headache health heaven height hell hero hide hire honest honor hug huge human humor hunt hurt identity ignore image imagine immediate impress improve include increase indeed industry inform injure insist instead intend interest introduce invent invite island item jail journey judge jump justice kick knock knowledge lack language laugh law lawyer lazy leader lend level lift limit link loud lovely machine mad magic main major manage manner marriage master material mention mercy mess message method military mistake mix modern moment mood moral motion mountain murder mystery narrow nation nature nearly neck neighbor nervous nobody normal notice nurse object obvious occasion offer officer opinion opportunity original pain pair partner passenger patient peace perfect perhaps period permit pity plenty pocket poison polite popular position possible pray prefer prepare present president pressure pride prince prison private prize probably produce promise proper protect proud prove public pull punish purpose quality quarter rabbit race raise rare rather reach realize receive recent record refuse regret relax release remain remind repeat reply report rescue respect responsible result return review reward rid ridiculous risk role rough royal rule rush sale satisfy scared scene schedule science scream search season secret section seek select serious servant service settle shake shame shape share sharp shout shy silence silent silly silver single skill skin slip smart smell smoke society soft soldier solve sort source space spare speech speed spell spirit spot spread square staff stage stare steal stomach stone storm strange stranger strength stress strike study style succeed suddenly suffer suggest suit support suppose surprise surround survive suspect swear sword system tale talent taste tear tend terrible terrific threat tie tight tiny title tone tongue tool total touch tough tour trade tradition trap treat trick trouble trust truth twice ugly unable unless upset useful usual valley value victim view village violence visitor wake warn waste wave wealth weapon wedding weight weird welcome wheel wild willing wise witness wonderful worth wound wrap yard youth zone').split(' ');
+var W1={},W2={};T1.forEach(function(w){W1[w]=1});T2.forEach(function(w){W2[w]=1});
+var SET=Object.assign({lvl:0,on:true},jg(KS,{}));
+if(!SET.lvl){var tg=''+((window.state&&state.user&&state.user.target)||'');SET.lvl=/C1|C2|7\.5|8\.0/.test(tg)?3:/B1|6\.0/.test(tg)?1:2}
+function userKnown(){var u=(window.state&&state.user)||{};var a=(u.known||[]).concat(jg(KK,[]));var o={};a.forEach(function(w){o[String(w).toLowerCase()]=1});return o}
+function userSaved(){var u=(window.state&&state.user)||{};var o={};(u.savedWords||[]).forEach(function(w){o[String(w).toLowerCase()]=1});jg(KC,[]).forEach(function(c){o[c.w]=1});return o}
+function forms(w){var o=[w],n=w.length;if(/'/.test(w))o.push(w.split(/['’]/)[0]);if(n>3&&/s$/.test(w))o.push(w.slice(0,-1));if(n>4&&/es$/.test(w))o.push(w.slice(0,-2));if(n>4&&/ies$/.test(w))o.push(w.slice(0,-3)+'y');if(n>4&&/ed$/.test(w)){o.push(w.slice(0,-2));o.push(w.slice(0,-1));if(w[n-3]===w[n-4])o.push(w.slice(0,-3))}if(n>5&&/ing$/.test(w)){o.push(w.slice(0,-3));o.push(w.slice(0,-3)+'e');if(w[n-4]===w[n-5])o.push(w.slice(0,-4))}if(n>4&&/ly$/.test(w))o.push(w.slice(0,-2));if(n>5&&/er$|st$/.test(w))o.push(w.slice(0,-2));return o}
+function isHard(w,cap){var K=userKnown(),f=forms(w),i;if(w.length<4)return false;for(i=0;i<f.length;i++){if(K[f[i]])return false;if(W1[f[i]])return false;if(SET.lvl>=2&&W2[f[i]])return false}if(SET.lvl>=3&&w.length<6)return false;if(cap)return false;return true}
+/* ---------- subtitle parsing ---------- */
+function tsec(s){var m=/(?:(\d+):)?(\d+):(\d+)[.,](\d+)/.exec(s);if(!m)return null;return (+m[1]||0)*3600+(+m[2])*60+(+m[3])+(+('0.'+m[4]))}
+function clean(t){return String(t).replace(/<[^>]+>/g,'').replace(/\{[^}]*\}/g,'').replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&#39;/g,"'").replace(/♪/g,'').replace(/\s+/g,' ').trim()}
+function parseSub(txt){var out=[];txt=String(txt||'').replace(/\r/g,'');if(txt.trim()[0]==='{'||txt.indexOf('"events"')>0){try{return fromJson3(JSON.parse(txt))}catch(e){}}
+ txt.split(/\n\s*\n/).forEach(function(b){var L=b.split('\n'),i=-1,k;for(k=0;k<L.length;k++)if(L[k].indexOf('-->')>-1){i=k;break}if(i<0)return;var p=L[i].split('-->'),s=tsec(p[0]),e=tsec(p[1]);var t=clean(L.slice(i+1).join(' '));if(s==null||e==null||!t)return;out.push({s:s,e:e,t:t})});
+ return out.sort(function(a,b){return a.s-b.s})}
+function fromJson3(j){var out=[];(j.events||[]).forEach(function(ev){if(!ev.segs)return;var t=clean(ev.segs.map(function(s){return s.utf8||''}).join(''));if(!t)return;var s=(ev.tStartMs||0)/1000;out.push({s:s,e:s+((ev.dDurationMs||2000)/1000),t:t})});
+ for(var i=0;i<out.length-1;i++){if(out[i].e>out[i+1].s)out[i].e=out[i+1].s}
+ return out}
+/* ---------- finding subtitles ---------- */
+function ft(url,ms,o){var c=new AbortController(),t=setTimeout(function(){c.abort()},ms||8000);o=o||{};o.signal=c.signal;return fetch(url,o).finally(function(){clearTimeout(t)})}
+async function subsIA(id){var r=await ft('https://archive.org/metadata/'+encodeURIComponent(id),12000),j=await r.json(),fl=(j.files||[]).filter(function(f){return /\.(vtt|srt)$/i.test(f.name)});if(!fl.length)return null;fl.sort(function(a,b){var A=/(^|[^a-z])(en|eng|english)([^a-z]|$)/i.test(a.name)?0:1,B=/(^|[^a-z])(en|eng|english)([^a-z]|$)/i.test(b.name)?0:1;return A-B});
+ var t=await (await ft('https://archive.org/download/'+encodeURIComponent(id)+'/'+fl[0].name.split('/').map(encodeURIComponent).join('/'),15000)).text();var c=parseSub(t);return c.length?c:null}
+async function subsYT(id){var c;
+ try{var r=await ft('https://www.youtube.com/api/timedtext?v='+encodeURIComponent(id)+'&lang=en&fmt=json3',5000);if(r.ok){var t=await r.text();if(t){c=fromJson3(JSON.parse(t));if(c.length)return c}}}catch(e){}
+ try{if(window.LRCALL){var j=await LRCALL({op:'yt_caps',v:id},16000);if(j&&j.ok&&j.cues&&j.cues.length)return j.cues.map(function(x){return{s:x[0],e:x[1],t:clean(x[2])}})}}catch(e){}
+ try{var P='https://api.allorigins.win/raw?url=',h=await (await ft(P+encodeURIComponent('https://www.youtube.com/watch?v='+id),12000)).text(),m=/"captionTracks":(\[.*?\])/.exec(h);if(m){var tr=JSON.parse(m[1]),en=tr.filter(function(x){return /^en/.test(x.languageCode)})[0]||tr[0];if(en){var u=en.baseUrl.replace(/\\u0026/g,'&')+'&fmt=json3',t2=await (await ft(P+encodeURIComponent(u),12000)).text();c=fromJson3(JSON.parse(t2));if(c.length)return c}}}catch(e){}
+ return null}
+/* ---------- word meaning in this scene ---------- */
+var MC={};
+async function meaning(w,line,title){var k=w+'|'+line;if(MC[k])return MC[k];var out={};
+ try{var key=aiKey();if(!key)throw 0;var c=new AbortController(),to=setTimeout(function(){c.abort()},14000);
+  var r=await lrAIFetch('https://api.openai.com/v1/chat/completions',{method:'POST',signal:c.signal,headers:{'Content-Type':'application/json',Authorization:'Bearer '+key},body:JSON.stringify({model:LR_AI_MODEL,temperature:.2,max_tokens:260,response_format:{type:'json_object'},messages:[{role:'system',content:'You are a precise English teacher. Reply JSON only: {"pos":"part of speech","en":"simple English meaning of the word AS USED in this exact line (max 14 words)","uz":"short Uzbek translation for this meaning","ru":"short Russian translation for this meaning","ex":"one short new example sentence"}'},{role:'user',content:'Word: '+w+'\nSubtitle line: '+line+(title?'\nFrom: '+title:'')}]})});clearTimeout(to);
+  var j=await r.json(),t=j&&j.choices&&j.choices[0]&&j.choices[0].message&&j.choices[0].message.content;out=JSON.parse(t)}catch(e){out={}}
+ if(!out.uz){try{var u=await translateToUz(w);if(u&&u.main)out.uz=u.main}catch(e){}}
+ if(!out.ru){try{var ru=await translateToRu(w);if(ru&&ru.main)out.ru=ru.main}catch(e){}}
+ try{out.lv=await getLevel(w)}catch(e){}
+ MC[k]=out;return out}
+/* ---------- video adapters ---------- */
+function adHTML(v){return{t:function(){return v.currentTime||0},pause:function(){v.pause()},play:function(){var p=v.play();if(p&&p.catch)p.catch(function(){})},seek:function(s){v.currentTime=s},paused:function(){return v.paused}}}
+var ytP=null;function ytAPI(){if(ytP)return ytP;ytP=new Promise(function(res){if(window.YT&&YT.Player)return res();var s=document.createElement('script');s.src='https://www.youtube.com/iframe_api';var prev=window.onYouTubeIframeAPIReady;window.onYouTubeIframeAPIReady=function(){try{prev&&prev()}catch(e){}res()};document.head.appendChild(s);setTimeout(res,10000)});return ytP}
+function adYT(ifr){return ytAPI().then(function(){return new Promise(function(res){if(!(window.YT&&YT.Player))return res(null);var pl=new YT.Player(ifr,{events:{onReady:function(){res({t:function(){try{return pl.getCurrentTime()||0}catch(e){return 0}},pause:function(){try{pl.pauseVideo()}catch(e){}},play:function(){try{pl.playVideo()}catch(e){}},seek:function(s){try{pl.seekTo(s,true)}catch(e){}},paused:function(){try{return pl.getPlayerState()!==1}catch(e){return true}},raw:pl})},onError:function(){res(null)}}});setTimeout(function(){res(null)},9000)})})}
+/* ---------- the smart layer on a player ---------- */
+function attach(frame,src,preset){if(!frame||frame.__lcs)return;frame.__lcs=1;if(getComputedStyle(frame).position==='static')frame.style.position='relative';
+ var ov=mk('<div class="lcs-hud"><button type="button" class="lcs-pill" data-a="tog"><i></i><span>Smart subtitles</span></button><button type="button" class="lcs-pill" data-a="lvl"></button><button type="button" class="lcs-pill" data-a="file">Load .srt / .vtt</button><button type="button" class="lcs-pill" data-a="deck"></button><button type="button" class="lcs-pill" data-a="fs">Full screen</button></div><div class="lcs-sub"></div>','lcs-ov');
+ frame.appendChild(ov);var sub=ov.querySelector('.lcs-sub'),cues=preset||null,ad=null,cur=-1,timer=0,sheet=null,busy=false,file=document.createElement('input');file.type='file';file.accept='.srt,.vtt,.txt,.json';file.style.display='none';ov.appendChild(file);
+ var LV=['','All new words','Balanced','Only hard words'];
+ function hud(){var p=ov.querySelector('[data-a=lvl]');p.textContent=LV[SET.lvl];ov.querySelector('[data-a=tog]').classList.toggle('off',!SET.on);ov.querySelector('[data-a=deck]').textContent='My cards · '+jg(KC,[]).length}hud();
+ ov.classList.add('hud');setTimeout(function(){ov.classList.remove('hud')},4500);
+ function note(h){sub.innerHTML='<div class="lcs-note" style="pointer-events:auto">'+h+'</div>'}
+ function status(m){note('<span style="opacity:.9">'+m+'</span>')}
+ function load(){if(cues)return;status('<b>Finding subtitles…</b>');
+  (src.k==='yt'?subsYT(src.id):src.k==='ia'?subsIA(src.id):Promise.resolve(null)).then(function(c){if(c&&c.length){cues=c;sub.innerHTML='';cur=-1;toast('Smart subtitles ready ✨')}else nosubs()}).catch(nosubs)}
+ function nosubs(){cues=null;note('<b>No subtitles found for this video.</b><br>Load a .srt or .vtt file and the yellow words will appear.<br><button type="button" class="lcs-b p" data-a="file">Load subtitle file</button>')}
+ file.onchange=function(){var f=file.files&&file.files[0];if(!f)return;var r=new FileReader();r.onload=function(){var c=parseSub(r.result);if(c.length){cues=c;cur=-1;sub.innerHTML='';toast('Subtitles loaded ✨')}else toast('That file has no subtitles')};r.readAsText(f);file.value=''};
+ function find(t){var a=cues,lo=0,hi=a.length-1,r=-1;while(lo<=hi){var m=(lo+hi)>>1;if(a[m].s<=t){r=m;lo=m+1}else hi=m-1}if(r>=0&&a[r].e>=t-.15)return r;return -1}
+ function render(i){if(i<0||!SET.on){sub.innerHTML='';return}var c=cues[i],K=userSaved(),n=0,h=c.t.replace(/([A-Za-z][A-Za-z'’-]*)/g,function(w,x,off){var lw=w.toLowerCase().replace(/[’]/g,"'").replace(/^[-']+|[-']+$/g,'');var cap=/^[A-Z]/.test(w)&&off>0&&!/[.!?]\s*$/.test(c.t.slice(0,off));var u=isHard(lw,cap),s=K[lw];return '<span class="lcs-w'+(u?' u':s?' s':'')+'" data-w="'+esc(lw)+'" style="--i:'+(n++)+'">'+esc(w)+'</span>'});sub.innerHTML='<span class="lcs-line">'+h+'</span>'}
+ function tick(){if(!ad||!cues||sheet)return;var i=find(ad.t());if(i!==cur){cur=i;render(i)}}
+ function clipOf(c){var mid=(c.s+c.e)/2,s=Math.max(0,Math.min(c.s-.4,mid-2.5));return{s:+s.toFixed(1),e:+(s+5).toFixed(1)}}
+ function closeSheet(play){if(!sheet)return;var s=sheet;sheet=null;s.classList.add('out');setTimeout(function(){s.remove()},230);if(play&&ad)ad.play()}
+ function playClip(cl,ring){if(!ad)return;ad.seek(cl.s);ad.play();var t0=Date.now(),iv=setInterval(function(){var t=ad.t(),p=Math.min(100,Math.max(0,(t-cl.s)/(cl.e-cl.s)*100));ring.style.setProperty('--p',p+'%');if(t>=cl.e||Date.now()-t0>9000){clearInterval(iv);ad.pause();ring.style.setProperty('--p','100%')}},80)}
+ function openWord(w,c){if(!ad)return;ad.pause();var cl=clipOf(c);closeSheet(false);
+  var line=esc(c.t).replace(new RegExp('\\b('+w.replace(/[^a-z\']/g,'')+'[a-z\']*)','i'),'<mark>$1</mark>');
+  sheet=mk('<div class="lcs-sh"><h3>'+esc(w)+'</h3><span class="lcs-lv" id="lcs-lv" hidden></span><span class="lcs-sp"></span><button type="button" class="lcs-ic" data-a="say" aria-label="Pronounce">🔊</button><button type="button" class="lcs-ic" data-a="close" aria-label="Close">✕</button></div><p class="lcs-ctx">“'+line+'”</p><div class="lcs-mean" id="lcs-m"><div class="lcs-sk"></div><div class="lcs-sk"></div></div><div class="lcs-clip"><div class="lcs-ring" data-a="clip"><span>▶</span></div><div><b>5-second clip</b><small>'+cl.s.toFixed(0)+'s – '+cl.e.toFixed(0)+'s · saved with the card</small></div></div><div class="lcs-act"><button type="button" class="lcs-b p" data-a="save">⭐ Save to flashcards</button><button type="button" class="lcs-b" data-a="know">I know it</button><button type="button" class="lcs-b" data-a="go">Continue ▶</button></div>','lcs-sheet');
+  ov.appendChild(sheet);var sh=sheet;
+  meaning(w,c.t,src.title).then(function(m){if(sheet!==sh)return;sh.__m=m;var h='';if(m.en)h+='<div><small>'+esc(m.pos||'meaning')+' · in this scene</small>'+esc(m.en)+'</div>';if(m.uz)h+='<div><small>🇺🇿 Uzbek</small>'+esc(m.uz)+'</div>';if(m.ru)h+='<div><small>🇷🇺 Russian</small>'+esc(m.ru)+'</div>';if(m.ex)h+='<div><small>Example</small>'+esc(m.ex)+'</div>';sh.querySelector('#lcs-m').innerHTML=h||'<div>Could not load the meaning. Check your internet.</div>';if(m.lv){var l=sh.querySelector('#lcs-lv');l.hidden=false;l.textContent=m.lv}});
+  sh.addEventListener('click',function(e){var b=e.target.closest('[data-a]');if(!b)return;var a=b.dataset.a;
+   if(a==='close'||a==='go'){closeSheet(true)}
+   else if(a==='say'){try{speakText(w)}catch(x){}}
+   else if(a==='clip'){playClip(cl,b)}
+   else if(a==='know'){var K=jg(KK,[]);if(K.indexOf(w)<0)K.push(w);js(KK,K);try{state.user.known=state.user.known||[];if(state.user.known.indexOf(w)<0)state.user.known.push(w);pfSave()}catch(x){}toast('Got it — “'+w+'” will not be highlighted again');cur=-1;closeSheet(true)}
+   else if(a==='save'){var m=sh.__m||{},cards=jg(KC,[]);if(!cards.some(function(x){return x.w===w&&x.src&&x.src.id===src.id&&Math.abs(x.s-cl.s)<3})){cards.unshift({id:Date.now(),w:w,line:c.t,pos:m.pos||'',en:m.en||'',uz:m.uz||'',ru:m.ru||'',ex:m.ex||'',src:{k:src.k,id:src.id,url:src.url||'',title:src.title||''},s:cl.s,e:cl.e,due:Date.now(),n:0});js(KC,cards.slice(0,400))}
+    try{saveWord(w)}catch(x){}fly(b,ov.querySelector('[data-a=deck]'),w);hud();cur=-1;setTimeout(function(){closeSheet(true)},650)}});}
+ function fly(from,to,w){try{var a=from.getBoundingClientRect(),b=to.getBoundingClientRect(),f=mk(esc(w),'lcs-fly');f.style.left=a.left+a.width/2-60+'px';f.style.top=a.top+'px';document.body.appendChild(f);var an=f.animate([{transform:'translate(0,0) scale(1) rotate(0)',opacity:1},{transform:'translate('+(b.left+b.width/2-a.left-a.width/2)+'px,'+(b.top-a.top)+'px) scale(.25) rotate(14deg)',opacity:.2}],{duration:620,easing:'cubic-bezier(.5,-.2,.3,1)'});an.onfinish=function(){f.remove()}}catch(e){}}
+ ov.addEventListener('click',function(e){var w=e.target.closest('.lcs-w');if(w&&cues&&cur>=0){openWord(w.dataset.w,cues[cur]);return}var b=e.target.closest('[data-a]');if(!b||b.closest('.lcs-sheet'))return;var a=b.dataset.a;
+  if(a==='tog'){SET.on=!SET.on;js(KS,SET);hud();cur=-1;if(!SET.on)sub.innerHTML=''}
+  else if(a==='lvl'){SET.lvl=SET.lvl%3+1;js(KS,SET);hud();cur=-1;tick()}
+  else if(a==='file'){file.click()}
+  else if(a==='deck'){if(ad)ad.pause();window.LCS.deck()}
+  else if(a==='fs'){try{if(document.fullscreenElement)document.exitFullscreen();else (frame.requestFullscreen||frame.webkitRequestFullscreen).call(frame)}catch(x){}}});
+ var hv=0;frame.addEventListener('pointermove',function(){ov.classList.add('hud');clearTimeout(hv);hv=setTimeout(function(){ov.classList.remove('hud')},3000)});
+ (function boot(){var v=frame.querySelector('video'),f=frame.querySelector('iframe');
+  if(v){ad=adHTML(v);load();timer=setInterval(function(){if(!document.body.contains(frame)){clearInterval(timer);return}tick()},110)}
+  else if(f&&src.k==='yt'){adYT(f).then(function(a){if(!a){note('<b>This player does not allow smart subtitles.</b>');return}ad=a;load();timer=setInterval(function(){if(!document.body.contains(frame)){clearInterval(timer);return}tick()},110)})}
+  else note('<b>Smart subtitles need a direct video or a YouTube video.</b>')})();
+}
+/* ---------- finding players that appear in the Movies section ---------- */
+function scan(){document.querySelectorAll('.mv-play .mv-frame').forEach(function(fr){if(fr.__lcs)return;var v=fr.querySelector('video'),f=fr.querySelector('iframe');
+  if(v&&v.getAttribute('src')){var m=/archive\.org\/download\/([^\/]+)\//.exec(v.getAttribute('src')||'');var t=((fr.parentNode.querySelector('.mv-pn')||{}).textContent||'').split('·')[0].trim();attach(fr,{k:m?'ia':'url',id:m?decodeURIComponent(m[1]):v.getAttribute('src'),url:v.getAttribute('src'),title:t})}
+  else if(f&&/youtube(-nocookie)?\.com\/embed\//.test(f.src||'')&&/enablejsapi=1/.test(f.src)){var id=/embed\/([^?]+)/.exec(f.src)[1];attach(fr,{k:'yt',id:id,title:''})}})}
+/* ---------- banner in Movies ---------- */
+function banner(){var r=document.getElementById('mv-root');if(!r||!r.children.length||r.querySelector('.lcs-banner'))return;
+ var b=mk('<span class="lcs-bi">✨</span><div class="lcs-bt"><b>Smart Subtitles</b><span>Watch any YouTube video or film. Words you may not know turn <mark>yellow</mark> — tap one to pause, see its meaning in the scene and save it with a 5-second clip.</span></div><button type="button" class="lcs-b p" data-a="open">Open a video</button><button type="button" class="lcs-b" data-a="deck">My cards</button>','lcs-banner');
+ b.addEventListener('click',function(e){var a=e.target.closest('[data-a]');if(!a)return;if(a.dataset.a==='open')LCS.studio();else LCS.deck()});r.insertBefore(b,r.firstChild)}
+/* ---------- studio (open any video) ---------- */
+function ytId(s){s=String(s||'').trim();var m=/(?:youtu\.be\/|v=|embed\/|shorts\/)([\w-]{11})/.exec(s);if(m)return m[1];if(/^[\w-]{11}$/.test(s))return s;return null}
+function modal(inner){var m=mk('<div class="lcs-box"><button type="button" class="lcs-x" aria-label="Close">✕</button>'+inner+'</div>','lcs-modal');m.querySelector('.lcs-x').onclick=function(){kill(m)};m.addEventListener('click',function(e){if(e.target===m)kill(m)});document.body.appendChild(m);return m}
+function kill(m){m.style.transition='opacity .2s';m.style.opacity=0;setTimeout(function(){m.remove()},200)}
+function studio(){var m=modal('<h2>Open a video</h2><p class="lcs-sm">Paste a YouTube link, or a direct video link (.mp4). Subtitles are found automatically when they exist; you can also load your own .srt / .vtt file.</p><input class="lcs-in" id="lcs-u" placeholder="https://www.youtube.com/watch?v=…" autocomplete="off"><div class="lcs-row"><div class="lcs-seg" id="lcs-l"><button data-l="1">All new words</button><button data-l="2">Balanced</button><button data-l="3">Only hard</button></div><span style="flex:1"></span><button type="button" class="lcs-b p" id="lcs-go">Watch</button></div><div id="lcs-st"></div>');
+ var seg=m.querySelector('#lcs-l');function sg(){seg.querySelectorAll('button').forEach(function(b){b.classList.toggle('on',+b.dataset.l===SET.lvl)})}sg();seg.onclick=function(e){var b=e.target.closest('button');if(!b)return;SET.lvl=+b.dataset.l;js(KS,SET);sg()};
+ function go(){var u=m.querySelector('#lcs-u').value.trim(),st=m.querySelector('#lcs-st'),id=ytId(u);if(!u){m.querySelector('#lcs-u').focus();return}
+  var stage=mk('','lcs-stage');st.innerHTML='';st.appendChild(stage);var src;
+  if(id){stage.innerHTML='<iframe src="https://www.youtube-nocookie.com/embed/'+id+'?autoplay=1&rel=0&playsinline=1&cc_load_policy=0&enablejsapi=1&origin='+encodeURIComponent(location.origin)+'" allow="autoplay; encrypted-media; picture-in-picture" referrerpolicy="strict-origin-when-cross-origin"></iframe>';src={k:'yt',id:id,title:'YouTube video'}}
+  else if(/^https?:\/\//.test(u)){stage.innerHTML='<video controls autoplay playsinline src="'+esc(u)+'"></video>';src={k:'url',id:u,url:u,title:'Video'}}
+  else{st.innerHTML='<p class="lcs-empty">That does not look like a YouTube or video link.</p>';return}
+  attach(stage,src)}
+ m.querySelector('#lcs-go').onclick=go;m.querySelector('#lcs-u').onkeydown=function(e){if(e.key==='Enter')go()}}
+/* ---------- my cards + practice ---------- */
+function clipHtml(c){if(c.src.k==='yt')return '<iframe src="https://www.youtube-nocookie.com/embed/'+esc(c.src.id)+'?start='+Math.floor(c.s)+'&end='+Math.ceil(c.e)+'&autoplay=1&rel=0&playsinline=1&cc_load_policy=0" allow="autoplay; encrypted-media" referrerpolicy="strict-origin-when-cross-origin"></iframe>';return '<video controls autoplay playsinline src="'+esc(c.src.url||c.src.id)+'#t='+c.s+','+c.e+'"></video>'}
+function deck(){var cards=jg(KC,[]);var m=modal('<h2>My Smart cards</h2><p class="lcs-sm">'+cards.length+' word'+(cards.length===1?'':'s')+' saved from videos. Each one remembers its scene.</p>'+(cards.length?'<div class="lcs-row" style="margin:0 0 14px"><button type="button" class="lcs-b p" id="lcs-pr">Practice due cards</button></div><div class="lcs-grid">'+cards.map(function(c,i){return '<div class="lcs-card" data-i="'+i+'"><b>'+esc(c.w)+'</b><p>'+esc(c.en||c.uz||'')+'</p><p style="opacity:.8">“'+esc(c.line)+'”</p><small>▶ Replay the scene · '+esc(c.src.title||c.src.k)+'</small></div>'}).join('')+'</div>':'<p class="lcs-empty">No cards yet.<br>Open a video, tap a yellow word and save it — it will appear here with its clip.</p>'));
+ var box=m.querySelector('.lcs-box');
+ box.addEventListener('click',function(e){var cd=e.target.closest('.lcs-card');if(cd){var c=cards[+cd.dataset.i];box.innerHTML='<button type="button" class="lcs-x">✕</button><h2>'+esc(c.w)+'</h2><p class="lcs-sm">'+esc(c.en||'')+(c.uz?' · '+esc(c.uz):'')+'</p><div class="lcs-stage">'+clipHtml(c)+'</div><p class="lcs-ctx">“'+esc(c.line)+'”</p><div class="lcs-act"><button type="button" class="lcs-b" id="lcs-back">← Back</button><button type="button" class="lcs-b" id="lcs-del">Remove</button></div>';box.querySelector('.lcs-x').onclick=function(){kill(m)};box.querySelector('#lcs-back').onclick=function(){kill(m);deck()};box.querySelector('#lcs-del').onclick=function(){var a=jg(KC,[]);a.splice(+cd.dataset.i,1);js(KC,a);kill(m);deck()};return}
+  if(e.target.id==='lcs-pr'){practice(m,box,cards)}})}
+function practice(m,box,all){var due=all.filter(function(c){return (c.due||0)<=Date.now()});if(!due.length)due=all.slice();var i=0;
+ function step(){if(i>=due.length){box.innerHTML='<button type="button" class="lcs-x">✕</button><h2>All done 🎉</h2><p class="lcs-sm">You practised '+due.length+' card'+(due.length===1?'':'s')+'.</p><div class="lcs-act"><button type="button" class="lcs-b p" id="lcs-ok">Close</button></div>';box.querySelector('.lcs-x').onclick=box.querySelector('#lcs-ok').onclick=function(){kill(m)};try{triggerConfetti()}catch(e){}return}
+  var c=due[i],blank=esc(c.line).replace(new RegExp('\\b'+c.w.replace(/[^a-z\']/g,'')+'[a-z\']*','i'),'<u id="lcs-bk">'+esc(c.w)+'</u>');
+  box.innerHTML='<button type="button" class="lcs-x">✕</button><h2>Remember this scene?</h2><p class="lcs-sm">'+(i+1)+' / '+due.length+'</p><div class="lcs-stage">'+clipHtml(c)+'</div><p class="lcs-big">“'+blank+'”</p><div class="lcs-mean" id="lcs-rv" hidden><div><small>Meaning</small>'+esc(c.en||'')+(c.uz?'<br>🇺🇿 '+esc(c.uz):'')+(c.ru?'<br>🇷🇺 '+esc(c.ru):'')+'</div></div><div class="lcs-act"><button type="button" class="lcs-b p" id="lcs-rev">Show the word</button><button type="button" class="lcs-b" id="lcs-ag" hidden>Again</button><button type="button" class="lcs-b p" id="lcs-gt" hidden>Got it</button></div>';
+  box.querySelector('.lcs-x').onclick=function(){kill(m)};var rev=box.querySelector('#lcs-rev');rev.onclick=function(){box.querySelector('#lcs-bk').classList.add('show');box.querySelector('#lcs-rv').hidden=false;rev.hidden=true;box.querySelector('#lcs-ag').hidden=false;box.querySelector('#lcs-gt').hidden=false};
+  function rate(g){var a=jg(KC,[]),k=a.findIndex(function(x){return x.id===c.id});if(k>=0){a[k].n=g?(a[k].n||0)+1:0;a[k].due=Date.now()+(g?[0,1,3,7,16,35][Math.min(5,a[k].n)]*864e5:6e5);js(KC,a)}i++;step()}
+  box.querySelector('#lcs-ag').onclick=function(){rate(false)};box.querySelector('#lcs-gt').onclick=function(){rate(true)}}
+ step()}
+window.LCS={attach:attach,studio:studio,deck:deck,parse:parseSub,hard:isHard,scan:scan};
+var seen=new WeakSet();
+function watchPlayers(){document.querySelectorAll('.mv-play').forEach(function(p){if(seen.has(p))return;seen.add(p);var o=new MutationObserver(function(){clearTimeout(o.t);o.t=setTimeout(scan,80)});o.observe(p,{childList:true,subtree:true});scan()})}
+var rootO=null;
+function watchRoot(){var r=document.getElementById('mv-root');if(!r)return;if(rootO&&rootO.r===r)return;if(rootO)rootO.disconnect();rootO=new MutationObserver(function(){clearTimeout(rootO.t);rootO.t=setTimeout(banner,150)});rootO.r=r;rootO.observe(r,{childList:true});banner()}
+function start(){new MutationObserver(function(){watchPlayers();watchRoot()}).observe(document.body,{childList:true});watchPlayers();watchRoot();setTimeout(watchRoot,3000);setTimeout(watchRoot,8000)}
+if(document.body)start();else document.addEventListener('DOMContentLoaded',start);
+})();
+</script></body>
 </html>
