@@ -35695,7 +35695,7 @@ var LR_TURN = null;    // optional TURN servers for voice on strict networks, e.
             if (FC.sheet) fcSheetClose(false);
             const w = FC.q.shift(); if (!w) return; const u = U(); u.known = u.known || []; u.mwSeen = u.mwSeen || [];
             if (!u.mwSeen.includes(w)) u.mwSeen.push(w);
-            if (k) { if (!FC.seen[w]) FC.first++; if (!u.known.includes(w)) u.known.push(w); } else { FC.q.push(w); u.known = u.known.filter(x => x !== w); }
+            if (window.SRS && !FC.seen[w]) SRS.mark(w, k); if (k) { if (!FC.seen[w]) FC.first++; if (!u.known.includes(w)) u.known.push(w); } else { FC.q.push(w); u.known = u.known.filter(x => x !== w); }
             FC.seen[w] = true; try { u.fcDate = dayKey(); } catch (e) { } save();
             const c = $('fc2-card'); c.classList.add(k ? 'go-r' : 'go-l'); setTimeout(() => { c.classList.remove('go-r', 'go-l'); if (!FC.q.length) return fcFinish(); fcShow(); }, 220);
         },
@@ -35711,7 +35711,7 @@ var LR_TURN = null;    // optional TURN servers for voice on strict networks, e.
         try { if (FC.first === FC.total) triggerConfetti(); } catch (e) { }
     }
     window.fcOpen = function (only) {
-        let words = saved().slice(); if (only === 'todo') { const k = known().map(x => x.toLowerCase()); words = words.filter(w => !k.includes(w.toLowerCase())); if (!words.length) words = saved().slice(); }
+        let words = saved().slice(); if (!only && window.SRS) { const dw = SRS.list(); if (dw.length) words = dw.slice(); } if (only === 'todo') { const k = known().map(x => x.toLowerCase()); words = words.filter(w => !k.includes(w.toLowerCase())); if (!words.length) words = saved().slice(); }
         if (!words.length) { toast('Save some words first — search a word and tap Save'); try { showSavedWords(); } catch (e) { } return; }
         for (let i = words.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [words[i], words[j]] = [words[j], words[i]]; }
         FC.q = words; FC.total = words.length; FC.first = 0; FC.seen = {}; fcVoiceLoad();
@@ -46444,7 +46444,7 @@ void main(){
             plan_level: CEFR[lv], difficulty: c.diff, last_days: days, yesterday_tasks: (c.prev || {}).sig || [],
             exam_best: Object.keys(log).reduce((o, k) => { o[k] = log[k].best; return o; }, {}),
             recent_mistakes: c.mis.slice(0, 10).map(m => ({ topic: m.top, q: shortOf(m.q, 90), you: m.you, right: m.ok })),
-            saved_words: (u.savedWords || []).length, recent_saved_words: (u.savedWords || []).slice(-15), film_words: (function () { try { return JSON.parse(localStorage.getItem('lr_cinema_cards') || '[]').slice(0, 12).map(c => ({ w: c.w, meaning: c.en || '', line: c.line })); } catch (e) { return []; } })(), grammar_modules: fit, games: GAMES
+            saved_words: (u.savedWords || []).length, recent_saved_words: (u.savedWords || []).slice(-15), due_words: (window.SRS ? SRS.list().slice(0, 12) : []), film_words: (function () { try { return JSON.parse(localStorage.getItem('lr_cinema_cards') || '[]').slice(0, 12).map(c => ({ w: c.w, meaning: c.en || '', line: c.line })); } catch (e) { return []; } })(), grammar_modules: fit, games: GAMES
         };
     }
     const PLAN_SYS = `You are Luna, a warm and expert English coach inside the LunaRise app. Plan TODAY's practice for one learner so their level rises step by step.
@@ -56323,6 +56323,36 @@ var rootO=null;
 function watchRoot(){var r=document.getElementById('mv-root');if(!r)return;if(rootO&&rootO.r===r)return;if(rootO)rootO.disconnect();rootO=new MutationObserver(function(){clearTimeout(rootO.t);rootO.t=setTimeout(banner,150)});rootO.r=r;rootO.observe(r,{childList:true});banner()}
 function start(){new MutationObserver(function(){watchRoot()}).observe(document.body,{childList:true});watchRoot();setTimeout(watchRoot,3000);setTimeout(watchRoot,8000)}
 if(document.body)start();else document.addEventListener('DOMContentLoaded',start);
+})();
+</script><script id="lr-tg">/* Telegram Mini App: when the site is opened inside Telegram it fills the screen, matches the theme and remembers the invite code */
+(function(){'use strict';var h=location.hash||'',q=location.search||'';
+if(!/tgWebApp/i.test(h+q)&&!(window.Telegram&&Telegram.WebApp&&Telegram.WebApp.initData))return;
+document.documentElement.classList.add('tg-app');
+try{var m=(h+'&'+q).match(/tgWebAppStartParam=([^&]+)/);if(m)localStorage.setItem('lr_ref',decodeURIComponent(m[1]))}catch(e){}
+function go(){try{var W=Telegram.WebApp;W.ready();W.expand();try{W.setHeaderColor('#0a0b1e');W.setBackgroundColor('#0a0b1e')}catch(e){}try{W.disableVerticalSwipes&&W.disableVerticalSwipes()}catch(e){}
+ var u=W.initDataUnsafe&&W.initDataUnsafe.user;if(u){try{localStorage.setItem('lr_tg_user',JSON.stringify({id:u.id,first:u.first_name||'',username:u.username||''}))}catch(e){}}
+ document.documentElement.style.setProperty('--tg-top',(W.contentSafeAreaInset&&W.contentSafeAreaInset.top||0)+'px')}catch(e){}}
+if(window.Telegram&&Telegram.WebApp)go();else{var s=document.createElement('script');s.src='https://telegram.org/js/telegram-web-app.js';s.onload=go;document.head.appendChild(s)}
+var st=document.createElement('style');st.textContent='html.tg-app #pwa-install,html.tg-app .pwa-banner,html.tg-app [id*="install"]{display:none!important}html.tg-app body{padding-top:var(--tg-top,0)}';document.head.appendChild(st)})();
+</script><script id="lr-srs">/* Spaced repetition: saved words come back after 1, 3, 7, 14, 30 and 60 days */
+(function(){'use strict';
+var INT=[1,3,7,14,30,60],D=document;
+function day(){return Math.floor(Date.now()/864e5)}
+function U(){try{return state.user||null}catch(e){return null}}
+function ent(w){var u=U();if(!u)return null;u.srs=u.srs||{};return u.srs[w]}
+var SRS=window.SRS={
+ isDue:function(w){var e=ent(w);return !e||e.due<=day()},
+ list:function(){var u=U();return u?(u.savedWords||[]).filter(SRS.isDue):[]},
+ next:function(){var u=U(),m=1e9;if(!u)return null;(u.savedWords||[]).forEach(function(w){var e=ent(w);if(e&&e.due>day()&&e.due<m)m=e.due});return m<1e9?m-day():null},
+ mark:function(w,knew){var u=U();if(!u)return;var e=ent(w)||{step:0,n:0};e.n=(e.n||0)+1;if(knew){e.step=Math.min((e.step||0)+1,INT.length);e.due=day()+INT[e.step-1]}else{e.step=0;e.due=day()+1}e.last=day();u.srs[w]=e;try{pfSave()}catch(x){}refresh()}
+};
+var chip;
+function onDash(){var v=D.getElementById('view-dashboard');return v&&!v.classList.contains('hidden')&&!D.getElementById('mv-play')}
+function refresh(){var n=SRS.list().length;if(!chip){chip=D.createElement('button');chip.type='button';chip.id='srs-chip';chip.setAttribute('aria-label','Review words that are due');chip.onclick=function(){try{fcOpen()}catch(e){}};D.body.appendChild(chip)}
+ var fcEl=D.getElementById('pf-fc'),fcOn=fcEl&&fcEl.style.display==='flex';var show=n>0&&onDash()&&!fcOn;chip.classList.toggle('on',!!show);
+ if(n>0)chip.innerHTML='<i></i><b>'+n+(n===1?' word':' words')+' ready to review</b><span>Start</span>'}
+var css=D.createElement('style');css.textContent='#srs-chip{position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom));z-index:3300;transform:translate(-50%,24px);opacity:0;pointer-events:none;display:flex;align-items:center;gap:10px;height:48px;padding:0 8px 0 16px;border-radius:999px;border:1px solid rgba(165,180,252,.35);background:linear-gradient(135deg,rgba(30,27,75,.94),rgba(49,26,94,.94));color:#eef0ff;font:700 14px/1 "Plus Jakarta Sans",system-ui,sans-serif;box-shadow:0 18px 40px -12px rgba(124,58,237,.6);cursor:pointer;transition:opacity .3s,transform .35s cubic-bezier(.2,1.2,.4,1)}#srs-chip.on{opacity:1;transform:translate(-50%,0);pointer-events:auto}#srs-chip i{width:9px;height:9px;border-radius:50%;background:#fbbf24;box-shadow:0 0 0 0 rgba(251,191,36,.7);animation:srsP 1.8s infinite}#srs-chip span{height:34px;padding:0 16px;border-radius:999px;display:grid;place-items:center;background:linear-gradient(135deg,#fbbf24,#fb7185);color:#1a1030;font-weight:800}@keyframes srsP{70%{box-shadow:0 0 0 9px rgba(251,191,36,0)}100%{box-shadow:0 0 0 0 rgba(251,191,36,0)}}@media (prefers-reduced-motion:reduce){#srs-chip{transition:none}#srs-chip i{animation:none}}';D.head.appendChild(css);
+setInterval(refresh,2500);setTimeout(refresh,1500);
 })();
 </script></body>
 </html>
