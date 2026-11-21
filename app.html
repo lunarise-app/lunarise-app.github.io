@@ -40830,7 +40830,7 @@ ${p.p}`;
     const isOwner = () => LS.get('lr_owner') === '1' || String(((U().google || {}).email) || '').toLowerCase() === ADMIN;
     let hiddenAt = 0, visitBusy = false;
     function visit() {
-        if (isOwner() || visitBusy) return; const id = dev(); if (!id) return;
+        if (isOwner() || visitBusy || BOT || !human) return; const id = dev(); if (!id) return;
         const last = +LS.get('lr_vlast') || 0; if (Date.now() - last < 30 * 60000) { LS.set('lr_vlast', String(Date.now())); return; }
         visitBusy = true; LS.set('lr_vlast', String(Date.now()));
         call({ op: 'visit', device: id }, 15000).catch(() => { }).then(() => { visitBusy = false; });
@@ -40846,7 +40846,7 @@ ${p.p}`;
         return { x: st.xp | 0, l: st.lvl | 0, s: st.streak | 0, w: (st.words || []).length, k: st.known | 0, e: st.examN | 0, p: (u.gamePts | 0), h: h.slice(-21) };
     }
     function beat() {
-        const id = dev(); if (!id || !DB || document.hidden || isOwner()) return;
+        const id = dev(); if (!id || !DB || document.hidden || isOwner() || BOT || !human) return;
         const now = Date.now(); if (now - lastBeat < 30000) return; lastBeat = now;
         const u = U(), plan = String(u.proPlan || ''), o = { t: { '.sv': 'timestamp' }, r: reg() ? 1 : 0, a: isApp() ? 1 : 0, p: u.isPro ? (/gift/i.test(plan) ? 3 : /promo/i.test(plan) ? 2 : 1) : 0, v: 'web53' };
         // for the owner's People list: the first name (only after sign-up), the level-test result and today's Luna Coach progress
@@ -40861,7 +40861,45 @@ ${p.p}`;
             const d = dayKey(now); if (LS.get('lr_sd') !== d) { LS.set('lr_sd', d); rest('stats/d/' + d + '/' + id, 'PUT', 1); }
         }
         rest('stats/seen/' + id, 'PATCH', o);
+        try { srvBeat(o); } catch (e) { }
     }
+    /* robots and link previews are not people: a visitor counts after the first real touch, click, key or scroll */
+    const BOT = (() => { try { return !!navigator.webdriver || /bot|crawl|spider|headless|lighthouse|preview|pagespeed|facebookexternalhit|slurp|phantom|puppeteer|chrome-lighthouse/i.test(navigator.userAgent || ''); } catch (e) { return false; } })();
+    let human = false, lastAct = 0, lastSrv = 0;
+    ['pointerdown', 'keydown', 'touchstart', 'wheel', 'scroll', 'click'].forEach(ev => addEventListener(ev, () => { lastAct = Date.now(); if (!human) { human = true; setTimeout(beat, 400); setTimeout(visit, 900); } }, { passive: true, capture: true }));
+    /* time spent today and sections opened today: running totals kept on the device, sent with the heartbeat */
+    function useLoad() { const d = dayKey(Date.now()); let u = null; try { u = JSON.parse(LS.get('lr_use') || 'null'); } catch (e) { } if (!u || u.d !== d || typeof u.vw !== 'object') u = { d: d, s: 0, vw: {} }; return u; }
+    function useView(v) { v = String(v || '').toLowerCase().replace(/[^a-z0-9-]/g, '').slice(0, 24); if (v.length < 2) return; const u = useLoad(); u.vw[v] = (u.vw[v] || 0) + 1; LS.set('lr_use', JSON.stringify(u)); }
+    setInterval(() => { if (document.hidden || !human || BOT || isOwner() || Date.now() - lastAct > 60000) return; const u = useLoad(); u.s += 5; LS.set('lr_use', JSON.stringify(u)); }, 5000);
+    try { const nv = window.navigateTo; if (typeof nv === 'function') window.navigateTo = function (v) { try { useView(v); } catch (e) { } return nv.apply(this, arguments); }; } catch (e) { }
+    setTimeout(() => { try { if (window.LAB && LAB.open && !LAB.open.__u) { const lo = LAB.open; LAB.open = function () { try { useView('english-lab'); } catch (e) { } return lo.apply(this, arguments); }; LAB.open.__u = 1; } } catch (e) { } try { if (window.DL && DL.start && !DL.start.__u) { const ds = DL.start; DL.start = function () { try { useView('daily-luna'); } catch (e) { } return ds.apply(this, arguments); }; DL.start.__u = 1; } } catch (e) { } }, 6000);
+    function devInfo() {
+        const ua = navigator.userAgent || '', pf = (navigator.userAgentData && navigator.userAgentData.platform) || navigator.platform || '';
+        const os = /android/i.test(ua) ? 'Android' : (/iphone|ipad|ipod/i.test(ua) || (/Mac/i.test(pf) && navigator.maxTouchPoints > 1)) ? 'iOS' : /windows/i.test(ua) ? 'Windows' : /mac/i.test(ua) ? 'macOS' : /cros/i.test(ua) ? 'ChromeOS' : /linux/i.test(ua) ? 'Linux' : 'Other';
+        const br = /edg\//i.test(ua) ? 'Edge' : /opr\/|opera/i.test(ua) ? 'Opera' : /samsungbrowser/i.test(ua) ? 'Samsung' : /firefox|fxios/i.test(ua) ? 'Firefox' : /chrome|crios/i.test(ua) ? 'Chrome' : /safari/i.test(ua) ? 'Safari' : 'Other';
+        const m = Math.min(screen.width || 0, screen.height || 0), ty = !m ? '' : m < 600 ? 'phone' : m < 1000 ? 'tablet' : 'desktop';
+        return { os: os, br: br, ty: ty, lg: String(navigator.language || '').slice(0, 12) };
+    }
+    /* the same numbers as the heartbeat, but written by the LunaRise server (never blocked by database rules) */
+    let lastO = null;
+    function srvBody(o) {
+        const id = dev(), now = Date.now();
+        let f = +LS.get('lr_fs'); if (!(f > 1.7e12)) { f = now; LS.set('lr_fs', String(f)); }
+        let z = ''; try { z = String(Intl.DateTimeFormat().resolvedOptions().timeZone || '').slice(0, 40); } catch (e) { }
+        const u = useLoad();
+        return Object.assign({ op: 'beat', device: id, r: o.r, a: o.a, p: o.p, v: o.v, n: o.n, l: o.l, c: o.c, g: o.g, f: f, z: z, ud: u.d, s: u.s, vw: u.vw }, devInfo());
+    }
+    function srvBeat(o) {
+        const id = dev(); if (!id || !human || BOT || isOwner()) return;
+        lastO = o; const now = Date.now(); if (now - lastSrv < 170000) return; lastSrv = now;
+        call(srvBody(o), 15000).catch(() => { });
+    }
+    /* when the person leaves or switches away, the last minutes of time and sections are sent too */
+    function srvFlush() {
+        try { const id = dev(); if (!id || !human || BOT || isOwner() || !lastO) return; server().then(url => { if (url) fetch(url, { method: 'POST', body: JSON.stringify(srvBody(lastO)), keepalive: true }).catch(() => { }); }); } catch (e) { }
+    }
+    document.addEventListener('visibilitychange', () => { if (document.hidden) srvFlush(); });
+    addEventListener('pagehide', srvFlush);
     function startStats() {
         if (/[?&]introT=/.test(location.search)) return;
         setTimeout(beat, 3500); setTimeout(visit, 5000); setTimeout(cfgCheck, 4500); setTimeout(giftCheck, 6000);
@@ -55144,21 +55182,39 @@ function kpi(l,v,s,c){return '<div class="a3-k '+(c||'')+'"><span>'+l+'</span><b
 /* ---------- dashboard ---------- */
 function dash(){var d=D;if(!d)return '<div class="a3-sk"></div><div class="a3-sk"></div><div class="a3-sk"></div>';
  var days=d.days&&d.days.length?d.days:[['00000000',0,0],['00000000',0,0]],a=d.acct||{},tot=Math.max(1,d.app+d.web);
- var hrs=d.hours||[],hm=Math.max(1,Math.max.apply(null,hrs)),pk=hrs.indexOf(Math.max.apply(null,hrs));
+ var hrs=(d.hours7&&d.hours7.some(Boolean))?d.hours7:(d.hours||[]),hm=Math.max(1,Math.max.apply(null,hrs)),pk=hrs.indexOf(Math.max.apply(null,hrs));
  var zm={};(d.zones||[]).forEach(function(z){var q=zn(z[0]);zm[q[1]]=zm[q[1]]||[q[0],q[1],0];zm[q[1]][2]+=z[1]});var zl=Object.keys(zm).map(function(k){return zm[k]}).sort(function(x,y){return y[2]-x[2]}),zx=Math.max(1,zl.length?zl[0][2]:1);
  var L=['A1','A2','B1','B2','C1','C2'],lv=d.levels||{},lx=Math.max.apply(null,L.map(function(k){return lv[k]||0}).concat([1]));
  var w1=days.slice(-7).reduce(function(s,x){return s+x[1]},0),w0=days.slice(0,-7).reduce(function(s,x){return s+x[1]},0),dw=w0?Math.round((w1-w0)/w0*100):null;
  return '<div><h2>Dashboard</h2><p class="a3-sub">Each person counted once. Your own devices are not counted.</p></div>'+
  '<div class="a3-hero"><div class="a3-card a3-now"><span class="a3-big">'+IC.ppl.replace('<svg','<svg style="width:34px;height:34px"')+'</span><div><small>Using LunaRise right now</small><b>'+fmt(d.online)+'</b><small>'+fmt(d.onlineApp)+' in the app · '+fmt(Math.max(0,d.online-d.onlineApp))+' on the website</small></div></div>'+
  '<div class="a3-kp" style="grid-template-columns:1fr 1fr">'+kpi('Today',fmt(d.today),fmt(d.newToday)+' new · '+fmt(d.backToday||0)+' returning')+kpi('Last 7 days',fmt(w1),dw==null?'people':(dw>=0?'▲ ':'▼ ')+Math.abs(dw)+'% vs week before','ok')+'</div></div>'+
- '<div class="a3-kp">'+kpi('All visitors',fmt(d.all),'devices, one each')+kpi('Signed up',fmt(d.reg),pc(d.reg,d.all)+'% of visitors · one person once','v')+kpi('Google accounts',fmt(a.google),fmt(a.n)+' accounts in total')+kpi('PRO',fmt(d.pro),fmt(d.proPromo)+' promo · '+fmt(d.proGift||0)+' gift','g')+kpi('Came back',d.back!=null?pc(d.back,d.all)+'%':'–','used it on 2+ days')+kpi('Week-1 return',d.cohort7?pc(d.cohort7back,d.cohort7)+'%':'–',d.cohort7?fmt(d.cohort7back)+' of '+fmt(d.cohort7):'needs more history')+'</div>'+
+ '<div class="a3-kp">'+kpi('All visitors',fmt(d.all),'devices, one each'+(d.v>=15?' · '+fmt(d.human||0)+' verified':''))+kpi('Signed up',fmt(d.reg),pc(d.reg,d.all)+'% of visitors · one person once','v')+kpi('Google accounts',fmt(a.google),fmt(a.n)+' accounts in total')+kpi('PRO',fmt(d.pro),fmt(d.proPromo)+' promo · '+fmt(d.proGift||0)+' gift','g')+kpi('Next-day return',d.cohort1?pc(d.cohort1back,d.cohort1)+'%':'–',d.cohort1?fmt(d.cohort1back)+' of '+fmt(d.cohort1)+' came back':'needs more history')+kpi('Week-1 return',d.cohort7?pc(d.cohort7back,d.cohort7)+'%':'–',d.cohort7?fmt(d.cohort7back)+' of '+fmt(d.cohort7):'needs more history')+'</div>'+
  '<div class="a3-card"><h3>People per day</h3><p class="a3-sub">last 14 days · Tashkent time</p><div class="a3-rel" id="a3-rel">'+area(days)+'<span class="a3-tip" id="a3-tip" hidden></span></div></div>'+
  '<div class="a3-2"><div class="a3-card"><h3>App or website</h3><p class="a3-sub">all visitors</p>'+donut([['App',d.app,'#ffb057'],['Website',d.web,'#7c8cff']])+'</div>'+
  '<div class="a3-card"><h3>Visitor → PRO</h3><p class="a3-sub">how far people go</p>'+[['Visitors',d.all],['Signed up',d.reg],['Level test',d.tested],['PRO',d.pro]].map(function(x){return '<div class="a3-row" style="grid-template-columns:100px 1fr 50px"><span>'+x[0]+'</span><span class="a3-bar"><i style="width:'+Math.max(2,pc(x[1],d.all||1))+'%"></i></span><b>'+fmt(x[1])+'</b></div>'}).join('')+'</div></div>'+
- '<div class="a3-2"><div class="a3-card"><h3>Busy hours</h3><p class="a3-sub">last 24 h'+(hrs.some(Boolean)?' · busiest '+String(pk).padStart(2,'0')+':00':'')+'</p><div class="a3-hr">'+hrs.map(function(n,h){return '<i title="'+h+':00 · '+n+'" class="'+(h===pk&&n?'pk':'')+'" style="height:'+Math.round(n/hm*100)+'%"></i>'}).join('')+'</div><div class="a3-ax"><span>00</span><span>06</span><span>12</span><span>18</span><span>23</span></div></div>'+
+ '<div class="a3-2"><div class="a3-card"><h3>Busy hours</h3><p class="a3-sub">'+(hrs===d.hours7?'last 7 days':'last 24 h')+(hrs.some(Boolean)?' · busiest '+String(pk).padStart(2,'0')+':00':'')+'</p><div class="a3-hr">'+hrs.map(function(n,h){return '<i title="'+h+':00 · '+n+'" class="'+(h===pk&&n?'pk':'')+'" style="height:'+Math.round(n/hm*100)+'%"></i>'}).join('')+'</div><div class="a3-ax"><span>00</span><span>06</span><span>12</span><span>18</span><span>23</span></div></div>'+
  '<div class="a3-card"><h3>Levels</h3><p class="a3-sub">'+fmt(d.tested||0)+' took the level test</p><div class="a3-lv">'+L.map(function(k){return '<div><b>'+fmt(lv[k]||0)+'</b><i style="height:'+Math.max(4,Math.round((lv[k]||0)/lx*80))+'px"></i><small style="color:#6f7898">'+k+'</small></div>'}).join('')+'</div></div></div>'+
  '<div class="a3-2"><div class="a3-card"><h3>Countries</h3><p class="a3-sub">from the phone\'s time zone</p>'+(zl.map(function(z){return '<div class="a3-row"><span>'+z[0]+'</span><span>'+esc(z[1])+'<span class="a3-bar" style="display:block;margin-top:4px"><i style="width:'+Math.round(z[2]/zx*100)+'%"></i></span></span><span></span><b>'+fmt(z[2])+'</b></div>'}).join('')||'<div class="a3-none">No data yet</div>')+'</div>'+
- '<div class="a3-card"><h3>Learners</h3><p class="a3-sub">signed-up accounts</p><div class="a3-kp" style="grid-template-columns:1fr 1fr">'+kpi('Active today',fmt(a.active1),'')+kpi('Active 7 days',fmt(a.active7),'')+kpi('Words saved',fmt(a.words),'all learners')+kpi('Need a look',fmt(a.flagged),'odd numbers','g')+'</div></div></div>'}
+ '<div class="a3-card"><h3>Learners</h3><p class="a3-sub">signed-up accounts</p><div class="a3-kp" style="grid-template-columns:1fr 1fr">'+kpi('Active today',fmt(a.active1),'')+kpi('Active 7 days',fmt(a.active7),'')+kpi('Words saved',fmt(a.words),'all learners')+kpi('Need a look',fmt(a.flagged),'odd numbers','g')+'</div></div></div>'+more(d)}
+/* ---------- fuller statistics: time spent, sections, devices, languages (the server collects them from v15) ---------- */
+var LGN={uz:'Uzbek',ru:'Russian',en:'English',tr:'Turkish',kk:'Kazakh',ky:'Kyrgyz',tg:'Tajik',ar:'Arabic',fa:'Persian',de:'German',fr:'French',es:'Spanish',uk:'Ukrainian',az:'Azerbaijani',zh:'Chinese',ko:'Korean',ja:'Japanese',hi:'Hindi'};
+function ttl(k){k=String(k||'').replace(/-/g,' ').replace(/^ai /,'AI ');return k.charAt(0).toUpperCase()+k.slice(1)}
+function listCard(h,sub,rows,none){var mx=Math.max(1,rows.length?rows[0][1]:1);return '<div class="a3-card"><h3>'+h+'</h3><p class="a3-sub">'+sub+'</p>'+(rows.map(function(r){return '<div class="a3-row" style="grid-template-columns:130px 1fr 46px"><span>'+esc(r[0])+'</span><span class="a3-bar"><i style="width:'+Math.max(3,Math.round(r[1]/mx*100))+'%"></i></span><b>'+fmt(r[1])+'</b></div>'}).join('')||'<div class="a3-none">'+(none||'No data yet')+'</div>')+'</div>'}
+function more(d){
+ if(!(d.v>=15))return '<div class="a3-card a3-none" style="margin-top:12px"><b>More statistics are ready</b><p>Update the LunaRise server to the newest version to see time spent, most used sections, devices and languages.</p></div>';
+ var days=d.days||[],tdy=days[days.length-1]||[],w=days.slice(-7).filter(function(x){return x[5]>0}),avg7=w.length?Math.round(w.reduce(function(s,x){return s+x[4]},0)/w.length*10)/10:0;
+ var mm=Math.max(1,Math.max.apply(null,days.map(function(x){return x[4]||0})));
+ var bars=days.map(function(x){return '<i title="'+lab(x[0])+' · '+(x[4]||0)+' min" style="height:'+Math.round((x[4]||0)/mm*100)+'%"></i>'}).join('');
+ var feat=(d.feat||[]).map(function(f){return[ttl(f[0]),f[1]]});
+ var os=(d.os||[]).map(function(x,i){return[x[0],x[1],['#7c8cff','#ffb057','#53d6a6','#ff7a9c','#b69cff','#6fd3ff'][i%6]]});
+ var ty=(d.ty||[]).map(function(x){return[ttl(x[0]),x[1]]}),lg=(d.lang||[]).map(function(x){return[LGN[x[0]]||x[0].toUpperCase(),x[1]]});
+ var nw=days.slice(-7).reduce(function(s,x){return s+(x[3]||0)},0),pp=days.slice(-7).reduce(function(s,x){return s+x[1]},0);
+ return '<div class="a3-2"><div class="a3-card"><h3>Time spent</h3><p class="a3-sub">minutes per active person, last 14 days</p><div class="a3-kp" style="grid-template-columns:1fr 1fr">'+kpi('Today',tdy[5]?(tdy[4]||0)+' min':'–','per person')+kpi('7-day average',avg7?avg7+' min':'–','per person per day')+'</div><div class="a3-hr" style="margin-top:10px">'+bars+'</div><div class="a3-ax"><span>'+lab(days[0][0])+'</span><span>'+lab(days[6][0])+'</span><span>'+lab(days[13][0])+'</span></div></div>'+
+ listCard('Most used','sections opened, last 7 days',feat,'Appears as people use LunaRise')+'</div>'+
+ '<div class="a3-2"><div class="a3-card"><h3>Devices</h3><p class="a3-sub">operating system</p>'+(os.length?donut(os):'<div class="a3-none">No data yet</div>')+'</div>'+
+ '<div class="a3-card"><h3>Who comes</h3><p class="a3-sub">last 7 days</p><div class="a3-kp" style="grid-template-columns:1fr 1fr">'+kpi('New people',fmt(nw),pc(nw,pp||1)+'% of visits','v')+kpi('Returning',fmt(Math.max(0,pp-nw)),'came back','ok')+'</div>'+listCard('Screen','phone, tablet or computer',ty)+'</div></div>'+
+ '<div class="a3-2">'+listCard('Languages','phone language',lg)+'<div class="a3-card"><h3>How accurate is this?</h3><p class="a3-sub">what is counted</p><p style="color:#9aa3c7;font-size:13px;line-height:1.6">One person is one device, counted once a day. A visitor counts only after a real touch, click or scroll, so robots and link previews are left out. Your own devices are not counted. Numbers come from three places at once (daily list, hourly list, last seen), so one failed write cannot hide a visit.</p></div></div>'}
 /* ---------- people ---------- */
 function ppl(){if(!U)return '<div class="a3-sk"></div><div class="a3-sk"></div>';
  var q=fl.q.trim().toLowerCase(),now=Date.now(),F={all:function(){return 1},google:function(p){return p.g},pro:function(p){return p.pro},act:function(p){return now-p.t<7*864e5},flag:function(p){return p.fl&&p.fl.length},ban:function(p){return p.ban},tch:function(p){return p.tch}};
