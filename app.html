@@ -12131,7 +12131,7 @@ vec4 sky(vec3 p,vec3 sp){
  neb+=vec3(.75,.22,.3)*smoothstep(.62,.9,nc)*.35;
  vec3 mw=mix(vec3(.55,.5,.6),vec3(1.,.82,.55),smoothstep(.3,1.,n1))*dens*.7;
  mw*=1.-dust*.78;
- float fine=smoothstep(.72,1.,vn(sp*140.))*band*.45+smoothstep(.8,1.,vn(sp*260.))*.25;
+ float fine=0.;
  vec3 c=neb*(.3+.7*band+.25)+mw+vec3(fine)*vec3(.95,.92,1.);
  c+=vec3(.012,.016,.04);
  return vec4(c,1.);}
@@ -12235,17 +12235,28 @@ void main(){
  gl_FragColor=vec4(col,edge);}`;
 
 /* ---- sky ---- */
-const FS_SKY = `precision highp float;varying vec2 vUV;uniform sampler2D uSky;uniform mat3 uVRT;uniform vec2 uT;uniform float uBright;
+const FS_SKY = `precision highp float;varying vec2 vUV;uniform sampler2D uSky;uniform mat3 uVRT;uniform vec2 uT;uniform float uBright,uPx;
+${GLSL_NOISE}
+float sdots(vec3 w,float sc,float dens){
+ vec3 a=abs(w);vec2 f;float fid;
+ if(a.x>=a.y&&a.x>=a.z){f=w.yz/a.x;fid=w.x>0.?1.:2.;}else if(a.y>=a.z){f=w.xz/a.y;fid=w.y>0.?3.:4.;}else{f=w.xy/a.z;fid=w.z>0.?5.:6.;}
+ vec2 g=f*sc,ic=floor(g);vec3 hh=h33(vec3(ic,fid*13.1+sc));
+ if(hh.x>=dens)return 0.;
+ vec2 sp=ic+.25+.5*hh.yz;float d=length(g-sp);float pc=uPx*sc*(1.+dot(f,f));
+ float b=pow(h31(vec3(ic+7.3,fid+sc)),7.);float s=pc*(.5+.45*b);
+ return (.2+b*1.15)*exp(-d*d/(s*s));}
 void main(){vec3 d=normalize(vec3(vUV.x*uT.x,vUV.y*uT.y,-1.));vec3 w=uVRT*d;
  vec2 uv=vec2(atan(w.z,w.x)*.15915494+.5,asin(clamp(w.y,-1.,1.))*.3183099+.5);
- gl_FragColor=vec4(texture2D(uSky,uv).rgb*uBright,1.);}`;
+ vec3 tx=texture2D(uSky,uv).rgb;float m=clamp(dot(tx,vec3(.3333))*2.2,0.,1.);float k=.55+1.1*m;
+ float st=sdots(w,150.,.13*k)+sdots(w,330.,.09*k)*.85;
+ gl_FragColor=vec4((tx+vec3(.95,.92,1.)*st*.75)*uBright,1.);}`;
 
 /* ---- stars ---- */
 const VS_STAR = `attribute vec3 aDir;attribute vec4 aCol;uniform mat4 uVP;uniform float uTime,uPS;varying vec3 vC;
 void main(){vec4 c=uVP*vec4(aDir,1.);if(c.w<=0.){gl_Position=vec4(2.,2.,2.,1.);gl_PointSize=1.;vC=vec3(0.);return;}
  gl_Position=c;float tw=.72+.28*sin(uTime*(.8+aCol.a*2.4)+aDir.x*91.+aDir.y*47.+aDir.z*13.);
  gl_PointSize=(1.1+aCol.a*2.3)*uPS;vC=aCol.rgb*tw*(.45+aCol.a*.9);}`;
-const FS_STAR = `precision highp float;varying vec3 vC;void main(){float d=length(gl_PointCoord-.5)*2.;float a=smoothstep(1.,.1,d);a*=a;gl_FragColor=vec4(vC*a,1.);}`;
+const FS_STAR = `precision highp float;varying vec3 vC;void main(){float d=length(gl_PointCoord-.5)*2.;float a=smoothstep(1.,.1,d);a*=a;a=a*.72+smoothstep(.42,0.,d)*.46;gl_FragColor=vec4(vC*a,1.);}`;
 const VS_WARP = `attribute vec3 aDir;attribute vec2 aE;uniform mat4 uVP;uniform float uW,uAsp;varying float vA;
 void main(){vec4 c=uVP*vec4(aDir,1.);if(c.w<=0.){gl_Position=vec4(2.,2.,2.,1.);vA=0.;return;}
  vec2 n=c.xy/c.w;vec2 dr=normalize(n+1e-4);float L=aE.x*uW*(.25+length(n)*1.2);
@@ -12286,6 +12297,7 @@ function spaceGL() {
     const bgEl = document.getElementById('lr-bg'); if (!bgEl) return false;
     const coarse = matchMedia('(pointer:coarse)').matches, reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
     const isLite = () => document.body.classList.contains('lite') || document.documentElement.classList.contains('lite');
+    const weakDev = () => ((navigator.hardwareConcurrency || 8) <= 4 && coarse) || (navigator.deviceMemory || 8) <= 2;
     const cv = document.createElement('canvas'); cv.id = 'sp-canvas';
     cv.style.cssText = 'position:absolute;left:0;top:0;width:100%;height:100%;display:block;opacity:0;transition:opacity 1.8s ease';
     let gl = null;
@@ -12339,7 +12351,7 @@ function spaceGL() {
     const quadBuf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, quadBuf); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
     const drawQuad = () => { gl.bindBuffer(gl.ARRAY_BUFFER, quadBuf); attrs(1); gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0); gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4); };
     /* ---------- texture baking ---------- */
-    const lowEnd = () => isLite() || coarse;
+    const lowEnd = () => weakDev();
     const TEX = {}; let bakeQ = [], bakeDone = 0, bakeTotal = 0;
     const PAL = {
         moon: { t: 0, c1: [.8, .79, .77], c2: [.15, .15, .16], p: [.55, 1, 0, 0], big: 1 },
@@ -12363,7 +12375,7 @@ function spaceGL() {
     function bakeInit() {
         ORDER.forEach(n => {
             const d = PAL[n]; const big = d.big && !lowEnd();
-            const w = n === 'sky' ? (lowEnd() ? 512 : 1024) : big ? 1024 : 512, h = w / 2, strips = big ? 8 : 4;
+            const mx = Math.min(gl.getParameter(gl.MAX_TEXTURE_SIZE) || 2048, 4096), w = Math.min(mx, n === 'sky' ? (lowEnd() ? 1024 : 4096) : big ? (lowEnd() ? 1024 : 2048) : (lowEnd() ? 512 : 1024)), h = w / 2, strips = Math.max(4, Math.round(w * h / 49152));
             const tex = gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D, tex);
             gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, w, h, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
@@ -12384,7 +12396,7 @@ function spaceGL() {
         drawQuad(); gl.disable(gl.SCISSOR_TEST); gl.bindFramebuffer(gl.FRAMEBUFFER, null);
         if (j.last) {
             gl.bindTexture(gl.TEXTURE_2D, T.tex);
-            if (!d.nomip) { gl.generateMipmap(gl.TEXTURE_2D); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR); }
+            if (!d.nomip) { gl.generateMipmap(gl.TEXTURE_2D); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR); try { const ax = gl.getExtension('EXT_texture_filter_anisotropic'); if (ax) gl.texParameterf(gl.TEXTURE_2D, ax.TEXTURE_MAX_ANISOTROPY_EXT, Math.min(8, gl.getParameter(ax.MAX_TEXTURE_MAX_ANISOTROPY_EXT) || 1)); } catch (e) { } }
             T.ready = true;
         }
         bakeDone++; return true;
@@ -12695,7 +12707,7 @@ function spaceGL() {
         const VProt = m4mul(PM, new Float32Array([VR[0], VR[1], VR[2], 0, VR[3], VR[4], VR[5], 0, VR[6], VR[7], VR[8], 0, 0, 0, 0, 1]));
         /* sky */
         gl.disable(gl.BLEND); gl.useProgram(P.sky); gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, TEX.sky.tex); gl.uniform1i(P.sky.u('uSky'), 0);
-        UM3(P.sky, 'uVRT', m3T(VR)); U2(P.sky, 'uT', Math.tan(FOV / 2) * asp, Math.tan(FOV / 2)); U1(P.sky, 'uBright', .9 + .1 * Math.sin(gtime * .2)); drawQuad();
+        UM3(P.sky, 'uVRT', m3T(VR)); U2(P.sky, 'uT', Math.tan(FOV / 2) * asp, Math.tan(FOV / 2)); U1(P.sky, 'uBright', .9 + .1 * Math.sin(gtime * .2)); U1(P.sky, 'uPx', Math.tan(FOV / 2) * 2 / cv.height); drawQuad();
         drawStars(VProt);
         gl.enable(gl.BLEND); gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
         /* items */
@@ -12740,7 +12752,7 @@ function spaceGL() {
         drawComet(); drawMeteors(); drawFlare(sunV); flushQuads(gtime);
     }
     /* ---------- sizing ---------- */
-    function applyQ() { const dpr = window.devicePixelRatio || 1; DPR = (Q === 0 ? Math.min(dpr, isLite() ? 1.25 : 1.75) : Q === 1 ? Math.min(dpr, 1) : Math.min(dpr, .75)); IV = (Q >= 1 || coarse || isLite()) ? 33 : 16; }
+    function applyQ() { const dpr = window.devicePixelRatio || 1; DPR = (Q === 0 ? Math.min(dpr, weakDev() ? 1.25 : 2.5) : Q === 1 ? Math.min(dpr, weakDev() ? 1 : 1.5) : Math.min(dpr, 1.1)); IV = (Q >= 1 || coarse || isLite()) ? 33 : 16; }
     function resize() { applyQ(); W = Math.max(2, Math.round(innerWidth * DPR)); H = Math.max(2, Math.round(innerHeight * DPR)); cv.width = W; cv.height = H; asp = W / H; }
     let lastW = 0, lastH = 0, rt = 0; addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => { if (Math.abs(innerWidth - lastW) > 30 || Math.abs(innerHeight - lastH) > lastH * .2) { lastW = innerWidth; lastH = innerHeight; resize(); } }, 150); });
     addEventListener('pointermove', e => { if (e.pointerType === 'touch') return; ptx = (e.clientX / innerWidth - .5) * 2; pty = (e.clientY / innerHeight - .5) * 2; }, { passive: true });
@@ -12757,7 +12769,7 @@ function spaceGL() {
         if (document.hidden || window.__spPause) { prev = 0; return; }
         const v = document.body.dataset.view || ''; const pause = reduce || (/^(games|chess)$/.test(v) && mode !== 'hero') || document.body.classList.contains('fx-off');
         if (pause && drew) { prev = 0; return; } if (!pause) drew = false;
-        if (bakeQ.length) { const t0 = performance.now(); let n = 0; while (bakeQ.length && n < 2 && performance.now() - t0 < 10) { bakeStep(); n++; } }
+        if (bakeQ.length) { const t0 = performance.now(); let n = 0; const cap = started ? 2 : 10; while (bakeQ.length && n < cap && performance.now() - t0 < (started ? 10 : 14)) { bakeStep(); n++; } }
         if (!started) { if (ESSENTIAL.every(n => TEX[n].ready)) { started = true; cv.style.opacity = 1; } else return; }
         if (ts - prev < IV - 2) return; const dt = prev ? Math.min((ts - prev) / 1000, .1) : .033; const raw = prev ? ts - prev : IV; prev = ts;
         T += dt; gtime += dt; director(dt); updMeteors(dt); updShip(dt);
@@ -12766,7 +12778,7 @@ function spaceGL() {
     }
     /* ---------- init ---------- */
     try {
-        bakeInit(); buildStars(); buildBelt(); buildMeshes(); Q = lowEnd() ? 1 : 0; try { if ((navigator.hardwareConcurrency || 8) <= 4 && coarse) Q = 2; } catch (e) { }
+        bakeInit(); buildStars(); buildBelt(); buildMeshes(); Q = weakDev() ? 1 : 0; try { if ((navigator.hardwareConcurrency || 8) <= 4 && coarse) Q = 1; } catch (e) { }
         lastW = innerWidth; lastH = innerHeight; resize(); T = 8; director(0); requestAnimationFrame(frame);
     } catch (e) { console.warn('[space] init failed', e); try { host.removeChild(cv); } catch (x) { } window.__spErr = String(e && e.message || e); return false; }
     /* DOM hooks: registration -> hero shot, success -> warp */
@@ -56250,7 +56262,7 @@ CN.begin=function(p,src){if(p.__cn)return p.__cn;var box=p.querySelector('.mv-pb
  hudSync(C);emptyState(C,'listen');wireUI(C);
  var iv=setInterval(function(){if(!document.body.contains(p)){destroy(C);return}tick(C)},120);C.timers.push(iv);
  return C};
-function destroy(C){if(C.dead)return;C.dead=true;document.documentElement.classList.remove('cn-on');C.timers.forEach(clearInterval);if(C.wh)C.wh.stop();try{if(document.fullscreenElement)document.exitFullscreen()}catch(e){}document.removeEventListener('keydown',C.kd,true)}
+function destroy(C){if(C.dead)return;C.dead=true;document.documentElement.classList.remove('cn-on');C.timers.forEach(clearInterval);if(C.wh)C.wh.stop();if(C.stt)C.stt.dead=true;try{if(document.fullscreenElement)document.exitFullscreen()}catch(e){}document.removeEventListener('keydown',C.kd,true)}
 CN.ready=function(p,o){var C=p.__cn;if(!C)return;o=o||{};var v=p.querySelector('video'),f=p.querySelector('iframe');
  if(v){C.video=v;C.ad=adHTML2(v,function(n){onState(C,n)});v.controls=false;v.removeAttribute('controls');autoFit(C);v.addEventListener('loadedmetadata',function(){autoFit(C)});findCues(C)}
  else if(f&&C.src.k==='yt'){C.yt=true;adYT2(f,function(s){onState(C,s)}).then(function(a){if(!a){nativeMode(C);return}C.ad=a;findCues(C)})}
@@ -56260,14 +56272,30 @@ function onState(C,s){C.state.last=s;uiPlay(C)}
 function uiPlay(C){if(!C.ad)return;var pl=!C.ad.paused();C.pp.innerHTML=pl?ICON.pause:ICON.play;C.p.classList.toggle('cn-paused',!pl)}
 function autoFit(C){var v=C.video;if(!v||!v.videoWidth)return;var r=C.stage.getBoundingClientRect();if(!r.width)return;var va=v.videoWidth/v.videoHeight,sa=r.width/r.height,crop=1-Math.min(va,sa)/Math.max(va,sa);C.p.classList.toggle('cn-fill',crop<.13||C.fill===true)}
 function hudSync(C){var LV=['','All new words','Balanced','Hard words'],q=C.p.querySelector('[data-a=lvl]'),z=C.p.querySelector('[data-a=pz]');if(q)q.textContent=LV[SET.lvl];if(z){z.textContent=SET.pz===false?'Keep playing':'Pause on tap';z.classList.toggle('off',SET.pz===false)}var nn=jg(KC,[]).length;C.p.querySelector('.cn-cnt').textContent=nn+(nn===1?' word':' words')+' saved from films'}
-function emptyState(C,k){if(C.cues&&C.cues.length)return;var h={listen:'<div class="cn-wave"><i></i><i></i><i></i><i></i><i></i></div><b>Getting the dialogue ready…</b><span>Every word will be tappable.</span>',whisper:'<div class="cn-wave"><i></i><i></i><i></i><i></i><i></i></div><b>Listening to the film…</b><span>Lines appear here a few seconds after they are spoken. Tap any word.</span>',native:'<b>This player keeps its own controls.</b><span>Smart subtitles work with YouTube videos and film files. You can still load your own subtitle file.</span><button type="button" class="cn-b cn-pill" data-a="file">Load .srt / .vtt</button>',ytcc:'<b>Subtitles are on inside the video.</b><span>YouTube shows its own English subtitles when this video has them. Want tappable words? Load a subtitle file.</span><button type="button" class="cn-b cn-pill" data-a="file">Load .srt / .vtt</button>',none:'<div class="cn-wave off"><i></i><i></i><i></i><i></i><i></i></div><b>Dialogue appears while the film plays.</b><span>Have a subtitle file? Add it and every line shows up here.</span><button type="button" class="cn-b cn-pill" data-a="file">Load .srt / .vtt</button>'}[k]||'';C.list.innerHTML='<div class="cn-empty">'+h+'</div>';C.lines=[]}
+function emptyState(C,k){if(C.cues&&C.cues.length)return;var h={listen:'<div class="cn-wave"><i></i><i></i><i></i><i></i><i></i></div><b>Getting the dialogue ready…</b><span>Every word will be tappable.</span>',whisper:'<div class="cn-wave"><i></i><i></i><i></i><i></i><i></i></div><b>Listening to the film…</b><span>Lines appear here a few seconds after they are spoken. Tap any word.</span>',native:'<b>This player keeps its own controls.</b><span>Smart subtitles work with YouTube videos and film files. You can still load your own subtitle file.</span><button type="button" class="cn-b cn-pill" data-a="file">Load .srt / .vtt</button>',ytstt:'<div class="cn-wave"><i></i><i></i><i></i><i></i><i></i></div><b>Writing the dialogue for you…</b><span>Lines appear here as the film plays, every word tappable. YouTube\'s own subtitles are on in the meantime.</span>',ytcc:'<b>Subtitles are on inside the video.</b><span>YouTube shows its own English subtitles when this video has them. Want tappable words? Load a subtitle file.</span><button type="button" class="cn-b cn-pill" data-a="file">Load .srt / .vtt</button>',none:'<div class="cn-wave off"><i></i><i></i><i></i><i></i><i></i></div><b>Dialogue appears while the film plays.</b><span>Have a subtitle file? Add it and every line shows up here.</span><button type="button" class="cn-b cn-pill" data-a="file">Load .srt / .vtt</button>'}[k]||'';C.list.innerHTML='<div class="cn-empty">'+h+'</div>';C.lines=[]}
 function findCues(C){var src=C.src,pre=src.cues;if(pre&&pre.length){setCues(C,pre);return}
  var job=src.k==='yt'?subsYT(src.id):src.k==='ia'?subsIA(src.id).catch(function(){return null}):Promise.resolve(null);
  job.then(function(c){if(C.dead)return;if(c&&c.length){setCues(C,c);return}noCaps(C)}).catch(function(){noCaps(C)})}
+/* ---- YouTube films without readable subtitles: the LunaRise server listens to the film's sound and writes the dialogue ---- */
+function sttStart(C){var id=C.src&&C.src.id;if(!id||C.stt||typeof window.LRCALL!=='function')return false;
+ var S={dead:false,got:{},busy:{},n:0,fail:0,ok:0,next:0,dur:0,live:false};C.stt=S;
+ var dev='';try{dev=typeof promoDevice==='function'?promoDevice():''}catch(e){}
+ function giveUp(why){if(S.dead)return;S.dead=true;clearInterval(S.tm);if(!C.dead&&!C.cues.length)emptyState(C,'ytcc')}
+ function cover(k){var on=S.got[k]!==undefined&&(C.cues.length>0);if(C.ccUser)return;if(on&&C.ccOn)ytCC(C,false);else if(!on&&!C.ccOn&&C.yt)ytCC(C,true)}
+ function get(k){S.busy[k]=1;S.n++;
+  window.LRCALL({op:'yt_stt',v:id,k:k,device:dev},75000).then(function(j){S.n--;delete S.busy[k];if(S.dead||C.dead)return;
+   if(j&&j.ok){S.got[k]=1;S.ok++;S.fail=0;if(j.dur)S.dur=j.dur;var add=(j.cues||[]).map(function(x){return{s:+x[0],e:+x[1],t:String(x[2]),live:1}}).filter(function(x){return x.t&&x.e>x.s});if(add.length){S.live=true;addLive(C,add)}}
+   else{S.fail++;S.next=Date.now()+4000}}).catch(function(e){S.n--;delete S.busy[k];var m=String(e&&e.message||e);if(/limit/.test(m)){giveUp('limit');return}if(/busy/.test(m)){S.next=Date.now()+3000;return}S.fail++;S.next=Date.now()+(S.fail<3?4000:9000);if(S.fail>=4&&!S.ok)giveUp('fail')})}
+ function loop(){if(S.dead||C.dead){clearInterval(S.tm);return}if(!C.ad)return;var t=0;try{t=C.ad.t()||0}catch(e){}var k0=Math.floor(t/60);
+  if(S.dur&&k0*60>S.dur+30)return;if(Date.now()<S.next)return;
+  var want=[k0];if(S.got[k0]!==undefined)want.push(k0+1);if(S.got[k0]!==undefined&&S.got[k0+1]!==undefined)want.push(k0+2);
+  for(var i=0;i<want.length&&S.n<2;i++){var k=want[i];if(S.dur&&k*60>S.dur)continue;if(S.got[k]===undefined&&!S.busy[k]){get(k)}}
+  cover(k0)}
+ S.tm=setInterval(loop,1500);C.timers.push(S.tm);setTimeout(loop,300);return true}
 /* YouTube's own captions: shown inside the video whenever the video has any */
 function ytCC(C,on){var pl=C.ad&&C.ad.raw;if(!pl)return;try{if(on){pl.loadModule('captions');pl.setOption('captions','track',{languageCode:'en'})}else pl.unloadModule('captions')}catch(e){}C.ccOn=!!on;C.p.classList.toggle('cn-cc',!!on);var b=C.p.querySelector('[data-a=cc]');if(b)b.classList.toggle('on',!!on)}
 function noCaps(C){if(C.cues.length)return;var v=C.video;
- if(C.yt){ytCC(C,true);emptyState(C,'ytcc');if(!C.retried){C.retried=1;C.timers.push(setTimeout(function(){if(!C.dead&&!C.cues.length)findCues(C)},25000))}return}
+ if(C.yt){ytCC(C,true);emptyState(C,sttStart(C)?'ytstt':'ytcc');if(!C.retried){C.retried=1;C.timers.push(setTimeout(function(){if(!C.dead&&!C.cues.length&&!(C.stt&&C.stt.live))findCues(C)},25000))}return}
  if(v&&!C.noCors){var w=whisperStart(v,function(add){addLive(C,add)},function(){return SET.auto!==false&&!C.dead});if(w){C.wh=w;emptyState(C,'whisper');C.timers.push(setTimeout(function(){if(!C.dead&&!C.cues.length)emptyState(C,'none')},70000));return}}
  emptyState(C,'none')}
 function setCues(C,c){if(C.yt)ytCC(C,false);C.cues=c.slice().sort(function(a,b){return a.s-b.s});C.cur=-1;buildList(C);C.p.classList.add('cn-has')}
@@ -56301,7 +56329,7 @@ function wireUI(C){var p=C.p,ad=function(){return C.ad};
   else if(a==='rate'){var rs=[.75,1,1.25,1.5],cur=ad()?ad().rate():1,i=rs.indexOf(cur);var nx=rs[(i+1)%rs.length];if(ad())ad().rate(nx);b.textContent=(nx===1?'1':nx)+'×'}
   else if(a==='lvl'){SET.lvl=SET.lvl%3+1;js(KS,SET);hudSync(C);buildList(C,true)}
   else if(a==='pz'){SET.pz=SET.pz===false;js(KS,SET);hudSync(C)}
-  else if(a==='cc'){if(C.yt)ytCC(C,!C.ccOn)}
+  else if(a==='cc'){if(C.yt){C.ccUser=1;ytCC(C,!C.ccOn)}}
   else if(a==='file'){C.file.click()}
   else if(a==='deck'){if(ad())ad().pause();window.LCS.deck()}
   else if(a==='go'){var li=b.closest('.cn-l');if(li&&ad()){var c=C.cues[+li.dataset.i];ad().seek(Math.max(0,c.s-.1));ad().play();C.userScroll=0}}
@@ -56925,6 +56953,79 @@ textarea#dl-t{font-size:18px}
 
 .dl-host{padding-bottom:20px}
 .dl2-ch{max-width:540px;margin:0 auto}.dl2-ch .dl2-rl{font-size:7.5px}
+/* ===== Daily Luna v140: moonlit identity ===== */
+.dl3,#lab-ov.lab-daily,#lab-ov.lab-daily-skills,#lab-ov.lab-daily-set{--mn:#f4efdc;--mn2:#cfc9ee;--gd:#f5c26b;--ink:#0a0d22;--ok:#5eead4;--sf:rgba(255,255,255,.055);--sl:rgba(190,196,255,.16)}
+.dl3-mo{display:block;filter:drop-shadow(0 0 10px rgba(244,239,220,.35))}.dl3-mo .mo-d{fill:#1a1f45}.dl3-mo .mo-l{fill:var(--mn)}.dl3-mo .mo-r{fill:none;stroke:rgba(244,239,220,.28);stroke-width:.8}
+/* backdrop for every Daily screen */
+#lab-ov.lab-daily .lab-bg,#lab-ov.lab-daily-skills .lab-bg,#lab-ov.lab-daily-set .lab-bg{background:radial-gradient(520px 420px at 88% -6%,rgba(244,239,220,.17),transparent 62%),radial-gradient(900px 520px at 0% 108%,rgba(94,80,200,.34),transparent 62%),linear-gradient(180deg,#070a1c 0%,#0c1030 55%,#120f33 100%);overflow:hidden}
+#lab-ov.lab-daily .lab-bg::before,#lab-ov.lab-daily-skills .lab-bg::before,#lab-ov.lab-daily-set .lab-bg::before{content:"";position:absolute;inset:0;background-image:radial-gradient(1.4px 1.4px at 12% 22%,#fff 50%,transparent 51%),radial-gradient(1px 1px at 28% 64%,#cfd6ff 50%,transparent 51%),radial-gradient(1.6px 1.6px at 46% 12%,#fff 50%,transparent 51%),radial-gradient(1px 1px at 63% 48%,#dfe3ff 50%,transparent 51%),radial-gradient(1.3px 1.3px at 78% 78%,#fff 50%,transparent 51%),radial-gradient(1px 1px at 90% 34%,#cfd6ff 50%,transparent 51%),radial-gradient(1px 1px at 6% 86%,#fff 50%,transparent 51%),radial-gradient(1.2px 1.2px at 54% 90%,#dfe3ff 50%,transparent 51%),radial-gradient(1px 1px at 36% 38%,#fff 50%,transparent 51%);background-size:620px 520px;opacity:.7;animation:dl3tw 7s ease-in-out infinite alternate}
+#lab-ov.lab-daily .lab-bg::after,#lab-ov.lab-daily-skills .lab-bg::after{content:"";position:absolute;right:-90px;top:-90px;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle at 36% 34%,rgba(255,255,255,.1),rgba(244,239,220,.05) 55%,transparent 70%);filter:blur(2px)}
+@keyframes dl3tw{from{opacity:.45}to{opacity:.85}}
+@media(prefers-reduced-motion:reduce){#lab-ov .lab-bg::before,.dl3-moon,.dl-orb{animation:none!important}}
+/* home card */
+.dl.dl3{border-radius:32px;padding:24px;overflow:hidden;background:radial-gradient(420px 300px at 100% -8%,rgba(244,239,220,.15),transparent 68%),radial-gradient(520px 300px at -6% 108%,rgba(110,92,230,.34),transparent 70%),linear-gradient(165deg,#10153a 0%,#0b0e27 70%);border:1px solid var(--sl);box-shadow:inset 0 1px 0 rgba(255,255,255,.09),0 34px 70px -38px rgba(0,0,0,.95)}
+.dl3-sky{position:absolute;inset:0;pointer-events:none;background-image:radial-gradient(1.3px 1.3px at 8% 18%,#fff 50%,transparent 51%),radial-gradient(1px 1px at 22% 70%,#cfd6ff 50%,transparent 51%),radial-gradient(1.4px 1.4px at 41% 9%,#fff 50%,transparent 51%),radial-gradient(1px 1px at 58% 52%,#dfe3ff 50%,transparent 51%),radial-gradient(1.2px 1.2px at 74% 86%,#fff 50%,transparent 51%),radial-gradient(1px 1px at 93% 40%,#cfd6ff 50%,transparent 51%);background-size:520px 360px;opacity:.55}
+.dl3>*:not(.dl3-sky){position:relative}
+.dl3-hd{align-items:center;gap:18px}.dl3-moon{flex:none;width:92px;height:92px;display:grid;place-items:center;border-radius:50%;box-shadow:0 0 0 8px rgba(244,239,220,.05),0 0 60px rgba(244,239,220,.22);animation:dl3br 6s ease-in-out infinite}
+@keyframes dl3br{50%{box-shadow:0 0 0 12px rgba(244,239,220,.04),0 0 80px rgba(244,239,220,.3)}}
+.dl3 .dl-kick{color:var(--gd);letter-spacing:.04em;font-weight:700}
+.dl3 .dl-hx h2{font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;font-weight:600;font-size:clamp(23px,3.6vw,31px);line-height:1.12;color:var(--mn);letter-spacing:-.005em}
+.dl3 .dl-hello{color:var(--mn2);font-size:15.5px}
+.dl3-kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:16px 0 4px}
+.dl3-kpi>div{background:var(--sf);border:1px solid var(--sl);border-radius:20px;padding:12px 8px;text-align:center;min-width:0;position:relative}
+.dl3-kpi b{display:block;font:700 24px/1.1 "Iowan Old Style",Georgia,serif;color:var(--mn)}.dl3-kpi b em{font:600 13px Inter,system-ui,sans-serif;font-style:normal;color:#9aa3c9;margin-left:2px}
+.dl3-kpi small{display:block;margin-top:4px;font-size:12px;color:#9aa3c9}.dl3-kpi u{text-decoration:none;color:var(--gd);font-weight:700}
+.dl3-kpi .k1 b{color:var(--gd)}
+.dl3-kpi .g svg{position:absolute;right:8px;top:8px;width:20px;height:20px;transform:none}.dl3-kpi .g0{fill:none;stroke:rgba(255,255,255,.14);stroke-width:5}.dl3-kpi .g1{fill:none;stroke:var(--ok);stroke-width:5;stroke-linecap:round}
+.dl3-modes{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:14px 0 4px}
+.dl3-mode{font:inherit;color:var(--mn);text-align:left;background:var(--sf);border:1px solid var(--sl);border-radius:18px;padding:11px 12px 12px;cursor:pointer;min-height:84px;display:flex;flex-direction:column;gap:2px;min-width:0;transition:transform .15s,border-color .15s,background .15s}
+.dl3-mode i{font-style:normal;font-size:18px}.dl3-mode b{font-size:14px}.dl3-mode small{font-size:11.5px;line-height:1.3;color:#9aa3c9}
+.dl3-mode:active{transform:scale(.98)}.dl3-mode.on{border-color:var(--gd);background:linear-gradient(180deg,rgba(245,194,107,.2),rgba(245,194,107,.06));box-shadow:0 0 0 1px rgba(245,194,107,.35) inset}.dl3-mode.sg:not(.on){border-style:dashed;border-color:rgba(245,194,107,.6)}
+.dl3-sug{margin:8px 2px 0;font-size:13.5px;color:var(--gd)}
+.dl3 .dl-start{border-radius:20px;min-height:58px;font-size:17px;font-weight:700;color:#201505;background:linear-gradient(180deg,#ffe2a6,#f5c26b);border:0;box-shadow:0 16px 36px -14px rgba(245,194,107,.75),inset 0 1px 0 rgba(255,255,255,.55)}
+.dl3-wk{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin:16px 0 2px}
+.dl3-d{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 0 6px;border-radius:16px;border:1px solid transparent}.dl3-d small{font-size:11.5px;color:#9aa3c9;font-weight:600}
+.dl3-d.td{border-color:var(--sl);background:var(--sf)}.dl3-d.td small{color:var(--gd)}.dl3-d:not(.on):not(.sv) .dl3-mo{opacity:.55;filter:none}.dl3-d.sv .dl3-mo{filter:drop-shadow(0 0 8px rgba(245,194,107,.5))}
+.dl3 .dl-skl{margin-top:14px}.dl3 .dl-sm{border-radius:18px;background:var(--sf);border:1px solid var(--sl)}.dl3 .dl-sm i{height:3px;opacity:.95}
+.dl3 .dl-lk{color:var(--mn2)}.dl3 .dl-lk.fx{color:#201505;background:linear-gradient(180deg,#ffe2a6,#f5c26b);font-weight:700}.dl3 .dl-lk.fx b{background:rgba(32,21,5,.18);border-radius:99px;padding:1px 8px;margin-left:4px}
+@media(max-width:720px){.dl3-modes{grid-template-columns:repeat(2,1fr)}.dl3-kpi{grid-template-columns:repeat(2,1fr)}.dl.dl3{padding:18px}.dl3-moon{width:72px;height:72px}.dl3-moon .dl3-mo{width:72px;height:72px}}
+/* session screens */
+.lab-daily .dl-top{gap:12px}.dl3-mn{flex:none;display:grid}
+.dl-prog.dl3-seg{display:flex;gap:5px;height:auto;background:none;overflow:visible}.dl3-seg i{flex:1;height:7px;border-radius:6px;background:rgba(255,255,255,.12);transition:background .3s,box-shadow .3s;width:auto}
+.dl3-seg i.d{background:linear-gradient(90deg,#f4efdc,#f5c26b);box-shadow:0 0 10px rgba(245,194,107,.45)}.dl3-seg i.c{background:rgba(244,239,220,.5);animation:dl3cur 1.6s ease-in-out infinite}@keyframes dl3cur{50%{background:rgba(244,239,220,.9)}}
+.lab-daily .dl-xp{color:var(--gd);font-family:"Iowan Old Style",Georgia,serif}.lab-daily .dl-tm{color:#9aa3c9;font-variant-numeric:tabular-nums;font-size:13px}
+.lab-daily .dl-k{color:var(--gd);text-transform:none;letter-spacing:.03em}.lab-daily .dl-ins{font-family:"Iowan Old Style","Palatino Linotype",Georgia,serif;font-weight:600;color:var(--mn)}
+.lab-daily .dl-sent{background:var(--sf);border:1px solid var(--sl);border-radius:22px;font-family:"Iowan Old Style",Georgia,serif}
+.lab-daily .dl-o,.lab-daily .lab-opt.dl-o{background:var(--sf);border:1px solid var(--sl);border-radius:18px;color:var(--mn);transition:transform .12s,border-color .15s,background .15s}.lab-daily .dl-o:active{transform:scale(.99)}
+.lab-daily .dl-o.sel{border-color:var(--gd);background:rgba(245,194,107,.16)}
+.lab-daily .lab-card{background:var(--sf);border:1px solid var(--sl);border-radius:24px}
+.lab-daily .lab-go:not(.ghost):not(.sm){background:linear-gradient(180deg,#ffe2a6,#f5c26b);color:#201505;font-weight:700;border:0;box-shadow:0 12px 28px -14px rgba(245,194,107,.8)}
+.lab-daily .dl-foot{background:linear-gradient(180deg,transparent,rgba(7,10,28,.96) 34%)}
+.lab-daily .dl-foot.fb{margin:0 max(10px,calc((100% - 880px)/2));border-radius:26px 26px 0 0;border:1px solid var(--sl);border-bottom:0;-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+.lab-daily .dl-foot.fb.ok{background:linear-gradient(180deg,rgba(18,64,58,.96),rgba(10,38,36,.98));border-top-color:var(--ok)}.lab-daily .dl-foot.fb.no{background:linear-gradient(180deg,rgba(72,24,40,.96),rgba(42,14,26,.98));border-top-color:#fb7185}.lab-daily .dl-foot.fb.mid{background:linear-gradient(180deg,rgba(74,56,18,.96),rgba(44,34,12,.98));border-top-color:var(--gd)}
+.lab-daily .dl-fbx b{font-family:"Iowan Old Style",Georgia,serif;font-size:21px}.lab-daily .dl-fbx b i{color:var(--gd)}
+/* results */
+.lab-daily .dl-res{text-align:center}.dl3-resmoon{display:grid;place-items:center;margin:2px auto 6px;width:96px;height:96px;border-radius:50%;box-shadow:0 0 70px rgba(244,239,220,.28)}
+.lab-daily .dl-res h2{font-family:"Iowan Old Style","Palatino Linotype",Georgia,serif;font-weight:600;color:var(--mn);font-size:clamp(26px,4vw,34px)}
+.lab-daily .dl-res .lber-ring.big{margin-left:auto;margin-right:auto}
+.lab-daily .dl-stats>div{background:var(--sf);border:1px solid var(--sl);border-radius:20px}.lab-daily .dl-stats b{font-family:"Iowan Old Style",Georgia,serif;color:var(--gd)}
+.dl3-evs{display:grid;gap:10px;margin:14px auto;max-width:560px;text-align:left}
+.dl3-ev{display:flex;gap:12px;align-items:center;padding:13px 16px;border-radius:20px;background:var(--sf);border:1px solid var(--sl)}.dl3-ev b{display:block;font-size:15px;color:var(--mn)}.dl3-ev small{display:block;color:#a7afd6;font-size:13px;margin-top:2px}
+.dl3-ev.sh{border-color:rgba(245,194,107,.5);background:rgba(245,194,107,.1)}.dl3-ev.bd i{flex:none}
+.dl3-up{padding:18px;border-radius:24px;text-align:center;background:linear-gradient(135deg,rgba(245,194,107,.28),rgba(124,140,255,.22));border:1px solid rgba(245,194,107,.55);box-shadow:0 0 50px -10px rgba(245,194,107,.5)}.dl3-up span{font-size:12.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--gd)}.dl3-up b{display:block;font:700 34px/1.2 "Iowan Old Style",Georgia,serif;color:var(--mn);margin:4px 0}.dl3-up small{color:#cfd6ff}
+.dl3-fixrow{display:block;width:100%;text-align:left;font:inherit;color:var(--mn);cursor:pointer;padding:13px 16px;border-radius:20px;background:linear-gradient(180deg,rgba(245,194,107,.2),rgba(245,194,107,.07));border:1px solid rgba(245,194,107,.5)}.dl3-fixrow b{display:block}.dl3-fixrow small{color:#c9cdea}
+/* progress screen */
+.dl3-bg{display:grid;grid-template-columns:repeat(auto-fill,minmax(132px,1fr));gap:10px}.dl3-b{display:flex;flex-direction:column;align-items:center;text-align:center;gap:3px;padding:12px 8px;border-radius:18px;background:rgba(255,255,255,.03);border:1px dashed var(--sl);opacity:.62}
+.dl3-b.on{opacity:1;border-style:solid;border-color:rgba(245,194,107,.5);background:rgba(245,194,107,.08)}.dl3-b b{font-size:13.5px;color:var(--mn)}.dl3-b small{font-size:11.5px;color:#9aa3c9;line-height:1.3}.dl3-b i{display:grid}
+.dl3-bd h4 small,.dl3-cal h4 small{font-weight:500;color:#9aa3c9;margin-left:8px}
+.dl3-wd,.dl3-cg{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;max-width:420px}.dl3-wd span{text-align:center;font-size:11.5px;color:#9aa3c9}
+.dl3-cg span{display:grid;place-items:center;height:34px;border-radius:12px;background:rgba(255,255,255,.03)}.dl3-cg span.td{outline:1px solid var(--gd)}.dl3-cg span.e{background:none}.dl3-cg span i{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.18)}
+.dl3-rg{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:6px 0 12px}.dl3-rg>div{text-align:center;padding:10px 4px;border-radius:16px;background:rgba(255,255,255,.04)}.dl3-rg b{display:block;font:700 22px "Iowan Old Style",Georgia,serif;color:var(--mn)}.dl3-rg b em{font:600 12px Inter,system-ui,sans-serif;font-style:normal;color:#9aa3c9}.dl3-rg small{color:#9aa3c9;font-size:12px}
+@media(max-width:560px){.dl3-rg{grid-template-columns:repeat(2,1fr)}}
+
+.dl3-mo .mo-c circle{fill:rgba(90,84,130,.22)}
+.dl3-wd,.dl3-cg{max-width:520px;margin-left:auto;margin-right:auto}.dl3-cg span{height:38px}
+@media(max-width:720px){.dl3-mode:last-child{grid-column:1/-1;min-height:0}}
 </style><script id="lr-dl">/* ================= Daily Luna: an adaptive daily English trainer ================= */
 (function(){'use strict';
 var D=document,L=window.LAB,esc=L.esc,$=function(s,r){return (r||D).querySelector(s)};
@@ -57073,8 +57174,8 @@ async function make(type,ses,d,st){var r=rngf(hash(L.today()+type+(ses.n||0)+Mat
  if(x){x.type=type;x.tier=t}return x}
 /* ---------- session planning ---------- */
 function minutes(d){return (d.pref&&d.pref.min)||15}
-function stepsFor(d){return minutes(d)<=10?6:minutes(d)>=30?10:8}
-function planSteps(d){var r=rngf(hash(L.today()+(U().name||'')+d.tot)),n=stepsFor(d),sty=STYLE[(d.pref&&d.pref.style)||'mixed']||{},ai=aiOn(),can=SR||false,w={},types=Object.keys(T).filter(function(k){return (!T[k].ai||ai||k==='write')&&k.indexOf('cam')!==0});
+function stepsFor(d){var m=modeOf(d);if(m==='sprint')return 4;if(m==='deep')return 12;return baseSteps(d)}
+function planSteps(d){var r=rngf(hash(L.today()+(U().name||'')+d.tot)),n=stepsFor(d),sty=STYLE[modeStyle(d)]||{},ai=aiOn(),can=SR||false,w={},types=Object.keys(T).filter(function(k){return (!T[k].ai||ai||k==='write')&&k.indexOf('cam')!==0});
  var last=(d.lastTypes||[]);
  types.forEach(function(k){var need=0;T[k].sk.forEach(function(s){need+=(100-d.sk[s])/100});need/=T[k].sk.length;var x=.35+need;x*=(sty[k]||1);if(last.indexOf(k)>=0)x*=.6;if(k==='say'&&!can)x*=.5;if(k==='think'&&!ai)x=0;w[k]=x});
  var out=[],cnt={};
@@ -57192,13 +57293,79 @@ function prefs(cb){L.open('daily-set','Your daily plan','Two quick questions so 
  paint()})}
 /* ---------- my skills ---------- */
 function spark(vals){if(vals.length<2)return '';var mn=Math.min.apply(null,vals)-1,mx=Math.max.apply(null,vals)+1,w=240,h=54,pts=vals.map(function(v,i){return (i/(vals.length-1)*w).toFixed(1)+','+(h-(v-mn)/(mx-mn)*h).toFixed(1)}).join(' ');return '<svg viewBox="0 0 '+w+' '+h+'" class="dl-sp"><polyline points="'+pts+'" fill="none" stroke="#22d3ee" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'}
+/* ===================== v140: Lunar redesign + new functions ===================== */
+function dayAdd(k,n){var p=String(k).split('-');return new Date(Date.UTC(+p[0],+p[1]-1,+p[2]+n)).toISOString().slice(0,10)}
+function moon(p,sz){p=Math.max(0,Math.min(1,p||0));var r=20,k=Math.cos(p*2*Math.PI),rx=Math.abs(k)*r,dd='';
+ if(p>.004&&p<.996){if(p<.5)dd='M20 0A20 20 0 0 1 20 40A'+rx.toFixed(2)+' 20 0 0 '+(k>0?0:1)+' 20 0Z';else dd='M20 0A20 20 0 0 0 20 40A'+rx.toFixed(2)+' 20 0 0 '+(k>0?1:0)+' 20 0Z'}
+ return '<svg class="dl3-mo" viewBox="0 0 40 40" width="'+sz+'" height="'+sz+'" aria-hidden="true"><circle cx="20" cy="20" r="19.5" class="mo-d"/>'+(dd?'<path d="'+dd+'" class="mo-l"/>':'')+(sz>=48?'<g class="mo-c"><circle cx="14" cy="13" r="3.2"/><circle cx="25" cy="23" r="4.4"/><circle cx="13" cy="27" r="2.3"/><circle cx="27" cy="11" r="1.8"/></g>':'')+'<circle cx="20" cy="20" r="19.5" class="mo-r"/></svg>'}
+STYLE.listen={listen:2,dictate:1.6,gap:1.1,read:1.2};
+var MODES={sprint:{lbl:'Sprint',ic:'⚡',n:4,sub:'4 exercises · about 5 min'},std:{lbl:'Standard',ic:'🌙',sub:''},deep:{lbl:'Deep focus',ic:'🔭',n:12,sub:'12 exercises · about 25 min'},speak:{lbl:'Speaking',ic:'🎙',sub:'Talk and write more'},listen:{lbl:'Listening',ic:'🎧',sub:'Hear more, type more'}};
+function modeOf(d){return d.mode&&d.mode.day===L.today()&&MODES[d.mode.k]?d.mode.k:'std'}
+function modeStyle(d){var m=modeOf(d);return m==='speak'?'speak':m==='listen'?'listen':((d.pref&&d.pref.style)||'mixed')}
+function baseSteps(d){return minutes(d)<=10?6:minutes(d)>=30?10:8}
+function liveStreak(d){var t=L.today();if(!d.streak)return 0;if(d.last===t||d.last===yday())return d.streak;if(d.last===dayAdd(t,-2)&&(d.shield||0)>0)return d.streak;return 0}
+function atRisk(d){var t=L.today();return d.streak>0&&d.last!==t&&d.last===yday()}
+function streakNext(d,t){if(d.last===yday())return d.streak+1;if(d.last===t)return d.streak;
+ if(d.last&&d.last===dayAdd(t,-2)&&(d.shield||0)>0&&d.streak>0){d.shield--;d.saved=d.saved||{};d.saved[yday()]=1;d.shieldUsed=t;return d.streak+1}return 1}
+function earnShield(d,ses){if(d.streak>0&&d.streak%7===0&&d.shieldAt!==d.streak){d.shield=Math.min(2,(d.shield||0)+1);d.shieldAt=d.streak;ses.shieldGot=1}}
+function suggestMode(d){if(atRisk(d))return['sprint','Your streak is on the line. A quick Sprint keeps it alive.'];
+ var ks=dayKeys(4),h=ks.filter(function(k){return d.hist[k]&&d.hist[k].done}).length;if(h>=3)return['deep','You have been consistent. Ready for a Deep focus session?'];
+ var wk=SKILLS.slice().sort(function(a,b){return d.sk[a]-d.sk[b]})[0];if(wk==='speaking'||wk==='pronunciation')return['speak','Speaking is your weakest skill right now.'];if(wk==='listening')return['listen','Listening is your weakest skill right now.'];return null}
+function minOf(d,k){return Math.floor((((d.time||{})[k])||0)/60)}
+/* --- badges --- */
+var BADGES=[
+ ['first','First light','Finish your first session',function(d){return d.tot>=1}],
+ ['s3','Three nights','3-day streak',function(d){return d.streak>=3}],
+ ['s7','Week of moons','7-day streak',function(d){return d.streak>=7}],
+ ['s30','Full cycle','30-day streak',function(d){return d.streak>=30}],
+ ['perfect','Flawless','Score 100% in a session',function(d,x){return x&&x.pct>=100}],
+ ['xp500','Moonbeam','Earn 500 XP',function(d){return d.xp>=500}],
+ ['xp2500','Starlight','Earn 2,500 XP',function(d){return d.xp>=2500}],
+ ['deep','Deep diver','Finish a Deep focus session',function(d,x){return x&&x.mode==='deep'}],
+ ['owl','Night owl','Finish a session after 9 pm',function(d,x){return x&&new Date().getHours()>=21}],
+ ['lark','Early bird','Finish a session before 8 am',function(d,x){return x&&new Date().getHours()<8}],
+ ['b1','Reached B1','Overall level B1',function(d){return overall(d)>=36}],
+ ['b2','Reached B2','Overall level B2',function(d){return overall(d)>=54}],
+ ['c1','Reached C1','Overall level C1',function(d){return overall(d)>=72}]];
+function awardBadges(d,x){d.badges=d.badges||{};var got=[];BADGES.forEach(function(b){if(!d.badges[b[0]]){var ok=false;try{ok=b[3](d,x)}catch(e){}if(ok){d.badges[b[0]]=L.today();got.push(b)}}});return got}
+function badgeHTML(d){var h=d.badges||{},n=Object.keys(h).length;
+ return '<section class="lab-card dl3-bd"><h4>Badges <small>'+n+' of '+BADGES.length+'</small></h4><div class="dl3-bg">'+BADGES.map(function(b){var on=!!h[b[0]];return '<div class="dl3-b'+(on?' on':'')+'" title="'+esc(b[2])+'"><i>'+moon(on?.5:.08,34)+'</i><b>'+esc(b[1])+'</b><small>'+esc(on?'Earned':b[2])+'</small></div>'}).join('')+'</div></section>'}
+/* --- calendar + weekly report --- */
+function calHTML(d){var ks=dayKeys(35),first=new Date(ks[0]+'T00:00:00Z').getUTCDay(),off=(first+6)%7,cells='';for(var i=0;i<off;i++)cells+='<span class="e"></span>';
+ ks.forEach(function(k){var h=d.hist[k],dn=h&&h.done,sv=d.saved&&d.saved[k],ph=dn?Math.max(.2,Math.min(.5,(h.avg||60)/100*.5)):sv?.18:0,cl=(dn?'on':sv?'sv':'')+(k===L.today()?' td':'');
+  cells+='<span class="'+cl+'" title="'+k+(dn?' · '+h.avg+'%':sv?' · saved by shield':'')+'">'+(ph?moon(ph,22):'<i></i>')+'</span>'});
+ var done=ks.filter(function(k){return d.hist[k]&&d.hist[k].done}).length;
+ return '<section class="lab-card dl3-cal"><h4>Last 5 weeks <small>'+done+' sessions</small></h4><div class="dl3-wd"><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span></div><div class="dl3-cg">'+cells+'</div></section>'}
+function weekStats(d){var ks=dayKeys(7),s=0,xp=0,av=0,sec=0;ks.forEach(function(k){var h=d.hist[k];if(h&&h.done){s++;xp+=h.xp||0;av+=h.avg||0}sec+=((d.time||{})[k])||0});return{s:s,xp:xp,avg:s?Math.round(av/s):0,sec:sec,mins:Math.round(sec/60)}}
+function reportText(d){var w=weekStats(d);return 'My LunaRise week\n• Sessions: '+w.s+' of 7\n• Time learning: '+w.mins+' min\n• XP earned: '+w.xp+'\n• Average score: '+(w.s?w.avg+'%':'–')+'\n• Streak: '+liveStreak(d)+' days\n• Level: '+cefr(overall(d))+'\nlunarise-app.github.io'}
+function reportHTML(d){var w=weekStats(d);return '<section class="lab-card dl3-rp"><h4>This week</h4><div class="dl3-rg"><div><b>'+w.s+'<em>/7</em></b><small>sessions</small></div><div><b>'+w.mins+'<em>min</em></b><small>learning</small></div><div><b>'+w.xp+'</b><small>XP</small></div><div><b>'+(w.s?w.avg+'<em>%</em>':'–')+'</b><small>avg score</small></div></div><button type="button" class="lab-go ghost sm" id="dl3-cp">Copy my weekly report</button></section>'}
+function bindReport(b,d){var x=$('#dl3-cp',b);if(!x)return;x.onclick=function(){var t=reportText(d);function ok(){x.textContent='Copied';setTimeout(function(){x.textContent='Copy my weekly report'},1800)}
+ try{if(navigator.share&&/Android|iPhone|iPad/i.test(navigator.userAgent)){navigator.share({text:t}).catch(function(){});return}}catch(e){}
+ try{navigator.clipboard.writeText(t).then(ok,function(){fall()})}catch(e){fall()}
+ function fall(){try{var a=document.createElement('textarea');a.value=t;a.style.cssText='position:fixed;opacity:0';document.body.appendChild(a);a.select();document.execCommand('copy');a.remove();ok()}catch(e){}}}}
+/* --- result extras: level-up, badges, vs yesterday, shield --- */
+function finishExtras(b,C,ses,d,pct,avg){var host=$('.dl-res',b);if(!host)return;var h='',lv0=0,n0=0;SKILLS.forEach(function(k){if(ses.before&&ses.before[k]!=null){lv0+=ses.before[k];n0++}});lv0=n0?lv0/n0:overall(d);
+ var c0=cefr(lv0),c1=cefr(overall(d));
+ if(!ses.quick){var got=awardBadges(d,{pct:pct,mode:modeOf(d)});
+  if(ses.shieldGot)h+='<div class="dl3-ev sh"><b>Moon shield earned</b><small>A 7-day streak gives you a shield. It saves your streak if you miss one day.</small></div>';
+  if(ses.saved)h+='<div class="dl3-ev sh"><b>Your shield saved the streak</b><small>You missed a day, so the shield was used.</small></div>';
+  var y=d.hist[yday()];if(y&&y.done){var dx=(ses.xp||0)-(y.xp||0),da=pct-(y.avg||0);h+='<div class="dl3-ev cmp"><b>Compared with yesterday</b><small>'+(da>0?'Score up '+da+' points':da<0?'Score down '+Math.abs(da)+' points':'Same score')+' · '+(dx>=0?'+':'−')+Math.abs(dx)+' XP</small></div>'}
+  got.forEach(function(g){h+='<div class="dl3-ev bd"><i>'+moon(.5,30)+'</i><div><b>New badge: '+esc(g[1])+'</b><small>'+esc(g[2])+'</small></div></div>'});
+  if(got.length||ses.shieldGot)save()}
+ if(c0!==c1&&cefr(overall(d))>c0){h='<div class="dl3-up"><span>Level up</span><b>'+c0+' → '+c1+'</b><small>Your overall English level just moved up.</small></div>'+h;try{triggerConfetti()}catch(e){}}
+ var er=0;try{er=L.err.active().length}catch(e){}
+ if(er)h+='<button type="button" class="dl3-fixrow" id="dl3-fx"><b>Fix my mistakes</b><small>'+er+' saved in your Error Bank</small></button>';
+ var hd=host.querySelector('h2');var mo=document.createElement('div');mo.className='dl3-resmoon';mo.innerHTML=moon(Math.max(.06,avg*.5),76);host.insertBefore(mo,host.firstChild);
+ if(h&&hd)hd.insertAdjacentHTML('afterend','<div class="dl3-evs">'+h+'</div>');var fx=$('#dl3-fx',b);if(fx)fx.onclick=function(){L.close();setTimeout(function(){try{L.apps.errors()}catch(e){}},320)}}
+function moonStrip(p,n){var o='';for(var i=0;i<n;i++)o+=moon(i/(n-1)*.5,16);return o}
+
 /* ---------- the home card ---------- */
 function greetTime(){var h=new Date().getHours();return h<5?'Good night':h<12?'Good morning':h<18?'Good afternoon':'Good evening'}
 function status(d){var t=L.today(),n=stepsFor(d);if(todayDone(d))return{k:'done',done:n,n:n};var s=d.ses&&d.ses.day===t?d.ses:null;if(s)return{k:'prog',done:s.i,n:s.steps.length};return{k:'new',done:0,n:n}}
 function refresh(){var el=D.getElementById('lc-card');if(el&&el.querySelector('.dl')||el&&!el.querySelector('.lc-in'))el.innerHTML=card()}
 function bonusOpen(){L.open('daily-bonus','Bonus quests','The rest of LunaRise, picked for your weak spots.',function(b){var d=S();b.innerHTML='<section class="lab-card"><p class="lab-mut">Each one trains a different skill. Finish it, then tick it. Some tick by themselves.</p>'+bonusHTML(d)+'</section>';bindBonus(b)})}
 D.addEventListener('click',function(e){var x=e.target.closest&&e.target.closest('[data-dl]');if(!x)return;var k=x.dataset.dl;
- if(k==='start')start();else if(k==='quick')start(x.dataset.k);else if(k==='skills')skills();else if(k==='bonus')bonusOpen();else if(k==='prefs')prefs(function(){});else if(k==='film'){try{BON.movies.run()}catch(e){}}
+ if(k==='start')start();else if(k==='quick')start(x.dataset.k);else if(k==='skills')skills();else if(k==='bonus')bonusOpen();else if(k==='prefs')prefs(function(){});else if(k==='fix'){try{L.apps.errors()}catch(e){}}else if(k==='mode'){var d0=S();if(!(d0.ses&&d0.ses.day===L.today())){d0.mode={day:L.today(),k:x.dataset.m};save();refresh()}}else if(k==='film'){try{BON.movies.run()}catch(e){}}
  else if(k==='hello'){var d=S(),pk=d.pack&&d.pack.day===L.today()?d.pack:null,t=pk&&pk.hello?pk.hello:'Hello! Ready to grow your English today? Let\'s start.';try{if(window.LC&&LC.say)LC.say(t);else L.say(t,'en-US')}catch(e){L.say(t,'en-US')}}});
 window.DL={on:function(){return true},card:card,start:function(q){start(q)},open:function(){start()},skills:skills,refresh:refresh,feed:feed,state:function(){return S()},levels:function(){var d=S();return SKILLS.reduce(function(o,k){o[k]=cefr(d.sk[k]);return o},{})}};
 function wrapFeed(){var _pf=window.pfFeed;if(typeof _pf==='function'&&!_pf.__dl){var w=function(k,x){try{feed(k,x)}catch(e){}return _pf.apply(this,arguments)};w.__dl=1;window.pfFeed=w}}
@@ -57405,7 +57572,7 @@ function skills(){L.open('daily-skills','Progress','Where you started, where you
  '<section class="lab-card dl-sh"><div class="dl-big2"><b>'+cefr(o)+'</b><small>Overall level</small></div><div class="dl-sd"><p><b>'+Math.round(o)+'</b> / 100 · IELTS about <b>'+ielts(o).toFixed(1)+'</b></p><p class="lab-mut">'+d.tot+' session'+(d.tot===1?'':'s')+' · '+d.streak+' day streak · '+sinceDays(d)+' day'+(sinceDays(d)===1?'':'s')+' with Luna</p></div></section>'+
  '<section class="lab-card"><h4>Start and now</h4>'+radar(then,d.sk)+'<div class="dl2-lg"><span><i class="t"></i>At the start</span><span><i class="n"></i>Now</span></div><div class="dl-sk">'+SKILLS.map(function(k){var dv=d.sk[k]-then[k];return '<div class="dl-skr"><span>'+SKN[k]+'</span><div class="dl-bar2"><i style="width:'+d.sk[k].toFixed(1)+'%;background:'+SKC[k]+'"></i><u style="left:'+then[k].toFixed(1)+'%"></u></div><em class="'+(dv>.9?'up':dv<-.9?'dn':'')+'">'+cefr(then[k])+' → '+cefr(d.sk[k])+'</em></div>'}).join('')+'</div></section>'+
  '<section class="lab-card"><h4>Your level over time</h4>'+lineChart(lv,lvl.length?lvl:['',''],'#22d3ee')+'</section>'+
- '<section class="lab-card"><h4>Time with Luna</h4><div class="dl2-ts"><div><b>'+fmtM((d.time||{})[L.today()]||0)+'</b><small>today</small></div><div><b>'+fmtM(weekSecs(d))+'</b><small>this week</small></div><div><b>'+sinceDays(d)+'</b><small>days since you started</small></div></div>'+barsChart(d)+'</section>'+
+ reportHTML(d)+calHTML(d)+badgeHTML(d)+'<section class="lab-card"><h4>Time with Luna</h4><div class="dl2-ts"><div><b>'+fmtM((d.time||{})[L.today()]||0)+'</b><small>today</small></div><div><b>'+fmtM(weekSecs(d))+'</b><small>this week</small></div><div><b>'+sinceDays(d)+'</b><small>days since you started</small></div></div>'+barsChart(d)+'</section>'+
  spkHTML(d)+
  '<section class="lab-card"><h4>Your activity today</h4>'+actHTML(d)+'</section>'+
  '<section class="lab-card"><h4>How you do by exercise</h4><div class="dl-sk">'+Object.keys(T).map(function(k){var a=d.acc[k];return '<div class="dl-skr"><span>'+esc(T[k].lbl)+'</span><div class="dl-bar2"><i style="width:'+(a?Math.round(a.s/a.n*100):0)+'%;background:#7c8cff"></i></div><em>'+(a?Math.round(a.s/a.n*100)+'%':'new')+'</em></div>'}).join('')+'</div></section>'+
@@ -57416,13 +57583,13 @@ function skills(){L.open('daily-skills','Progress','Where you started, where you
  $('#dl-cm',b).onclick=function(){d.nocam=d.nocam?0:1;save();this.textContent='Camera exercises: '+(d.nocam?'Off':'On')};
  $('#dl-sn',b).onclick=function(){try{localStorage.setItem('lr_dl_mute',muted()?'0':'1')}catch(e){}this.textContent='Break sound: '+(muted()?'Off':'On');if(!muted())chime()};
  $('#dl-rc',b).onclick=function(){d.placed=false;d.lcSkip='';d.ses=null;save();L.close();setTimeout(function(){start()},320)};
- var sp=$('#dl-sp',b);if(sp)sp.onclick=function(){L.close();setTimeout(function(){start('speaking')},320)};bindAct(b)})}
+ var sp=$('#dl-sp',b);if(sp)sp.onclick=function(){L.close();setTimeout(function(){start('speaking')},320)};bindAct(b);bindReport(b,d)})}
 
 async function run(){var C=CUR;if(!C)return;stopCam();var ses=C.ses,d=C.d,b=C.host;if(ses.i>=ses.steps.length)return finish();
  if(shouldBreak(ses)){ses.brk=ses.brk||{};ses.brk[ses.i]=1;ses.bsec=0;if(!ses.quick)save();return breakScreen(C,function(){if(CUR===C)run()})}
  var st=ses.steps[ses.i],tt=$('.lab-ti small');if(tt)tt.textContent=(ses.kind==='check'?'Level check':ses.quick?'Quick practice':'Daily Luna')+' · '+(ses.i+1)+' of '+ses.steps.length;
  var pct=Math.round(ses.i/ses.steps.length*100);
- b.innerHTML='<div class="dl-top"><div class="dl-prog"><i style="width:'+pct+'%"></i></div><span class="dl-tm" id="dl-tm" title="Time in this session">'+fmtT(ses.sec||0)+'</span>'+(ses.kind==='check'?'':'<span class="dl-xp">+'+ses.xp+' XP</span>')+'</div><div class="dl-body"><div class="dl-k" style="--c:'+SKC[T[st.type].sk[0]]+'">'+esc(T[st.type].lbl)+' <small>'+esc(T[st.type].sk.map(function(k){return SKN[k]}).join(' · '))+'</small></div><div class="dl-host">'+L.spin()+'</div></div><div class="dl-foot" id="dl-ft"></div>';
+ b.innerHTML='<div class="dl-top"><span class="dl3-mn">'+moon(Math.max(.04,ses.i/ses.steps.length*.5),30)+'</span><div class="dl-prog dl3-seg">'+ses.steps.map(function(x,j){return '<i class="'+(j<ses.i?'d':j===ses.i?'c':'')+'"></i>'}).join('')+'</div><span class="dl-tm" id="dl-tm" title="Time in this session">'+fmtT(ses.sec||0)+'</span>'+(ses.kind==='check'?'':'<span class="dl-xp">+'+ses.xp+' XP</span>')+'</div><div class="dl-body"><div class="dl-k" style="--c:'+SKC[T[st.type].sk[0]]+'">'+esc(T[st.type].lbl)+' <small>'+esc(T[st.type].sk.map(function(k){return SKN[k]}).join(' · '))+'</small></div><div class="dl-host">'+L.spin()+'</div></div><div class="dl-foot" id="dl-ft"></div>';
  var data=st.data;if(!data){data=await make(st.type,ses,d,st);if(!data){var alt=['correct','gap','wordorder'];for(var i=0;i<alt.length&&!data;i++){if(alt[i]!==st.type){data=await make(alt[i],ses,d,st);if(data)st.type=alt[i]}}}if(!data){ses.i++;return run()}st.data=data}
  if(!CUR||CUR!==C)return;st.tier=data.tier||0;
  var host=$('.dl-host',b),ft=$('#dl-ft',b),ready=false,busy=false,r;
@@ -57442,7 +57609,7 @@ function grade(st,res,d){var C=CUR,ses=C.ses,s=clamp(res.score||0,0,1);st.done=1
  try{(res.wrongs||(res.wrong?[res.wrong]:[])).forEach(function(w){if(w&&w.t)L.err.add({k:res.wrongkind||'phrase',t:w.t,fix:w.fix||'',why:w.why||'',src:'Daily Luna'})})}catch(e){}
  if(!ses.quick)d.ses=ses;save();if(s>=.8){L.buzz([10,40,10])}else L.buzz([28,40,28])}
 function finish(){var C=CUR;if(!C)return;if(C.ses.kind==='check')return checkFinish(C);stopTimer();var ses=C.ses,d=C.d,b=C.host,n=ses.cnt||0,avg=n?ses.sc/n:0,pct=Math.round(avg*100),u=U(),first=false;
- if(!ses.quick){ses.fin=1;var t=L.today();if(!d.hist[t]||!d.hist[t].done){first=true;d.xp+=ses.xp+50;ses.xp+=50;d.streak=(d.last===yday())?d.streak+1:(d.last===t?d.streak:1);d.last=t;d.tot++;
+ if(!ses.quick){ses.fin=1;var t=L.today();if(!d.hist[t]||!d.hist[t].done){first=true;d.xp+=ses.xp+50;ses.xp+=50;d.streak=streakNext(d,t);if(d.shieldUsed===t)ses.saved=1;earnShield(d,ses);d.last=t;d.tot++;
    try{u.gamePts=(u.gamePts||0)+ses.xp}catch(e){}try{pfFeed('mission','Daily Luna · '+pct+'% · '+n+' exercises')}catch(e){}}
   d.hist[t]={done:1,xp:ses.xp,avg:pct,lvl:Math.round(overall(d)*10)/10,n:n};Object.keys(d.hist).sort().slice(0,-40).forEach(function(k){delete d.hist[k]});
   var seen={};d.lastTypes=ses.steps.map(function(s){return s.type}).filter(function(k){return !seen[k]&&(seen[k]=1)});d.ses=null}
@@ -57454,17 +57621,26 @@ function finish(){var C=CUR;if(!C)return;if(C.ses.kind==='check')return checkFin
  b.innerHTML='<div class="dl-res"><div class="lber-ring big" style="--p:'+(avg).toFixed(3)+'"><b>'+pct+'%</b></div><h2>'+(ses.quick?'Quick practice done':'Today\'s session is done')+'</h2><p class="lab-mut">'+esc(line)+'</p><div class="dl-stats"><div><b>+'+ses.xp+'</b><small>XP earned</small></div><div><b>'+(ses.quick?d.streak:d.streak)+'</b><small>day streak</small></div><div><b>'+n+'</b><small>exercises</small></div><div><b>'+fmtM(ses.sec||0)+'</b><small>time</small></div></div>'+
   '<h4 class="lab-h">Skill changes</h4><div class="dl-sk">'+SKILLS.map(function(k){var a=ses.before[k]==null?d.sk[k]:ses.before[k],z=d.sk[k],df=z-a;return '<div class="dl-skr"><span>'+SKN[k]+'</span><div class="dl-bar2"><i style="width:'+z.toFixed(1)+'%;background:'+SKC[k]+'"></i></div><em class="'+(df>.05?'up':df<-.05?'dn':'')+'">'+cefr(z)+' '+(df>.05?'▲ +':df<-.05?'▼ ':'· ')+df.toFixed(1)+'</em></div>'}).join('')+'</div>'+
   (ses.quick?'':'<h4 class="lab-h">Your activity today</h4>'+actHTML(d)+'<h4 class="lab-h">Bonus quests</h4>'+bonusHTML(d))+'<div class="dl-ra"><button type="button" class="lab-go ghost" id="dl-sks">My skills</button><button type="button" class="lab-go" id="dl-dn">Done</button></div></div>';
- $('#dl-dn',b).onclick=function(){L.close()};$('#dl-sks',b).onclick=function(){setTimeout(skills,50)};bindBonus(b);bindAct(b);}
+ $('#dl-dn',b).onclick=function(){L.close()};$('#dl-sks',b).onclick=function(){setTimeout(skills,50)};bindBonus(b);bindAct(b);try{finishExtras(b,C,ses,d,pct,avg)}catch(e){}}
 function card(){var d=S(),st=status(d),u=U(),nm=String(u.name||'').split(' ')[0],weak=SKILLS.slice().sort(function(a,b){return d.sk[a]-d.sk[b]})[0],pk=d.pack&&d.pack.day===L.today()?d.pack:null;
  var focus=pk&&pk.focus?pk.focus:SKN[weak]+' first';var hello=(!d.placed&&st.k==='new')?'Let\'s find your level first. About 6 minutes, and it shapes every day after.':st.k==='done'?'Today\'s session is complete. Come back tomorrow, or practise any skill below.':st.k==='prog'?'You are '+st.done+' of '+st.n+' exercises in. Let\'s finish it.':greetTime()+(nm?', '+nm:'')+'. Today we focus on '+focus.toLowerCase()+'.';
- var pct=st.n?st.done/st.n:0,min=minutes(d);
+ var t=L.today(),pct=st.n?st.done/st.n:0,min=minutes(d),mode=modeOf(d),goal=min,mn=minOf(d,t),gp=Math.min(1,mn/goal),ph=st.k==='done'?.5:Math.max(.12,pct*.5),ls=liveStreak(d),er=0;try{er=L.err.active().length}catch(e){}
  var btn=st.k==='done'?'Practise more':st.k==='prog'?'Continue session':'Start today\'s session';if(!d.placed&&st.k==='new')btn='Find my level';
- return '<div class="dl"><div class="dl-hd"><div class="dl-orb"></div><div class="dl-hx"><p class="dl-kick">Daily Luna</p><h2>'+esc(st.k==='done'?'All done for today':'Today: '+focus)+'</h2></div><button type="button" class="lab-ic sm" data-dl="hello" aria-label="Hear Luna">'+IC.say+'</button></div>'+
+ var showModes=d.placed&&st.k==='new',sg=showModes?suggestMode(d):null;
+ var modes=showModes?'<div class="dl3-modes" role="group" aria-label="Focus mode">'+['sprint','std','deep','speak','listen'].map(function(k){var m=MODES[k],on=mode===k,sub=k==='std'?baseSteps(d)+' exercises · about '+Math.round(baseSteps(d)*2.4)+' min':m.sub;return '<button type="button" class="dl3-mode'+(on?' on':'')+(sg&&sg[0]===k?' sg':'')+'" data-dl="mode" data-m="'+k+'" aria-pressed="'+on+'"><i>'+m.ic+'</i><b>'+m.lbl+'</b><small>'+esc(sub)+'</small></button>'}).join('')+'</div>'+(sg?'<p class="dl3-sug">'+esc(sg[1])+'</p>':''):'';
+ var wk=dayKeys(7).map(function(k){var h=d.hist[k],dn=h&&h.done,sv=d.saved&&d.saved[k],p=dn?.5:sv?.2:(k===t?Math.min(.45,gp*.45):0),nmD=['S','M','T','W','T','F','S'][new Date(k+'T00:00:00Z').getUTCDay()];
+  return '<div class="dl3-d'+(k===t?' td':'')+(dn?' on':'')+(sv?' sv':'')+'" title="'+k+'">'+moon(p,30)+'<small>'+nmD+'</small></div>'}).join('');
+ var done=0;try{var B=bonusList(d);B.list.forEach(function(k){if(B.done[k])done++});var bt=B.list.length}catch(e){var bt=0}
+ return '<div class="dl dl3"><div class="dl3-sky" aria-hidden="true"></div>'+
+ '<div class="dl-hd dl3-hd"><div class="dl3-moon">'+moon(ph,92)+'</div><div class="dl-hx"><p class="dl-kick">Daily Luna</p><h2>'+esc(st.k==='done'?'All done for today':'Today: '+focus)+'</h2></div><button type="button" class="lab-ic sm" data-dl="hello" aria-label="Hear Luna">'+IC.say+'</button></div>'+
  '<p class="dl-hello">'+esc(hello)+'</p>'+openLine(d)+
- '<div class="dl-mid"><div class="lber-ring" style="--p:'+pct.toFixed(3)+'"><b>'+st.done+'/'+st.n+'</b><small>today</small></div><div class="dl-chips"><span class="dl-pill">🔥 '+d.streak+' day streak</span><span class="dl-pill">'+cefr(overall(d))+' level</span><span class="dl-pill">'+d.xp+' XP</span><span class="dl-pill">'+fmtM((d.time||{})[L.today()]||0)+' today</span></div></div>'+
- '<button type="button" class="lab-go dl-start" data-dl="start">'+btn+(st.k==='new'?(d.placed?' · ~'+min+' min':' · ~6 min'):'')+'</button>'+
+ '<div class="dl3-kpi"><div class="k1"><b>'+ls+'</b><small>day streak'+((d.shield||0)>0?' · <u title="Moon shield: saves your streak if you miss a day">🛡 '+d.shield+'</u>':'')+'</small></div><div><b>'+cefr(overall(d))+'</b><small>level</small></div><div><b>'+d.xp+'</b><small>XP</small></div>'+
+ '<div class="g"><svg viewBox="0 0 36 36" aria-hidden="true"><circle cx="18" cy="18" r="15.9" class="g0"/><circle cx="18" cy="18" r="15.9" class="g1" stroke-dasharray="'+(gp*100).toFixed(1)+' 100" transform="rotate(-90 18 18)"/></svg><b>'+mn+'<em>/'+goal+'</em></b><small>min today</small></div></div>'+
+ modes+
+ '<button type="button" class="lab-go dl-start" data-dl="start">'+btn+(st.k==='new'?(d.placed?' · '+(mode==='sprint'?'~5':mode==='deep'?'~25':'~'+min)+' min':' · ~6 min'):'')+'</button>'+
+ '<div class="dl3-wk" aria-label="This week">'+wk+'</div>'+
  '<div class="dl-skl">'+SKILLS.map(function(k){return '<button type="button" class="dl-sm" data-dl="quick" data-k="'+k+'" style="--c:'+SKC[k]+'"><span>'+SKN[k]+'</span><i style="width:'+d.sk[k].toFixed(0)+'%"></i><em>'+cefr(d.sk[k])+'</em></button>'}).join('')+'</div>'+
- '<div class="dl-ft"><button type="button" class="dl-lk" data-dl="skills">Progress</button><button type="button" class="dl-lk" data-dl="bonus">Bonus quests '+(function(){var B=bonusList(d),c=0;B.list.forEach(function(k){if(B.done[k])c++});return c+'/'+B.list.length})()+'</button><button type="button" class="dl-lk" data-dl="prefs">Plan</button></div></div>'}
+ '<div class="dl-ft">'+(er?'<button type="button" class="dl-lk fx" data-dl="fix">Fix my mistakes <b>'+er+'</b></button>':'')+'<button type="button" class="dl-lk" data-dl="skills">Progress</button><button type="button" class="dl-lk" data-dl="bonus">Bonus quests '+done+'/'+bt+'</button><button type="button" class="dl-lk" data-dl="prefs">Plan</button></div></div>'}
 
 })();
 </script></body>
