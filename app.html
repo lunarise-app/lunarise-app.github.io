@@ -19733,12 +19733,7 @@ Respond ONLY with minified JSON: {"title":string,"topic":string (1-2 English wor
             { id: 'movies', icon: 'fa-film', g: 'linear-gradient(135deg,#ec4899,#7c3aed)', c: 'rgba(236,72,153,.28)', title: 'Movies', desc: 'Movies, drama, series, cartoons, anime and sport. HD trailers with subtitles and where to watch the full film.', w2: 1, isNew: 1, live: () => { const n = (state.user.mvList || []).length; return n ? n + ' in my list' : 'Trending now'; }, go: "navigateTo('movies')" }, /*club*/{ id: 'club', icon: 'fa-earth-asia', g: 'linear-gradient(135deg,#2c5cc5,#d9465a)', c: 'rgba(96,165,250,.3)', title: 'Speaking Club', desc: 'Make friends worldwide: chat, voice and video calls, AI help with your English.', w2: 1, isNew: 1, live: () => (window.CLUB && CLUB.liveText ? CLUB.liveText() : 'Chats, friends and calls'), go: "navigateTo('club')" },/*/club*/
                         { id: 'profile', icon: 'fa-user-astronaut', g: 'linear-gradient(135deg,#6366f1,#a855f7)', c: 'rgba(129,140,248,.3)', title: 'My Profile', desc: 'XP, badges, settings.', live: () => 'Level ' + pfStats().lvl, go: "navigateTo('profile')" },
             { id: 'reading', icon: 'fa-book-open-reader', g: 'linear-gradient(135deg,#f43f5e,#be123c)', c: 'rgba(244,63,94,.25)', title: 'Reading Lab', desc: 'Two parts: passages with exam questions, and Book Maker for whole illustrated books.', w2: 1, isNew: 1, live: () => { const s = rlStats(); return s.n ? s.n + ' read · ' + s.acc + '%' : rlAll().length + ' passages'; }, go: "navigateTo('reading')" },
-            { id: 'think', icon: 'fa-brain', g: 'linear-gradient(135deg,#6366f1,#22d3ee)', c: 'rgba(99,102,241,.3)', title: 'Think in English', desc: 'Stop translating word for word. See how natives say it.', isNew: 1, live: () => 'Native phrasing', go: "LAB.apps.think()" },
-            { id: 'errors', icon: 'fa-shield-halved', g: 'linear-gradient(135deg,#fb7185,#f59e0b)', c: 'rgba(251,113,133,.3)', title: 'Error Bank & Boss Fight', desc: 'Your own mistakes become practice. Beat the weekly boss.', isNew: 1, live: () => { try { return LAB.err.active().length + ' to fix'; } catch (e) { return ''; } }, go: "LAB.apps.errors()" },
-            { id: 'story', icon: 'fa-user-secret', g: 'linear-gradient(135deg,#7c3aed,#0ea5e9)', c: 'rgba(124,58,237,.3)', title: 'Detective Story', desc: 'Solve a new mystery by interviewing suspects in English.', isNew: 1, live: () => 'New case every time', go: "LAB.apps.story()" },
-            { id: 'path', icon: 'fa-route', g: 'linear-gradient(135deg,#10b981,#22d3ee)', c: 'rgba(16,185,129,.3)', title: '90-Day Path', desc: 'One clear plan: four short tasks a day, three phases.', isNew: 1, live: () => { try { const p = LAB.pathDay(); return p ? 'Day ' + p.day + ' of 90' : 'Start today'; } catch (e) { return ''; } }, go: "LAB.apps.path()" },
-            { id: 'reels', icon: 'fa-bolt', g: 'linear-gradient(135deg,#f59e0b,#ec4899)', c: 'rgba(245,158,11,.3)', title: 'Micro Lessons', desc: '30-second lessons in a swipe feed. Fix one mistake at a time.', isNew: 1, live: () => 'Swipe & learn', go: "LAB.apps.reels()" },
-            { id: 'scan', icon: 'fa-camera', g: 'linear-gradient(135deg,#06b6d4,#8b5cf6)', c: 'rgba(6,182,212,.3)', title: 'Reality Scanner', desc: 'Photograph your world. Get the English words for it.', isNew: 1, live: () => 'Camera or gallery', go: "LAB.apps.scan()" }
+            { id: 'lab', icon: 'fa-flask', g: 'linear-gradient(135deg,#6366f1,#22d3ee)', c: 'rgba(99,102,241,.3)', title: 'English Lab', desc: 'Think in English, Error Bank, stories, 90-day path, lessons and scanner. All in one place.', isNew: 1, live: () => { try { const n = LAB.err.active().length; const p = LAB.pathDay(); return (p ? 'Day ' + p.day + ' · ' : '') + n + ' to fix'; } catch (e) { return 'Open the Lab'; } }, go: "LAB.apps.home()" }
         ];
         const HB_TIPS = [
             'Learn words in chunks, not alone: "make a decision" sticks better than "decision".',
@@ -35730,7 +35725,7 @@ var LR_TURN = null;    // optional TURN servers for voice on strict networks, e.
     });
 
     /* ================= Hub: clear groups ================= */
-    const GROUPS = [['Learn', 'Lessons and full exam practice', ['exams', 'grammar', 'reading', 'library']], ['Words', 'Look up, save and remember', ['dictionary', 'mywords', 'classroom']], ['Practise speaking', 'With AI and with real people', ['ai', 'club']], ['Play', 'Learn with games', ['games', 'wordforge']], ['Watch', 'English movies — learn while you watch', ['movies']], ['Lab', 'New ways to learn', ['think', 'errors', 'story', 'path', 'reels', 'scan']], ['More', '', ['mentors', 'profile']]];
+    const GROUPS = [['Learn', 'Lessons and full exam practice', ['exams', 'grammar', 'reading', 'library']], ['Words', 'Look up, save and remember', ['dictionary', 'mywords', 'classroom']], ['Practise speaking', 'With AI and with real people', ['ai', 'club']], ['Play', 'Learn with games', ['games', 'wordforge']], ['Watch', 'English movies — learn while you watch', ['movies']], ['Lab', 'All-in-one English training', ['lab']], ['More', '', ['mentors', 'profile']]];
     function tileList() {
         let T = []; try { T = HB_TILES.slice(); } catch (e) { }
         const sv = saved().length, kn = known().filter(w => isSaved(w)).length;
@@ -56435,6 +56430,32 @@ html.lab-on #srs-chip,html.lab-on .srs-chip{display:none!important}
 .lab-shl{flex:1;overflow:auto;padding:4px 12px max(18px,env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:6px}
 .lab-lr{display:flex;align-items:center;gap:14px;min-height:56px;padding:8px 14px;border-radius:14px;border:1px solid transparent;background:rgba(255,255,255,.04);color:var(--lt);font:inherit;text-align:left;cursor:pointer}.lab-lr.on{background:rgba(124,140,255,.2);border-color:var(--la)}
 .lab-lr i{font-style:normal;font-size:26px}.lab-lr span{flex:1;min-width:0}.lab-lr b{display:block;font-weight:600}.lab-lr small{color:var(--lm)}.lab-lr svg{width:22px;height:22px;fill:var(--lg)}
+/* ---- English Lab hub ---- */
+.lab-hub .lab-bd{padding-bottom:18px}.lab-nav{flex:none;display:flex;justify-content:center;gap:2px;padding:6px 10px max(8px,env(safe-area-inset-bottom));background:#0e1328;border-top:1px solid rgba(255,255,255,.09)}
+.lab-nav button{flex:1;max-width:120px;min-height:56px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:0;background:none;color:var(--lm);border-radius:14px;font:600 11.5px Inter,system-ui,sans-serif;cursor:pointer;transition:color .15s,background .15s}
+.lab-nav svg{width:22px;height:22px;fill:currentColor}.lab-nav button.on{color:#fff;background:rgba(124,140,255,.2)}.lab-nav button:active{transform:scale(.95)}
+.lab-hub .lab-bd{contain:content}
+/* think */
+.lbt-bar{display:flex;align-items:center;gap:10px;margin:2px 0 12px}.lbt-lang,.lbt-en{flex:1;min-width:0;display:flex;align-items:center;gap:12px;background:linear-gradient(180deg,var(--lc2),var(--lc));border:1px solid rgba(255,255,255,.1);border-radius:18px;padding:10px 14px;color:var(--lt);font:inherit;text-align:left}
+.lbt-lang{cursor:pointer}.lbt-lang:active{transform:scale(.98)}.lbt-bar i{font-style:normal;font-size:28px}.lbt-bar span{display:flex;flex-direction:column;min-width:0;flex:1}.lbt-bar small{color:var(--lm);font-size:11.5px}.lbt-bar b{font-size:16px}.lbt-lang svg{width:22px;height:22px;stroke:var(--lm);fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;flex:none}.lbt-arr{font-size:22px;color:var(--la2);flex:none}
+.lbt-md{margin:0 0 12px}.lbt-in{padding:14px}.lbt-box{display:flex;gap:10px;align-items:flex-start}.lbt-box textarea,.lbt-box input{flex:1}.lbt-in textarea{font-size:19px;min-height:92px}.lbt-bt{display:flex;flex-direction:column;gap:8px}
+.lbt-ex{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 0}.lbt-go{width:100%;min-height:54px;font-size:16px;margin-top:14px}
+.lbt-hero{border-radius:24px;padding:20px 20px 18px;margin:0 0 14px;background:radial-gradient(500px 200px at 0% 0%,rgba(52,211,153,.22),transparent 70%),linear-gradient(180deg,#143a3a,#0f2430);border:1px solid rgba(52,211,153,.45);animation:labin .3s both}
+.lbt-hero small{color:#86efac;font-weight:700;font-size:12.5px}.lbt-natx{font-size:clamp(24px,4vw,32px);font-weight:700;line-height:1.3;margin:6px 0 12px!important;letter-spacing:-.01em}
+.lbt-tns{display:flex;gap:6px;margin:0 0 14px}.lbt-tn{border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.06);color:#d1fae5;border-radius:999px;padding:6px 14px;font:600 13px Inter,system-ui,sans-serif;cursor:pointer}.lbt-tn.on{background:#34d399;color:#04251a;border-color:transparent}
+.lbt-act{display:flex;gap:8px;flex-wrap:wrap}.lbt-act .lab-go{margin:0}.lbt-act svg{width:18px;height:18px;fill:currentColor}
+.lbt-cmp{padding:0;overflow:hidden}.lbt-row{padding:14px 18px}.lbt-row b{font-size:12.5px;display:block;margin-bottom:4px}.lbt-row p{font-size:18px;font-weight:600;margin:0 0 4px}.lbt-row small{color:var(--lm)}.lbt-row.bad{background:rgba(251,113,133,.1)}.lbt-row.bad b{color:#fda4af}.lbt-row.good{background:rgba(52,211,153,.08)}.lbt-row.good b{color:#86efac}
+.lbt-gap small,.lbt-try small{display:block;color:var(--lm);font-weight:700;margin-bottom:6px}.lbt-gap p{font-size:16px;line-height:1.55}.lbt-pat{margin:2px 0 6px}
+.lbt-more{margin-top:12px;border-top:1px solid rgba(255,255,255,.08);padding-top:12px}.lbt-mr{display:flex;align-items:center;gap:10px;margin:0 0 8px}.lbt-mr b{flex:none;max-width:55%}.lbt-mr span{flex:1;color:var(--lm);font-size:14px;min-width:0}
+.lbt-nx{display:flex;gap:10px;justify-content:flex-end;margin:0 0 6px}.lbt-nx .lab-go{margin:0}
+.lbt-pr{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:10px 14px;margin:0 0 8px}.lbt-pm{flex:1;min-width:0}.lbt-pm b{display:block}.lbt-pm small{color:var(--lm)}
+/* home */
+.lbh-hero{border-radius:24px;padding:22px;margin:2px 0 14px;background:radial-gradient(500px 240px at 100% 0%,rgba(34,211,238,.25),transparent 70%),linear-gradient(135deg,#2b2f7a,#161b3a 70%);border:1px solid rgba(165,180,252,.25)}.lbh-k{margin:0;color:#a5b4fc;font-weight:700;font-size:13px}.lbh-hero h2{margin:4px 0 6px;font-size:clamp(24px,4vw,32px);letter-spacing:-.01em}.lbh-hero p{margin:0;color:#c7d2fe}
+.lbh-q{padding:16px}.lbh-go{margin:0;min-height:48px}.lbh-lg{margin-top:12px;background:none;border:0;color:#a5b4fc;font:600 13.5px Inter,system-ui,sans-serif;cursor:pointer;padding:4px 0}.lbh-lg i{font-style:normal}
+.lbh-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:0 0 6px}.lbh-c{text-align:left;border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:16px;color:#fff;font:inherit;cursor:pointer;display:flex;flex-direction:column;gap:4px;min-height:110px}.lbh-c small{color:rgba(255,255,255,.7);font-weight:600}.lbh-c b{font-size:18px}.lbh-c span{font-size:13px;color:rgba(255,255,255,.75)}
+.lbh-a{background:linear-gradient(135deg,#0f766e,#164e63)}.lbh-b{background:linear-gradient(135deg,#9f1239,#7c2d12)}.lbh-d{background:linear-gradient(135deg,#4338ca,#6d28d9)}.lbh-c:active,.lbh-t:active{transform:scale(.98)}
+.lbh-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.lbh-t{display:flex;align-items:center;gap:14px;text-align:left;border:1px solid rgba(255,255,255,.09);background:linear-gradient(180deg,var(--lc2),var(--lc));color:#fff;border-radius:18px;padding:14px 16px;font:inherit;cursor:pointer;min-height:76px}.lbh-t i{font-style:normal;font-size:28px}.lbh-t b{display:block}.lbh-t small{color:var(--lm)}
+@media(max-width:640px){.lbh-row{grid-template-columns:1fr}.lbh-grid{grid-template-columns:1fr}.lab-nav button{font-size:10.5px}.lbt-bar{flex-wrap:wrap}.lbt-arr{display:none}.lbt-lang,.lbt-en{flex:1 1 100%}}
 </style><script id="lr-lab">/* ================= LunaRise Lab: new ways to learn ================= */
 (function(){'use strict';
 var D=document,LS=window.localStorage;
@@ -56452,11 +56473,11 @@ function lobj(c){var a=langs();for(var i=0;i<a.length;i++)if(a[i].c===c)return a
 function lang(){var u=U(),c=jg('lr_lab_lang',null)||u.xLang||u.ntLang||(u.prefs&&u.prefs.lang)||'uz';return lobj(c)?c:'uz'}
 function sp(c){var o=lobj(c);return o&&o.sp||'en-US'}
 var LN=new Proxy({},{get:function(_,c){var o=lobj(c);return o?o.n:'Uzbek'}});
-var LB_APPS={think:1,scan:1,path:1,reels:1},CUR=null;
-function langBtn(){var o=lobj(lang());var b=D.createElement('button');b.type='button';b.className='lab-lg';b.setAttribute('aria-label','My language: '+o.n);b.innerHTML='<i>'+o.f+'</i><span>'+esc(o.n)+'</span>';b.onclick=langSheet;$('.lab-ex',OV).replaceWith(b)}
+var LB_APPS={scan:1,path:1,reels:1},CUR=null;
+function langBtn(){var o=lobj(lang());var b=D.createElement('button');b.type='button';b.className='lab-lg';b.setAttribute('aria-label','My language: '+o.n);b.innerHTML='<i>'+o.f+'</i><span>'+esc(o.n)+'</span>';b.onclick=langSheet;var s=$('.lab-lg,.lab-ex',OV);if(s)s.replaceWith(b)}
 function langSheet(){var cur=lang(),sh=D.createElement('div');sh.className='lab-sh';sh.innerHTML='<div class="lab-shb"></div><div class="lab-shp" role="dialog" aria-label="My language"><div class="lab-shh"><div><b>My language</b><small>Explanations and translations use this language.</small></div><button type="button" class="lab-bk lab-shx" aria-label="Close">×</button></div><div class="lab-shl">'+langs().map(function(l){return '<button type="button" class="lab-lr'+(l.c===cur?' on':'')+'" data-c="'+l.c+'"><i>'+l.f+'</i><span><b>'+esc(l.n)+'</b><small>'+esc(l.nat||'')+'</small></span>'+(l.c===cur?IC.check:'')+'</button>'}).join('')+'</div></div>';OV.appendChild(sh);requestAnimationFrame(function(){sh.classList.add('in')});
  function x(){sh.classList.remove('in');setTimeout(function(){sh.remove()},200)}
- $('.lab-shb',sh).onclick=x;$('.lab-shx',sh).onclick=x;sh.querySelectorAll('.lab-lr').forEach(function(b){b.onclick=function(){var c=b.dataset.c;js('lr_lab_lang',c);try{var u=U();u.xLang=c;if(window.pfSave)pfSave()}catch(e){}buzz(8);var id=CUR;x();if(c!==cur&&id&&LAB.apps[id])setTimeout(function(){LAB.apps[id]()},120)}})}
+ $('.lab-shb',sh).onclick=x;$('.lab-shx',sh).onclick=x;sh.querySelectorAll('.lab-lr').forEach(function(b){b.onclick=function(){var c=b.dataset.c;js('lr_lab_lang',c);try{var u=U();u.xLang=c;if(window.pfSave)pfSave()}catch(e){}buzz(8);var id=LAB.curTab||CUR;x();if(c!==cur&&id&&LAB.apps[id])setTimeout(function(){LAB.apps[id]()},120)}})}
 function level(){try{var t=String(U().level||U().cefr||U().target||'B1');var m=t.match(/\b([ABC][12])\b/);return m?m[1]:'B1'}catch(e){return'B1'}}
 /* ---- one place to talk to the AI ---- */
 async function ai(sys,user,o){o=o||{};var key;try{key=aiKey()}catch(e){}if(!key)throw new Error('noai');
@@ -56480,7 +56501,7 @@ var EK='lr_errbank',ERR={
  clear:function(id){js(EK,ERR.all().filter(function(e){return e.id!==id}))}};
 /* ---- full screen shell ---- */
 var OV=null,cleanup=null;
-function open(id,title,sub,build){close(true);CUR=id;OV=D.createElement('div');OV.id='lab-ov';OV.className='lab lab-'+id;OV.setAttribute('role','dialog');OV.setAttribute('aria-label',title);
+function open(id,title,sub,build){if(LAB._inhub&&LAB._hubRender){LAB._inhub=0;return LAB._hubRender(id,title,sub,build)}close(true);CUR=id;OV=D.createElement('div');OV.id='lab-ov';OV.className='lab lab-'+id;OV.setAttribute('role','dialog');OV.setAttribute('aria-label',title);
  OV.innerHTML='<div class="lab-bg"></div><header class="lab-hd"><button type="button" class="lab-bk" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><div class="lab-ti"><b>'+esc(title)+'</b><small>'+esc(sub||'')+'</small></div><span class="lab-ex"></span></header><main class="lab-bd"></main>';
  D.body.appendChild(OV);D.documentElement.classList.add('lab-on');if(LB_APPS[id])langBtn();
  $('.lab-bk',OV).onclick=function(){close()};
@@ -56496,34 +56517,63 @@ function mic(onText,langCode,btn){var SR=window.SpeechRecognition||window.webkit
  r.onresult=function(e){var t='';for(var i=0;i<e.results.length;i++)t+=e.results[i][0].transcript;onText(t,e.results[e.results.length-1].isFinal)};
  r.onend=function(){btn.__rec=null;btn.classList.remove('rec')};r.onerror=function(){btn.__rec=null;btn.classList.remove('rec')};try{r.start()}catch(e){}}
 var IC={mic:'<svg viewBox="0 0 24 24"><path d="M12 15a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.9V22h2v-3.1A7 7 0 0 0 19 12z"/></svg>',say:'<svg viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9zm11.5 3a4 4 0 0 0-2-3.5v7a4 4 0 0 0 2-3.5zM14 3.2v2.1a7 7 0 0 1 0 13.4v2.1a9 9 0 0 0 0-17.6z"/></svg>',check:'<svg viewBox="0 0 24 24"><path d="m9 16.2-3.5-3.5L4 14.1l5 5 11-11-1.5-1.4z"/></svg>',send:'<svg viewBox="0 0 24 24"><path d="M3 20.5 21 12 3 3.5l.01 6.6L15 12 3.01 13.9z"/></svg>'};
-var LAB=window.LAB={langs:langs,sp:sp,lobj:lobj,open:open,close:close,ai:ai,aiErr:aiErr,esc:esc,$:$,jg:jg,js:js,U:U,toast:toast,say:say,buzz:buzz,lang:lang,LN:LN,level:level,err:ERR,spin:spin,mic:mic,IC:IC,today:today,apps:{}};
-/* ============ Think in English: stop translating word for word ============ */
-LAB.apps.think=function(){open('think','Think in English','Say it in your language. See how a native would say it.',function(b){
- var HK='lr_think_hist',L=lang(),ex=({uz:['Men bugun juda charchadim.','Menga bu fikr yoqmadi.','Ertaga uchrashamiz, xo‘pmi?','Bu ish menga og‘irlik qilyapti.'],ru:['Я сегодня очень устал.','Мне не нравится эта идея.','Увидимся завтра, хорошо?','Мне тяжело даётся эта работа.']})[L]||[];
- b.innerHTML='<section class="lab-card lbth-in"><label for="lbth-t">What do you want to say?</label><div class="lbth-box"><textarea id="lbth-t" rows="3" maxlength="400" placeholder="Write in '+LN[L]+' (or any language)…"></textarea><button type="button" class="lab-ic" id="lbth-m" aria-label="Speak">'+IC.mic+'</button></div><div class="lbth-ex">'+ex.map(function(x){return '<button type="button" class="lab-chip">'+esc(x)+'</button>'}).join('')+'</div><button type="button" class="lab-go" id="lbth-go">Think in English</button></section><div id="lbth-out"></div><section class="lab-hist" id="lbth-h"></section>';
- var t=$('#lbth-t',b),out=$('#lbth-out',b),busy=false;
- b.querySelectorAll('.lbth-ex .lab-chip').forEach(function(c){c.onclick=function(){t.value=c.textContent;t.focus()}});
- $('#lbth-m',b).onclick=function(){mic(function(x){t.value=x},sp(L),this)};
- function hist(){var h=jg(HK,[]),el=$('#lbth-h',b);el.innerHTML=h.length?'<h4>Earlier</h4>'+h.slice(0,6).map(function(x,i){return '<button type="button" class="lab-row" data-i="'+i+'"><span>'+esc(x.src)+'</span><b>'+esc(x.r.natural&&x.r.natural.en||'')+'</b></button>'}).join(''):'';el.querySelectorAll('.lab-row').forEach(function(r){r.onclick=function(){var x=jg(HK,[])[+r.dataset.i];t.value=x.src;show(x.r,x.src,true);window.scrollTo(0,0)}})}
- function show(r,src,old){var nat=r.natural||{},lit=r.literal||{};
-  out.innerHTML='<section class="lab-card lbth-c bad"><small>Word for word</small><p class="lbth-en">'+esc(lit.en||'')+'</p><p class="lbth-why">'+esc(lit.issue||'')+'</p></section>'+
-  '<section class="lab-card lbth-c good"><small>What a native says</small><p class="lbth-en">'+esc(nat.en||'')+'</p><button type="button" class="lab-ic sm" id="lbth-s" aria-label="Listen">'+IC.say+'</button><div class="lbth-alt">'+(nat.casual?'<span><i>Casual</i>'+esc(nat.casual)+'</span>':'')+(nat.formal?'<span><i>Formal</i>'+esc(nat.formal)+'</span>':'')+'</div></section>'+
-  '<section class="lab-card lbth-c gap"><small>The thinking gap</small><p>'+esc(r.gap||'')+'</p>'+(r.pattern?'<div class="lbth-pat">'+esc(r.pattern)+'</div>':'')+'</section>'+
-  '<section class="lab-card lbth-c try"><small>Now you say it</small><div class="lbth-box"><input id="lbth-y" type="text" placeholder="Type the English sentence from memory" autocomplete="off"><button type="button" class="lab-ic" id="lbth-ym" aria-label="Speak English">'+IC.mic+'</button></div><button type="button" class="lab-go ghost" id="lbth-ck">Check my sentence</button><div id="lbth-fb"></div></section>'+(old?'':'<p class="lbth-saved">'+IC.check+' Saved to your Error Bank so you can practise it later.</p>');
-  $('#lbth-s',out).onclick=function(){say(nat.en,'en-US')};
-  $('#lbth-ym',out).onclick=function(){mic(function(x){$('#lbth-y',out).value=x},'en-US',this)};
-  $('#lbth-ck',out).onclick=async function(){var y=$('#lbth-y',out).value.trim();if(!y)return;var fb=$('#lbth-fb',out);fb.innerHTML=spin();
-   try{var j=await ai('You are a kind English coach for a '+LN[L]+' speaker at level '+level()+'. Reply JSON only: {"ok":boolean (true if natural and correct enough),"feedback":"one or two short sentences in English","better":"improved sentence or empty"}.','Meaning to express: '+src+'\nNative version: '+nat.en+'\nLearner wrote: '+y,{max:220,t:.2});
-    fb.innerHTML='<p class="lbth-fb '+(j.ok?'ok':'no')+'">'+(j.ok?'✓ ':'')+esc(j.feedback||'')+(j.better?'<br><b>'+esc(j.better)+'</b>':'')+'</p>';if(j.ok){buzz([10,40,10]);try{triggerConfetti()}catch(e){}}else ERR.add({k:'phrase',t:y,fix:j.better||nat.en,why:j.feedback||'',src:'Think in English'})}catch(e){fb.innerHTML='<p class="lbth-fb no">'+esc(aiErr(e))+'</p>'}};
+var LAB=window.LAB={langs:langs,sp:sp,lobj:lobj,open:open,close:close,ai:ai,aiErr:aiErr,esc:esc,$:$,jg:jg,js:js,U:U,toast:toast,say:say,buzz:buzz,lang:lang,LN:LN,level:level,err:ERR,spin:spin,mic:mic,IC:IC,today:today,apps:{},tabs:{},langSheet:langSheet,langBtn:langBtn,go:function(id,o){LAB.apps[id](o)}};
+/* ============ Think in English: write in your language, see how a native says it ============ */
+var EXS={uz:['Men bugun juda charchadim.','Menga bu fikr yoqmadi.','Ertaga uchrashamiz, xo‘pmi?'],ru:['Я сегодня очень устал.','Мне не нравится эта идея.','Увидимся завтра, хорошо?'],tr:['Bugün çok yorgunum.','Bu fikri beğenmedim.','Yarın görüşürüz, tamam mı?'],kk:['Мен бүгін өте шаршадым.','Маған бұл идея ұнамады.','Ертең кездесеміз, келістік пе?'],ky:['Мен бүгүн абдан чарчадым.','Мага бул идея жакпады.','Эртең жолугабыз, макулбу?'],tg:['Ман имрӯз хеле хаста шудам.','Ин ғоя ба ман маъқул нашуд.','Фардо вомехӯрем, хуб?'],ar:['أنا متعب جدًا اليوم.','لم تعجبني هذه الفكرة.','أراك غدًا، حسنًا؟'],zh:['我今天很累。','我不喜欢这个主意。','明天见，好吗？'],ja:['今日はとても疲れました。','そのアイデアは好きではありません。','また明日ね、いい？'],ko:['오늘 너무 피곤해요.','이 아이디어가 마음에 안 들어요.','내일 봐요, 괜찮죠?'],hi:['मैं आज बहुत थका हुआ हूँ।','मुझे यह विचार पसंद नहीं आया।','कल मिलते हैं, ठीक है?'],fr:['Je suis très fatigué aujourd’hui.','Cette idée ne me plaît pas.','On se voit demain, d’accord ?'],de:['Ich bin heute sehr müde.','Die Idee gefällt mir nicht.','Wir sehen uns morgen, okay?'],es:['Hoy estoy muy cansado.','No me gusta esta idea.','Nos vemos mañana, ¿vale?']};
+var PBK='lr_phrasebook',THK='lr_think_hist';
+function copyTxt(t){try{navigator.clipboard.writeText(t).then(function(){toast('Copied')},function(){toast('Could not copy')})}catch(e){toast('Could not copy')}}
+LAB.tabs.think=function(){open('think','Think in English','Write in your language. See how natives say it.',function(b){
+ var L1=lang(),mode=jg('lr_think_mode','out'),busy=false,pre=LAB.pre&&LAB.pre.think;LAB.pre=null;
+ function paint(){L1=lang();var o=lobj(L1),ex=EXS[L1]||EXS.uz;
+  b.innerHTML='<section class="lbt-bar"><button type="button" class="lbt-lang" id="lbt-l" aria-label="Choose your language"><i>'+o.f+'</i><span><small>I write in</small><b>'+esc(o.n)+'</b></span><svg viewBox="0 0 24 24"><path d="m7 10 5 5 5-5"/></svg></button><span class="lbt-arr">'+(mode==='out'?'→':'←')+'</span><div class="lbt-en"><i>🇬🇧</i><span><small>I learn</small><b>English</b></span></div></section>'+
+  '<div class="lab-seg lbt-md"><button type="button" class="lab-chip'+(mode==='out'?' on':'')+'" data-m="out">Say it in English</button><button type="button" class="lab-chip'+(mode==='in'?' on':'')+'" data-m="in">Understand English</button></div>'+
+  '<section class="lab-card lbt-in"><div class="lbt-box"><textarea id="lbt-t" dir="auto" rows="3" maxlength="500" placeholder="'+(mode==='out'?'Write anything in '+esc(o.n)+'…':'Paste an English sentence…')+'" lang="'+(mode==='out'?L1:'en')+'"></textarea><div class="lbt-bt"><button type="button" class="lab-ic sm" id="lbt-m" aria-label="Speak">'+IC.mic+'</button><button type="button" class="lab-ic sm" id="lbt-c" aria-label="Clear">×</button></div></div>'+
+  (mode==='out'?'<div class="lbt-ex">'+ex.map(function(x){return '<button type="button" class="lab-chip" dir="auto">'+esc(x)+'</button>'}).join('')+'</div>':'<div class="lbt-ex">'+['I\'m running late.','It\'s not a big deal.','Let\'s call it a day.'].map(function(x){return '<button type="button" class="lab-chip">'+esc(x)+'</button>'}).join('')+'</div>')+
+  '<button type="button" class="lab-go lbt-go" id="lbt-go">'+(mode==='out'?'Show me the English':'Explain it to me')+'</button></section><div id="lbt-out"></div><div id="lbt-pb"></div>';
+  var t=$('#lbt-t',b);b.querySelectorAll('.lbt-ex .lab-chip').forEach(function(c){c.onclick=function(){t.value=c.textContent;t.focus();buzz(5)}});
+  b.querySelectorAll('.lbt-md .lab-chip').forEach(function(c){c.onclick=function(){mode=c.dataset.m;js('lr_think_mode',mode);paint()}});
+  $('#lbt-l',b).onclick=function(){LAB.langSheet()};$('#lbt-c',b).onclick=function(){t.value='';t.focus()};
+  $('#lbt-m',b).onclick=function(){mic(function(x){t.value=x},mode==='out'?sp(L1):'en-US',this)};
+  $('#lbt-go',b).onclick=function(){run(t.value.trim())};t.onkeydown=function(e){if(e.key==='Enter'&&(e.ctrlKey||e.metaKey))run(t.value.trim())};
+  book();if(pre){t.value=pre;pre=null;run(t.value.trim())}}
+ function book(){var a=jg(PBK,[]),el=$('#lbt-pb',b);if(!el)return;if(!a.length){el.innerHTML='';return}
+  el.innerHTML='<h4 class="lab-h">Phrasebook · '+a.length+'</h4>'+a.slice(0,12).map(function(x,i){return '<div class="lbt-pr"><div class="lbt-pm"><b>'+esc(x.en)+'</b><small dir="auto">'+esc(x.src||'')+'</small></div><button type="button" class="lab-ic sm" data-s="'+i+'" aria-label="Listen">'+IC.say+'</button><button type="button" class="lab-ic sm x" data-x="'+i+'" aria-label="Remove">×</button></div>'}).join('');
+  el.querySelectorAll('[data-s]').forEach(function(x){x.onclick=function(){say(a[+x.dataset.s].en,'en-US')}});el.querySelectorAll('[data-x]').forEach(function(x){x.onclick=function(){a.splice(+x.dataset.x,1);js(PBK,a);book()}})}
+ function sheet(r,src,old){var out=$('#lbt-out',b),nat=r.natural||{},lit=r.literal||{},tone='neutral',L1n=LN[L1];
+  var tones=[['neutral','Natural',nat.en],['casual','Casual',nat.casual],['formal','Formal',nat.formal]].filter(function(x){return x[2]});
+  function show(){var cur=(tones.filter(function(x){return x[0]===tone})[0]||tones[0]);$('#lbt-nat',out).textContent=cur[2];out.__cur=cur[2];out.querySelectorAll('.lbt-tn').forEach(function(x){x.classList.toggle('on',x.dataset.k===cur[0])})}
+  var same=lit.en&&nat.en&&lit.en.trim().toLowerCase()===nat.en.trim().toLowerCase();
+  out.innerHTML='<section class="lbt-hero"><small>Say it like this</small><p id="lbt-nat" class="lbt-natx" lang="en"></p><div class="lbt-tns">'+tones.map(function(x){return '<button type="button" class="lbt-tn" data-k="'+x[0]+'">'+x[1]+'</button>'}).join('')+'</div><div class="lbt-act"><button type="button" class="lab-go sm" id="lbt-s">'+IC.say+' Listen</button><button type="button" class="lab-go sm ghost" id="lbt-sl">Slow</button><button type="button" class="lab-go sm ghost" id="lbt-cp">Copy</button><button type="button" class="lab-go sm ghost" id="lbt-sv">Save</button></div></section>'+
+  (same?'':'<section class="lab-card lbt-cmp"><div class="lbt-row bad"><b>✗ Word for word</b><p lang="en">'+esc(lit.en||'')+'</p><small>'+esc(lit.issue||'')+'</small></div><div class="lbt-row good"><b>✓ What natives say</b><p lang="en">'+esc(nat.en||'')+'</p></div></section>')+
+  '<section class="lab-card lbt-gap"><small>How '+esc(L1n)+' and English think differently</small><p dir="auto">'+esc(r.gap||'')+'</p>'+(r.pattern?'<div class="lbth-pat lbt-pat">'+esc(r.pattern)+'</div>':'')+
+  ((r.more||[]).length?'<div class="lbt-more"><small>More with the same pattern</small>'+(r.more||[]).slice(0,3).map(function(m){return '<div class="lbt-mr"><b lang="en">'+esc(m.en)+'</b><span dir="auto">'+esc(m.l1||'')+'</span><button type="button" class="lab-ic sm" data-m="'+esc(m.en)+'" aria-label="Listen">'+IC.say+'</button></div>'}).join('')+'</div>':'')+'</section>'+
+  '<section class="lab-card lbt-try"><small>Now you say it</small><div class="lbt-box"><input id="lbt-y" type="text" placeholder="Type the English sentence from memory" autocomplete="off" autocapitalize="off" spellcheck="false"><button type="button" class="lab-ic sm" id="lbt-ym" aria-label="Speak English">'+IC.mic+'</button></div><button type="button" class="lab-go ghost sm" id="lbt-ck">Check my sentence</button><div id="lbt-fb"></div></section>'+
+  '<div class="lbt-nx"><button type="button" class="lab-go ghost sm" id="lbt-er">Practise my mistakes</button><button type="button" class="lab-go sm" id="lbt-new">New sentence</button></div>';
+  out.querySelectorAll('.lbt-tn').forEach(function(x){x.onclick=function(){tone=x.dataset.k;show();buzz(5)}});show();
+  $('#lbt-s',out).onclick=function(){say(out.__cur,'en-US')};$('#lbt-sl',out).onclick=function(){try{speechSynthesis.cancel();var u=new SpeechSynthesisUtterance(out.__cur);u.lang='en-US';u.rate=.6;speechSynthesis.speak(u)}catch(e){say(out.__cur,'en-US')}};
+  $('#lbt-cp',out).onclick=function(){copyTxt(out.__cur)};
+  $('#lbt-sv',out).onclick=function(){var a=jg(PBK,[]);if(!a.some(function(x){return x.en===out.__cur}))a.unshift({en:out.__cur,src:src,ts:Date.now()});js(PBK,a.slice(0,80));toast('Saved to your phrasebook ✓');buzz(8);book()};
+  out.querySelectorAll('[data-m]').forEach(function(x){x.onclick=function(){say(x.dataset.m,'en-US')}});
+  $('#lbt-ym',out).onclick=function(){mic(function(x){$('#lbt-y',out).value=x},'en-US',this)};
+  $('#lbt-ck',out).onclick=async function(){var y=$('#lbt-y',out).value.trim();if(!y)return;var fb=$('#lbt-fb',out);fb.innerHTML=spin();
+   try{var j=await ai('You are a kind English coach for a '+L1n+' speaker at level '+level()+'. Reply JSON only: {"ok":boolean (true if natural and correct enough),"feedback":"one or two short sentences in English","better":"improved sentence or empty"}.','Meaning to express: '+src+'\nNative version: '+out.__cur+'\nLearner wrote: '+y,{max:220,t:.2});
+    fb.innerHTML='<p class="lbth-fb '+(j.ok?'ok':'no')+'">'+(j.ok?'✓ ':'')+esc(j.feedback||'')+(j.better?'<br><b>'+esc(j.better)+'</b>':'')+'</p>';if(j.ok){buzz([10,40,10]);try{triggerConfetti()}catch(e){}}else ERR.add({k:'phrase',t:y,fix:j.better||out.__cur,why:j.feedback||'',src:'Think in English'})}catch(e){fb.innerHTML='<p class="lbth-fb no">'+esc(aiErr(e))+'</p>'}};
+  $('#lbt-er',out).onclick=function(){LAB.go('errors')};$('#lbt-new',out).onclick=function(){var t=$('#lbt-t',b);t.value='';out.innerHTML='';b.parentNode.scrollTo?b.parentNode.scrollTo({top:0,behavior:'smooth'}):0;t.focus()};
   out.classList.remove('in');void out.offsetWidth;out.classList.add('in')}
- $('#lbth-go',b).onclick=async function(){var src=t.value.trim();if(!src||busy)return;busy=true;out.innerHTML=spin();var btn=this;btn.disabled=true;
-  try{var r=await ai('You are a world-class English teacher who cures "word-for-word translation disease" in '+LN[L]+' speakers (level '+level()+'). The learner writes something in their language. Reply JSON ONLY:\n{"literal":{"en":"the English a learner would produce by translating word for word","issue":"one short English sentence saying why that sounds wrong or odd to natives"},"natural":{"en":"the most natural English a native would say in this situation","casual":"a casual alternative or empty","formal":"a formal alternative or empty"},"gap":"2-3 short sentences in '+LN[L]+' explaining how the two languages think differently here (what is added, dropped or changed)","pattern":"a reusable English pattern like: I feel + adjective / It is + adj + to + verb"}\nIf the word-for-word version is actually fine, say so in "issue" and keep literal equal to natural. Never use markdown.',src,{max:700,t:.3});
-   var h=jg(HK,[]);h.unshift({src:src,r:r,ts:Date.now()});js(HK,h.slice(0,20));
-   if(r.literal&&r.natural&&r.literal.en&&r.natural.en&&r.literal.en.trim().toLowerCase()!==r.natural.en.trim().toLowerCase())ERR.add({k:'phrase',t:r.literal.en,fix:r.natural.en,why:r.literal.issue||'',src:'Think in English'});
-   show(r,src,false);hist();try{LAB.mark('think')}catch(e){}}catch(e){out.innerHTML='<section class="lab-card"><p class="lbth-fb no">'+esc(aiErr(e))+'</p></section>'}finally{busy=false;btn.disabled=false}};
- hist()})};
+ function insight(r,src){var out=$('#lbt-out',b);
+  out.innerHTML='<section class="lbt-hero in2"><small>In '+esc(LN[L1])+'</small><p class="lbt-natx" dir="auto">'+esc(r.tr||'')+'</p><div class="lbt-act"><button type="button" class="lab-go sm" id="lbt-s">'+IC.say+' Listen to the English</button></div></section>'+
+  '<section class="lab-card lbt-gap"><small>Meaning and use</small><p dir="auto">'+esc(r.meaning||'')+'</p>'+(r.tone?'<div class="lbth-pat lbt-pat">'+esc(r.tone)+'</div>':'')+((r.examples||[]).length?'<div class="lbt-more"><small>Examples</small>'+r.examples.slice(0,3).map(function(m){return '<div class="lbt-mr"><b lang="en">'+esc(m.en)+'</b><span dir="auto">'+esc(m.l1||'')+'</span><button type="button" class="lab-ic sm" data-m="'+esc(m.en)+'" aria-label="Listen">'+IC.say+'</button></div>'}).join('')+'</div>':'')+'</section>';
+  $('#lbt-s',out).onclick=function(){say(src,'en-US')};out.querySelectorAll('[data-m]').forEach(function(x){x.onclick=function(){say(x.dataset.m,'en-US')}});out.classList.remove('in');void out.offsetWidth;out.classList.add('in')}
+ async function run(src){if(!src||busy)return;busy=true;var out=$('#lbt-out',b),btn=$('#lbt-go',b);out.innerHTML=spin();btn.disabled=true;var L1n=LN[L1];
+  try{if(mode==='out'){var r=await ai('You are a world-class English teacher who cures "word-for-word translation disease" in '+L1n+' speakers (level '+level()+'). The learner writes something in '+L1n+' (or any language). Reply JSON ONLY:\n{"literal":{"en":"the English a learner would produce by translating word for word","issue":"one short English sentence on why that sounds wrong or odd to natives"},"natural":{"en":"the most natural neutral English a native would say here","casual":"a casual alternative or empty","formal":"a formal alternative or empty"},"gap":"2-3 short sentences written in '+L1n+' explaining how the two languages think differently here (what is added, dropped or changed)","pattern":"a reusable English pattern like: I feel + adjective","more":[{"en":"another sentence with the same pattern","l1":"its meaning in '+L1n+'"},{"en":"","l1":""}]}\nIf the word-for-word version is actually fine, say so in "issue" and keep literal equal to natural. Never use markdown.',src,{max:900,t:.3});
+    var h=jg(THK,[]);h.unshift({src:src,ts:Date.now()});js(THK,h.slice(0,20));
+    if(r.literal&&r.natural&&r.literal.en&&r.natural.en&&r.literal.en.trim().toLowerCase()!==r.natural.en.trim().toLowerCase())ERR.add({k:'phrase',t:r.literal.en,fix:r.natural.en,why:r.literal.issue||'',src:'Think in English'});
+    sheet(r,src,false);try{LAB.mark('think')}catch(e){}}
+   else{var r2=await ai('You explain English to a '+L1n+' speaker (level '+level()+'). Reply JSON ONLY: {"tr":"natural translation into '+L1n+'","meaning":"1-2 short sentences in '+L1n+' explaining the meaning and when natives use it","tone":"short English label like: casual, polite, idiom, slang","examples":[{"en":"example sentence","l1":"its translation in '+L1n+'"},{"en":"","l1":""}]}. Never use markdown.',src,{max:600,t:.3});insight(r2,src)}
+  }catch(e){out.innerHTML='<section class="lab-card"><p class="lbth-fb no">'+esc(aiErr(e))+'</p></section>'}finally{busy=false;btn.disabled=false}}
+ paint();return function(){}})};
 /* ============ Error Bank + Boss Fight ============ */
-LAB.apps.errors=function(){open('errors','Error Bank','Your own mistakes, turned into practice.',function(b){
+LAB.tabs.errors=function(){open('errors','Error Bank','Your own mistakes, turned into practice.',function(b){
  function paint(){var a=ERR.all(),act=a.filter(function(e){return !e.done}),fin=a.filter(function(e){return e.done});
   var last=jg('lr_boss_last',0),days=last?Math.floor((Date.now()-last)/864e5):99;
   b.innerHTML='<section class="lab-card lber-top"><div class="lber-ring" style="--p:'+(a.length?(fin.length/a.length):0).toFixed(3)+'"><b>'+act.length+'</b><small>to fix</small></div><div class="lber-tx"><h3>'+(act.length>=4?'Boss Fight is ready':'Collect a few more mistakes')+'</h3><p>'+(act.length>=4?'A short exam made only from your own mistakes. Beat it to clear them.':'Mistakes are saved automatically from flashcards, Think in English, Story Mode and Micro Lessons. You can also add your own.')+'</p><div class="lber-b"><button type="button" class="lab-go" id="lber-boss"'+(act.length<2?' disabled':'')+'>Start Boss Fight</button>'+(days<7&&last?'<small>Last fight '+days+' day'+(days===1?'':'s')+' ago</small>':'')+'</div></div></section>'+
@@ -56552,7 +56602,7 @@ var tileRefresh=null;function refreshTiles(){try{if(typeof renderHub==='function
 (function(){'use strict';
 var L=window.LAB,$=L.$,esc=L.esc,ai=L.ai,IC=L.IC,jg=L.jg,js=L.js;
 var SK='lr_story';
-L.apps.story=function(){L.open('story','Detective Story','Interview suspects in English. Solve the case.',function(b){
+L.tabs.story=function(){L.open('story','Detective Story','Interview suspects in English. Solve the case.',function(b){
  var S=jg(SK,null),busy=false;
  function start(){
   b.innerHTML='<section class="lab-card"><h3>New case</h3><p class="lab-mut">An AI game master writes a fresh mystery. You question people in English. Your mistakes are gently corrected and saved to your Error Bank.</p><label>Genre</label><div class="lab-seg" id="lbst-g">'+['Classic mystery','Sci-fi station','Fantasy castle','Office thriller'].map(function(x,i){return '<button type="button" class="lab-chip'+(i?'':' on')+'">'+x+'</button>'}).join('')+'</div><button type="button" class="lab-go" id="lbst-go">Open the case</button></section>'+(S&&!S.over?'<button type="button" class="lab-row" id="lbst-res"><span>Continue</span><b>'+esc(S.title)+'</b></button>':'');
@@ -56616,7 +56666,7 @@ function mlCard(m,i){var q=m[3]&&m[3].indexOf('Q|')===0?m[3].split('|'):null,ex=
  if(ex)h+='<p class="lbml-x">'+esc(ex)+'</p><button type="button" class="lab-ic" data-s="'+esc(m[1]+'. '+m[2]+' '+ex)+'" aria-label="Listen">'+IC.say+'</button>';
  if(q){var o=q[3].split(','),ok=+q[4],ord=[0,1];if(i%2)ord=[1,0];h+='<div class="lbml-q"><b>'+esc(q[1])+'</b><p>'+esc(q[2])+'</p>'+ord.map(function(k){return '<button type="button" class="lab-opt" data-ok="'+(k===ok?1:0)+'">'+esc(o[k])+'</button>'}).join('')+'</div>'}
  return h+'</article>'}
-L.apps.reels=function(){L.open('reels','Micro Lessons','30-second lessons. Swipe up for the next one.',function(b){
+L.tabs.reels=function(){L.open('reels','Micro Lessons','30-second lessons. Swipe up for the next one.',function(b){
  var seen=jg('lr_ml_seen',0),order=ML.map(function(_,i){return i}),k=+seen%ML.length,items=order.slice(k).concat(order.slice(0,k)).map(function(i){return ML[i]}),viewed={},gen=false;
  b.innerHTML='<div class="lbml-feed" id="lbml-f"></div><div class="lbml-pg" id="lbml-p"></div>';var f=$('#lbml-f',b);
  function add(arr){var s=f.children.length;f.insertAdjacentHTML('beforeend',arr.map(function(m,i){return mlCard(m,s+i)}).join(''));bind()}
@@ -56630,7 +56680,7 @@ L.apps.reels=function(){L.open('reels','Micro Lessons','30-second lessons. Swipe
  async function more(){gen=true;try{var j=await ai('Write 5 new micro English lessons for a '+L.LN[L.lang()]+' speaker at level '+L.level()+'. Each: a common mistake or a useful phrase. Reply JSON {"l":[{"k":"Say it better|Phrasal verb|Confusing pair","t":"title","b":"explanation, max 22 words","x":"one example sentence"}]}',' ',{max:800,t:.9});(j.l||[]).forEach(function(l){items.push([l.k||'Lesson',l.t||'',l.b||'',l.x||''])});f.insertAdjacentHTML('beforeend',(j.l||[]).map(function(l,i){return mlCard(items[items.length-j.l.length+i],items.length-j.l.length+i)}).join(''));bind();watch();gen=false}catch(e){gen=false;if(!more.t){more.t=1;f.insertAdjacentHTML('beforeend','<article class="lbml-c"><div class="lbml-k">That’s all for now</div><h2>You finished the set</h2><p class="lbml-b">Come back tomorrow for more, or connect AI for endless lessons.</p></article>')}}}
  prog();return function(){io.disconnect()}})};
 /* ============ Reality Scanner: point the camera, learn the words ============ */
-L.apps.scan=function(){L.open('scan','Reality Scanner','Take a photo. Learn the English for everything in it.',function(b){
+L.tabs.scan=function(){L.open('scan','Reality Scanner','Take a photo. Learn the English for everything in it.',function(b){
  b.innerHTML='<section class="lab-card lbsc-top"><div class="lbsc-pre" id="lbsc-pre"><svg viewBox="0 0 24 24"><path d="M9 3 7.2 5H4a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-3.2L15 3zm3 14a4.5 4.5 0 1 1 0-9 4.5 4.5 0 0 1 0 9z"/></svg><b>Photograph a room, a street, a menu, your desk</b><small>Or choose a picture from your gallery</small></div><div class="lbsc-bt"><label class="lab-go">Take a photo<input type="file" accept="image/*" capture="environment" id="lbsc-c" hidden></label><label class="lab-go ghost">Choose picture<input type="file" accept="image/*" id="lbsc-g" hidden></label></div></section><div id="lbsc-out"></div>';
  var out=$('#lbsc-out',b);
  function prep(file){return new Promise(function(ok,no){var im=new Image(),u=URL.createObjectURL(file);im.onload=function(){var m=1024,s=Math.min(1,m/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=Math.round(im.width*s);c.height=Math.round(im.height*s);c.getContext('2d').drawImage(im,0,0,c.width,c.height);URL.revokeObjectURL(u);ok(c.toDataURL('image/jpeg',.8))};im.onerror=no;im.src=u})}
@@ -56660,7 +56710,7 @@ function words(d){var lv=d<=30?['A2','B1']:d<=60?['B1','B2']:['B2','C1'],pool=[]
  if(pool.length<20)try{pool=Object.keys(miniUz).filter(function(k){return /^[a-z]+$/.test(k)}).sort()}catch(e){}
  var n=pool.length,out=[];for(var j=0;j<3&&n;j++)out.push(pool[((d-1)*3+j)*37%n]);return out}
 function streak(){var m=done(),d=day(),s=0;for(var i=d;i>=1;i--){var t=tasksFor(i).filter(function(k){return k!=='boss'&&k!=='speak'||true});var c=Object.keys(m[i]||{}).length;if(c>=3)s++;else if(i!==d)break}return s}
-L.apps.path=function(){L.open('path','90-Day Path','One clear plan. Four small tasks a day.',function(b){
+L.tabs.path=function(){L.open('path','90-Day Path','One clear plan. Four small tasks a day.',function(b){
  function paint(){var s=start();
   if(s==null){b.innerHTML='<section class="lab-card lbpa-hero"><h3>Fluent in 90 days</h3><p>Three phases. Every day gives you four short tasks: words, review, speaking and a micro lesson. About 20 minutes a day.</p><div class="lbpa-ph"><div><b>Days 1–30</b><span>Foundation</span><small>Daily words, core grammar, first sentences</small></div><div><b>Days 31–60</b><span>Fluency</span><small>Longer answers, stories, listening</small></div><div><b>Days 61–90</b><span>Mastery</span><small>Exam style tasks and real conversation</small></div></div><button type="button" class="lab-go" id="lbpa-s">Start today</button></section>';$('#lbpa-s',b).onclick=function(){js(SKY,dnum());paint()};return}
   var d=day(),m=done(),tk=tasksFor(d),dn=(m[d]||{}),cnt=tk.filter(function(k){return dn[k]}).length,ph=d<=30?'Foundation':d<=60?'Fluency':'Mastery';
@@ -56669,13 +56719,63 @@ L.apps.path=function(){L.open('path','90-Day Path','One clear plan. Four small t
   '<section id="lbpa-t">'+tk.map(function(k){var ok=dn[k];return '<div class="lbpa-t'+(ok?' ok':'')+'" data-k="'+k+'"><span class="lbpa-ck">'+(ok?L.IC.check:'')+'</span><div class="lbpa-m"><b>'+esc(TI[k][0])+'</b><small>'+esc(TI[k][1])+'</small></div><button type="button" class="lab-go sm" data-o="'+k+'">'+(ok?'Again':'Open')+'</button></div>'}).join('')+'</section><div id="lbpa-w"></div>'+
   '<section class="lab-card"><h4>Your 90 days</h4><div class="lbpa-cal">'+cal+'</div><button type="button" class="lab-go ghost sm" id="lbpa-r">Restart plan</button></section>';
   b.querySelectorAll('[data-o]').forEach(function(x){x.onclick=function(){var k=x.dataset.o;if(k==='words'){showWords(d);return}if(k==='review'){L.mark('review');try{L.close();setTimeout(function(){window.fcOpen()},260)}catch(e){}return}
-   var a={think:'think',micro:'reels',speak:'story',boss:'errors',scan:'scan'}[k];try{L.close();setTimeout(function(){L.apps[a]()},260)}catch(e){}}});
+   var a={think:'think',micro:'reels',speak:'story',boss:'errors',scan:'scan'}[k];try{L.go(a)}catch(e){}}});
   $('#lbpa-r',b).onclick=function(){if(this.dataset.c){js(SKY,null);js(DK,{});paint()}else{this.dataset.c=1;this.textContent='Tap again to erase progress'}}}
  function showWords(d){var w=words(d),el=$('#lbpa-w',b);el.innerHTML='<section class="lab-card"><h4>Today’s words</h4>'+w.map(function(x,i){return '<div class="lbsc-w"><div class="lbsc-m"><b>'+esc(x)+'</b><span id="pw'+i+'">…</span></div><button type="button" class="lab-ic sm" data-s="'+esc(x)+'" aria-label="Listen">'+L.IC.say+'</button><button type="button" class="lab-ic sm" data-v="'+esc(x)+'" aria-label="Save">+</button></div>'}).join('')+'<button type="button" class="lab-go" id="pw-d">I learned them</button></section>';
   w.forEach(function(x,i){var t='',lg=L.lang();try{if(lg==='uz')t=miniUz[x]||''}catch(e){}var el2=$('#pw'+i,b);if(t)el2.textContent=t;else try{if(lg==='uz')translateToUz(x).then(function(r){el2.textContent=r&&r.main||''});else LRW.tr(x,lg).then(function(r){el2.textContent=r&&r.m||''})}catch(e){}});
   el.querySelectorAll('[data-s]').forEach(function(x){x.onclick=function(){L.say(x.dataset.s,'en-US')}});el.querySelectorAll('[data-v]').forEach(function(x){x.onclick=function(){try{saveWord(x.dataset.v)}catch(e){}x.innerHTML=L.IC.check;x.classList.add('on')}});
   $('#pw-d',b).onclick=function(){L.mark('words');L.buzz([10,30,10]);paint()};el.scrollIntoView({behavior:'smooth',block:'start'})}
  paint()})};
+})();
+
+/* ============ English Lab: one place, seven tabs ============ */
+(function(){'use strict';
+var L=window.LAB,D=document,$=L.$,esc=L.esc,jg=L.jg;
+var HUB=null;
+var TABS=[['home','Home','<path d="M3 11.5 12 4l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>'],
+ ['think','Think','<path d="M12 3a6 6 0 0 0-4 10.5V16h8v-2.5A6 6 0 0 0 12 3zm-3 15h6v1.5a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 19.5z"/>'],
+ ['reels','Lessons','<path d="M13 2 4 14h6l-1 8 9-12h-6z"/>'],
+ ['errors','Mistakes','<path d="M12 2 4 5v6c0 5 3.4 9.3 8 11 4.6-1.7 8-6 8-11V5zm-1 6h2v6h-2zm0 8h2v2h-2z"/>'],
+ ['story','Story','<path d="M10 2a8 8 0 1 0 4.9 14.3l5.4 5.4 1.4-1.4-5.4-5.4A8 8 0 0 0 10 2zm0 2a6 6 0 1 1 0 12 6 6 0 0 1 0-12z"/>'],
+ ['scan','Scan','<path d="M9 3 7.2 5H4a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-3.2L15 3zm3 14a4.5 4.5 0 1 1 0-9 4.5 4.5 0 0 1 0 9z"/>'],
+ ['path','Path','<path d="M5 3a3 3 0 0 0-1 5.8V15a4 4 0 0 0 4 4h2.2a3 3 0 1 0 0-2H8a2 2 0 0 1-2-2V8.8A3 3 0 0 0 5 3zm14 12a3 3 0 1 0 .2 6A3 3 0 0 0 19 15z"/>']];
+function hubRender(id,title,sub,build){var ov=HUB.ov,b=HUB.b;try{HUB.cleanup&&HUB.cleanup()}catch(e){}HUB.cleanup=null;
+ ov.className='lab lab-hub in lab-'+id;$('.lab-ti b',ov).textContent=title;$('.lab-ti small',ov).textContent=sub||'';ov.setAttribute('aria-label',title);
+ var s=$('.lab-lg,.lab-ex',ov),e=D.createElement('span');e.className='lab-ex';s.replaceWith(e);
+ b.innerHTML='';b.scrollTop=0;
+ HUB.nav.querySelectorAll('button').forEach(function(x){x.classList.toggle('on',x.dataset.t===id);x.setAttribute('aria-current',x.dataset.t===id?'page':'false')});
+ L.curTab=id;if(({scan:1,path:1,reels:1})[id])L.langBtn();
+ HUB.cleanup=build(b,ov)||null;return ov}
+L._hubRender=hubRender;
+function openHub(tab,o){
+ if(HUB&&HUB.ov&&D.body.contains(HUB.ov)){go(tab,o);return}
+ L._inhub=0;
+ L.open('hub','English Lab','',function(b,ov){var nav=D.createElement('nav');nav.className='lab-nav';nav.setAttribute('aria-label','English Lab sections');
+  nav.innerHTML=TABS.map(function(t){return '<button type="button" data-t="'+t[0]+'"><svg viewBox="0 0 24 24" aria-hidden="true">'+t[2]+'</svg><span>'+t[1]+'</span></button>'}).join('');
+  ov.appendChild(nav);HUB={ov:ov,b:b,nav:nav,cleanup:null};
+  nav.querySelectorAll('button').forEach(function(x){x.onclick=function(){L.buzz(6);go(x.dataset.t)}});
+  go(tab);return function(){try{HUB&&HUB.cleanup&&HUB.cleanup()}catch(e){}HUB=null;L.curTab=null}})}
+function go(tab,o){if(!HUB)return openHub(tab,o);if(o&&o.think)L.pre={think:o.think};L._inhub=1;try{L.tabs[tab]()}catch(e){L._inhub=0;throw e}}
+['home','think','errors','story','path','reels','scan'].forEach(function(k){L.apps[k]=function(o){openHub(k,o)}});
+L.apps.hub=function(o){openHub('home',o)};
+/* ---------- Home: where everything connects ---------- */
+function pathInfo(){try{var p=L.pathDay();return p}catch(e){return null}}
+L.tabs.home=function(){L.open('home','English Lab','Everything you need to think in English.',function(b){
+ var errN=0,p=pathInfo(),ph=null,u=L.U(),nm=String(u.name||'').split(' ')[0],o=L.lobj(L.lang()),dl=null;
+ try{errN=L.err.active().length}catch(e){}try{dl=window.DL?DL.state():null}catch(e){}
+ var hh=new Date().getHours(),gr=hh<5?'Good night':hh<12?'Good morning':hh<18?'Good afternoon':'Good evening';
+ b.innerHTML='<section class="lbh-hero"><div><p class="lbh-k">English Lab</p><h2>'+esc(gr)+(nm?', '+esc(nm):'')+'</h2><p>Write in your language. Learn how English really sounds.</p></div></section>'+
+ '<section class="lab-card lbh-q"><label for="lbh-t">Think in English</label><div class="lbt-box"><textarea id="lbh-t" dir="auto" rows="2" placeholder="Write anything in '+esc(o.n)+'…"></textarea><button type="button" class="lab-go lbh-go" id="lbh-go">Show me</button></div><button type="button" class="lbh-lg" id="lbh-lg"><i>'+o.f+'</i> '+esc(o.n)+' · change language</button></section>'+
+ '<div class="lbh-row">'+
+ '<button type="button" class="lbh-c lbh-a" data-g="path"><small>90-Day Path</small><b>'+(p?'Day '+p.day+' · '+p.phase:'Start your plan')+'</b><span>'+(p?(p.left.length?p.left.length+' task'+(p.left.length===1?'':'s')+' left today':'All tasks done today ✓'):'Four small tasks every day')+'</span></button>'+
+ '<button type="button" class="lbh-c lbh-b" data-g="errors"><small>Mistakes</small><b>'+errN+' to fix</b><span>'+(errN>=4?'Boss Fight is ready':'Collected from every activity')+'</span></button>'+
+ '<button type="button" class="lbh-c lbh-d" data-g="daily"><small>Daily Luna</small><b>'+(dl&&dl.last===L.today()?'Done today ✓':'Today\'s session')+'</b><span>'+(window.DL?'Adaptive practice for all 6 skills':'')+'</span></button></div>'+
+ '<h4 class="lab-h">Tools</h4><div class="lbh-grid">'+
+ [['think','Think in English','Natural English from your own words','💭'],['reels','Micro Lessons','30-second swipe lessons','⚡'],['errors','Error Bank & Boss Fight','Turn mistakes into points','🛡'],['story','Detective Story','Solve cases in English','🕵'],['scan','Reality Scanner','Photo to vocabulary','📷'],['path','90-Day Path','A clear daily plan','🧭']].map(function(t){return '<button type="button" class="lbh-t" data-g="'+t[0]+'"><i>'+t[3]+'</i><span><b>'+t[1]+'</b><small>'+t[2]+'</small></span></button>'}).join('')+'</div>';
+ b.querySelectorAll('[data-g]').forEach(function(x){x.onclick=function(){var g=x.dataset.g;L.buzz(6);if(g==='daily'){L.close();setTimeout(function(){try{DL.start()}catch(e){}},300)}else L.go(g)}});
+ $('#lbh-go',b).onclick=function(){var v=$('#lbh-t',b).value.trim();if(v)L.go('think',{think:v});else $('#lbh-t',b).focus()};
+ $('#lbh-lg',b).onclick=function(){L.langSheet()};
+ return function(){}})};
 })();
 
 </script><style id="lr-dl-css">.lc-card.dl-card{padding:0;background:none;border:0;box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none;overflow:visible}
@@ -56688,7 +56788,7 @@ L.apps.path=function(){L.open('path','90-Day Path','One clear plan. Four small t
 .dl-mid{display:flex;align-items:center;gap:18px;margin:14px 0 4px;flex-wrap:wrap}.dl-chips{display:flex;gap:8px;flex-wrap:wrap}.dl-pill{padding:7px 13px;border-radius:999px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);font-size:13.5px;font-weight:600}
 .dl .lber-ring:before{background:#121833}
 .dl-start{width:100%;margin-top:14px;min-height:56px;font-size:17px;border-radius:18px;box-shadow:0 14px 34px -14px rgba(124,140,255,.9)}
-.dl-skl{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px}
+.dl-skl{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:16px}
 .dl-sm{position:relative;overflow:hidden;text-align:left;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.05);color:#eef1fb;border-radius:16px;padding:11px 13px 14px;cursor:pointer;font:inherit;display:flex;justify-content:space-between;align-items:center;gap:6px;min-height:50px}
 .dl-sm span{font-weight:600;font-size:14px}.dl-sm em{font-style:normal;font-size:12px;color:#9aa3c4}.dl-sm i{position:absolute;left:0;bottom:0;height:4px;background:var(--c);border-radius:0 4px 4px 0}
 .dl-sm:active{transform:scale(.98)}
@@ -56717,13 +56817,51 @@ L.apps.path=function(){L.open('path','90-Day Path','One clear plan. Four small t
 .dl-pr.sh .dl-pi{min-height:50px;font-size:17px}
 @media(max-width:560px){.dl-pr{gap:10px}.dl-pi{font-size:14.5px;padding:11px}}
 textarea#dl-t{font-size:18px}
-.dl-res{text-align:center;padding-bottom:30px}.dl-res h2{margin:0 0 4px}.dl-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:16px 0}.dl-stats div{background:rgba(255,255,255,.06);border-radius:16px;padding:12px}.dl-stats b{font-size:24px;display:block}.dl-stats small{color:var(--lm)}
+.dl-res{text-align:center;padding-bottom:30px}.dl-res h2{margin:0 0 4px}.dl-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(86px,1fr));gap:10px;margin:16px 0}.dl-stats div{background:rgba(255,255,255,.06);border-radius:16px;padding:12px}.dl-stats b{font-size:24px;display:block}.dl-stats small{color:var(--lm)}
 .dl-sk{display:grid;gap:10px;text-align:left}.dl-skr{display:grid;grid-template-columns:110px 1fr 96px;align-items:center;gap:12px;font-size:14px}.dl-bar2{height:9px;border-radius:8px;background:rgba(255,255,255,.1);overflow:hidden}.dl-bar2 i{display:block;height:100%;border-radius:8px;transition:width .6s}.dl-skr em{font-style:normal;color:var(--lm);font-size:12.5px;text-align:right}.dl-skr em.up{color:#34d399}.dl-skr em.dn{color:#fb7185}
 .dl-bq{display:grid;gap:10px;text-align:left}.dl-bqi{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);border-radius:16px;padding:12px 14px}.dl-bqi.ok{border-color:rgba(52,211,153,.5)}.dl-bt{flex:none;width:30px;height:30px;border-radius:50%;border:2px solid rgba(255,255,255,.25);background:none;color:#04251a;display:grid;place-items:center;cursor:pointer;padding:0}.dl-bqi.ok .dl-bt{background:#34d399;border-color:#34d399}.dl-bt svg{width:18px;height:18px;fill:currentColor}.dl-bm{flex:1;min-width:0}.dl-bm b{display:block}.dl-bm small{color:var(--lm)}
 .dl-ra{display:flex;gap:12px;justify-content:center;margin-top:20px}
 .dl-sh{display:flex;gap:20px;align-items:center}.dl-big2{flex:none;text-align:center;width:110px;height:110px;border-radius:50%;display:grid;place-content:center;background:conic-gradient(from 200deg,#7c8cff,#22d3ee,#34d399,#7c8cff)}.dl-big2 b{font-size:34px;line-height:1;color:#0b0f1d}.dl-big2 small{color:#0b0f1d;font-weight:600;font-size:11px}.dl-sd{flex:1;min-width:0}.dl-sd p{margin:0 0 6px}.dl-sp{width:100%;max-width:260px;height:54px;display:block}
 .dl-ch{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.dl-ch.col{grid-template-columns:1fr}.dl-cc{text-align:left;border:2px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);color:#fff;border-radius:16px;padding:14px;font:inherit;cursor:pointer}.dl-cc b{display:block;font-size:16px}.dl-cc small{color:var(--lm)}.dl-cc.on{border-color:#7c8cff;background:rgba(124,140,255,.2)}
 @media(max-width:560px){.dl-ch{grid-template-columns:1fr}.dl-skr{grid-template-columns:88px 1fr 78px}}
+
+.dl-bar2{position:relative}.dl-bar2 u{position:absolute;top:-2px;bottom:-2px;width:3px;border-radius:2px;background:#fff;opacity:.85;text-decoration:none;transform:translateX(-1px)}
+.dl-skr em.up{color:#34d399}.dl-skr em.dn{color:#fb7185}
+.dl-tm{font-variant-numeric:tabular-nums;font-size:13px;font-weight:600;color:#a5b4fc;background:rgba(255,255,255,.08);border-radius:10px;padding:4px 9px}
+.dl2-open{margin:8px 0 0;color:#fde68a;font-size:14px}.dl2-open button{background:none;border:0;color:#7dd3fc;font:inherit;font-weight:600;text-decoration:underline;cursor:pointer;padding:0}
+.dl2-int p{max-width:46ch;margin:0 auto}
+/* camera */
+.dl2-cam{position:relative;width:min(100%,420px,max(220px,calc((100vh - 540px)*1.333)));aspect-ratio:4/3;margin:6px auto 14px;border-radius:22px;overflow:hidden;background:#05070f;border:1px solid rgba(165,180,252,.25);box-shadow:0 18px 40px -22px rgba(0,0,0,.8)}
+.dl2-cam video{width:100%;height:100%;object-fit:cover;transform:scaleX(-1);display:block}
+.dl2-co{position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:20px;color:#c7d2fe;font-size:14px}.dl2-co[hidden]{display:none}
+.dl2-tmr{position:absolute;right:10px;top:10px;background:rgba(5,7,15,.72);color:#fff;border-radius:12px;padding:5px 11px;font-weight:700;font-variant-numeric:tabular-nums;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.dl2-priv{margin:10px 0 0;text-align:center;font-size:12.5px;color:#8b95b8}
+/* break */
+.dl2-brk{position:fixed;inset:0;z-index:3300;display:grid;place-items:center;padding:24px;background:radial-gradient(700px 420px at 50% 28%,rgba(99,102,241,.35),transparent 70%),radial-gradient(500px 360px at 80% 90%,rgba(34,211,238,.18),transparent 70%),rgba(6,9,22,.99);color:#eef1fb;animation:dl2f .5s ease both;font-family:Inter,system-ui,sans-serif}
+@keyframes dl2f{from{opacity:0}to{opacity:1}}
+.dl2-bin{max-width:440px;width:100%;text-align:center}
+.dl2-br{position:relative;width:150px;height:150px;margin:0 auto 22px}.dl2-br i{position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff,#c7d2fe 14%,#7c8cff 46%,#4338ca 80%);opacity:.28;animation:dl2b 8s ease-in-out infinite}.dl2-br i:nth-child(2){animation-delay:-2.6s;opacity:.4;inset:14px}.dl2-br i:nth-child(3){animation-delay:-5.2s;opacity:.9;inset:34px;box-shadow:0 0 50px rgba(124,140,255,.7)}
+@keyframes dl2b{0%,100%{transform:scale(.72)}50%{transform:scale(1.08)}}
+.dl2-bk{margin:0;color:#a5b4fc;font-weight:600;font-size:13px;letter-spacing:.04em}.dl2-bin h2{margin:6px 0 8px;font-size:clamp(24px,5vw,32px);line-height:1.15}.dl2-bx{margin:0 auto;color:#c7d2fe;font-size:16.5px;line-height:1.55;max-width:34ch}
+.dl2-bst{display:flex;justify-content:center;gap:12px;margin:24px 0 22px;flex-wrap:wrap}.dl2-bst div{background:rgba(255,255,255,.07);border-radius:16px;padding:10px 16px;min-width:96px}.dl2-bst b{display:block;font-size:20px;font-variant-numeric:tabular-nums}.dl2-bst small{color:#9aa6cf;font-size:12px}
+.dl2-ba{display:flex;gap:10px;justify-content:center;align-items:center}
+@media(prefers-reduced-motion:reduce){.dl2-br i{animation:none}.dl2-brk{animation:none}}
+/* activity */
+.dl2-act{display:grid;gap:8px;text-align:left}.dl2-ar{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.05);border-radius:14px;padding:10px 12px}.dl2-ar.ok{background:rgba(52,211,153,.1)}
+.dl2-ad{flex:none;width:24px;height:24px;border-radius:50%;border:2px solid rgba(255,255,255,.25);display:grid;place-items:center}.dl2-ar.ok .dl2-ad{background:#34d399;border-color:#34d399;color:#06281c}.dl2-ad svg{width:14px;height:14px}
+.dl2-am{flex:1;min-width:0}.dl2-am b{display:block;font-size:14.5px}.dl2-am small{color:#9aa6cf;font-size:12.5px;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.dl2-ar em{font-style:normal;color:#34d399;font-size:13px;font-weight:600}
+/* progress */
+.dl2-vd{text-align:left}.dl2-vd h3{margin:0 0 6px;font-size:21px}.dl2-vd p{margin:4px 0}.dl2-vd ul{margin:8px 0;padding-left:20px;line-height:1.6}.dl2-vk{font-size:12.5px;color:#9aa6cf}.dl2-wk{font-weight:600;color:#fde68a}
+.dl2-vd.up{border-color:rgba(52,211,153,.5);background:linear-gradient(180deg,rgba(52,211,153,.14),rgba(255,255,255,.03))}.dl2-vd.flat{border-color:rgba(251,191,36,.45);background:linear-gradient(180deg,rgba(251,191,36,.1),rgba(255,255,255,.03))}.dl2-vd.down{border-color:rgba(251,113,133,.5);background:linear-gradient(180deg,rgba(251,113,133,.12),rgba(255,255,255,.03))}
+.dl2-rad{display:block;width:100%;max-width:330px;margin:0 auto}.dl2-rg{fill:none;stroke:rgba(255,255,255,.14);stroke-width:1}.dl2-rl{fill:#9aa6cf;font-size:10.5px;font-family:Inter,system-ui,sans-serif}
+.dl2-rt{fill:none;stroke:#fbbf24;stroke-width:2;stroke-dasharray:5 4}.dl2-rn{fill:rgba(34,211,238,.22);stroke:#22d3ee;stroke-width:2.4}
+.dl2-lg{display:flex;gap:18px;justify-content:center;margin:2px 0 14px;font-size:12.5px;color:#9aa6cf}.dl2-lg i{display:inline-block;width:14px;height:0;border-top:2px dashed #fbbf24;vertical-align:middle;margin-right:6px}.dl2-lg i.n{border-top:3px solid #22d3ee}
+.dl2-ch{display:block;width:100%;height:auto}.dl2-ts{display:flex;gap:10px;margin-bottom:10px;flex-wrap:wrap}.dl2-ts div{flex:1;min-width:90px;background:rgba(255,255,255,.06);border-radius:14px;padding:10px 12px;text-align:center}.dl2-ts b{display:block;font-size:19px}.dl2-ts small{color:#9aa6cf;font-size:12px}
+.dl2-sb{display:flex;align-items:baseline;gap:10px}.dl2-sb b{font-size:38px;color:#fb7185}.dl2-sb small{color:#9aa6cf}
+.dl2-pl{display:flex;gap:8px;flex-wrap:wrap}
+
+.dl-host{padding-bottom:20px}
+.dl2-ch{max-width:540px;margin:0 auto}.dl2-ch .dl2-rl{font-size:7.5px}
 </style><script id="lr-dl">/* ================= Daily Luna: an adaptive daily English trainer ================= */
 (function(){'use strict';
 var D=document,L=window.LAB,esc=L.esc,$=function(s,r){return (r||D).querySelector(s)};
@@ -56790,9 +56928,9 @@ function sim(a,b){var x=norm(a).split(' ').filter(Boolean),y=norm(b).split(' ').
 function speak(t,rate){try{if(window.speechSynthesis){speechSynthesis.cancel();var u=new SpeechSynthesisUtterance(t);u.lang='en-US';u.rate=rate||.95;speechSynthesis.speak(u);return}}catch(e){}L.say(t,'en-US')}
 var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
 /* ---------- skills & CEFR ---------- */
-var SKILLS=['listening','speaking','reading','writing','vocab','grammar'];
-var SKN={listening:'Listening',speaking:'Speaking',reading:'Reading',writing:'Writing',vocab:'Vocabulary',grammar:'Grammar'};
-var SKC={listening:'#22d3ee',speaking:'#fb7185',reading:'#a78bfa',writing:'#fbbf24',vocab:'#34d399',grammar:'#60a5fa'};
+var SKILLS=['listening','speaking','pronunciation','reading','writing','vocab','grammar'];
+var SKN={listening:'Listening',speaking:'Speaking',pronunciation:'Pronunciation',reading:'Reading',writing:'Writing',vocab:'Vocabulary',grammar:'Grammar'};
+var SKC={listening:'#22d3ee',speaking:'#fb7185',pronunciation:'#f472b6',reading:'#a78bfa',writing:'#fbbf24',vocab:'#34d399',grammar:'#60a5fa'};
 function cefr(v){return v<18?'A1':v<36?'A2':v<54?'B1':v<72?'B2':v<88?'C1':'C2'}
 function tier(v){return v<38?0:v<62?1:2}
 function n100(v){v=+v;if(!v&&v!==0)return null;return v<=9?v/9*100:clamp(v,0,100)}
@@ -56802,6 +56940,10 @@ function S(){var u=U();var d=u.dl=u.dl||{};
  if(!d.sk){var p=u.placement||{},base={A1:12,A2:28,B1:45,B2:64,C1:80,C2:92}[p.cefr]||38,g=n100(p.g),r=n100(p.r),s=n100(p.s);
   d.sk={listening:base,speaking:s!=null?clamp(s*.9,5,95):base-3,reading:r!=null?clamp(r*.9,5,95):base,writing:base-2,vocab:base,grammar:g!=null?clamp(g*.9,5,95):base};
   d.placed=!!p.cefr}
+ SKILLS.forEach(function(k){if(typeof d.sk[k]!=='number')d.sk[k]=k==='pronunciation'?(typeof d.sk.speaking==='number'?d.sk.speaking:40):40});
+ if(!d.base){d.base={};SKILLS.forEach(function(k){d.base[k]=d.sk[k]});d.baseAt=L.today()}
+ if(!d.since)d.since=L.today();
+ {var bk=Object.keys(d.bonus||{}).sort();while(bk.length>30)delete d.bonus[bk.shift()]}
  d.xp=d.xp||0;d.streak=d.streak||0;d.last=d.last||'';d.hist=d.hist||{};d.acc=d.acc||{};d.bonus=d.bonus||{};d.tot=d.tot||0;return d}
 function overall(d){d=d||S();var s=0;SKILLS.forEach(function(k){s+=d.sk[k]});return s/SKILLS.length}
 function yday(){var t=new Date();t.setDate(t.getDate()-1);try{var o=t.getTimezoneOffset()*6e4;return new Date(t.getTime()-o).toISOString().slice(0,10)}catch(e){return''}}
@@ -56815,7 +56957,9 @@ var T={
  wordorder:{sk:['grammar','writing'],lbl:'Build the sentence',ord:4},
  read:{sk:['reading'],lbl:'Read and answer',ord:5},
  dictate:{sk:['listening','writing'],lbl:'Dictation',ord:5},
- say:{sk:['speaking'],lbl:'Say it aloud',ord:6},
+ say:{sk:['speaking','pronunciation'],lbl:'Say it aloud',ord:6},
+ camsay:{sk:['speaking','pronunciation'],lbl:'Talk to the camera',ord:6},
+ camshow:{sk:['speaking','vocab'],lbl:'Show and tell',ord:6},
  write:{sk:['writing','vocab'],lbl:'Use it in a sentence',ord:7,ai:1},
  think:{sk:['writing','speaking'],lbl:'Think in English',ord:7,ai:1}};
 var STYLE={games:{match:1.5,join:1.5,wordorder:1.5,listen:1.2,correct:1.2},speak:{say:1.8,think:1.5,dictate:1.2,write:1.2},study:{read:1.7,listen:1.4,gap:1.3,dictate:1.3},mixed:{}};
@@ -56825,12 +56969,12 @@ var PACK=null;
 function facts(d){var u=U(),sv=(u.savedWords||[]).slice(-12),er=[];try{er=L.err.active().slice(0,6).map(function(e){return {said:e.t,right:e.fix}})}catch(e){}
  var film=[];try{film=JSON.parse(localStorage.getItem('lr_cinema_cards')||'[]').slice(0,8).map(function(c){return c.w})}catch(e){}
  var due=[];try{due=(window.SRS?SRS.list().slice(0,8):[])}catch(e){}
- return {first_name:String(u.name||'').split(' ')[0],goal:u.target||'',levels:SKILLS.reduce(function(o,k){o[k]=cefr(d.sk[k])+' ('+Math.round(d.sk[k])+'/100)';return o},{}),mother_tongue:L.LN[L.lang()],recent_saved_words:sv,film_words:film,due_words:due,common_mistakes:er,weakest:SKILLS.slice().sort(function(a,b){return d.sk[a]-d.sk[b]}).slice(0,2)}}
+ return {first_name:String(u.name||'').split(' ')[0],goal:u.target||'',levels:SKILLS.reduce(function(o,k){o[k]=cefr(d.sk[k])+' ('+Math.round(d.sk[k])+'/100)';return o},{}),mother_tongue:L.LN[L.lang()],recent_saved_words:sv,film_words:film,due_words:due,common_mistakes:er,weakest:SKILLS.slice().sort(function(a,b){return d.sk[a]-d.sk[b]}).slice(0,2),interests:interests(d)}}
 async function buildPack(d){
  if(PACK&&PACK.day===L.today())return PACK;var pk=d.pack;if(pk&&pk.day===L.today()){PACK=pk;return pk}
  if(!aiOn())return null;
  var lg=L.LN[L.lang()],lv=tier(overall(d));
- try{var j=await L.ai('You are Luna, an expert English coach. Create TODAY\'s personal practice pack for ONE learner. Use their facts: reuse their saved words, film words and mistakes inside the sentences when natural. Keep sentences natural, 6-14 words, level-appropriate (A2/B1/B2 per the skill levels, a mix centred on the learner). Reply JSON ONLY:\n{"focus":"today\'s theme, max 5 words","hello":"2 short warm spoken sentences; use the first name once if given","sentences":[{"en":"","t":0|1|2}],"wrong":[{"ok":"correct sentence","bad":["wrong version 1 (one grammar error)","wrong version 2 (a different error)"],"note":"max 14 words explaining the rule"}],"gap":[{"s":"sentence with ___","a":"answer","d":["wrong 1","wrong 2"],"note":""}],"match":[{"en":"word","tr":"translation into '+lg+'"}],"read":{"title":"","text":"60-90 word passage","qs":[{"q":"","o":["","",""],"a":0}]},"write":[{"p":"one sentence-writing task using a target word","w":"target word"}],"think":[{"src":"a short everyday sentence in '+lg+'","en":"the most natural English"}]}\nCounts: sentences 10, wrong 3, gap 3, match 5, read 1 (3 questions), write 2, think 2. Never use markdown.',JSON.stringify(facts(d)),{max:2200,t:.7,ms:45000});
+ try{var j=await L.ai('You are Luna, an expert English coach. Create TODAY\'s personal practice pack for ONE learner. Use their facts: reuse their saved words; if interests are given, quietly build the topics of the sentences around them (never mention that you know their interests); film words and mistakes inside the sentences when natural. Keep sentences natural, 6-14 words, level-appropriate (A2/B1/B2 per the skill levels, a mix centred on the learner). Reply JSON ONLY:\n{"focus":"today\'s theme, max 5 words","hello":"2 short warm spoken sentences; use the first name once if given","sentences":[{"en":"","t":0|1|2}],"wrong":[{"ok":"correct sentence","bad":["wrong version 1 (one grammar error)","wrong version 2 (a different error)"],"note":"max 14 words explaining the rule"}],"gap":[{"s":"sentence with ___","a":"answer","d":["wrong 1","wrong 2"],"note":""}],"match":[{"en":"word","tr":"translation into '+lg+'"}],"read":{"title":"","text":"60-90 word passage","qs":[{"q":"","o":["","",""],"a":0}]},"write":[{"p":"one sentence-writing task using a target word","w":"target word"}],"think":[{"src":"a short everyday sentence in '+lg+'","en":"the most natural English"}]}\nCounts: sentences 10, wrong 3, gap 3, match 5, read 1 (3 questions), write 2, think 2. Never use markdown.',JSON.stringify(facts(d)),{max:2200,t:.7,ms:45000});
   if(j&&j.sentences){j.day=L.today();d.pack=j;PACK=j;save();return j}}catch(e){}
  return null}
 /* ---------- exercise generators ---------- */
@@ -56860,14 +57004,14 @@ async function genMatch(ses,r,t){var lg=L.lang(),pk=PACK&&PACK.match;
  var u=usedSet(ses,'mw');words=shuffle(words.filter(function(w){return u.indexOf(w)<0}),r).slice(0,5);if(words.length<4)return null;words.forEach(function(w){u.push(w)});
  var res=await Promise.all(words.map(async function(w){var m='';try{if(lg==='uz')m=(miniUz[w]||'').split(',')[0].trim();else if(window.LRW){var x=await Promise.race([LRW.tr(w,lg),new Promise(function(_,no){setTimeout(no,6000)})]);m=x&&x.m||''}}catch(e){}return[w,m]}));
  res=res.filter(function(p){return p[1]});if(res.length<4)return null;return{pairs:res,aud:1}}
-async function make(type,ses,d){var r=rngf(hash(L.today()+type+(ses.n||0)+Math.random())),sk=T[type].sk[0],t=tier(d.sk[sk]);
- if(d.acc[type]&&d.acc[type].n>=4&&d.acc[type].s/d.acc[type].n<.45)t=Math.max(0,t-1);
+async function make(type,ses,d,st){var r=rngf(hash(L.today()+type+(ses.n||0)+Math.random())),sk=T[type].sk[0],t=tier(d.sk[sk]),forced=st&&st.ft!=null;
+ if(!forced&&d.acc[type]&&d.acc[type].n>=4&&d.acc[type].s/d.acc[type].n<.45)t=Math.max(0,t-1);if(forced)t=st.ft;
  ses.n=(ses.n||0)+1;var x=null;try{x=type==='match'?await genMatch(ses,r,t):GEN[type](ses,r,t)}catch(e){x=null}
  if(x){x.type=type;x.tier=t}return x}
 /* ---------- session planning ---------- */
 function minutes(d){return (d.pref&&d.pref.min)||15}
 function stepsFor(d){return minutes(d)<=10?6:minutes(d)>=30?10:8}
-function planSteps(d){var r=rngf(hash(L.today()+(U().name||'')+d.tot)),n=stepsFor(d),sty=STYLE[(d.pref&&d.pref.style)||'mixed']||{},ai=aiOn(),can=SR||false,w={},types=Object.keys(T).filter(function(k){return !T[k].ai||ai||k==='write'});
+function planSteps(d){var r=rngf(hash(L.today()+(U().name||'')+d.tot)),n=stepsFor(d),sty=STYLE[(d.pref&&d.pref.style)||'mixed']||{},ai=aiOn(),can=SR||false,w={},types=Object.keys(T).filter(function(k){return (!T[k].ai||ai||k==='write')&&k.indexOf('cam')!==0});
  var last=(d.lastTypes||[]);
  types.forEach(function(k){var need=0;T[k].sk.forEach(function(s){need+=(100-d.sk[s])/100});need/=T[k].sk.length;var x=.35+need;x*=(sty[k]||1);if(last.indexOf(k)>=0)x*=.6;if(k==='say'&&!can)x*=.5;if(k==='think'&&!ai)x=0;w[k]=x});
  var out=[],cnt={};
@@ -56878,7 +57022,7 @@ function planSteps(d){var r=rngf(hash(L.today()+(U().name||'')+d.tot)),n=stepsFo
  var guard=0;while(out.length<n&&guard++<80){var tot=0,ks=types.filter(function(k){return (cnt[k]||0)<2&&w[k]>0});if(!ks.length)break;ks.forEach(function(k){tot+=w[k]*((cnt[k]||0)?.5:1)});var p=r()*tot,c=ks[ks.length-1];for(var i=0;i<ks.length;i++){var a=w[ks[i]]*((cnt[ks[i]]||0)?.5:1);if(p<a){c=ks[i];break}p-=a}add(c)}
  if(!out.some(function(k){return T[k].sk.indexOf('reading')>=0})&&n>=8)out[out.length-1]='read';
  out.sort(function(a,b){return T[a].ord-T[b].ord||0});
- return out.map(function(k,i){return{id:'s'+i,type:k,done:0}})}
+ out=camMix(d,out,r);return out.map(function(k,i){return{id:'s'+i,type:k,done:0}})}
 /* ---------- bonus quests: the rest of the site, connected ---------- */
 function weakGrammar(){try{var sc=JSON.parse(localStorage.getItem('lunarise_grammar_scores')||'{}'),m=(Array.isArray(grammarModules)?grammarModules:[]).filter(function(x){return sc[x.id]!=null&&sc[x.id]<70});if(m.length)return m[0].id;var all=Array.isArray(grammarModules)?grammarModules:[];return all.length?all[Math.floor(hash(L.today())%Math.min(all.length,30))].id:null}catch(e){return null}}
 var BON={
@@ -56897,11 +57041,13 @@ var BON={
  think:{t:'Think in English',s:'Say it the way natives do',run:function(){L.apps.think()}},
  scan:{t:'Scan your room',s:'Learn 8 words from one photo',run:function(){L.apps.scan()}},
  path:{t:'Open your 90-Day Path',s:'Today\'s plan from the roadmap',run:function(){L.apps.path()}},
+ cam:{t:'Talk to the camera',s:'30 seconds of speaking, face to face',run:function(){start('speaking')}},
  movies:{t:'Watch with smart subtitles',s:'Tap words in a film and save them',run:function(){try{navigateTo('movies')}catch(e){}}}};
 function pickBonus(d){var r=rngf(hash(L.today()+'b')),keys=[],er=0,due=0;try{er=L.err.active().length;due=window.SRS?SRS.list().length:0}catch(e){}
- var pool=['grammar','reading','shadow','game','music','story','reels','think','scan','movies','mock','tutor','words'];if(due>=3)keys.push('cards');if(er>=3)keys.push('errors');
- var sk=SKILLS.slice().sort(function(a,b){return d.sk[a]-d.sk[b]})[0];var pref={grammar:'grammar',reading:'reading',speaking:'shadow',listening:'movies',writing:'think',vocab:'scan'}[sk];if(pref&&keys.indexOf(pref)<0)keys.push(pref);
- pool=shuffle(pool.filter(function(k){return keys.indexOf(k)<0}),r);while(keys.length<3)keys.push(pool.shift());return keys.slice(0,3)}
+ var pool=['grammar','reading','shadow','game','music','story','reels','think','scan','movies','mock','tutor','words'].concat(camOn()?['cam']:[]);if(due>=3)keys.push('cards');if(er>=3)keys.push('errors');
+ var sk=SKILLS.slice().sort(function(a,b){return d.sk[a]-d.sk[b]})[0];var pref={grammar:'grammar',reading:'reading',pronunciation:'shadow',speaking:'cam',listening:'movies',writing:'think',vocab:'scan'}[sk];if(pref&&keys.indexOf(pref)<0)keys.push(pref);
+ pool=bpool(pool,keys,d,r);while(keys.length<3)keys.push(pool.shift());return keys.slice(0,3)}
+
 /* ---------- exercise renderers: each returns {check()} and calls api.ready(bool) ---------- */
 var IC=L.IC,COL=['#7c8cff','#22d3ee','#fbbf24','#fb7185','#34d399'];
 function mcq(host,opts,api,extra){var sel=-1;host.innerHTML=(extra||'')+'<div class="dl-opts">'+opts.map(function(o,i){return '<button type="button" class="lab-opt dl-o" data-i="'+i+'">'+esc(o)+'</button>'}).join('')+'</div>';
@@ -56953,44 +57099,13 @@ function pairing(host,pairs,api,short,aud){var rs=shuffle(pairs.map(function(p,i
  paint();return{check:function(){var c=0,w=[];pairs.forEach(function(p,i){if(rs[map[i]]&&rs[map[i]].i===i)c++;else w.push(p)});
   Lc.querySelectorAll('.dl-pi').forEach(function(b){var i=+b.dataset.i;b.disabled=true;b.classList.add(rs[map[i]]&&rs[map[i]].i===i?'okp':'nop')});Rc.querySelectorAll('.dl-pi').forEach(function(b){b.disabled=true});
   var s=c/pairs.length;return{ok:s>=.8,score:s,shown:pairs.map(function(p){return p[0]+' = '+p[1]}).join('  ·  '),note:c+' of '+pairs.length+' matched',wrongs:w.map(function(p){return short?{t:p[0],fix:p[1],why:'Vocabulary'}:{t:p[0]+' …',fix:p[0]+' '+p[1],why:'Sentence structure'}}),wrongkind:short?'word':'phrase'}}}}
+
 /* ---------- the session ---------- */
 var CUR=null,TOK=0;
 function delay(ms){return new Promise(function(r){setTimeout(r,ms)})}
 function snap(d){var o={};SKILLS.forEach(function(k){o[k]=d.sk[k]});return o}
-function quickSteps(sk){var d=S(),ai=aiOn(),r=rngf(hash(Date.now())),ks=Object.keys(T).filter(function(k){return T[k].sk.indexOf(sk)>=0&&(!T[k].ai||ai||k==='write')&&!(k==='think'&&!ai)});if(sk==='speaking'&&!ai&&!SR)ks=['say'];if(!ks.length)ks=['gap'];var out=[],c={};for(var i=0;i<4;i++){var k=pick(ks,r),g=0;while((c[k]||0)>=2&&g++<8)k=pick(ks,r);c[k]=(c[k]||0)+1;out.push({id:'q'+i,type:k,done:0})}return out}
-function newSes(d,quick){return{day:L.today(),steps:quick?quickSteps(quick):planSteps(d),i:0,n:0,used:{},xp:0,sc:0,cnt:0,quick:quick||'',before:snap(d),startedAt:Date.now()}}
+function quickSteps(sk){var d=S(),ai=aiOn(),r=rngf(hash(Date.now())),ks=Object.keys(T).filter(function(k){return T[k].sk.indexOf(sk)>=0&&(!T[k].ai||ai||k==='write')&&!(k==='think'&&!ai)&&(k.indexOf('cam')!==0||camOn())});if(sk==='speaking'&&!ai&&!SR)ks=['say'];if(!ks.length)ks=['gap'];var out=[],c={};for(var i=0;i<4;i++){var k=pick(ks,r),g=0;while((c[k]||0)>=2&&g++<8)k=pick(ks,r);c[k]=(c[k]||0)+1;out.push({id:'q'+i,type:k,done:0})}return out}
 function todayDone(d){var h=d.hist[L.today()];return !!(h&&h.done)}
-async function start(quick){var d=S();if(!d.pref&&!quick)return prefs(function(){start()});
- var tok=++TOK;
- L.open('daily','Daily Luna',quick?'Quick practice · '+SKN[quick]:'Your session for today',function(b){
-  b.innerHTML='<div class="dl-load"><div class="dl-orb"></div><h3>Luna is preparing your session…</h3><p>Choosing exercises for your level.</p>'+L.spin()+'</div>';
-  (async function(){try{await Promise.race([buildPack(d),delay(quick?2500:7000)])}catch(e){}
-   if(tok!==TOK||!$('#lab-ov'))return;
-   var ses=(!quick&&d.ses&&d.ses.day===L.today()&&!d.ses.fin)?d.ses:null;if(!ses){ses=newSes(d,quick);if(!quick){d.ses=ses;save()}}
-   CUR={ses:ses,quick:quick,host:b,d:d,tok:tok};run()})();
-  return function(){CUR=null;TOK++;try{refresh()}catch(e){}}})}
-async function run(){var C=CUR;if(!C)return;var ses=C.ses,d=C.d,b=C.host;if(ses.i>=ses.steps.length)return finish();
- var st=ses.steps[ses.i],tt=$('.lab-ti small');if(tt)tt.textContent=(ses.quick?'Quick practice':'Daily Luna')+' · '+(ses.i+1)+' of '+ses.steps.length;
- var pct=Math.round(ses.i/ses.steps.length*100);
- b.innerHTML='<div class="dl-top"><div class="dl-prog"><i style="width:'+pct+'%"></i></div><span class="dl-xp">+'+ses.xp+' XP</span></div><div class="dl-body"><div class="dl-k" style="--c:'+SKC[T[st.type].sk[0]]+'">'+esc(T[st.type].lbl)+' <small>'+esc(T[st.type].sk.map(function(k){return SKN[k]}).join(' · '))+'</small></div><div class="dl-host">'+L.spin()+'</div></div><div class="dl-foot" id="dl-ft"></div>';
- var data=st.data;if(!data){data=await make(st.type,ses,d);if(!data){var alt=['correct','gap','wordorder'];for(var i=0;i<alt.length&&!data;i++){if(alt[i]!==st.type){data=await make(alt[i],ses,d);if(data)st.type=alt[i]}}}if(!data){ses.i++;return run()}st.data=data}
- if(!CUR||CUR!==C)return;st.tier=data.tier||0;
- var host=$('.dl-host',b),ft=$('#dl-ft',b),ready=false,busy=false,r;
- $('.dl-k',b).insertAdjacentHTML('afterend','<p class="dl-ins">'+instr(st.type)+'</p>');
- host.innerHTML='';
- ft.innerHTML='<button type="button" class="lab-go ghost sm" id="dl-sk">Skip</button><button type="button" class="lab-go" id="dl-ck" disabled>Check</button>';
- var ck=$('#dl-ck',b);
- r=R[st.type](host,data,{ready:function(v){ready=!!v;ck.disabled=!v||busy}});
- $('#dl-sk',b).onclick=function(){st.skipped=1;ses.i++;if(!ses.quick)save();run()};
- ck.onclick=async function(){if(busy||!ready)return;busy=true;ck.disabled=true;ck.textContent='Checking…';var res;try{res=await r.check()}catch(e){res={ok:false,score:0,shown:'',note:'Something went wrong.'}}
-  grade(st,res,d);fb(st,res,b)}}
-function instr(t){return {wordorder:'Put the words in the correct order.',correct:'Only one sentence is correct.',gap:'Choose the word that fits.',join:'Join each beginning with its ending.',match:'Match each English word with its meaning.',listen:'Listen, then choose what you heard.',dictate:'Listen and type exactly what you hear.',say:'Listen, then say the sentence aloud.',read:'Read the text and answer the questions.',write:'Write one clear sentence.',think:'Translate it the way a native would say it.'}[t]}
-function grade(st,res,d){var C=CUR,ses=C.ses,s=clamp(res.score||0,0,1);st.done=1;st.score=s;st.ok=!!res.ok;
- T[st.type].sk.forEach(function(k,j){var w=j===0?1:.5,cur=d.sk[k],ct=tier(cur),tt=st.tier||0,delta=(s-.62)*5*w;if(tt>ct&&s>=.8)delta+=w;if(tt<ct&&s<.5)delta-=.5*w;d.sk[k]=clamp(cur+delta,2,98)});
- var a=d.acc[st.type]=d.acc[st.type]||{n:0,s:0};a.n++;a.s+=s;if(a.n>30){a.n=15;a.s=a.s/2}
- var xp=Math.round(6+s*8);if(ses.quick)xp=Math.round(xp*.6);ses.xp+=xp;ses.sc+=s;ses.cnt++;st.xp=xp;
- try{(res.wrongs||(res.wrong?[res.wrong]:[])).forEach(function(w){if(w&&w.t)L.err.add({k:res.wrongkind||'phrase',t:w.t,fix:w.fix||'',why:w.why||'',src:'Daily Luna'})})}catch(e){}
- if(!ses.quick)d.ses=ses;save();if(s>=.8){L.buzz([10,40,10])}else L.buzz([28,40,28])}
 function fb(st,res,b){var ft=$('#dl-ft',b),ok=res.ok,last=CUR.ses.i>=CUR.ses.steps.length-1,s=Math.round((res.score||0)*100);
  var title=ok?pick(['Correct!','Great!','Well done!','Perfect!'],Math.random):((res.score||0)>=.5?'Almost there':'Not quite');
  ft.className='dl-foot fb '+(ok?'ok':(res.score>=.5?'mid':'no'));
@@ -56999,7 +57114,271 @@ function fb(st,res,b){var ft=$('#dl-ft',b),ok=res.ok,last=CUR.ses.i>=CUR.ses.ste
  $('#dl-nx',b).onclick=function(){CUR.ses.i++;if(!CUR.ses.quick)save();run()};
  try{ft.scrollIntoView({block:'end',behavior:'smooth'})}catch(e){}}
 /* ---------- results ---------- */
-function finish(){var C=CUR;if(!C)return;var ses=C.ses,d=C.d,b=C.host,n=ses.cnt||0,avg=n?ses.sc/n:0,pct=Math.round(avg*100),u=U(),first=false;
+/* ---------- bonus quests ---------- */
+function bonusList(d){var t=L.today();d.bonus[t]=d.bonus[t]||{};if(!d.bonus[t].list){d.bonus[t].list=pickBonus(d);d.bonus[t].done={}}return d.bonus[t]}
+function bonusHTML(d){var B=bonusList(d);return '<div class="dl-bq">'+B.list.map(function(k){var q=BON[k],on=B.done[k];return '<div class="dl-bqi'+(on?' ok':'')+'"><button type="button" class="dl-bt" data-bt="'+k+'" aria-label="Mark done">'+(on?IC.check:'')+'</button><div class="dl-bm"><b>'+esc(q.t)+'</b><small>'+esc(q.s)+'</small></div><button type="button" class="lab-go sm" data-b="'+k+'">Open</button></div>'}).join('')+'</div>'}
+function tick(k,auto){var d=S(),B=bonusList(d);if(B.done[k])return;B.done[k]=1;d.xp+=15;try{U().gamePts=(U().gamePts||0)+15}catch(e){}save();L.toast('Bonus quest done · +15 XP ✓');try{refresh()}catch(e){}}
+function bindBonus(root){root.querySelectorAll('[data-b]').forEach(function(x){x.onclick=function(){var k=x.dataset.b;try{var dd=S();dd.clicks=dd.clicks||{};dd.clicks[k]=(dd.clicks[k]||0)+1;save()}catch(e){}L.close();setTimeout(function(){try{BON[k].run()}catch(e){}},300)}});
+ root.querySelectorAll('[data-bt]').forEach(function(x){x.onclick=function(){tick(x.dataset.bt);x.parentNode.classList.add('ok');x.innerHTML=IC.check}})}
+function feed(k,x){try{var d=S(),B=bonusList(d);var ad=actDay(d);ad.ev[k]=(ad.ev[k]||0)+1;B.list.forEach(function(id){var q=BON[id];if(q&&q.ev&&!B.done[id]&&q.ev(k,String(x||'')))tick(id,1)})}catch(e){}}
+/* ---------- preferences ---------- */
+function prefs(cb){L.open('daily-set','Your daily plan','Two quick questions so Luna fits you.',function(b){var d=S(),pf=d.pref||{min:20,style:'mixed'},m=pf.min,s=pf.style;
+ function paint(){b.innerHTML='<section class="lab-card"><h3>How much time do you have each day?</h3><div class="dl-ch" id="pm">'+[[10,'10 min','6 exercises'],[20,'20 min','8 exercises'],[30,'30 min','10 exercises']].map(function(x){return '<button type="button" class="dl-cc'+(m===x[0]?' on':'')+'" data-v="'+x[0]+'"><b>'+x[1]+'</b><small>'+x[2]+'</small></button>'}).join('')+'</div></section><section class="lab-card"><h3>What suits you best?</h3><div class="dl-ch col" id="ps">'+[['mixed','Balanced','A bit of everything. Luna balances your skills.'],['games','Games & puzzles','More matching, sentence building and listening.'],['speak','Speaking first','More speaking, dictation and translation.'],['study','Reading & listening','More texts, grammar and listening.']].map(function(x){return '<button type="button" class="dl-cc'+(s===x[0]?' on':'')+'" data-v="'+x[0]+'"><b>'+x[1]+'</b><small>'+x[2]+'</small></button>'}).join('')+'</div></section><button type="button" class="lab-go" id="dl-sv" style="width:100%">'+(d.pref?'Save':'Save and start')+'</button>';
+  b.querySelectorAll('#pm .dl-cc').forEach(function(x){x.onclick=function(){m=+x.dataset.v;paint()}});b.querySelectorAll('#ps .dl-cc').forEach(function(x){x.onclick=function(){s=x.dataset.v;paint()}});
+  $('#dl-sv',b).onclick=function(){var had=!!d.pref;d.pref={min:m,style:s};save();L.close();try{refresh()}catch(e){}if(cb)setTimeout(cb,320)}}
+ paint()})}
+/* ---------- my skills ---------- */
+function spark(vals){if(vals.length<2)return '';var mn=Math.min.apply(null,vals)-1,mx=Math.max.apply(null,vals)+1,w=240,h=54,pts=vals.map(function(v,i){return (i/(vals.length-1)*w).toFixed(1)+','+(h-(v-mn)/(mx-mn)*h).toFixed(1)}).join(' ');return '<svg viewBox="0 0 '+w+' '+h+'" class="dl-sp"><polyline points="'+pts+'" fill="none" stroke="#22d3ee" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'}
+/* ---------- the home card ---------- */
+function greetTime(){var h=new Date().getHours();return h<5?'Good night':h<12?'Good morning':h<18?'Good afternoon':'Good evening'}
+function status(d){var t=L.today(),n=stepsFor(d);if(todayDone(d))return{k:'done',done:n,n:n};var s=d.ses&&d.ses.day===t?d.ses:null;if(s)return{k:'prog',done:s.i,n:s.steps.length};return{k:'new',done:0,n:n}}
+function refresh(){var el=D.getElementById('lc-card');if(el&&el.querySelector('.dl')||el&&!el.querySelector('.lc-in'))el.innerHTML=card()}
+function bonusOpen(){L.open('daily-bonus','Bonus quests','The rest of LunaRise, picked for your weak spots.',function(b){var d=S();b.innerHTML='<section class="lab-card"><p class="lab-mut">Each one trains a different skill. Finish it, then tick it. Some tick by themselves.</p>'+bonusHTML(d)+'</section>';bindBonus(b)})}
+D.addEventListener('click',function(e){var x=e.target.closest&&e.target.closest('[data-dl]');if(!x)return;var k=x.dataset.dl;
+ if(k==='start')start();else if(k==='quick')start(x.dataset.k);else if(k==='skills')skills();else if(k==='bonus')bonusOpen();else if(k==='prefs')prefs(function(){});else if(k==='film'){try{BON.movies.run()}catch(e){}}
+ else if(k==='hello'){var d=S(),pk=d.pack&&d.pack.day===L.today()?d.pack:null,t=pk&&pk.hello?pk.hello:'Hello! Ready to grow your English today? Let\'s start.';try{if(window.LC&&LC.say)LC.say(t);else L.say(t,'en-US')}catch(e){L.say(t,'en-US')}}});
+window.DL={on:function(){return true},card:card,start:function(q){start(q)},open:function(){start()},skills:skills,refresh:refresh,feed:feed,state:function(){return S()},levels:function(){var d=S();return SKILLS.reduce(function(o,k){o[k]=cefr(d.sk[k]);return o},{})}};
+function wrapFeed(){var _pf=window.pfFeed;if(typeof _pf==='function'&&!_pf.__dl){var w=function(k,x){try{feed(k,x)}catch(e){}return _pf.apply(this,arguments)};w.__dl=1;window.pfFeed=w}}
+function boot(){wrapFeed();try{if(!document.__dlvis){document.__dlvis=1;document.addEventListener('visibilitychange',function(){if(document.hidden)stopCam()})}}catch(e){}try{if(window.LC){LC.next=function(){start()};LC.open=function(){start()};LC.nag=function(){}}}catch(e){}try{refresh()}catch(e){}}
+setTimeout(boot,900);setTimeout(boot,3500);
+
+/* ================= v136: level check, camera talk, breaks, study timer, activity checks, progress ================= */
+var CAMOK=!!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia);
+function camOn(){try{return CAMOK&&!S().nocam}catch(e){return false}}
+function ielts(v){return Math.round(clamp(1+v/100*8.2,1,9)*2)/2}
+function fmtT(s){s=Math.max(0,s|0);var m=Math.floor(s/60),x=s%60;return (m<10?'0':'')+m+':'+(x<10?'0':'')+x}
+function fmtM(s){var m=Math.round((s||0)/60);if(s>0&&m<1)return '<1 min';return m<60?m+' min':Math.floor(m/60)+' h '+(m%60)+' min'}
+function dayKeys(n){var out=[],now=new Date();for(var i=n-1;i>=0;i--){var x=new Date(now);x.setDate(now.getDate()-i);try{out.push(new Date(x.getTime()-x.getTimezoneOffset()*6e4).toISOString().slice(0,10))}catch(e){}}return out}
+function newSes(d,quick){if(!quick&&needCheck(d,quick))return checkSes(d);return{day:L.today(),steps:quick?quickSteps(quick):planSteps(d),i:0,n:0,used:{},xp:0,sc:0,cnt:0,quick:quick||'',before:snap(d),startedAt:Date.now(),sec:0,bsec:0,brk:{}}}
+function instr(t){return {wordorder:'Put the words in the correct order.',correct:'Only one sentence is correct.',gap:'Choose the word that fits.',join:'Join each beginning with its ending.',match:'Match each English word with its meaning.',listen:'Listen, then choose what you heard.',dictate:'Listen and type exactly what you hear.',say:'Listen, then say the sentence aloud.',read:'Read the text and answer the questions.',write:'Write one clear sentence.',think:'Translate it the way a native would say it.',camsay:'Look at the camera and speak for 30 seconds.',camshow:'Hold an object up to the camera and describe it.'}[t]||''}
+
+/* ---------- study timer (counts only while a session is open and the page is visible) ---------- */
+var TICK=null,BRK=0;
+function startTimer(){stopTimer(false);TICK=setInterval(function(){var C=CUR;if(!C||document.hidden||BRK)return;var d=C.d,t=L.today();d.time=d.time||{};d.time[t]=(d.time[t]||0)+1;C.ses.sec=(C.ses.sec||0)+1;C.ses.bsec=(C.ses.bsec||0)+1;var el=$('#dl-tm');if(el)el.textContent=fmtT(C.ses.sec);if(d.time[t]%20===0)save()},1000)}
+function stopTimer(sv){if(TICK){clearInterval(TICK);TICK=null}if(sv!==false)try{save()}catch(e){}}
+function weekSecs(d){var t=0;dayKeys(7).forEach(function(k){t+=(d.time&&d.time[k])||0});return t}
+function sinceDays(d){try{var a=new Date(d.since+'T00:00:00'),b=new Date(L.today()+'T00:00:00');return Math.max(1,Math.round((b-a)/864e5)+1)}catch(e){return 1}}
+
+/* ---------- break screen: soft chime, light vibration, a different message every time ---------- */
+var BREAKS=[['Take a breath','Breathe in for 4, hold for 4, breathe out for 6. Do it three times.'],['Look far away','Look at something far from you for 20 seconds. Your eyes will thank you.'],['Drink some water','A glass of water helps your brain stay sharp.'],['Stretch your neck','Slowly turn your head left, then right. Roll your shoulders back.'],['Stand up','Stand up and walk for one minute. Movement helps memory.'],['Smile for ten seconds','It really does lift your mood. Try it now.'],['Say it out loud','Say one thing you learned today to the room. Out loud!'],['Close your eyes','Close your eyes for 15 seconds and listen to the sounds around you.'],['Shake it out','Shake your hands and arms for 10 seconds. Loosen up.'],['Sit tall','Straighten your back and drop your shoulders. Better posture, better focus.'],['Rest makes memory','Your brain keeps learning while you rest. Breaks make memory stronger.'],['Rest your hands','Open and close your fists ten times, then relax your fingers.'],['You are doing great','Most people stop early. You are still here. That is how levels go up.'],['Remember your why','Why are you learning English? Hold that thought for a moment.'],['Fresh air','If you can, open a window and take three deep breaths.'],['Blink slowly','Blink slowly ten times to refresh your eyes.'],['Mini recall','Without looking: what was the last new word you learned?'],['Quiet minute','Sit quietly for 20 seconds. No phone, no sound.'],['One good thing','Think of one good thing that happened today.'],['Relax your jaw','Unclench your teeth and let your shoulders fall.'],['Roll your wrists','Make slow circles with both wrists. Typing and tapping tire them.'],['Think in English','Describe what you see around you in your head, in English.'],['Rest your eyes','Cover your eyes with your palms for 15 seconds. Darkness rests them.'],['Be kind to yourself','Mistakes are the way in. Every error you fix is a level gained.']];
+function muted(){try{return localStorage.getItem('lr_dl_mute')==='1'}catch(e){return false}}
+var AC=null;
+function chime(){if(muted())return;try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume();var t0=AC.currentTime;[523.25,659.25,783.99].forEach(function(f,i){var o=AC.createOscillator(),g=AC.createGain();o.type='sine';o.frequency.value=f;o.connect(g);g.connect(AC.destination);var s=t0+i*.22;g.gain.setValueAtTime(.0001,s);g.gain.exponentialRampToValueAtTime(.12,s+.05);g.gain.exponentialRampToValueAtTime(.0001,s+1.2);o.start(s);o.stop(s+1.3)})}catch(e){}}
+function nextBreak(d){if(!d.brkDeck||!d.brkDeck.length){var r=rngf(hash(Date.now()+'brk'));d.brkDeck=shuffle(BREAKS.map(function(_,i){return i}),r)}return BREAKS[d.brkDeck.shift()]}
+function shouldBreak(ses){if(ses.quick&&ses.steps.length<6)return false;if(ses.i<=0||ses.i>=ses.steps.length-1)return false;ses.brk=ses.brk||{};if(ses.brk[ses.i])return false;
+ if(ses.kind==='check')return ses.i===6;return ses.i%3===0||(ses.bsec||0)>=420}
+function hideBreak(){var e=D.getElementById('dl-brk');if(e)e.remove();BRK=0}
+function breakScreen(C,cb){var d=C.d,ses=C.ses,m=nextBreak(d),t=L.today(),tm=(d.time||{})[t]||0,left=12,iv;BRK=1;stopCam();
+ var el=D.createElement('div');el.id='dl-brk';el.className='dl2-brk';el.setAttribute('role','dialog');el.setAttribute('aria-label','Break time');
+ el.innerHTML='<div class="dl2-bin"><div class="dl2-br" aria-hidden="true"><i></i><i></i><i></i></div><p class="dl2-bk">Break time</p><h2>'+esc(m[0])+'</h2><p class="dl2-bx">'+esc(m[1])+'</p>'+
+  '<div class="dl2-bst"><div><b>'+fmtT(ses.sec||0)+'</b><small>this session</small></div><div><b>'+fmtM(tm)+'</b><small>today</small></div><div><b>'+sinceDays(d)+'</b><small>day'+(sinceDays(d)===1?'':'s')+' with Luna</small></div></div>'+
+  '<div class="dl2-ba"><button type="button" class="lab-ic sm" id="dl-mu" aria-label="Sound on or off">'+(muted()?'🔇':'🔔')+'</button><button type="button" class="lab-go ghost sm" id="dl-bs">Skip break</button><button type="button" class="lab-go" id="dl-bg" disabled>Rest '+left+'s</button></div></div>';
+ (D.getElementById('lab-ov')||D.body).appendChild(el);chime();L.buzz([15,70,15]);save();
+ function go(){clearInterval(iv);hideBreak();cb()}
+ iv=setInterval(function(){left--;var b=$('#dl-bg',el);if(!b){clearInterval(iv);return}if(left<=0){b.disabled=false;b.textContent='I am ready';clearInterval(iv)}else b.textContent='Rest '+left+'s'},1000);
+ $('#dl-bg',el).onclick=go;$('#dl-bs',el).onclick=go;
+ $('#dl-mu',el).onclick=function(){try{localStorage.setItem('lr_dl_mute',muted()?'0':'1')}catch(e){}this.textContent=muted()?'🔇':'🔔';if(!muted())chime()}}
+
+/* ---------- activity: what the learner really did on the site today ---------- */
+function actDay(d){d.act=d.act||{};var t=L.today();var a=d.act[t]=d.act[t]||{film:0,aud:0,items:{},ev:{}};a.items=a.items||{};a.ev=a.ev||{};var ks=Object.keys(d.act).sort();while(ks.length>21)delete d.act[ks.shift()];return a}
+var ML=new WeakMap(),LASTSAVE=0;
+function mTitle(el){var t=el.getAttribute('data-title')||el.getAttribute('aria-label')||el.title||'';if(!t){var c=el.closest&&el.closest('[data-title],[data-name]');if(c)t=c.getAttribute('data-title')||c.getAttribute('data-name')||''}
+ if(!t){try{t=decodeURIComponent((el.currentSrc||el.src||'').split('?')[0].split('/').pop()).replace(/\.[a-z0-9]+$/i,'').replace(/[-_.]+/g,' ')}catch(e){}}
+ return String(t||(el.tagName==='VIDEO'?'Film':'Music')).slice(0,60)}
+function realMedia(el){if(el.loop||el.muted||el.volume===0)return 0;var du=el.duration;if(el.tagName==='VIDEO')return isFinite(du)&&du>240?'film':0;return (!isFinite(du)||du>45)?'aud':0}
+D.addEventListener('timeupdate',function(e){var el=e.target;if(!el||(el.tagName!=='VIDEO'&&el.tagName!=='AUDIO'))return;
+ try{var now=el.currentTime,m=ML.get(el);if(!m){m={last:now};ML.set(el,m);return}var dt=now-m.last;m.last=now;if(!(dt>0&&dt<2.5)||el.paused||document.visibilityState!=='visible')return;
+  var kind=realMedia(el);if(!kind)return;var d=S(),a=actDay(d),key=mTitle(el),it=a.items[key]=a.items[key]||{k:kind,s:0,p:0};it.s+=dt;a[kind]+=dt;
+  if(isFinite(el.duration)&&el.duration>0)it.p=Math.max(it.p,now/el.duration);
+  if(kind==='film'&&it.s>=120)d.open=it.p<.9?{t:key,p:Math.round(it.p*100),day:L.today()}:null;
+  actCheck(d,a);if(Date.now()-LASTSAVE>20000){LASTSAVE=Date.now();save()}}catch(x){}},true);
+D.addEventListener('ended',function(e){var el=e.target;if(!el||(el.tagName!=='VIDEO'&&el.tagName!=='AUDIO'))return;try{var kind=realMedia(el);if(!kind)return;var d=S(),a=actDay(d),key=mTitle(el);if(a.items[key]){a.items[key].p=1}if(kind==='film')d.open=null;save()}catch(x){}},true);
+function actCheck(d,a){try{var B=bonusList(d);if(a.film>=600&&B.list.indexOf('movies')>=0&&!B.done.movies)tick('movies',1);if(a.aud>=180&&B.list.indexOf('music')>=0&&!B.done.music)tick('music',1)}catch(e){}}
+function actRows(d){var a=actDay(d),ev=a.ev,rows=[],film=Object.keys(a.items).filter(function(k){return a.items[k].k==='film'}).sort(function(x,y){return a.items[y].s-a.items[x].s})[0];
+ var fl=film?a.items[film]:null;
+ rows.push({k:'movies',t:'Film',ok:a.film>=300,x:fl?(fl.p>=.9?'Finished “'+film+'”':fmtM(a.film)+' watched · “'+film+'” '+Math.round(fl.p*100)+'%'):(d.open?'You stopped “'+d.open.t+'” at '+d.open.p+'%':'Not yet today'),btn:fl&&fl.p>=.9?'':'Watch'});
+ rows.push({k:'music',t:'Music and audio',ok:a.aud>=120,x:a.aud?fmtM(a.aud)+' listened':'Not yet today',btn:'Listen'});
+ rows.push({k:'reading',t:'Reading and exams',ok:(ev.exam||0)>0||(ev.read||0)>0,x:((ev.exam||0)+(ev.read||0))?((ev.exam||0)+(ev.read||0))+' done':'Not yet today',btn:'Read'});
+ rows.push({k:'game',t:'Games',ok:(ev.game||0)+(ev.chess||0)>0,x:((ev.game||0)+(ev.chess||0))?((ev.game||0)+(ev.chess||0))+' played':'Not yet today',btn:'Play'});
+ rows.push({k:'cards',t:'Flashcards',ok:(ev.cards||0)>0,x:ev.cards?'Reviewed':'Not yet today',btn:'Review'});
+ rows.push({k:'tutor',t:'AI Tutor',ok:(ev.ai||0)>0,x:ev.ai?ev.ai+' message'+(ev.ai===1?'':'s'):'Not yet today',btn:'Talk'});
+ rows.push({k:'scan',t:'New words saved',ok:(ev.save||0)>0,x:ev.save?ev.save+' saved':'Not yet today',btn:''});
+ return rows}
+function actHTML(d){return '<div class="dl2-act">'+actRows(d).map(function(r){return '<div class="dl2-ar'+(r.ok?' ok':'')+'"><span class="dl2-ad" aria-hidden="true">'+(r.ok?IC.check:'')+'</span><div class="dl2-am"><b>'+esc(r.t)+'</b><small>'+esc(r.x)+'</small></div>'+(!r.ok&&r.btn?'<button type="button" class="lab-go sm ghost" data-ao="'+r.k+'">'+r.btn+'</button>':'<em>'+(r.ok?'Done':'')+'</em>')+'</div>'}).join('')+'</div>'}
+function bindAct(root){root.querySelectorAll('[data-ao]').forEach(function(x){x.onclick=function(){var k=x.dataset.ao;L.close();setTimeout(function(){try{(BON[k]||BON.movies).run()}catch(e){}},300)}})}
+function openLine(d){var o=d.open;if(!o||o.day===undefined)return '';var a=actDay(d);var it=a.items[o.t];if(it&&it.p>=.9)return '';return '<p class="dl2-open">You stopped “'+esc(o.t)+'” at '+o.p+'%. <button type="button" data-dl="film">Continue watching</button></p>'}
+
+/* ---------- interests, worked out quietly from what the learner does ---------- */
+var KW={music:/song|music|sing|band|guitar|concert|lyric|album|dance|melody|piano/g,movies:/film|movie|actor|series|cinema|scene|director|episode/g,games:/game|play|level|chess|player|team|score/g,sport:/football|sport|gym|run|fitness|training|match|swim|tennis/g,tech:/computer|phone|app|internet|software|code|robot|laptop|online/g,travel:/travel|trip|airport|hotel|visit|country|flight|tourist|journey/g,food:/food|cook|restaurant|dinner|recipe|coffee|kitchen|lunch|bread/g,science:/science|space|planet|research|doctor|health|medicine|tooth|teeth|hospital|nature/g,study:/exam|university|lesson|teacher|student|college|homework/g};
+function interests(d){try{var sc={},txt=((U().savedWords||[]).slice(-80).join(' ')+' ');Object.keys(d.act||{}).forEach(function(k){txt+=Object.keys((d.act[k].items)||{}).join(' ')+' '});txt=txt.toLowerCase();
+ Object.keys(KW).forEach(function(k){var m=txt.match(KW[k]);if(m)sc[k]=(sc[k]||0)+m.length});
+ var c=d.clicks||{};function add(k,w){if(w)sc[k]=(sc[k]||0)+w}add('movies',(c.movies||0)*2);add('music',(c.music||0)*2);add('games',(c.game||0)*2);add('science',(c.scan||0));add('tech',(c.tutor||0));
+ var fs=0,as=0;Object.keys(d.act||{}).forEach(function(k){fs+=d.act[k].film||0;as+=d.act[k].aud||0});add('movies',Math.floor(fs/600));add('music',Math.floor(as/300));
+ return Object.keys(sc).filter(function(k){return sc[k]>=2}).sort(function(a,b){return sc[b]-sc[a]}).slice(0,3)}catch(e){return []}}
+function recentB(d){var out=[];dayKeys(3).forEach(function(k){if(k!==L.today()&&d.bonus&&d.bonus[k]&&d.bonus[k].list)out=out.concat(d.bonus[k].list)});return out}
+function bpool(pool,keys,d,r){var rec=recentB(d),a=pool.filter(function(k){return keys.indexOf(k)<0&&rec.indexOf(k)<0});if(a.length<3-keys.length)a=pool.filter(function(k){return keys.indexOf(k)<0});
+ var it=interests(d),w=a.filter(function(k){return (k==='movies'&&it.indexOf('movies')>=0)||(k==='music'&&it.indexOf('music')>=0)||(k==='game'&&it.indexOf('games')>=0)});var sh=shuffle(a,r);return sh.filter(function(k){return w.indexOf(k)>=0}).concat(sh.filter(function(k){return w.indexOf(k)<0}))}
+function camMix(d,out,r){if(!camOn())return out;if(r()>(minutes(d)<=10?.5:.85))return out;var k=((d.tot||0)%2===0)?'camsay':'camshow';out=out.slice();var i=out.indexOf('say');if(i>=0)out[i]=k;else out.push(k);out.sort(function(a,b){return T[a].ord-T[b].ord||0});return out}
+
+/* ---------- level check: twelve short questions for people who skipped the first test ---------- */
+function needCheck(d,quick){return !quick&&!d.placed&&d.lcSkip!==L.today()}
+var CHK=[['gap',0],['gap',1],['gap',2],['correct',1],['correct',2],['match',1],['listen',0],['listen',2],['read',1],['say',0],['say',2],['write',1]];
+function checkSes(d){PACK=null;return{day:L.today(),kind:'check',steps:CHK.map(function(x,i){return{id:'c'+i,type:x[0],ft:x[1],done:0}}),i:0,n:0,used:{},xp:0,sc:0,cnt:0,quick:'',before:snap(d),startedAt:Date.now(),sec:0,bsec:0,brk:{}}}
+function checkCalc(ses){var by={};SKILLS.forEach(function(k){by[k]=[[],[],[]]});
+ ses.steps.forEach(function(st){if(!st.done)return;T[st.type].sk.forEach(function(k){by[k][st.ft].push(st.score||0)})});
+ var out={};SKILLS.forEach(function(k){var a=by[k].map(function(x){return x.length?x.reduce(function(p,c){return p+c},0)/x.length:null}),m=a.slice();
+  if(m[0]==null)m[0]=m[1]!=null?m[1]:(m[2]!=null?m[2]:null);if(m[0]==null){out[k]=null;return}
+  if(m[1]==null)m[1]=m[2]!=null?Math.max(m[2],m[0]*.8):m[0]*.8;if(m[2]==null)m[2]=m[1]*.6;
+  m[1]=Math.min(m[1],m[0]+.3);m[2]=Math.min(m[2],m[1]+.3);out[k]=clamp(6+26*m[0]+26*m[1]+40*m[2],4,96)});
+ if(out.pronunciation==null&&out.speaking!=null)out.pronunciation=out.speaking;if(out.speaking==null&&out.pronunciation!=null)out.speaking=out.pronunciation;
+ return out}
+function checkIntro(b,d,tok){b.innerHTML='<div class="dl-load dl2-int"><div class="dl-orb"></div><h3>Let\'s find your level</h3><p>Twelve short questions: grammar, words, listening, reading, speaking and writing. About 6 minutes. Answer honestly. If you do not know, guess or skip. Luna uses the result to build every day for you.</p><div class="dl-ra"><button type="button" class="lab-go ghost" id="dl-cl">Not now</button><button type="button" class="lab-go" id="dl-cs">Start level check</button></div></div>';
+ var tt=$('.lab-ti small');if(tt)tt.textContent='Level check';
+ $('#dl-cs',b).onclick=function(){if(tok!==TOK)return;var ses=checkSes(d);d.ses=ses;save();CUR={ses:ses,quick:'',host:b,d:d,tok:tok};startTimer();run()};
+ $('#dl-cl',b).onclick=function(){d.lcSkip=L.today();save();L.close();setTimeout(function(){start()},320)}}
+function checkFinish(C){var ses=C.ses,d=C.d,b=C.host,u=U();stopTimer();ses.fin=1;var est=checkCalc(ses);SKILLS.forEach(function(k){if(est[k]!=null)d.sk[k]=est[k]});
+ d.placed=true;d.lcAt=L.today();d.base={};SKILLS.forEach(function(k){d.base[k]=d.sk[k]});d.baseAt=L.today();d.ses=null;d.lcRes={at:L.today(),sk:snapNow(d)};
+ var o=overall(d);if(!u.placement||!u.placement.cefr){u.placement={band:ielts(o),cefr:cefr(o),g:ielts(d.sk.grammar),r:ielts(d.sk.reading),s:ielts(d.sk.speaking),ai:0,at:Date.now(),check:1,imp:[],str:[],plan:'',sp:{f:0,v:0,g:0,p:0}};try{document.dispatchEvent(new CustomEvent('lr-placement'))}catch(e){}}
+ save();try{triggerConfetti()}catch(e){}L.buzz([20,60,20,60,40]);var tt=$('.lab-ti small');if(tt)tt.textContent='Your level';
+ var srt=SKILLS.slice().sort(function(a,c){return d.sk[c]-d.sk[a]}),best=srt[0],weak=srt[srt.length-1];
+ b.innerHTML='<div class="dl-res"><div class="lber-ring big" style="--p:'+(o/100).toFixed(3)+'"><b>'+cefr(o)+'</b></div><h2>Your level: '+cefr(o)+'</h2><p class="lab-mut">About IELTS '+ielts(o).toFixed(1)+'. Strongest: '+SKN[best]+'. Needs most care: '+SKN[weak]+'. Luna will start there.</p>'+
+  '<div class="dl-sk">'+SKILLS.map(function(k){var v=d.sk[k];return '<div class="dl-skr"><span>'+SKN[k]+'</span><div class="dl-bar2"><i style="width:'+v.toFixed(1)+'%;background:'+SKC[k]+'"></i></div><em>'+cefr(v)+'</em></div>'}).join('')+'</div>'+
+  '<p class="lab-mut">This is a quick estimate. It sharpens with every exercise you do.</p><div class="dl-ra"><button type="button" class="lab-go ghost" id="dl-dn">Later</button><button type="button" class="lab-go" id="dl-go">Start today\'s session</button></div></div>';
+ $('#dl-dn',b).onclick=function(){L.close()};$('#dl-go',b).onclick=function(){L.close();setTimeout(function(){start()},320)}}
+function snapNow(d){var o={};SKILLS.forEach(function(k){o[k]=Math.round(d.sk[k]*10)/10});return o}
+
+/* ---------- starting a session ---------- */
+async function start(quick){var d=S();if(!d.pref&&!quick)return prefs(function(){start()});
+ var tok=++TOK;
+ L.open('daily','Daily Luna',quick?'Quick practice · '+SKN[quick]:'Your session for today',function(b){
+  b.innerHTML='<div class="dl-load"><div class="dl-orb"></div><h3>Luna is preparing your session…</h3><p>Choosing exercises for your level.</p>'+L.spin()+'</div>';
+  (async function(){
+   var resume=(!quick&&d.ses&&d.ses.day===L.today()&&!d.ses.fin)?d.ses:null;
+   if(!resume&&needCheck(d,quick)){if(tok!==TOK||!$('#lab-ov'))return;return checkIntro(b,d,tok)}
+   try{if(!(resume&&resume.kind==='check'))await Promise.race([buildPack(d),delay(quick?2500:7000)])}catch(e){}
+   if(tok!==TOK||!$('#lab-ov'))return;
+   var ses=resume;if(!ses){ses=newSes(d,quick);if(!quick){d.ses=ses;save()}}
+   CUR={ses:ses,quick:quick,host:b,d:d,tok:tok};startTimer();run()})();
+  return function(){CUR=null;TOK++;stopCam();stopTimer();hideBreak();try{refresh()}catch(e){}}})}
+
+/* ---------- camera speaking: talk to the camera, an examiner AI listens ---------- */
+var CS=null;
+function stopCam(){if(CS){try{CS.getTracks().forEach(function(t){t.stop()})}catch(e){}CS=null}}
+var PTALK=[['','Tell me about your day so far.'],['','Describe the place where you live.'],['','Talk about a person you admire and why.'],['music','Talk about the music you like. Who do you listen to, and when?'],['movies','Describe a film or series you enjoyed. What was it about?'],['games','Explain a game you like. How do you play it?'],['sport','Talk about a sport you play or watch.'],['tech','How do you use your phone every day? Is it good or bad for you?'],['travel','Describe a place you would like to visit and why.'],['food','Describe a meal you love. How is it made?'],['science','Explain something interesting you learned recently.'],['study','Talk about your studies. What is easy and what is hard?'],['','What did you do last weekend? Give details.'],['','Talk about your best friend. What are they like?'],['','What are your plans for next year?'],['','Describe your morning routine step by step.'],['','Talk about a problem you solved. What did you do?'],['','What would you change in your city? Give reasons.'],['','Describe a happy memory from your childhood.'],['','Give advice to a person who wants to learn English fast.'],['','Talk about your dream job. Why is it right for you?'],['travel','Tell me about a trip you remember well.'],['movies','Would you rather watch a film at home or at the cinema? Why?'],['music','Can music help you learn English? Explain your opinion.'],['tech','Will robots and AI take people\'s jobs? What do you think?'],['','Describe your favourite room at home.'],['','What makes a good teacher? Give examples.'],['food','Tell me how you would cook something for a guest.'],['sport','Why is exercise important? How do you stay active?'],['','Talk about something you want to get better at, and how.']];
+var PSHOW=['Find something blue near you.','Find something you use every day.','Find an object on your desk.','Find something round.','Find something made of metal or plastic.','Show something you use to study.','Find something you charge.','Find your favourite object in the room.','Find something small enough to hold in one hand.','Find something that is older than you.'];
+GEN.camsay=function(ses,r,t){var d=S(),it=interests(d),rec=d.pu||[],pool=PTALK.filter(function(x){return rec.indexOf(x[1])<0});if(!pool.length){pool=PTALK;d.pu=[]}
+ var wt=[];pool.forEach(function(x){var w=x[0]&&it.indexOf(x[0])>=0?3:1;for(var i=0;i<w;i++)wt.push(x)});var x=pick(wt,r);d.pu=(d.pu||[]).concat([x[1]]).slice(-24);
+ return{p:x[1],h:'Look at the camera. Speak for about 30 seconds. Use full sentences.',secs:30,kind:'talk'}};
+GEN.camshow=function(ses,r,t){var p=pick(PSHOW,r);return{p:p+' Hold it up to the camera.',h:'Say what it is, its colour and shape, and what you use it for. Three sentences or more.',secs:30,kind:'show'}};
+function targetBand(){var tg=String(U().target||''),m=tg.match(/IELTS\s*([0-9.]+)/i);if(m)return +m[1];var c=tg.match(/\b(A1|A2|B1|B2|C1|C2)\b/);return c?({A1:3,A2:4,B1:5.5,B2:6.5,C1:7.5,C2:8.5}[c[1]]):7}
+async function speakEval(txt,d0,snapUrl,n,conf){var d=S(),lv=cefr(d.sk.speaking),out;
+ if(n<4)return{ok:false,score:.15,shown:'I could hardly hear you.',note:'Check the microphone and speak a little longer next time.'};
+ if(aiOn()){try{var sys='You are a strict, kind IELTS speaking examiner. The learner (level '+lv+', target band '+targetBand().toFixed(1)+') spoke to a camera. You get an automatic transcript without punctuation; recognition errors are possible, so judge ideas, grammar patterns and vocabulary, not spelling. Reply JSON ONLY: {"band":number 1-9 in steps of 0.5,"fluency":1-9,"vocabulary":1-9,"grammar":1-9,"feedback":"one short sentence in English","tip":"the single most useful thing to do to reach the next half band, max 16 words","better":"one sentence the learner said, rewritten at a higher level","fixes":[{"said":"short wrong phrase from the transcript","fix":"correct phrase","why":"max 8 words"}]'+(d0.kind==='show'?',"match":true or false (does the description fit the object in the photo),"seen":"what you see in the photo, max 6 words"':'')+'}. Max 2 fixes.';
+   var usr=[{role:'user',content:[{type:'text',text:'Task: '+d0.p+'\nTranscript ('+n+' words): '+txt}].concat(d0.kind==='show'&&snapUrl?[{type:'image_url',image_url:{url:snapUrl,detail:'low'}}]:[])}];
+   var j=await L.ai(sys,usr,{max:600,t:.2,ms:40000});var bd=clamp(+j.band||5,1,9);
+   out={band:bd,fl:j.fluency,vo:j.vocabulary,gr:j.grammar,fb:j.feedback||'',tip:j.tip||'',better:j.better||'',fixes:(j.fixes||[]).slice(0,2),seen:j.seen,match:j.match,ai:1}}catch(e){out=null}}
+ if(!out){var w=txt.toLowerCase().split(/\s+/).filter(Boolean),u=new Set(w).size/w.length,al=w.join('').length/w.length;var bd=Math.round(clamp(2.5+Math.min(n,70)/70*2+u*1.6+(al-3.6)*.5,2,7)*2)/2;out={band:bd,fb:'This is a rough estimate from length and word variety.',tip:'Connect AI in the AI Tutor to get exact feedback and corrections.',fixes:[],ai:0}}
+ d.spk=d.spk||[];d.spk.push({day:L.today(),b:out.band,n:n,ai:out.ai?1:0});d.spk=d.spk.slice(-40);
+ var s=clamp(out.band/9+.05,0,1),tgt=targetBand();
+ var shown='Speaking band '+(out.ai?'':'≈ ')+out.band.toFixed(1)+(out.fl?' · Fluency '+out.fl+' · Vocabulary '+out.vo+' · Grammar '+out.gr:'');
+ var note=(out.fb||'')+(out.match===false?' The AI did not see that object in your photo.':'')+(out.tip?' To go higher: '+out.tip:'')+(out.band<tgt?' Target '+tgt.toFixed(1)+', you are '+(tgt-out.band).toFixed(1)+' away.':' You are at your target. Keep it steady.');
+ var rs={ok:out.band>=5&&out.match!==false,score:out.match===false?Math.min(s,.5):s,shown:shown,note:note,say:out.better||''};
+ if(out.fixes.length)rs.wrongs=out.fixes.filter(function(f){return f&&f.said&&f.fix}).map(function(f){return{t:f.said,fix:f.fix,why:f.why||'Speaking'}});
+ return rs}
+R.camsay=function(host,d,api){var txt='',conf=[],on=false,left=d.secs,tm=null,rec=null,snapUrl='',self=null,v;
+ host.innerHTML='<div class="dl2-cam"><video id="dl2-cv" autoplay playsinline muted></video><div class="dl2-co" id="dl2-co" hidden>Camera is off. You can still speak.</div><div class="dl2-tmr" id="dl2-tmr">'+d.secs+'s</div></div><p class="dl-sent">'+esc(d.p)+'</p><p class="dl-hint">'+esc(d.h)+'</p>'+
+  (SR?'<div class="dl-play"><button type="button" class="dl-big rec" id="dl2-mc" aria-label="Start speaking">'+IC.mic+'</button></div>':'<div class="dl-self"><button type="button" class="lab-chip" id="dl2-st">Start 30-second timer</button><p class="dl-hint">Speech recognition is not available here, so rate yourself after you speak.</p><div id="dl2-rt" hidden><button type="button" class="lab-opt" data-v="0.85">I spoke well</button><button type="button" class="lab-opt" data-v="0.55">I spoke a little</button><button type="button" class="lab-opt" data-v="0.25">I could not</button></div></div>')+
+  '<p class="dl-heard" id="dl2-h">'+(SR?'Tap the microphone and talk to the camera.':'')+'</p><p class="dl2-priv">Your camera stays on this device and is never recorded.'+(d.kind==='show'&&aiOn()?' One small photo is sent to the AI to check your answer.':'')+'</p>';
+ v=$('#dl2-cv',host);var tmr=$('#dl2-tmr',host),hh=$('#dl2-h',host);
+ if(CAMOK){navigator.mediaDevices.getUserMedia({video:{facingMode:'user',width:{ideal:640}},audio:false}).then(function(s){if(!CUR){s.getTracks().forEach(function(t){t.stop()});return}CS=s;v.srcObject=s;var p=v.play&&v.play();if(p&&p.catch)p.catch(function(){})}).catch(function(){$('#dl2-co',host).hidden=false})}else $('#dl2-co',host).hidden=false;
+ function shot(){if(d.kind!=='show'||!v||!v.videoWidth)return;try{var c=D.createElement('canvas'),w=480,h=Math.round(w*v.videoHeight/v.videoWidth);c.width=w;c.height=h;c.getContext('2d').drawImage(v,0,0,w,h);snapUrl=c.toDataURL('image/jpeg',.6)}catch(e){}}
+ function stopRec(){on=false;clearInterval(tm);var mc=$('#dl2-mc',host);if(mc)mc.classList.remove('live');shot();try{rec&&rec.stop()}catch(e){}rec=null;setTimeout(function(){var n=txt.trim()?txt.trim().split(/\s+/).length:0;hh.innerHTML=n?'I heard <b>'+n+' words</b>: '+esc(txt.trim().slice(0,160))+(txt.length>160?'…':'')+(n<8?'<br>A bit short. Tap the microphone to try again.':''):'I did not hear you. Check the microphone and try again.';api.ready(n>=4)},500)}
+ function startRec(){if(on)return;txt='';conf=[];left=d.secs;tmr.textContent=left+'s';on=true;var mc=$('#dl2-mc',host);mc.classList.add('live');hh.textContent='Listening… keep talking.';
+  var r=new SR();r.lang='en-US';r.continuous=true;r.interimResults=true;rec=r;
+  r.onresult=function(e){var fin='',tmp='';for(var i=e.resultIndex;i<e.results.length;i++){var rs=e.results[i];if(rs.isFinal){fin+=rs[0].transcript+' ';conf.push(rs[0].confidence||0)}else tmp+=rs[0].transcript}txt+=fin;hh.textContent=(txt+tmp).slice(-140)};
+  r.onend=function(){if(on&&left>0){try{r.start()}catch(x){}}};r.onerror=function(ev){if(ev.error==='not-allowed'||ev.error==='service-not-allowed'){on=false;clearInterval(tm);mc.classList.remove('live');hh.textContent='The microphone is blocked. Allow it in your browser settings.'}};
+  try{r.start()}catch(x){}tm=setInterval(function(){left--;tmr.textContent=Math.max(0,left)+'s';if(left<=0)stopRec()},1000)}
+ if(SR){$('#dl2-mc',host).onclick=function(){if(on)stopRec();else startRec()}}
+ else{var rt=$('#dl2-rt',host);$('#dl2-st',host).onclick=function(){var b=this;b.disabled=true;left=d.secs;tm=setInterval(function(){left--;tmr.textContent=Math.max(0,left)+'s';if(left<=0){clearInterval(tm);shot();rt.hidden=false}},1000)};
+  rt.querySelectorAll('.lab-opt').forEach(function(b){b.onclick=function(){self=+b.dataset.v;rt.querySelectorAll('.lab-opt').forEach(function(x){x.classList.remove('sel')});b.classList.add('sel');api.ready(true)}})}
+ return{check:async function(){stopCam();if(on){on=false;clearInterval(tm);try{rec&&rec.stop()}catch(e){}}
+  if(!SR){var d2=S();d2.spk=d2.spk||[];return{ok:self>=.55,score:self,shown:'You rated yourself.',note:'Use Chrome on Android for real speaking feedback from the AI.'}}
+  var n=txt.trim()?txt.trim().split(/\s+/).length:0;return await speakEval(txt.trim(),d,snapUrl,n,conf)}}};
+R.camshow=R.camsay;
+
+/* ---------- Progress: then and now, honest reasons, speaking band ---------- */
+var SH={listening:'Listen',speaking:'Speak',pronunciation:'Pron.',reading:'Read',writing:'Write',vocab:'Vocab',grammar:'Gram.'};
+function radar(then,now){var n=SKILLS.length,cx=140,cy=135,Rr=88;function pt(i,v){var a=-Math.PI/2+i*2*Math.PI/n,r=Rr*v/100;return[cx+Math.cos(a)*r,cy+Math.sin(a)*r]}function poly(f){return SKILLS.map(function(k,i){return pt(i,f(k)).map(function(x){return x.toFixed(1)}).join(',')}).join(' ')}
+ var grid=[25,50,75,100].map(function(g){return '<polygon points="'+poly(function(){return g})+'" class="dl2-rg"/>'}).join('');
+ var ax=SKILLS.map(function(k,i){var p=pt(i,100),q=pt(i,122);return '<line x1="'+cx+'" y1="'+cy+'" x2="'+p[0].toFixed(1)+'" y2="'+p[1].toFixed(1)+'" class="dl2-rg"/><text x="'+q[0].toFixed(1)+'" y="'+q[1].toFixed(1)+'" text-anchor="middle" dominant-baseline="middle" class="dl2-rl">'+SH[k]+'</text>'}).join('');
+ return '<svg viewBox="0 0 280 270" class="dl2-rad" role="img" aria-label="Skill chart: your skills at the start (dashed) and now (filled)">'+grid+ax+'<polygon points="'+poly(function(k){return then[k]})+'" class="dl2-rt"/><polygon points="'+poly(function(k){return now[k]})+'" class="dl2-rn"/>'+SKILLS.map(function(k,i){var p=pt(i,now[k]);return '<circle cx="'+p[0].toFixed(1)+'" cy="'+p[1].toFixed(1)+'" r="3.4" fill="'+SKC[k]+'"/>'}).join('')+'</svg>'}
+function lineChart(vals,labs,color,unit){if(vals.length<2)return '<p class="lab-mut">Finish two sessions to see this chart.</p>';var w=300,h=110,pl=26,pb=18,mn=Math.min.apply(null,vals),mx=Math.max.apply(null,vals);if(mx-mn<4){mx+=2;mn-=2}var X=function(i){return pl+i/(vals.length-1)*(w-pl-6)},Y=function(v){return 6+(1-(v-mn)/(mx-mn))*(h-6-pb)};
+ var pts=vals.map(function(v,i){return X(i).toFixed(1)+','+Y(v).toFixed(1)}),area='M'+X(0).toFixed(1)+','+(h-pb)+' L'+pts.join(' L')+' L'+X(vals.length-1).toFixed(1)+','+(h-pb)+' Z';
+ return '<svg viewBox="0 0 '+w+' '+h+'" class="dl2-ch" role="img" aria-label="Chart of your level over time, from '+vals[0].toFixed(0)+' to '+vals[vals.length-1].toFixed(0)+'"><path d="'+area+'" fill="'+color+'" opacity=".16"/><polyline points="'+pts.join(' ')+'" fill="none" stroke="'+color+'" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>'+vals.map(function(v,i){return '<circle cx="'+X(i).toFixed(1)+'" cy="'+Y(v).toFixed(1)+'" r="3" fill="'+color+'"/>'}).join('')+'<text x="'+pl+'" y="'+(h-3)+'" class="dl2-rl" text-anchor="start">'+esc(labs[0])+'</text><text x="'+(w-6)+'" y="'+(h-3)+'" class="dl2-rl" text-anchor="end">'+esc(labs[labs.length-1])+'</text><text x="2" y="'+(Y(mx)+3).toFixed(1)+'" class="dl2-rl">'+Math.round(mx)+'</text><text x="2" y="'+(Y(mn)+3).toFixed(1)+'" class="dl2-rl">'+Math.round(mn)+'</text></svg>'}
+function barsChart(d){var ks=dayKeys(14),vals=ks.map(function(k){return Math.round(((d.time&&d.time[k])||0)/60)}),mx=Math.max(10,Math.max.apply(null,vals)),w=300,h=100,bw=(w-30)/ks.length;
+ return '<svg viewBox="0 0 '+w+' '+(h+16)+'" class="dl2-ch" role="img" aria-label="Minutes studied each day, last 14 days">'+vals.map(function(v,i){var bh=v/mx*(h-12),x=26+i*bw;return '<rect x="'+x.toFixed(1)+'" y="'+(h-bh).toFixed(1)+'" width="'+(bw-4).toFixed(1)+'" height="'+Math.max(bh,v?2:0).toFixed(1)+'" rx="3" fill="'+(ks[i]===L.today()?'#22d3ee':'#7c8cff')+'"/>'+(v?'<text x="'+(x+(bw-4)/2).toFixed(1)+'" y="'+(h-bh-3).toFixed(1)+'" text-anchor="middle" class="dl2-rl">'+v+'</text>':'')}).join('')+'<text x="26" y="'+(h+12)+'" class="dl2-rl">'+ks[0].slice(5)+'</text><text x="'+(w-4)+'" y="'+(h+12)+'" text-anchor="end" class="dl2-rl">today</text><text x="2" y="'+(h+1)+'" class="dl2-rl">min</text></svg>'}
+function verdict(d){var b=d.base||{},now=overall(d),then=0;SKILLS.forEach(function(k){then+=b[k]!=null?b[k]:d.sk[k]});then/=SKILLS.length;var diff=now-then,ks=dayKeys(14),act=ks.filter(function(k){return ((d.time||{})[k]||0)>=120||(d.hist[k]&&d.hist[k].done)}).length,mins=ks.reduce(function(s,k){return s+((d.time||{})[k]||0)},0)/60;
+ var ups=SKILLS.map(function(k){return{k:k,dv:d.sk[k]-(b[k]!=null?b[k]:d.sk[k])}}).filter(function(x){return x.dv>=1}).sort(function(a,c){return c.dv-a.dv}),lvUp=cefr(now)!==cefr(then),state=(diff>=1.5||lvUp)?'up':diff<=-1.5?'down':'flat';
+ var h='<section class="lab-card dl2-vd '+state+'"><p class="dl2-vk">'+(b&&d.baseAt?'Since '+d.baseAt:'')+'</p>';
+ if(d.tot<3&&state!=='up'){h+='<h3>Too early to tell</h3><p>Finish three sessions and Luna will show how far you have come.</p>'}
+ else if(state==='up'){var top=Object.keys(d.acc).filter(function(k){return T[k]}).sort(function(a,c){return d.acc[c].n-d.acc[a].n}).slice(0,2).map(function(k){return T[k].lbl.toLowerCase()});
+  h+='<h3>'+(lvUp?'Level up! '+cefr(then)+' → '+cefr(now):'You are moving up')+'</h3><p>Overall +'+diff.toFixed(1)+' points.</p><ul>'+ups.slice(0,4).map(function(x){return '<li><b>'+SKN[x.k]+'</b> +'+x.dv.toFixed(1)+' ('+cefr(b[x.k])+' → '+cefr(d.sk[x.k])+')</li>'}).join('')+'</ul><p class="lab-mut">What helped: you practised on '+act+' of the last 14 days'+(top.length?', mostly '+top.join(' and '):'')+'.</p>'}
+ else{var why=[],lastGap=d.last?Math.round((new Date(L.today()+'T00:00:00')-new Date(d.last+'T00:00:00'))/864e5):99;
+  if(act<6)why.push('You practised on only '+act+' of the last 14 days. Levels grow from regular days, not from long ones.');
+  if(mins<90)why.push('Total practice in the last 14 days: '+Math.round(mins)+' minutes. Aim for about 15 minutes a day.');
+  if(lastGap>=3)why.push('Your last full session was '+(lastGap>=99?'never':lastGap+' days ago')+'. A short session today restarts the habit.');
+  var sk=d.skp||{n:0,of:0};if(sk.n+sk.of>=10&&sk.n/(sk.n+sk.of)>.25)why.push('You skip about '+Math.round(sk.n/(sk.n+sk.of)*100)+'% of exercises. Skipped exercises teach nothing.');
+  var worst=Object.keys(d.acc).filter(function(k){return T[k]&&d.acc[k].n>=4}).sort(function(a,c){return d.acc[a].s/d.acc[a].n-d.acc[c].s/d.acc[c].n})[0];if(worst&&d.acc[worst].s/d.acc[worst].n<.6)why.push('Hardest for you: '+T[worst].lbl.toLowerCase()+' ('+Math.round(d.acc[worst].s/d.acc[worst].n*100)+'% correct). Luna will give you more of it, slowly.');
+  var wk=0;dayKeys(7).forEach(function(k){var a=d.act&&d.act[k];if(a)wk+=(a.film||0)+(a.aud||0)});if(wk<600)why.push('You watched or listened to almost nothing in English this week. Listening grows from real films and music.');
+  if(!why.length)why.push('You are working steadily. Skills move slowly at higher levels, so keep going.');
+  h+='<h3>'+(state==='down'?'Your level slipped a little':'Your level has not moved yet')+'</h3><p>Then '+cefr(then)+' · now '+cefr(now)+' ('+(diff>=0?'+':'')+diff.toFixed(1)+' points).</p><p class="dl2-wk">Why:</p><ul>'+why.slice(0,4).map(function(x){return '<li>'+esc(x)+'</li>'}).join('')+'</ul><p class="lab-mut">Next step: do today\'s session, then watch ten minutes of a film.</p>'}
+ return h+'</section>'}
+function spkHTML(d){var s=d.spk||[];if(!s.length)return '<section class="lab-card"><h4>Speaking band</h4><p class="lab-mut">Do a “Talk to the camera” exercise. An AI examiner will estimate your IELTS speaking band.</p><button type="button" class="lab-go sm" id="dl-sp">Practise speaking</button></section>';
+ var last=s[s.length-1].b,avg=s.slice(-3).reduce(function(a,c){return a+c.b},0)/Math.min(3,s.length),tg=targetBand();
+ return '<section class="lab-card"><h4>Speaking band</h4><div class="dl2-sb"><b>'+last.toFixed(1)+'</b><small>latest'+(s[s.length-1].ai?'':' (rough estimate)')+'</small></div><p>Last '+Math.min(3,s.length)+' average <b>'+avg.toFixed(1)+'</b> · target <b>'+tg.toFixed(1)+'</b> · '+(avg>=tg?'you are there':(tg-avg).toFixed(1)+' to go')+'</p>'+lineChart(s.map(function(x){return x.b}),[s[0].day.slice(5),s[s.length-1].day.slice(5)],'#fb7185')+'<button type="button" class="lab-go sm" id="dl-sp">Practise speaking</button></section>'}
+function skills(){L.open('daily-skills','Progress','Where you started, where you are now.',function(b){var d=S(),o=overall(d),base=d.base||{},days=Object.keys(d.hist).sort().slice(-30),lv=days.map(function(k){return d.hist[k].lvl}).filter(function(v){return v!=null}),lvl=days.filter(function(k){return d.hist[k].lvl!=null}).map(function(k){return k.slice(5)}),er=[];try{er=L.err.active().slice(0,3)}catch(e){}
+ var then={};SKILLS.forEach(function(k){then[k]=base[k]!=null?base[k]:d.sk[k]});
+ b.innerHTML=verdict(d)+
+ '<section class="lab-card dl-sh"><div class="dl-big2"><b>'+cefr(o)+'</b><small>Overall level</small></div><div class="dl-sd"><p><b>'+Math.round(o)+'</b> / 100 · IELTS about <b>'+ielts(o).toFixed(1)+'</b></p><p class="lab-mut">'+d.tot+' session'+(d.tot===1?'':'s')+' · '+d.streak+' day streak · '+sinceDays(d)+' day'+(sinceDays(d)===1?'':'s')+' with Luna</p></div></section>'+
+ '<section class="lab-card"><h4>Start and now</h4>'+radar(then,d.sk)+'<div class="dl2-lg"><span><i class="t"></i>At the start</span><span><i class="n"></i>Now</span></div><div class="dl-sk">'+SKILLS.map(function(k){var dv=d.sk[k]-then[k];return '<div class="dl-skr"><span>'+SKN[k]+'</span><div class="dl-bar2"><i style="width:'+d.sk[k].toFixed(1)+'%;background:'+SKC[k]+'"></i><u style="left:'+then[k].toFixed(1)+'%"></u></div><em class="'+(dv>.9?'up':dv<-.9?'dn':'')+'">'+cefr(then[k])+' → '+cefr(d.sk[k])+'</em></div>'}).join('')+'</div></section>'+
+ '<section class="lab-card"><h4>Your level over time</h4>'+lineChart(lv,lvl.length?lvl:['',''],'#22d3ee')+'</section>'+
+ '<section class="lab-card"><h4>Time with Luna</h4><div class="dl2-ts"><div><b>'+fmtM((d.time||{})[L.today()]||0)+'</b><small>today</small></div><div><b>'+fmtM(weekSecs(d))+'</b><small>this week</small></div><div><b>'+sinceDays(d)+'</b><small>days since you started</small></div></div>'+barsChart(d)+'</section>'+
+ spkHTML(d)+
+ '<section class="lab-card"><h4>Your activity today</h4>'+actHTML(d)+'</section>'+
+ '<section class="lab-card"><h4>How you do by exercise</h4><div class="dl-sk">'+Object.keys(T).map(function(k){var a=d.acc[k];return '<div class="dl-skr"><span>'+esc(T[k].lbl)+'</span><div class="dl-bar2"><i style="width:'+(a?Math.round(a.s/a.n*100):0)+'%;background:#7c8cff"></i></div><em>'+(a?Math.round(a.s/a.n*100)+'%':'new')+'</em></div>'}).join('')+'</div></section>'+
+ (er.length?'<section class="lab-card"><h4>Your top mistakes</h4>'+er.map(function(e){return '<div class="lber-r"><div class="lber-m"><s>'+esc(e.t)+'</s>'+(e.fix?'<b>'+esc(e.fix)+'</b>':'')+'</div></div>'}).join('')+'<button type="button" class="lab-go ghost sm" id="dl-eb">Open Error Bank</button></section>':'')+
+ '<section class="lab-card"><h4>Your plan</h4><p>'+minutes(d)+' minutes a day · '+({mixed:'Balanced',games:'Games & puzzles',speak:'Speaking first',study:'Reading & listening'}[(d.pref&&d.pref.style)||'mixed'])+'</p><div class="dl2-pl"><button type="button" class="lab-go ghost sm" id="dl-pf">Change my plan</button><button type="button" class="lab-go ghost sm" id="dl-cm">Camera exercises: '+(d.nocam?'Off':'On')+'</button><button type="button" class="lab-go ghost sm" id="dl-sn">Break sound: '+(muted()?'Off':'On')+'</button><button type="button" class="lab-go ghost sm" id="dl-rc">Retake level check</button></div></section>';
+ var eb=$('#dl-eb',b);if(eb)eb.onclick=function(){L.close();setTimeout(function(){L.apps.errors()},300)};
+ $('#dl-pf',b).onclick=function(){L.close();setTimeout(function(){prefs(function(){setTimeout(skills,60)})},300)};
+ $('#dl-cm',b).onclick=function(){d.nocam=d.nocam?0:1;save();this.textContent='Camera exercises: '+(d.nocam?'Off':'On')};
+ $('#dl-sn',b).onclick=function(){try{localStorage.setItem('lr_dl_mute',muted()?'0':'1')}catch(e){}this.textContent='Break sound: '+(muted()?'Off':'On');if(!muted())chime()};
+ $('#dl-rc',b).onclick=function(){d.placed=false;d.lcSkip='';d.ses=null;save();L.close();setTimeout(function(){start()},320)};
+ var sp=$('#dl-sp',b);if(sp)sp.onclick=function(){L.close();setTimeout(function(){start('speaking')},320)};bindAct(b)})}
+
+async function run(){var C=CUR;if(!C)return;stopCam();var ses=C.ses,d=C.d,b=C.host;if(ses.i>=ses.steps.length)return finish();
+ if(shouldBreak(ses)){ses.brk=ses.brk||{};ses.brk[ses.i]=1;ses.bsec=0;if(!ses.quick)save();return breakScreen(C,function(){if(CUR===C)run()})}
+ var st=ses.steps[ses.i],tt=$('.lab-ti small');if(tt)tt.textContent=(ses.kind==='check'?'Level check':ses.quick?'Quick practice':'Daily Luna')+' · '+(ses.i+1)+' of '+ses.steps.length;
+ var pct=Math.round(ses.i/ses.steps.length*100);
+ b.innerHTML='<div class="dl-top"><div class="dl-prog"><i style="width:'+pct+'%"></i></div><span class="dl-tm" id="dl-tm" title="Time in this session">'+fmtT(ses.sec||0)+'</span>'+(ses.kind==='check'?'':'<span class="dl-xp">+'+ses.xp+' XP</span>')+'</div><div class="dl-body"><div class="dl-k" style="--c:'+SKC[T[st.type].sk[0]]+'">'+esc(T[st.type].lbl)+' <small>'+esc(T[st.type].sk.map(function(k){return SKN[k]}).join(' · '))+'</small></div><div class="dl-host">'+L.spin()+'</div></div><div class="dl-foot" id="dl-ft"></div>';
+ var data=st.data;if(!data){data=await make(st.type,ses,d,st);if(!data){var alt=['correct','gap','wordorder'];for(var i=0;i<alt.length&&!data;i++){if(alt[i]!==st.type){data=await make(alt[i],ses,d,st);if(data)st.type=alt[i]}}}if(!data){ses.i++;return run()}st.data=data}
+ if(!CUR||CUR!==C)return;st.tier=data.tier||0;
+ var host=$('.dl-host',b),ft=$('#dl-ft',b),ready=false,busy=false,r;
+ $('.dl-k',b).insertAdjacentHTML('afterend','<p class="dl-ins">'+instr(st.type)+'</p>');
+ host.innerHTML='';
+ ft.innerHTML='<button type="button" class="lab-go ghost sm" id="dl-sk">Skip</button><button type="button" class="lab-go" id="dl-ck" disabled>Check</button>';
+ var ck=$('#dl-ck',b);
+ r=R[st.type](host,data,{ready:function(v){ready=!!v;ck.disabled=!v||busy}});
+ $('#dl-sk',b).onclick=function(){stopCam();st.skipped=1;d.skp=d.skp||{n:0,of:0};d.skp.n++;ses.i++;if(!ses.quick)save();run()};
+ ck.onclick=async function(){if(busy||!ready)return;busy=true;ck.disabled=true;ck.textContent='Checking…';var res;try{res=await r.check()}catch(e){res={ok:false,score:0,shown:'',note:'Something went wrong.'}}
+  grade(st,res,d);fb(st,res,b)}}
+function grade(st,res,d){var C=CUR,ses=C.ses,s=clamp(res.score||0,0,1);st.done=1;st.score=s;st.ok=!!res.ok;d.skp=d.skp||{n:0,of:0};d.skp.of++;
+ if(ses.kind==='check'){st.xp=0;try{(res.wrongs||(res.wrong?[res.wrong]:[])).forEach(function(w){if(w&&w.t)L.err.add({k:res.wrongkind||'phrase',t:w.t,fix:w.fix||'',why:w.why||'',src:'Level check'})})}catch(e){}ses.cnt++;d.ses=ses;save();L.buzz(s>=.8?[10,40,10]:[20,40,20]);return}
+ T[st.type].sk.forEach(function(k,j){var w=j===0?1:.5,cur=d.sk[k],ct=tier(cur),tt=st.tier||0,delta=(s-.62)*5*w;if(tt>ct&&s>=.8)delta+=w;if(tt<ct&&s<.5)delta-=.5*w;d.sk[k]=clamp(cur+delta,2,98)});
+ var a=d.acc[st.type]=d.acc[st.type]||{n:0,s:0};a.n++;a.s+=s;if(a.n>30){a.n=15;a.s=a.s/2}
+ var xp=Math.round(6+s*8);if(ses.quick)xp=Math.round(xp*.6);ses.xp+=xp;ses.sc+=s;ses.cnt++;st.xp=xp;
+ try{(res.wrongs||(res.wrong?[res.wrong]:[])).forEach(function(w){if(w&&w.t)L.err.add({k:res.wrongkind||'phrase',t:w.t,fix:w.fix||'',why:w.why||'',src:'Daily Luna'})})}catch(e){}
+ if(!ses.quick)d.ses=ses;save();if(s>=.8){L.buzz([10,40,10])}else L.buzz([28,40,28])}
+function finish(){var C=CUR;if(!C)return;if(C.ses.kind==='check')return checkFinish(C);stopTimer();var ses=C.ses,d=C.d,b=C.host,n=ses.cnt||0,avg=n?ses.sc/n:0,pct=Math.round(avg*100),u=U(),first=false;
  if(!ses.quick){ses.fin=1;var t=L.today();if(!d.hist[t]||!d.hist[t].done){first=true;d.xp+=ses.xp+50;ses.xp+=50;d.streak=(d.last===yday())?d.streak+1:(d.last===t?d.streak:1);d.last=t;d.tot++;
    try{u.gamePts=(u.gamePts||0)+ses.xp}catch(e){}try{pfFeed('mission','Daily Luna · '+pct+'% · '+n+' exercises')}catch(e){}}
   d.hist[t]={done:1,xp:ses.xp,avg:pct,lvl:Math.round(overall(d)*10)/10,n:n};Object.keys(d.hist).sort().slice(0,-40).forEach(function(k){delete d.hist[k]});
@@ -57009,55 +57388,21 @@ function finish(){var C=CUR;if(!C)return;var ses=C.ses,d=C.d,b=C.host,n=ses.cnt|
  if(pct>=70){try{triggerConfetti()}catch(e){}L.buzz([20,60,20,60,40])}
  var tt=$('.lab-ti small');if(tt)tt.textContent='Session complete';
  var line=pct>=85?'That was excellent. Your brain is building real habits.':pct>=65?'Solid work. Every correct answer makes the next one easier.':'Good effort. The mistakes are saved, we will fix them together tomorrow.';
- b.innerHTML='<div class="dl-res"><div class="lber-ring big" style="--p:'+(avg).toFixed(3)+'"><b>'+pct+'%</b></div><h2>'+(ses.quick?'Quick practice done':'Today\'s session is done')+'</h2><p class="lab-mut">'+esc(line)+'</p><div class="dl-stats"><div><b>+'+ses.xp+'</b><small>XP earned</small></div><div><b>'+(ses.quick?d.streak:d.streak)+'</b><small>day streak</small></div><div><b>'+n+'</b><small>exercises</small></div></div>'+
-  '<h4 class="lab-h">Skill changes</h4><div class="dl-sk">'+SKILLS.map(function(k){var a=ses.before[k],z=d.sk[k],df=z-a;return '<div class="dl-skr"><span>'+SKN[k]+'</span><div class="dl-bar2"><i style="width:'+z.toFixed(1)+'%;background:'+SKC[k]+'"></i></div><em class="'+(df>.05?'up':df<-.05?'dn':'')+'">'+cefr(z)+' '+(df>.05?'▲ +':df<-.05?'▼ ':'· ')+df.toFixed(1)+'</em></div>'}).join('')+'</div>'+
-  (ses.quick?'':'<h4 class="lab-h">Bonus quests</h4>'+bonusHTML(d))+'<div class="dl-ra"><button type="button" class="lab-go ghost" id="dl-sks">My skills</button><button type="button" class="lab-go" id="dl-dn">Done</button></div></div>';
- $('#dl-dn',b).onclick=function(){L.close()};$('#dl-sks',b).onclick=function(){setTimeout(skills,50)};bindBonus(b);}
-/* ---------- bonus quests ---------- */
-function bonusList(d){var t=L.today();d.bonus[t]=d.bonus[t]||{};if(!d.bonus[t].list){d.bonus[t].list=pickBonus(d);d.bonus[t].done={}}return d.bonus[t]}
-function bonusHTML(d){var B=bonusList(d);return '<div class="dl-bq">'+B.list.map(function(k){var q=BON[k],on=B.done[k];return '<div class="dl-bqi'+(on?' ok':'')+'"><button type="button" class="dl-bt" data-bt="'+k+'" aria-label="Mark done">'+(on?IC.check:'')+'</button><div class="dl-bm"><b>'+esc(q.t)+'</b><small>'+esc(q.s)+'</small></div><button type="button" class="lab-go sm" data-b="'+k+'">Open</button></div>'}).join('')+'</div>'}
-function tick(k,auto){var d=S(),B=bonusList(d);if(B.done[k])return;B.done[k]=1;d.xp+=15;try{U().gamePts=(U().gamePts||0)+15}catch(e){}save();L.toast('Bonus quest done · +15 XP ✓');try{refresh()}catch(e){}}
-function bindBonus(root){root.querySelectorAll('[data-b]').forEach(function(x){x.onclick=function(){var k=x.dataset.b;L.close();setTimeout(function(){try{BON[k].run()}catch(e){}},300)}});
- root.querySelectorAll('[data-bt]').forEach(function(x){x.onclick=function(){tick(x.dataset.bt);x.parentNode.classList.add('ok');x.innerHTML=IC.check}})}
-function feed(k,x){try{var d=S(),B=bonusList(d);B.list.forEach(function(id){var q=BON[id];if(q&&q.ev&&!B.done[id]&&q.ev(k,String(x||'')))tick(id,1)})}catch(e){}}
-/* ---------- preferences ---------- */
-function prefs(cb){L.open('daily-set','Your daily plan','Two quick questions so Luna fits you.',function(b){var d=S(),pf=d.pref||{min:20,style:'mixed'},m=pf.min,s=pf.style;
- function paint(){b.innerHTML='<section class="lab-card"><h3>How much time do you have each day?</h3><div class="dl-ch" id="pm">'+[[10,'10 min','6 exercises'],[20,'20 min','8 exercises'],[30,'30 min','10 exercises']].map(function(x){return '<button type="button" class="dl-cc'+(m===x[0]?' on':'')+'" data-v="'+x[0]+'"><b>'+x[1]+'</b><small>'+x[2]+'</small></button>'}).join('')+'</div></section><section class="lab-card"><h3>What suits you best?</h3><div class="dl-ch col" id="ps">'+[['mixed','Balanced','A bit of everything. Luna balances your skills.'],['games','Games & puzzles','More matching, sentence building and listening.'],['speak','Speaking first','More speaking, dictation and translation.'],['study','Reading & listening','More texts, grammar and listening.']].map(function(x){return '<button type="button" class="dl-cc'+(s===x[0]?' on':'')+'" data-v="'+x[0]+'"><b>'+x[1]+'</b><small>'+x[2]+'</small></button>'}).join('')+'</div></section><button type="button" class="lab-go" id="dl-sv" style="width:100%">'+(d.pref?'Save':'Save and start')+'</button>';
-  b.querySelectorAll('#pm .dl-cc').forEach(function(x){x.onclick=function(){m=+x.dataset.v;paint()}});b.querySelectorAll('#ps .dl-cc').forEach(function(x){x.onclick=function(){s=x.dataset.v;paint()}});
-  $('#dl-sv',b).onclick=function(){var had=!!d.pref;d.pref={min:m,style:s};save();L.close();try{refresh()}catch(e){}if(cb)setTimeout(cb,320)}}
- paint()})}
-/* ---------- my skills ---------- */
-function spark(vals){if(vals.length<2)return '';var mn=Math.min.apply(null,vals)-1,mx=Math.max.apply(null,vals)+1,w=240,h=54,pts=vals.map(function(v,i){return (i/(vals.length-1)*w).toFixed(1)+','+(h-(v-mn)/(mx-mn)*h).toFixed(1)}).join(' ');return '<svg viewBox="0 0 '+w+' '+h+'" class="dl-sp"><polyline points="'+pts+'" fill="none" stroke="#22d3ee" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'}
-function skills(){L.open('daily-skills','My skills','Your level in each skill, updated after every exercise.',function(b){var d=S(),days=Object.keys(d.hist).sort().slice(-14),lv=days.map(function(k){return d.hist[k].lvl}).filter(function(v){return v!=null}),o=overall(d);
- var er=[];try{er=L.err.active().slice(0,3)}catch(e){}
- b.innerHTML='<section class="lab-card dl-sh"><div class="dl-big2"><b>'+cefr(o)+'</b><small>Overall level</small></div><div class="dl-sd"><p><b>'+Math.round(o)+'</b> / 100 · '+d.tot+' session'+(d.tot===1?'':'s')+' · '+d.streak+' day streak</p>'+spark(lv)+'<small class="lab-mut">'+(lv.length>1?'Last '+lv.length+' days':'Complete a few sessions to see your growth.')+'</small></div></section>'+
- '<section class="lab-card"><h4>Skills</h4><div class="dl-sk">'+SKILLS.map(function(k){var v=d.sk[k];return '<div class="dl-skr"><span>'+SKN[k]+'</span><div class="dl-bar2"><i style="width:'+v.toFixed(1)+'%;background:'+SKC[k]+'"></i></div><em>'+cefr(v)+' · '+Math.round(v)+'</em></div>'}).join('')+'</div></section>'+
- '<section class="lab-card"><h4>How you do by exercise</h4><div class="dl-sk">'+Object.keys(T).map(function(k){var a=d.acc[k];return '<div class="dl-skr"><span>'+esc(T[k].lbl)+'</span><div class="dl-bar2"><i style="width:'+(a?Math.round(a.s/a.n*100):0)+'%;background:#7c8cff"></i></div><em>'+(a?Math.round(a.s/a.n*100)+'%':'new')+'</em></div>'}).join('')+'</div></section>'+
- (er.length?'<section class="lab-card"><h4>Your top mistakes</h4>'+er.map(function(e){return '<div class="lber-r"><div class="lber-m"><s>'+esc(e.t)+'</s>'+(e.fix?'<b>'+esc(e.fix)+'</b>':'')+'</div></div>'}).join('')+'<button type="button" class="lab-go ghost sm" id="dl-eb">Open Error Bank</button></section>':'')+
- '<section class="lab-card"><h4>Your plan</h4><p>'+minutes(d)+' minutes a day · '+({mixed:'Balanced',games:'Games & puzzles',speak:'Speaking first',study:'Reading & listening'}[(d.pref&&d.pref.style)||'mixed'])+'</p><button type="button" class="lab-go ghost sm" id="dl-pf">Change my plan</button></section>';
- var eb=$('#dl-eb',b);if(eb)eb.onclick=function(){L.close();setTimeout(function(){L.apps.errors()},300)};$('#dl-pf',b).onclick=function(){L.close();setTimeout(function(){prefs(function(){setTimeout(skills,60)})},300)}})}
-/* ---------- the home card ---------- */
-function greetTime(){var h=new Date().getHours();return h<5?'Good night':h<12?'Good morning':h<18?'Good afternoon':'Good evening'}
-function status(d){var t=L.today(),n=stepsFor(d);if(todayDone(d))return{k:'done',done:n,n:n};var s=d.ses&&d.ses.day===t?d.ses:null;if(s)return{k:'prog',done:s.i,n:s.steps.length};return{k:'new',done:0,n:n}}
+ b.innerHTML='<div class="dl-res"><div class="lber-ring big" style="--p:'+(avg).toFixed(3)+'"><b>'+pct+'%</b></div><h2>'+(ses.quick?'Quick practice done':'Today\'s session is done')+'</h2><p class="lab-mut">'+esc(line)+'</p><div class="dl-stats"><div><b>+'+ses.xp+'</b><small>XP earned</small></div><div><b>'+(ses.quick?d.streak:d.streak)+'</b><small>day streak</small></div><div><b>'+n+'</b><small>exercises</small></div><div><b>'+fmtM(ses.sec||0)+'</b><small>time</small></div></div>'+
+  '<h4 class="lab-h">Skill changes</h4><div class="dl-sk">'+SKILLS.map(function(k){var a=ses.before[k]==null?d.sk[k]:ses.before[k],z=d.sk[k],df=z-a;return '<div class="dl-skr"><span>'+SKN[k]+'</span><div class="dl-bar2"><i style="width:'+z.toFixed(1)+'%;background:'+SKC[k]+'"></i></div><em class="'+(df>.05?'up':df<-.05?'dn':'')+'">'+cefr(z)+' '+(df>.05?'▲ +':df<-.05?'▼ ':'· ')+df.toFixed(1)+'</em></div>'}).join('')+'</div>'+
+  (ses.quick?'':'<h4 class="lab-h">Your activity today</h4>'+actHTML(d)+'<h4 class="lab-h">Bonus quests</h4>'+bonusHTML(d))+'<div class="dl-ra"><button type="button" class="lab-go ghost" id="dl-sks">My skills</button><button type="button" class="lab-go" id="dl-dn">Done</button></div></div>';
+ $('#dl-dn',b).onclick=function(){L.close()};$('#dl-sks',b).onclick=function(){setTimeout(skills,50)};bindBonus(b);bindAct(b);}
 function card(){var d=S(),st=status(d),u=U(),nm=String(u.name||'').split(' ')[0],weak=SKILLS.slice().sort(function(a,b){return d.sk[a]-d.sk[b]})[0],pk=d.pack&&d.pack.day===L.today()?d.pack:null;
- var focus=pk&&pk.focus?pk.focus:SKN[weak]+' first';var hello=st.k==='done'?'Today\'s session is complete. Come back tomorrow, or practise any skill below.':st.k==='prog'?'You are '+st.done+' of '+st.n+' exercises in. Let\'s finish it.':greetTime()+(nm?', '+nm:'')+'. Today we focus on '+focus.toLowerCase()+'.';
+ var focus=pk&&pk.focus?pk.focus:SKN[weak]+' first';var hello=(!d.placed&&st.k==='new')?'Let\'s find your level first. About 6 minutes, and it shapes every day after.':st.k==='done'?'Today\'s session is complete. Come back tomorrow, or practise any skill below.':st.k==='prog'?'You are '+st.done+' of '+st.n+' exercises in. Let\'s finish it.':greetTime()+(nm?', '+nm:'')+'. Today we focus on '+focus.toLowerCase()+'.';
  var pct=st.n?st.done/st.n:0,min=minutes(d);
- var btn=st.k==='done'?'Practise more':st.k==='prog'?'Continue session':'Start today\'s session';
+ var btn=st.k==='done'?'Practise more':st.k==='prog'?'Continue session':'Start today\'s session';if(!d.placed&&st.k==='new')btn='Find my level';
  return '<div class="dl"><div class="dl-hd"><div class="dl-orb"></div><div class="dl-hx"><p class="dl-kick">Daily Luna</p><h2>'+esc(st.k==='done'?'All done for today':'Today: '+focus)+'</h2></div><button type="button" class="lab-ic sm" data-dl="hello" aria-label="Hear Luna">'+IC.say+'</button></div>'+
- '<p class="dl-hello">'+esc(hello)+'</p>'+
- '<div class="dl-mid"><div class="lber-ring" style="--p:'+pct.toFixed(3)+'"><b>'+st.done+'/'+st.n+'</b><small>today</small></div><div class="dl-chips"><span class="dl-pill">🔥 '+d.streak+' day streak</span><span class="dl-pill">'+cefr(overall(d))+' level</span><span class="dl-pill">'+d.xp+' XP</span></div></div>'+
- '<button type="button" class="lab-go dl-start" data-dl="start">'+btn+(st.k==='new'?' · ~'+min+' min':'')+'</button>'+
+ '<p class="dl-hello">'+esc(hello)+'</p>'+openLine(d)+
+ '<div class="dl-mid"><div class="lber-ring" style="--p:'+pct.toFixed(3)+'"><b>'+st.done+'/'+st.n+'</b><small>today</small></div><div class="dl-chips"><span class="dl-pill">🔥 '+d.streak+' day streak</span><span class="dl-pill">'+cefr(overall(d))+' level</span><span class="dl-pill">'+d.xp+' XP</span><span class="dl-pill">'+fmtM((d.time||{})[L.today()]||0)+' today</span></div></div>'+
+ '<button type="button" class="lab-go dl-start" data-dl="start">'+btn+(st.k==='new'?(d.placed?' · ~'+min+' min':' · ~6 min'):'')+'</button>'+
  '<div class="dl-skl">'+SKILLS.map(function(k){return '<button type="button" class="dl-sm" data-dl="quick" data-k="'+k+'" style="--c:'+SKC[k]+'"><span>'+SKN[k]+'</span><i style="width:'+d.sk[k].toFixed(0)+'%"></i><em>'+cefr(d.sk[k])+'</em></button>'}).join('')+'</div>'+
- '<div class="dl-ft"><button type="button" class="dl-lk" data-dl="skills">My skills</button><button type="button" class="dl-lk" data-dl="bonus">Bonus quests '+(function(){var B=bonusList(d),c=0;B.list.forEach(function(k){if(B.done[k])c++});return c+'/'+B.list.length})()+'</button><button type="button" class="dl-lk" data-dl="prefs">Plan</button></div></div>'}
-function refresh(){var el=D.getElementById('lc-card');if(el&&el.querySelector('.dl')||el&&!el.querySelector('.lc-in'))el.innerHTML=card()}
-function bonusOpen(){L.open('daily-bonus','Bonus quests','The rest of LunaRise, picked for your weak spots.',function(b){var d=S();b.innerHTML='<section class="lab-card"><p class="lab-mut">Each one trains a different skill. Finish it, then tick it. Some tick by themselves.</p>'+bonusHTML(d)+'</section>';bindBonus(b)})}
-D.addEventListener('click',function(e){var x=e.target.closest&&e.target.closest('[data-dl]');if(!x)return;var k=x.dataset.dl;
- if(k==='start')start();else if(k==='quick')start(x.dataset.k);else if(k==='skills')skills();else if(k==='bonus')bonusOpen();else if(k==='prefs')prefs(function(){});
- else if(k==='hello'){var d=S(),pk=d.pack&&d.pack.day===L.today()?d.pack:null,t=pk&&pk.hello?pk.hello:'Hello! Ready to grow your English today? Let\'s start.';try{if(window.LC&&LC.say)LC.say(t);else L.say(t,'en-US')}catch(e){L.say(t,'en-US')}}});
-window.DL={on:function(){return true},card:card,start:function(q){start(q)},open:function(){start()},skills:skills,refresh:refresh,feed:feed,state:function(){return S()},levels:function(){var d=S();return SKILLS.reduce(function(o,k){o[k]=cefr(d.sk[k]);return o},{})}};
-function wrapFeed(){var _pf=window.pfFeed;if(typeof _pf==='function'&&!_pf.__dl){var w=function(k,x){try{feed(k,x)}catch(e){}return _pf.apply(this,arguments)};w.__dl=1;window.pfFeed=w}}
-function boot(){wrapFeed();try{if(window.LC){LC.next=function(){start()};LC.open=function(){start()};LC.nag=function(){}}}catch(e){}try{refresh()}catch(e){}}
-setTimeout(boot,900);setTimeout(boot,3500);
+ '<div class="dl-ft"><button type="button" class="dl-lk" data-dl="skills">Progress</button><button type="button" class="dl-lk" data-dl="bonus">Bonus quests '+(function(){var B=bonusList(d),c=0;B.list.forEach(function(k){if(B.done[k])c++});return c+'/'+B.list.length})()+'</button><button type="button" class="dl-lk" data-dl="prefs">Plan</button></div></div>'}
+
 })();
 </script></body>
 </html>
