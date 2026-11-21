@@ -19732,7 +19732,13 @@ Respond ONLY with minified JSON: {"title":string,"topic":string (1-2 English wor
             { id: 'library', icon: 'fa-moon', g: 'linear-gradient(135deg,#f2c46d,#ff6b8a)', c: 'rgba(242,196,109,.3)', title: 'Moon Library', desc: 'Real books with covers and ratings. Page-turning reader, read-aloud, tap any word in 14 languages.', isNew: 1, live: () => { try { return JSON.parse(localStorage.getItem('ml_done') || '[]').length + ' finished'; } catch (e) { return 'Open'; } }, go: "ML.open()" },
             { id: 'movies', icon: 'fa-film', g: 'linear-gradient(135deg,#ec4899,#7c3aed)', c: 'rgba(236,72,153,.28)', title: 'Movies', desc: 'Movies, drama, series, cartoons, anime and sport. HD trailers with subtitles and where to watch the full film.', w2: 1, isNew: 1, live: () => { const n = (state.user.mvList || []).length; return n ? n + ' in my list' : 'Trending now'; }, go: "navigateTo('movies')" }, /*club*/{ id: 'club', icon: 'fa-earth-asia', g: 'linear-gradient(135deg,#2c5cc5,#d9465a)', c: 'rgba(96,165,250,.3)', title: 'Speaking Club', desc: 'Make friends worldwide: chat, voice and video calls, AI help with your English.', w2: 1, isNew: 1, live: () => (window.CLUB && CLUB.liveText ? CLUB.liveText() : 'Chats, friends and calls'), go: "navigateTo('club')" },/*/club*/
                         { id: 'profile', icon: 'fa-user-astronaut', g: 'linear-gradient(135deg,#6366f1,#a855f7)', c: 'rgba(129,140,248,.3)', title: 'My Profile', desc: 'XP, badges, settings.', live: () => 'Level ' + pfStats().lvl, go: "navigateTo('profile')" },
-            { id: 'reading', icon: 'fa-book-open-reader', g: 'linear-gradient(135deg,#f43f5e,#be123c)', c: 'rgba(244,63,94,.25)', title: 'Reading Lab', desc: 'Two parts: passages with exam questions, and Book Maker for whole illustrated books.', w2: 1, isNew: 1, live: () => { const s = rlStats(); return s.n ? s.n + ' read · ' + s.acc + '%' : rlAll().length + ' passages'; }, go: "navigateTo('reading')" }
+            { id: 'reading', icon: 'fa-book-open-reader', g: 'linear-gradient(135deg,#f43f5e,#be123c)', c: 'rgba(244,63,94,.25)', title: 'Reading Lab', desc: 'Two parts: passages with exam questions, and Book Maker for whole illustrated books.', w2: 1, isNew: 1, live: () => { const s = rlStats(); return s.n ? s.n + ' read · ' + s.acc + '%' : rlAll().length + ' passages'; }, go: "navigateTo('reading')" },
+            { id: 'think', icon: 'fa-brain', g: 'linear-gradient(135deg,#6366f1,#22d3ee)', c: 'rgba(99,102,241,.3)', title: 'Think in English', desc: 'Stop translating word for word. See how natives say it.', isNew: 1, live: () => 'Native phrasing', go: "LAB.apps.think()" },
+            { id: 'errors', icon: 'fa-shield-halved', g: 'linear-gradient(135deg,#fb7185,#f59e0b)', c: 'rgba(251,113,133,.3)', title: 'Error Bank & Boss Fight', desc: 'Your own mistakes become practice. Beat the weekly boss.', isNew: 1, live: () => { try { return LAB.err.active().length + ' to fix'; } catch (e) { return ''; } }, go: "LAB.apps.errors()" },
+            { id: 'story', icon: 'fa-user-secret', g: 'linear-gradient(135deg,#7c3aed,#0ea5e9)', c: 'rgba(124,58,237,.3)', title: 'Detective Story', desc: 'Solve a new mystery by interviewing suspects in English.', isNew: 1, live: () => 'New case every time', go: "LAB.apps.story()" },
+            { id: 'path', icon: 'fa-route', g: 'linear-gradient(135deg,#10b981,#22d3ee)', c: 'rgba(16,185,129,.3)', title: '90-Day Path', desc: 'One clear plan: four short tasks a day, three phases.', isNew: 1, live: () => { try { const p = LAB.pathDay(); return p ? 'Day ' + p.day + ' of 90' : 'Start today'; } catch (e) { return ''; } }, go: "LAB.apps.path()" },
+            { id: 'reels', icon: 'fa-bolt', g: 'linear-gradient(135deg,#f59e0b,#ec4899)', c: 'rgba(245,158,11,.3)', title: 'Micro Lessons', desc: '30-second lessons in a swipe feed. Fix one mistake at a time.', isNew: 1, live: () => 'Swipe & learn', go: "LAB.apps.reels()" },
+            { id: 'scan', icon: 'fa-camera', g: 'linear-gradient(135deg,#06b6d4,#8b5cf6)', c: 'rgba(6,182,212,.3)', title: 'Reality Scanner', desc: 'Photograph your world. Get the English words for it.', isNew: 1, live: () => 'Camera or gallery', go: "LAB.apps.scan()" }
         ];
         const HB_TIPS = [
             'Learn words in chunks, not alone: "make a decision" sticks better than "decision".',
@@ -35695,7 +35701,7 @@ var LR_TURN = null;    // optional TURN servers for voice on strict networks, e.
             if (FC.sheet) fcSheetClose(false);
             const w = FC.q.shift(); if (!w) return; const u = U(); u.known = u.known || []; u.mwSeen = u.mwSeen || [];
             if (!u.mwSeen.includes(w)) u.mwSeen.push(w);
-            if (window.SRS && !FC.seen[w]) SRS.mark(w, k); if (k) { if (!FC.seen[w]) FC.first++; if (!u.known.includes(w)) u.known.push(w); } else { FC.q.push(w); u.known = u.known.filter(x => x !== w); }
+            if (window.SRS && !FC.seen[w]) SRS.mark(w, k); if (!k && window.LAB && !FC.seen[w]) LAB.err.add({ k: 'word', t: w, fix: '', why: 'Missed in flashcards', src: 'Flashcards' }); if (k) { if (!FC.seen[w]) FC.first++; if (!u.known.includes(w)) u.known.push(w); } else { FC.q.push(w); u.known = u.known.filter(x => x !== w); }
             FC.seen[w] = true; try { u.fcDate = dayKey(); } catch (e) { } save();
             const c = $('fc2-card'); c.classList.add(k ? 'go-r' : 'go-l'); setTimeout(() => { c.classList.remove('go-r', 'go-l'); if (!FC.q.length) return fcFinish(); fcShow(); }, 220);
         },
@@ -35724,7 +35730,7 @@ var LR_TURN = null;    // optional TURN servers for voice on strict networks, e.
     });
 
     /* ================= Hub: clear groups ================= */
-    const GROUPS = [['Learn', 'Lessons and full exam practice', ['exams', 'grammar', 'reading', 'library']], ['Words', 'Look up, save and remember', ['dictionary', 'mywords', 'classroom']], ['Practise speaking', 'With AI and with real people', ['ai', 'club']], ['Play', 'Learn with games', ['games', 'wordforge']], ['Watch', 'English movies — learn while you watch', ['movies']], ['More', '', ['mentors', 'profile']]];
+    const GROUPS = [['Learn', 'Lessons and full exam practice', ['exams', 'grammar', 'reading', 'library']], ['Words', 'Look up, save and remember', ['dictionary', 'mywords', 'classroom']], ['Practise speaking', 'With AI and with real people', ['ai', 'club']], ['Play', 'Learn with games', ['games', 'wordforge']], ['Watch', 'English movies — learn while you watch', ['movies']], ['Lab', 'New ways to learn', ['think', 'errors', 'story', 'path', 'reels', 'scan']], ['More', '', ['mentors', 'profile']]];
     function tileList() {
         let T = []; try { T = HB_TILES.slice(); } catch (e) { }
         const sv = saved().length, kn = known().filter(w => isSaved(w)).length;
@@ -46444,7 +46450,7 @@ void main(){
             plan_level: CEFR[lv], difficulty: c.diff, last_days: days, yesterday_tasks: (c.prev || {}).sig || [],
             exam_best: Object.keys(log).reduce((o, k) => { o[k] = log[k].best; return o; }, {}),
             recent_mistakes: c.mis.slice(0, 10).map(m => ({ topic: m.top, q: shortOf(m.q, 90), you: m.you, right: m.ok })),
-            saved_words: (u.savedWords || []).length, recent_saved_words: (u.savedWords || []).slice(-15), due_words: (window.SRS ? SRS.list().slice(0, 12) : []), film_words: (function () { try { return JSON.parse(localStorage.getItem('lr_cinema_cards') || '[]').slice(0, 12).map(c => ({ w: c.w, meaning: c.en || '', line: c.line })); } catch (e) { return []; } })(), grammar_modules: fit, games: GAMES
+            saved_words: (u.savedWords || []).length, recent_saved_words: (u.savedWords || []).slice(-15), due_words: (window.SRS ? SRS.list().slice(0, 12) : []), error_bank: (window.LAB ? LAB.err.active().slice(0, 8).map(e => e.fix || e.t) : []), path_day: (window.LAB && LAB.pathDay ? LAB.pathDay() : null), film_words: (function () { try { return JSON.parse(localStorage.getItem('lr_cinema_cards') || '[]').slice(0, 12).map(c => ({ w: c.w, meaning: c.en || '', line: c.line })); } catch (e) { return []; } })(), grammar_modules: fit, games: GAMES
         };
     }
     const PLAN_SYS = `You are Luna, a warm and expert English coach inside the LunaRise app. Plan TODAY's practice for one learner so their level rises step by step.
@@ -46462,6 +46468,7 @@ Each task gets "why": one short personal sentence to the learner (max 14 words).
 Also write: "focus" (today's theme, max 6 words), "hello" (what you say aloud: 2 short warm natural sentences, use the first name once if given), "tip" (one practical sentence), "cheers" (4 different short praise lines, max 9 words each).
 Reply with JSON only: {"focus":"...","hello":"...","tip":"...","cheers":["..."],"tasks":[{...,"why":"..."}]}`;
     async function aiPlan() {
+        if (window.DL) return null;
         if (!aiOk()) return null;
         const j = await aiJson(PLAN_SYS, JSON.stringify(learnerFacts()), { max: 1100, temp: .7 });
         if (!j || !Array.isArray(j.tasks)) return null;
@@ -46814,6 +46821,7 @@ void main(){
     }
     function planLabel() { const d = new Date(); return d.toLocaleDateString('en-GB', { weekday: 'long' }) + ' plan · level ' + CEFR[level()]; }
     function cardHTML() {
+        if (registered() && window.DL) return DL.card();
         if (!registered()) return '<div class="lc-in lc-intro">' + orbHTML(84, 'lc-o-card') + '<div class="lc-hx"><p class="lc-kick">Luna Coach</p><h2 class="lc-h">Meet Luna, your AI coach</h2><p class="lc-hello">Take the 8-minute level test. Then Luna plans your day every morning, checks your work and explains every mistake.</p><button type="button" class="lc-btn pri" data-a="test">' + I('spark') + 'Take the level test</button></div></div>';
         const c = C(), n = c.tasks.length, d = n - left().length, xp = c.tasks.reduce((a, t) => a + (t.done ? t.xp : 0), 0) + (n && d === n ? 50 : 0);
         const head = !n ? 'Planning your day…' : d === n ? 'All done for today' : c.focus ? 'Today: ' + c.focus : n - d + ' task' + (n - d === 1 ? '' : 's') + ' for today';
@@ -46839,7 +46847,7 @@ void main(){
     function insertCard() {
         const v = $('view-dashboard'); if (!v) return null;
         if (cardEl && cardEl.isConnected) return cardEl;
-        cardEl = D.createElement('section'); cardEl.id = 'lc-card'; cardEl.className = 'lc-card'; cardEl.setAttribute('aria-label', 'Luna Coach, today’s plan');
+        cardEl = D.createElement('section'); cardEl.id = 'lc-card'; cardEl.className = 'lc-card dl-card'; cardEl.setAttribute('aria-label', 'Luna Coach, today’s plan');
         const hero = v.querySelector('.hb-hero'); if (hero && hero.nextSibling) v.insertBefore(cardEl, hero.nextSibling); else v.insertBefore(cardEl, v.firstChild);
         cardEl.addEventListener('click', onCardClick);
         // the old fixed "Today's mission" list is replaced by Luna's plan
@@ -47194,6 +47202,7 @@ void main(){
         return false;
     }
     function maybeNag(reason) {
+        if (window.DL) return;
         if (!registered() || D.hidden) return;
         if (window.LR_FLAGS && LR_FLAGS.coachNag === false && reason !== 'first') return;   // the owner switched the pop-up off
         const c = C(); if (c.day !== today() || !c.tasks.length || !left().length || busyScreen()) return;
@@ -56353,6 +56362,702 @@ function refresh(){var n=SRS.list().length;if(!chip){chip=D.createElement('butto
  if(n>0)chip.innerHTML='<i></i><b>'+n+(n===1?' word':' words')+' ready to review</b><span>Start</span>'}
 var css=D.createElement('style');css.textContent='#srs-chip{position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom));z-index:3300;transform:translate(-50%,24px);opacity:0;pointer-events:none;display:flex;align-items:center;gap:10px;height:48px;padding:0 8px 0 16px;border-radius:999px;border:1px solid rgba(165,180,252,.35);background:linear-gradient(135deg,rgba(30,27,75,.94),rgba(49,26,94,.94));color:#eef0ff;font:700 14px/1 "Plus Jakarta Sans",system-ui,sans-serif;box-shadow:0 18px 40px -12px rgba(124,58,237,.6);cursor:pointer;transition:opacity .3s,transform .35s cubic-bezier(.2,1.2,.4,1)}#srs-chip.on{opacity:1;transform:translate(-50%,0);pointer-events:auto}#srs-chip i{width:9px;height:9px;border-radius:50%;background:#fbbf24;box-shadow:0 0 0 0 rgba(251,191,36,.7);animation:srsP 1.8s infinite}#srs-chip span{height:34px;padding:0 16px;border-radius:999px;display:grid;place-items:center;background:linear-gradient(135deg,#fbbf24,#fb7185);color:#1a1030;font-weight:800}@keyframes srsP{70%{box-shadow:0 0 0 9px rgba(251,191,36,0)}100%{box-shadow:0 0 0 0 rgba(251,191,36,0)}}@media (prefers-reduced-motion:reduce){#srs-chip{transition:none}#srs-chip i{animation:none}}';D.head.appendChild(css);
 setInterval(refresh,2500);setTimeout(refresh,1500);
+})();
+</script><style id="lr-lab-css">:root{--lb:#0b0f1d;--lc:#151b30;--lc2:#1d2540;--lt:#eef1fb;--lm:#9aa3c4;--la:#7c8cff;--la2:#22d3ee;--lg:#34d399;--lr:#fb7185;--lw:#fbbf24}
+#lab-ov{position:fixed;inset:0;z-index:3200;color:var(--lt);font:15px/1.5 Inter,system-ui,sans-serif;opacity:0;transform:translateY(14px);transition:opacity .22s,transform .22s;display:flex;flex-direction:column}
+#lab-ov.in{opacity:1;transform:none}
+#lab-ov .lab-bg{position:absolute;inset:0;background:radial-gradient(900px 500px at 85% -10%,rgba(124,140,255,.28),transparent 60%),radial-gradient(700px 420px at -10% 110%,rgba(34,211,238,.16),transparent 60%),var(--lb);z-index:-1}
+#lab-ov *{box-sizing:border-box}
+.lab-hd{display:flex;align-items:center;gap:12px;padding:max(12px,env(safe-area-inset-top)) 18px 10px;flex:none}
+.lab-bk{width:44px;height:44px;border-radius:14px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:var(--lt);display:grid;place-items:center;cursor:pointer}
+.lab-bk svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.lab-ti{min-width:0;flex:1}.lab-ti b{display:block;font-size:20px;font-weight:700;letter-spacing:-.01em}.lab-ti small{color:var(--lm);font-size:13px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lab-bd{flex:1;overflow:auto;padding:6px 18px max(28px,env(safe-area-inset-bottom));max-width:860px;width:100%;margin:0 auto;-webkit-overflow-scrolling:touch}
+.lab-card{background:linear-gradient(180deg,var(--lc2),var(--lc));border:1px solid rgba(255,255,255,.08);border-radius:22px;padding:18px;margin:0 0 14px;box-shadow:0 10px 30px rgba(0,0,0,.28)}
+.lab-card h3{margin:0 0 6px;font-size:19px}.lab-card h4,.lab-h{margin:0 0 10px;font-size:13px;color:var(--lm);font-weight:600;letter-spacing:.02em}.lab-h{margin:18px 2px 10px}
+.lab-card label{display:block;font-size:13px;color:var(--lm);margin:0 0 8px}.lab-card p{margin:0 0 10px}.lab-mut{color:var(--lm)!important}
+.lab-card small{color:var(--lm);font-size:12.5px}
+.lab input,.lab textarea{width:100%;background:rgba(0,0,0,.28);border:1px solid rgba(255,255,255,.12);border-radius:14px;color:var(--lt);font:inherit;padding:13px 14px;outline:none;resize:none}
+.lab input:focus,.lab textarea:focus{border-color:var(--la);box-shadow:0 0 0 3px rgba(124,140,255,.25)}
+.lab-go{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 22px;border:0;border-radius:15px;background:linear-gradient(135deg,var(--la),#a78bfa);color:#fff;font:700 15px Inter,system-ui,sans-serif;cursor:pointer;margin-top:12px;transition:transform .12s,filter .12s}
+.lab-go:active{transform:scale(.97)}.lab-go[disabled]{opacity:.45;pointer-events:none}.lab-go.ghost{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14)}.lab-go.warn{background:linear-gradient(135deg,#fb7185,#f59e0b);width:100%}.lab-go.sm{min-height:38px;padding:0 16px;margin:0;font-size:14px;border-radius:12px}
+.lab-ic{flex:none;width:46px;height:46px;border-radius:14px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.07);color:var(--lt);display:grid;place-items:center;cursor:pointer;font-size:20px;line-height:1}
+.lab-ic svg{width:21px;height:21px;fill:currentColor}.lab-ic.sm{width:40px;height:40px;border-radius:12px}.lab-ic.pri{background:var(--la);border-color:transparent}.lab-ic.rec{background:var(--lr);animation:labp 1s infinite}.lab-ic.on{background:var(--lg);color:#04251a;border-color:transparent}
+@keyframes labp{50%{box-shadow:0 0 0 8px rgba(251,113,133,.25)}}
+.lab-chip{border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);color:var(--lt);border-radius:999px;padding:8px 14px;font:13.5px Inter,system-ui,sans-serif;cursor:pointer}.lab-chip.on{background:var(--la);border-color:transparent}
+.lab-seg{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:6px}
+.lab-row{display:flex;flex-direction:column;gap:2px;width:100%;text-align:left;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);color:var(--lt);border-radius:16px;padding:12px 14px;margin:0 0 8px;cursor:pointer;font:inherit}.lab-row span{color:var(--lm);font-size:13px}
+.lab-opt{display:block;width:100%;text-align:left;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:var(--lt);border-radius:16px;padding:14px 16px;margin:0 0 10px;font:600 16px Inter,system-ui,sans-serif;cursor:pointer;transition:background .15s,transform .1s}
+.lab-opt:active{transform:scale(.985)}.lab-opt.ok{background:rgba(52,211,153,.2);border-color:var(--lg)}.lab-opt.no{background:rgba(251,113,133,.2);border-color:var(--lr)}
+.lab-empty{color:var(--lm);text-align:center;padding:28px 10px}
+.lab-spin{display:flex;gap:6px;justify-content:center;padding:14px}.lab-spin i{width:9px;height:9px;border-radius:50%;background:var(--la);animation:labs 1s infinite}.lab-spin i:nth-child(2){animation-delay:.15s}.lab-spin i:nth-child(3){animation-delay:.3s}
+@keyframes labs{0%,80%,100%{transform:scale(.5);opacity:.4}40%{transform:scale(1);opacity:1}}
+.lbth-box{display:flex;gap:10px;align-items:flex-start}.lbth-ex{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.lbth-c{animation:labin .3s both}.lbth-c small{display:block;font-weight:700;margin-bottom:6px;text-transform:none}
+.lbth-c.bad{border-left:4px solid var(--lr)}.lbth-c.good{border-left:4px solid var(--lg);position:relative}.lbth-c.gap{border-left:4px solid var(--lw)}.lbth-c.try{border-left:4px solid var(--la)}
+.lbth-en{font-size:20px;font-weight:600;line-height:1.35;margin:0 0 6px!important}.lbth-why{color:var(--lm)}
+.lbth-c .lab-ic.sm{position:absolute;right:14px;top:14px}.lbth-alt{display:grid;gap:6px;margin-top:8px}.lbth-alt span{font-size:14px;color:var(--lm)}.lbth-alt i{font-style:normal;color:var(--la2);margin-right:8px;font-size:12px}
+.lbth-pat{display:inline-block;background:rgba(124,140,255,.16);border:1px solid rgba(124,140,255,.4);border-radius:12px;padding:8px 12px;font-weight:600}
+.lbth-fb{margin:10px 0 0!important;padding:10px 12px;border-radius:12px;background:rgba(255,255,255,.06)}.lbth-fb.ok{background:rgba(52,211,153,.16)}.lbth-fb.no{background:rgba(251,113,133,.14)}
+.lbth-saved{display:flex;gap:8px;align-items:center;color:var(--lg);font-size:13px}.lbth-saved svg{width:18px;height:18px;fill:currentColor}
+@keyframes labin{from{opacity:0;transform:translateY(10px)}}
+.lber-top,.lbpa-top{display:flex;gap:18px;align-items:center}.lber-tx{flex:1;min-width:0}.lber-b{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.lber-ring{--p:0;flex:none;width:92px;height:92px;border-radius:50%;display:grid;place-content:center;text-align:center;background:conic-gradient(var(--lg) calc(var(--p)*360deg),rgba(255,255,255,.1) 0);position:relative}
+.lber-ring:before{content:"";position:absolute;inset:8px;border-radius:50%;background:var(--lc)}.lber-ring *{position:relative}.lber-ring b{font-size:26px;line-height:1}.lber-ring small{font-size:11px}.lber-ring.big{margin:0 auto 14px;width:120px;height:120px}
+.lber-add{display:flex;gap:10px}.lber-add input{flex:1}
+.lber-r{display:flex;gap:10px;align-items:center;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:12px 14px;margin:0 0 8px}.lber-r.done{opacity:.55}.lber-m{flex:1;min-width:0}.lber-m s{color:var(--lr);display:block}.lber-m b{display:block;color:var(--lg)}.lber-m small,.lber-m em{display:block;font-style:normal;color:var(--lm);font-size:12.5px}.lab-ic.x{font-size:22px}
+.lbbs-hd{display:flex;justify-content:space-between;color:var(--lm);margin-bottom:8px}.lbbs-hp{height:10px;border-radius:9px;background:rgba(255,255,255,.1);overflow:hidden;margin-bottom:16px}.lbbs-hp i{display:block;height:100%;background:linear-gradient(90deg,var(--lr),var(--lw));transition:width .5s}
+.lbbs-q{font-size:20px;font-weight:600}
+.lbst-sus{display:flex;gap:10px;overflow:auto;padding:0 0 12px}.lbst-s{flex:none;min-width:150px;text-align:left;border-radius:16px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);color:var(--lt);padding:11px 14px;cursor:pointer;font:inherit}.lbst-s small{display:block;color:var(--lm)}.lbst-s.on{background:rgba(124,140,255,.22);border-color:var(--la)}
+.lbst-log{max-height:38vh;min-height:90px;overflow:auto;display:flex;flex-direction:column;gap:10px;margin-bottom:12px}.lbst-m{background:rgba(255,255,255,.07);border-radius:16px 16px 16px 4px;padding:10px 14px;max-width:88%}.lbst-m b{display:block;font-size:12px;color:var(--la2);margin-bottom:2px}.lbst-m.me{align-self:flex-end;background:rgba(124,140,255,.3);border-radius:16px 16px 4px 16px}.lbst-m small{display:block;color:#fde68a;margin-top:4px}
+.lbst-in{display:flex;gap:10px}.lbst-cl{display:flex;flex-wrap:wrap;gap:8px}.lbst-c{background:rgba(251,191,36,.14);border:1px solid rgba(251,191,36,.4);border-radius:12px;padding:6px 12px;font-size:13.5px}
+.lbml-feed{height:calc(100% - 4px);overflow:auto;scroll-snap-type:y mandatory;border-radius:24px}.lab-reels .lab-bd{padding-bottom:0;display:flex;flex-direction:column;position:relative}.lab-reels .lab-bd .lbml-feed{flex:1}
+.lbml-c{scroll-snap-align:start;scroll-snap-stop:always;min-height:100%;display:flex;flex-direction:column;justify-content:center;gap:12px;padding:28px 26px;margin:0 0 12px;border-radius:24px;background:linear-gradient(160deg,#27306a,#161b36 60%,#12303b);border:1px solid rgba(255,255,255,.08);position:relative}
+.lbml-k{color:var(--la2);font-weight:700;font-size:13px}.lbml-c h2{margin:0;font-size:clamp(26px,5vw,40px);line-height:1.15}.lbml-b{font-size:19px;color:#dfe4ff;margin:0}.lbml-x{font-size:20px;font-weight:600;background:rgba(255,255,255,.07);border-left:4px solid var(--lg);border-radius:12px;padding:12px 16px;margin:0}
+.lbml-c>.lab-ic{align-self:flex-start}.lbml-q b{display:block;margin-bottom:6px}.lbml-q p{font-size:20px;margin:0 0 12px}.lbml-pg{position:absolute;right:30px;top:6px;font-size:12px;color:var(--lm)}
+.lbsc-img{width:100%;max-height:44vh;object-fit:cover;border-radius:16px;display:block}.lbsc-pre{display:grid;place-items:center;gap:8px;text-align:center;padding:28px 10px;border:2px dashed rgba(255,255,255,.18);border-radius:18px;color:var(--lm)}.lbsc-pre svg{width:46px;height:46px;fill:var(--la)}.lbsc-pre b{color:var(--lt)}
+.lbsc-bt{display:flex;gap:10px;flex-wrap:wrap}.lbsc-sc{color:var(--lm);margin:0 2px 12px}
+.lbsc-w{display:flex;gap:10px;align-items:center;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:12px 14px;margin:0 0 8px}.lbsc-m{flex:1;min-width:0}.lbsc-m b{font-size:18px;margin-right:8px}.lbsc-m i{color:var(--la2);font-style:normal;font-size:13px}.lbsc-m span{display:block;color:var(--lg)}.lbsc-m small,.lbsc-m em{display:block;color:var(--lm);font-size:13px;font-style:normal}
+.lbpa-ph{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:10px}.lbpa-ph div{background:rgba(255,255,255,.06);border-radius:14px;padding:12px}.lbpa-ph b{display:block;font-size:13px;color:var(--la2)}.lbpa-ph span{font-weight:700;display:block}.lbpa-ph small{display:block;margin-top:4px}
+.lbpa-bar{height:8px;border-radius:8px;background:rgba(255,255,255,.1);overflow:hidden;margin-top:8px}.lbpa-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--la),var(--la2))}
+.lbpa-t{display:flex;align-items:center;gap:14px;background:linear-gradient(180deg,var(--lc2),var(--lc));border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:14px 16px;margin:0 0 10px}.lbpa-t.ok{border-color:rgba(52,211,153,.5)}.lbpa-ck{width:30px;height:30px;border-radius:50%;border:2px solid rgba(255,255,255,.25);display:grid;place-items:center;flex:none}.lbpa-t.ok .lbpa-ck{background:var(--lg);border-color:var(--lg);color:#04251a}.lbpa-ck svg{width:18px;height:18px;fill:currentColor}.lbpa-m{flex:1;min-width:0}.lbpa-m b{display:block}.lbpa-m small{display:block}
+.lbpa-cal{display:grid;grid-template-columns:repeat(15,1fr);gap:5px;margin-bottom:6px}.lbpa-cal i{aspect-ratio:1;border-radius:7px;background:rgba(255,255,255,.07);font:600 10px/1 Inter,system-ui,sans-serif;display:grid;place-items:center;color:var(--lm)}.lbpa-cal i.a{background:var(--lg);color:#04251a}.lbpa-cal i.p{background:rgba(52,211,153,.35);color:#fff}.lbpa-cal i.m{background:rgba(251,113,133,.25)}.lbpa-cal i.t{outline:2px solid var(--la2)}
+html.lab-on body{overflow:hidden}
+html.lab-on #lc-card,html.lab-on .lr-orb{display:none!important}
+@media(max-width:640px){.lbpa-ph{grid-template-columns:1fr}.lbpa-cal{grid-template-columns:repeat(10,1fr)}.lber-top,.lbpa-top{flex-direction:column;align-items:flex-start}}
+@media(prefers-reduced-motion:reduce){#lab-ov,.lbth-c{transition:none;animation:none}}
+
+html.lab-on #srs-chip,html.lab-on .srs-chip{display:none!important}
+.lab-lg{display:flex;align-items:center;gap:8px;height:44px;padding:0 14px;border-radius:14px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.07);color:var(--lt);font:600 14px Inter,system-ui,sans-serif;cursor:pointer}.lab-lg i{font-style:normal;font-size:20px}
+.lab-sh{position:absolute;inset:0;z-index:5;display:flex;justify-content:flex-end;opacity:0;transition:opacity .2s}.lab-sh.in{opacity:1}.lab-shb{position:absolute;inset:0;background:rgba(3,6,18,.6)}
+.lab-shp{position:relative;width:min(380px,100%);height:100%;background:#12172b;border-left:1px solid rgba(255,255,255,.1);display:flex;flex-direction:column;transform:translateX(30px);transition:transform .22s}.lab-sh.in .lab-shp{transform:none}
+.lab-shh{display:flex;justify-content:space-between;gap:10px;padding:max(16px,env(safe-area-inset-top)) 18px 12px}.lab-shh b{font-size:18px;display:block}.lab-shh small{color:var(--lm)}.lab-shx{font-size:26px;flex:none}
+.lab-shl{flex:1;overflow:auto;padding:4px 12px max(18px,env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:6px}
+.lab-lr{display:flex;align-items:center;gap:14px;min-height:56px;padding:8px 14px;border-radius:14px;border:1px solid transparent;background:rgba(255,255,255,.04);color:var(--lt);font:inherit;text-align:left;cursor:pointer}.lab-lr.on{background:rgba(124,140,255,.2);border-color:var(--la)}
+.lab-lr i{font-style:normal;font-size:26px}.lab-lr span{flex:1;min-width:0}.lab-lr b{display:block;font-weight:600}.lab-lr small{color:var(--lm)}.lab-lr svg{width:22px;height:22px;fill:var(--lg)}
+</style><script id="lr-lab">/* ================= LunaRise Lab: new ways to learn ================= */
+(function(){'use strict';
+var D=document,LS=window.localStorage;
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function $(s,r){return (r||D).querySelector(s)}
+function jg(k,d){try{var v=JSON.parse(LS.getItem(k));return v==null?d:v}catch(e){return d}}
+function js(k,v){try{LS.setItem(k,JSON.stringify(v))}catch(e){}}
+function U(){try{return state.user||{}}catch(e){return{}}}
+function toast(m){try{showToast(m)}catch(e){}}
+function buzz(n){try{navigator.vibrate&&navigator.vibrate(n||12)}catch(e){}}
+function say(t,code){try{if(typeof speakText==='function')speakText(t,code)}catch(e){}}
+function today(){try{return dayKey()}catch(e){return new Date().toISOString().slice(0,10)}}
+function langs(){var a=(window.LRW&&LRW.langs&&LRW.langs.length)?LRW.langs.slice():[{c:'uz',n:'Uzbek',nat:'Oʻzbekcha',f:'🇺🇿',sp:'uz-UZ'},{c:'ru',n:'Russian',nat:'Русский',f:'🇷🇺',sp:'ru-RU'}];return a.sort(function(x,y){return x.n.localeCompare(y.n)})}
+function lobj(c){var a=langs();for(var i=0;i<a.length;i++)if(a[i].c===c)return a[i];return null}
+function lang(){var u=U(),c=jg('lr_lab_lang',null)||u.xLang||u.ntLang||(u.prefs&&u.prefs.lang)||'uz';return lobj(c)?c:'uz'}
+function sp(c){var o=lobj(c);return o&&o.sp||'en-US'}
+var LN=new Proxy({},{get:function(_,c){var o=lobj(c);return o?o.n:'Uzbek'}});
+var LB_APPS={think:1,scan:1,path:1,reels:1},CUR=null;
+function langBtn(){var o=lobj(lang());var b=D.createElement('button');b.type='button';b.className='lab-lg';b.setAttribute('aria-label','My language: '+o.n);b.innerHTML='<i>'+o.f+'</i><span>'+esc(o.n)+'</span>';b.onclick=langSheet;$('.lab-ex',OV).replaceWith(b)}
+function langSheet(){var cur=lang(),sh=D.createElement('div');sh.className='lab-sh';sh.innerHTML='<div class="lab-shb"></div><div class="lab-shp" role="dialog" aria-label="My language"><div class="lab-shh"><div><b>My language</b><small>Explanations and translations use this language.</small></div><button type="button" class="lab-bk lab-shx" aria-label="Close">×</button></div><div class="lab-shl">'+langs().map(function(l){return '<button type="button" class="lab-lr'+(l.c===cur?' on':'')+'" data-c="'+l.c+'"><i>'+l.f+'</i><span><b>'+esc(l.n)+'</b><small>'+esc(l.nat||'')+'</small></span>'+(l.c===cur?IC.check:'')+'</button>'}).join('')+'</div></div>';OV.appendChild(sh);requestAnimationFrame(function(){sh.classList.add('in')});
+ function x(){sh.classList.remove('in');setTimeout(function(){sh.remove()},200)}
+ $('.lab-shb',sh).onclick=x;$('.lab-shx',sh).onclick=x;sh.querySelectorAll('.lab-lr').forEach(function(b){b.onclick=function(){var c=b.dataset.c;js('lr_lab_lang',c);try{var u=U();u.xLang=c;if(window.pfSave)pfSave()}catch(e){}buzz(8);var id=CUR;x();if(c!==cur&&id&&LAB.apps[id])setTimeout(function(){LAB.apps[id]()},120)}})}
+function level(){try{var t=String(U().level||U().cefr||U().target||'B1');var m=t.match(/\b([ABC][12])\b/);return m?m[1]:'B1'}catch(e){return'B1'}}
+/* ---- one place to talk to the AI ---- */
+async function ai(sys,user,o){o=o||{};var key;try{key=aiKey()}catch(e){}if(!key)throw new Error('noai');
+ var c=new AbortController(),to=setTimeout(function(){c.abort()},o.ms||30000);
+ try{var msgs=[{role:'system',content:sys}].concat(Array.isArray(user)?user:[{role:'user',content:user}]);
+  var body={model:LR_AI_MODEL,temperature:o.t==null?.4:o.t,max_tokens:o.max||900,messages:msgs};if(o.json!==false)body.response_format={type:'json_object'};
+  var r=await lrAIFetch('https://api.openai.com/v1/chat/completions',{method:'POST',signal:c.signal,headers:{'Content-Type':'application/json',Authorization:'Bearer '+key},body:JSON.stringify(body)});
+  if(!r.ok){var e=new Error(r.status===429?'limit':'ai');throw e}
+  var j=await r.json(),t=j&&j.choices&&j.choices[0]&&j.choices[0].message&&j.choices[0].message.content||'';
+  return o.json===false?t:JSON.parse(t)}finally{clearTimeout(to)}}
+function aiErr(e){var m=e&&e.message;return m==='noai'?'AI is not connected yet. Open AI Tutor once to connect it.':m==='limit'?'You used today’s free AI messages. Try again tomorrow or upgrade.':'The AI did not answer. Check your internet and try again.'}
+/* ---- Error Bank: every mistake becomes a small, fixable card ---- */
+var EK='lr_errbank',ERR={
+ all:function(){return jg(EK,[])},
+ active:function(){return ERR.all().filter(function(e){return !e.done})},
+ add:function(o){if(!o||!o.t)return false;var a=ERR.all(),k=(o.k||'phrase')+'|'+String(o.t).toLowerCase().trim(),f=a.filter(function(e){return e.key===k})[0];
+  if(f){f.n=(f.n||1)+1;f.ts=Date.now();if(o.fix)f.fix=o.fix;if(o.why)f.why=o.why;f.done=false;f.ok=0}else a.unshift({id:Date.now()+Math.random(),key:k,k:o.k||'phrase',t:String(o.t).trim(),fix:o.fix||'',why:o.why||'',src:o.src||'',n:1,ok:0,done:false,ts:Date.now()});
+  js(EK,a.slice(0,300));try{refreshTiles()}catch(e){}return true},
+ pass:function(id){var a=ERR.all();a.forEach(function(e){if(e.id===id){e.ok=(e.ok||0)+1;if(e.ok>=2)e.done=true}});js(EK,a)},
+ fail:function(id){var a=ERR.all();a.forEach(function(e){if(e.id===id){e.ok=0;e.n=(e.n||1)+1}});js(EK,a)},
+ clear:function(id){js(EK,ERR.all().filter(function(e){return e.id!==id}))}};
+/* ---- full screen shell ---- */
+var OV=null,cleanup=null;
+function open(id,title,sub,build){close(true);CUR=id;OV=D.createElement('div');OV.id='lab-ov';OV.className='lab lab-'+id;OV.setAttribute('role','dialog');OV.setAttribute('aria-label',title);
+ OV.innerHTML='<div class="lab-bg"></div><header class="lab-hd"><button type="button" class="lab-bk" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><div class="lab-ti"><b>'+esc(title)+'</b><small>'+esc(sub||'')+'</small></div><span class="lab-ex"></span></header><main class="lab-bd"></main>';
+ D.body.appendChild(OV);D.documentElement.classList.add('lab-on');if(LB_APPS[id])langBtn();
+ $('.lab-bk',OV).onclick=function(){close()};
+ try{history.pushState({lab:1},'')}catch(e){}
+ OV.__pop=function(){if(!(history.state&&history.state.lab)){close(true)}};window.addEventListener('popstate',OV.__pop);
+ OV.__esc=function(e){if(e.key==='Escape')close()};D.addEventListener('keydown',OV.__esc);
+ requestAnimationFrame(function(){OV&&OV.classList.add('in')});
+ cleanup=build($('.lab-bd',OV),OV)||null;return OV}
+function close(silent){if(!OV)return;var o=OV;OV=null;try{cleanup&&cleanup()}catch(e){}cleanup=null;window.removeEventListener('popstate',o.__pop);D.removeEventListener('keydown',o.__esc);o.classList.remove('in');setTimeout(function(){o.remove()},220);D.documentElement.classList.remove('lab-on');if(!silent&&history.state&&history.state.lab){try{history.back()}catch(e){}}}
+function spin(){return '<div class="lab-spin"><i></i><i></i><i></i></div>'}
+function mic(onText,langCode,btn){var SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){toast('Voice typing is not supported in this browser');return}
+ if(btn.__rec){try{btn.__rec.stop()}catch(e){}return}var r=new SR();r.lang=langCode;r.interimResults=true;r.continuous=false;btn.__rec=r;btn.classList.add('rec');
+ r.onresult=function(e){var t='';for(var i=0;i<e.results.length;i++)t+=e.results[i][0].transcript;onText(t,e.results[e.results.length-1].isFinal)};
+ r.onend=function(){btn.__rec=null;btn.classList.remove('rec')};r.onerror=function(){btn.__rec=null;btn.classList.remove('rec')};try{r.start()}catch(e){}}
+var IC={mic:'<svg viewBox="0 0 24 24"><path d="M12 15a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.9V22h2v-3.1A7 7 0 0 0 19 12z"/></svg>',say:'<svg viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9zm11.5 3a4 4 0 0 0-2-3.5v7a4 4 0 0 0 2-3.5zM14 3.2v2.1a7 7 0 0 1 0 13.4v2.1a9 9 0 0 0 0-17.6z"/></svg>',check:'<svg viewBox="0 0 24 24"><path d="m9 16.2-3.5-3.5L4 14.1l5 5 11-11-1.5-1.4z"/></svg>',send:'<svg viewBox="0 0 24 24"><path d="M3 20.5 21 12 3 3.5l.01 6.6L15 12 3.01 13.9z"/></svg>'};
+var LAB=window.LAB={langs:langs,sp:sp,lobj:lobj,open:open,close:close,ai:ai,aiErr:aiErr,esc:esc,$:$,jg:jg,js:js,U:U,toast:toast,say:say,buzz:buzz,lang:lang,LN:LN,level:level,err:ERR,spin:spin,mic:mic,IC:IC,today:today,apps:{}};
+/* ============ Think in English: stop translating word for word ============ */
+LAB.apps.think=function(){open('think','Think in English','Say it in your language. See how a native would say it.',function(b){
+ var HK='lr_think_hist',L=lang(),ex=({uz:['Men bugun juda charchadim.','Menga bu fikr yoqmadi.','Ertaga uchrashamiz, xo‘pmi?','Bu ish menga og‘irlik qilyapti.'],ru:['Я сегодня очень устал.','Мне не нравится эта идея.','Увидимся завтра, хорошо?','Мне тяжело даётся эта работа.']})[L]||[];
+ b.innerHTML='<section class="lab-card lbth-in"><label for="lbth-t">What do you want to say?</label><div class="lbth-box"><textarea id="lbth-t" rows="3" maxlength="400" placeholder="Write in '+LN[L]+' (or any language)…"></textarea><button type="button" class="lab-ic" id="lbth-m" aria-label="Speak">'+IC.mic+'</button></div><div class="lbth-ex">'+ex.map(function(x){return '<button type="button" class="lab-chip">'+esc(x)+'</button>'}).join('')+'</div><button type="button" class="lab-go" id="lbth-go">Think in English</button></section><div id="lbth-out"></div><section class="lab-hist" id="lbth-h"></section>';
+ var t=$('#lbth-t',b),out=$('#lbth-out',b),busy=false;
+ b.querySelectorAll('.lbth-ex .lab-chip').forEach(function(c){c.onclick=function(){t.value=c.textContent;t.focus()}});
+ $('#lbth-m',b).onclick=function(){mic(function(x){t.value=x},sp(L),this)};
+ function hist(){var h=jg(HK,[]),el=$('#lbth-h',b);el.innerHTML=h.length?'<h4>Earlier</h4>'+h.slice(0,6).map(function(x,i){return '<button type="button" class="lab-row" data-i="'+i+'"><span>'+esc(x.src)+'</span><b>'+esc(x.r.natural&&x.r.natural.en||'')+'</b></button>'}).join(''):'';el.querySelectorAll('.lab-row').forEach(function(r){r.onclick=function(){var x=jg(HK,[])[+r.dataset.i];t.value=x.src;show(x.r,x.src,true);window.scrollTo(0,0)}})}
+ function show(r,src,old){var nat=r.natural||{},lit=r.literal||{};
+  out.innerHTML='<section class="lab-card lbth-c bad"><small>Word for word</small><p class="lbth-en">'+esc(lit.en||'')+'</p><p class="lbth-why">'+esc(lit.issue||'')+'</p></section>'+
+  '<section class="lab-card lbth-c good"><small>What a native says</small><p class="lbth-en">'+esc(nat.en||'')+'</p><button type="button" class="lab-ic sm" id="lbth-s" aria-label="Listen">'+IC.say+'</button><div class="lbth-alt">'+(nat.casual?'<span><i>Casual</i>'+esc(nat.casual)+'</span>':'')+(nat.formal?'<span><i>Formal</i>'+esc(nat.formal)+'</span>':'')+'</div></section>'+
+  '<section class="lab-card lbth-c gap"><small>The thinking gap</small><p>'+esc(r.gap||'')+'</p>'+(r.pattern?'<div class="lbth-pat">'+esc(r.pattern)+'</div>':'')+'</section>'+
+  '<section class="lab-card lbth-c try"><small>Now you say it</small><div class="lbth-box"><input id="lbth-y" type="text" placeholder="Type the English sentence from memory" autocomplete="off"><button type="button" class="lab-ic" id="lbth-ym" aria-label="Speak English">'+IC.mic+'</button></div><button type="button" class="lab-go ghost" id="lbth-ck">Check my sentence</button><div id="lbth-fb"></div></section>'+(old?'':'<p class="lbth-saved">'+IC.check+' Saved to your Error Bank so you can practise it later.</p>');
+  $('#lbth-s',out).onclick=function(){say(nat.en,'en-US')};
+  $('#lbth-ym',out).onclick=function(){mic(function(x){$('#lbth-y',out).value=x},'en-US',this)};
+  $('#lbth-ck',out).onclick=async function(){var y=$('#lbth-y',out).value.trim();if(!y)return;var fb=$('#lbth-fb',out);fb.innerHTML=spin();
+   try{var j=await ai('You are a kind English coach for a '+LN[L]+' speaker at level '+level()+'. Reply JSON only: {"ok":boolean (true if natural and correct enough),"feedback":"one or two short sentences in English","better":"improved sentence or empty"}.','Meaning to express: '+src+'\nNative version: '+nat.en+'\nLearner wrote: '+y,{max:220,t:.2});
+    fb.innerHTML='<p class="lbth-fb '+(j.ok?'ok':'no')+'">'+(j.ok?'✓ ':'')+esc(j.feedback||'')+(j.better?'<br><b>'+esc(j.better)+'</b>':'')+'</p>';if(j.ok){buzz([10,40,10]);try{triggerConfetti()}catch(e){}}else ERR.add({k:'phrase',t:y,fix:j.better||nat.en,why:j.feedback||'',src:'Think in English'})}catch(e){fb.innerHTML='<p class="lbth-fb no">'+esc(aiErr(e))+'</p>'}};
+  out.classList.remove('in');void out.offsetWidth;out.classList.add('in')}
+ $('#lbth-go',b).onclick=async function(){var src=t.value.trim();if(!src||busy)return;busy=true;out.innerHTML=spin();var btn=this;btn.disabled=true;
+  try{var r=await ai('You are a world-class English teacher who cures "word-for-word translation disease" in '+LN[L]+' speakers (level '+level()+'). The learner writes something in their language. Reply JSON ONLY:\n{"literal":{"en":"the English a learner would produce by translating word for word","issue":"one short English sentence saying why that sounds wrong or odd to natives"},"natural":{"en":"the most natural English a native would say in this situation","casual":"a casual alternative or empty","formal":"a formal alternative or empty"},"gap":"2-3 short sentences in '+LN[L]+' explaining how the two languages think differently here (what is added, dropped or changed)","pattern":"a reusable English pattern like: I feel + adjective / It is + adj + to + verb"}\nIf the word-for-word version is actually fine, say so in "issue" and keep literal equal to natural. Never use markdown.',src,{max:700,t:.3});
+   var h=jg(HK,[]);h.unshift({src:src,r:r,ts:Date.now()});js(HK,h.slice(0,20));
+   if(r.literal&&r.natural&&r.literal.en&&r.natural.en&&r.literal.en.trim().toLowerCase()!==r.natural.en.trim().toLowerCase())ERR.add({k:'phrase',t:r.literal.en,fix:r.natural.en,why:r.literal.issue||'',src:'Think in English'});
+   show(r,src,false);hist();try{LAB.mark('think')}catch(e){}}catch(e){out.innerHTML='<section class="lab-card"><p class="lbth-fb no">'+esc(aiErr(e))+'</p></section>'}finally{busy=false;btn.disabled=false}};
+ hist()})};
+/* ============ Error Bank + Boss Fight ============ */
+LAB.apps.errors=function(){open('errors','Error Bank','Your own mistakes, turned into practice.',function(b){
+ function paint(){var a=ERR.all(),act=a.filter(function(e){return !e.done}),fin=a.filter(function(e){return e.done});
+  var last=jg('lr_boss_last',0),days=last?Math.floor((Date.now()-last)/864e5):99;
+  b.innerHTML='<section class="lab-card lber-top"><div class="lber-ring" style="--p:'+(a.length?(fin.length/a.length):0).toFixed(3)+'"><b>'+act.length+'</b><small>to fix</small></div><div class="lber-tx"><h3>'+(act.length>=4?'Boss Fight is ready':'Collect a few more mistakes')+'</h3><p>'+(act.length>=4?'A short exam made only from your own mistakes. Beat it to clear them.':'Mistakes are saved automatically from flashcards, Think in English, Story Mode and Micro Lessons. You can also add your own.')+'</p><div class="lber-b"><button type="button" class="lab-go" id="lber-boss"'+(act.length<2?' disabled':'')+'>Start Boss Fight</button>'+(days<7&&last?'<small>Last fight '+days+' day'+(days===1?'':'s')+' ago</small>':'')+'</div></div></section>'+
+  '<section class="lab-card"><label for="lber-t">Add a mistake</label><div class="lber-add"><input id="lber-t" placeholder="What I said or wrote"><input id="lber-f" placeholder="The correct way"><button type="button" class="lab-ic" id="lber-a" aria-label="Add">'+IC.check+'</button></div></section>'+
+  (act.length?'<h4 class="lab-h">To fix · '+act.length+'</h4>'+act.map(row).join(''):'<p class="lab-empty">Nothing to fix. Keep learning and your mistakes will appear here.</p>')+(fin.length?'<h4 class="lab-h">Fixed · '+fin.length+'</h4>'+fin.slice(0,12).map(row).join(''):'');
+  b.querySelectorAll('[data-x]').forEach(function(x){x.onclick=function(){ERR.clear(+x.dataset.x);paint()}});
+  b.querySelectorAll('[data-s]').forEach(function(x){x.onclick=function(){say(x.dataset.s,'en-US')}});
+  $('#lber-a',b).onclick=function(){var t=$('#lber-t',b).value.trim(),f=$('#lber-f',b).value.trim();if(!t)return;ERR.add({k:'phrase',t:t,fix:f,src:'Added by me'});paint()};
+  $('#lber-boss',b).onclick=function(){boss()}}
+ function row(e){return '<div class="lber-r'+(e.done?' done':'')+'"><div class="lber-m"><s>'+esc(e.t)+'</s>'+(e.fix?'<b>'+esc(e.fix)+'</b>':'')+(e.why?'<small>'+esc(e.why)+'</small>':'')+'<em>'+esc(e.src||'')+(e.n>1?' · '+e.n+'×':'')+'</em></div>'+(e.fix?'<button type="button" class="lab-ic sm" data-s="'+esc(e.fix)+'" aria-label="Listen">'+IC.say+'</button>':'')+'<button type="button" class="lab-ic sm x" data-x="'+e.id+'" aria-label="Delete">×</button></div>'}
+ async function boss(){var items=ERR.active().sort(function(a,b){return (b.n||1)-(a.n||1)}).slice(0,8);b.innerHTML='<section class="lab-card" style="text-align:center"><h3>Loading your Boss Fight…</h3>'+spin()+'</section>';var qs=[];
+  try{var j=await ai('Make a short exam from a learner\'s own English mistakes. For EACH item create one multiple-choice question that tests the correct form (fill the blank in a NEW sentence, or choose the natural phrase). Reply JSON: {"q":[{"i":item_index,"q":"question text with ___ if a blank","o":["A","B","C","D"],"a":correct_option_index,"e":"one short explanation"}]}. If correct="?" the item is just a vocabulary word the learner missed: ask a question about its meaning or use. Keep each question easy to read for level '+level()+'.',items.map(function(e,i){return i+': mistake="'+e.t+'" correct="'+(e.fix||'?')+'" note="'+(e.why||'')+'"'}).join('\n'),{max:1500,t:.3});qs=(j.q||[]).filter(function(q){return q&&q.o&&q.o.length>1&&items[q.i]})}catch(e){}
+  if(!qs.length)qs=items.filter(function(e){return e.fix}).map(function(e,i){var o=[e.fix,e.t].sort(function(){return Math.random()-.5});return{i:items.indexOf(e),q:'Which one is correct?',o:o,a:o.indexOf(e.fix),e:e.why||''}});
+  if(!qs.length){b.innerHTML='<section class="lab-card"><h3>Add the correct version first</h3><p>Boss Fight needs the right answer for each mistake.</p></section>';setTimeout(paint,1800);return}
+  var n=0,score=0,hp=100;
+  (function ask(){if(n>=qs.length)return end();var q=qs[n];b.innerHTML='<section class="lab-card bs"><div class="lbbs-hd"><span>Boss Fight</span><b>'+(n+1)+' / '+qs.length+'</b></div><div class="lbbs-hp"><i style="width:'+hp+'%"></i></div><p class="lbbs-q">'+esc(q.q)+'</p><div class="lbbs-o">'+q.o.map(function(o,k){return '<button type="button" class="lab-opt" data-k="'+k+'">'+esc(o)+'</button>'}).join('')+'</div><div class="lbbs-fb"></div></section>';
+   b.querySelectorAll('.lab-opt').forEach(function(btn){btn.onclick=function(){if(b.__lock)return;b.__lock=1;var k=+btn.dataset.k,ok=k===q.a;b.querySelectorAll('.lab-opt')[q.a].classList.add('ok');if(!ok)btn.classList.add('no');var it=items[q.i];if(ok){score++;hp=Math.max(0,hp-Math.round(100/qs.length));buzz(10);ERR.pass(it.id)}else{buzz([30,40,30]);ERR.fail(it.id)}
+    $('.lbbs-fb',b).innerHTML='<p class="lbth-fb '+(ok?'ok':'no')+'">'+(ok?'✓ Correct. ':'')+esc(q.e||'')+'</p><button type="button" class="lab-go" id="lbbs-n">'+(n+1>=qs.length?'See result':'Next')+'</button>';$('#lbbs-n',b).onclick=function(){b.__lock=0;n++;ask()}}})})();
+  function end(){js('lr_boss_last',Date.now());var win=score/qs.length>=.7;if(win){try{triggerConfetti()}catch(e){}buzz([20,60,20,60,40])}try{pfFeed('lab','Boss Fight: '+score+'/'+qs.length)}catch(e){}try{if(win)LAB.mark('boss')}catch(e){}
+   b.innerHTML='<section class="lab-card" style="text-align:center"><div class="lber-ring big" style="--p:'+(score/qs.length).toFixed(3)+'"><b>'+Math.round(score/qs.length*100)+'%</b></div><h3>'+(win?'Boss defeated!':'The boss survives… this time')+'</h3><p>'+score+' of '+qs.length+' correct. '+(win?'Mistakes answered correctly twice are cleared for good.':'Mistakes you got wrong stay in your bank. Review them and try again.')+'</p><button type="button" class="lab-go" id="lbbs-d">Back to my mistakes</button></section>';$('#lbbs-d',b).onclick=paint}}
+ paint()})};
+var tileRefresh=null;function refreshTiles(){try{if(typeof renderHub==='function')renderHub()}catch(e){}}
+})();
+
+/* ============ Detective Story: learn by solving a case ============ */
+(function(){'use strict';
+var L=window.LAB,$=L.$,esc=L.esc,ai=L.ai,IC=L.IC,jg=L.jg,js=L.js;
+var SK='lr_story';
+L.apps.story=function(){L.open('story','Detective Story','Interview suspects in English. Solve the case.',function(b){
+ var S=jg(SK,null),busy=false;
+ function start(){
+  b.innerHTML='<section class="lab-card"><h3>New case</h3><p class="lab-mut">An AI game master writes a fresh mystery. You question people in English. Your mistakes are gently corrected and saved to your Error Bank.</p><label>Genre</label><div class="lab-seg" id="lbst-g">'+['Classic mystery','Sci-fi station','Fantasy castle','Office thriller'].map(function(x,i){return '<button type="button" class="lab-chip'+(i?'':' on')+'">'+x+'</button>'}).join('')+'</div><button type="button" class="lab-go" id="lbst-go">Open the case</button></section>'+(S&&!S.over?'<button type="button" class="lab-row" id="lbst-res"><span>Continue</span><b>'+esc(S.title)+'</b></button>':'');
+  var g='Classic mystery';b.querySelectorAll('#lbst-g .lab-chip').forEach(function(c){c.onclick=function(){b.querySelectorAll('#lbst-g .lab-chip').forEach(function(x){x.classList.remove('on')});c.classList.add('on');g=c.textContent}});
+  var r=$('#lbst-res',b);if(r)r.onclick=play;
+  $('#lbst-go',b).onclick=async function(){this.disabled=true;b.insertAdjacentHTML('beforeend',L.spin());
+   try{var j=await ai('You are a game master writing a short detective case for an English learner at level '+L.level()+'. Genre: '+g+'. Use simple, vivid English. Reply JSON ONLY: {"title":"","intro":"3 short sentences setting the scene","victim":"what happened, 1 sentence","suspects":[{"name":"","role":"","look":"one short phrase","secret":"what they hide (1 sentence, hidden from the player)","truth":"what they really did that night (hidden)"}],"culprit":index,"motive":"1 sentence","solution":"2 sentences revealing how it happened"}. Exactly 4 suspects, each with a distinct personality. One is guilty; the others have honest secrets.',' ',{max:1400,t:.9,ms:40000});
+    if(!j.suspects||j.suspects.length<3||typeof j.culprit!=='number')throw new Error('bad');
+    S={title:j.title,intro:j.intro,victim:j.victim,suspects:j.suspects,culprit:j.culprit,motive:j.motive,solution:j.solution,clues:[],log:[],q:0,over:false,cur:0};js(SK,S);play()}catch(e){this.disabled=false;var sp=$('.lab-spin',b);sp&&sp.remove();L.toast(L.aiErr(e))}}}
+ function play(){
+  b.innerHTML='<section class="lab-card lbst-top"><h3>'+esc(S.title)+'</h3><p>'+esc(S.intro)+' '+esc(S.victim)+'</p></section>'+
+  '<section class="lbst-sus" id="lbst-sus">'+S.suspects.map(function(s,i){return '<button type="button" class="lbst-s'+(i===S.cur?' on':'')+'" data-i="'+i+'"><b>'+esc(s.name)+'</b><small>'+esc(s.role)+'</small></button>'}).join('')+'</section>'+
+  '<section class="lab-card lbst-chat"><div class="lbst-log" id="lbst-log"></div><div class="lbst-in"><input id="lbst-q" placeholder="Ask a question in English…" autocomplete="off"><button type="button" class="lab-ic" id="lbst-m" aria-label="Speak">'+IC.mic+'</button><button type="button" class="lab-ic pri" id="lbst-s" aria-label="Send">'+IC.send+'</button></div><div class="lbst-hint" id="lbst-h"></div></section>'+
+  '<section class="lab-card"><h4>Clue board</h4><div id="lbst-cl" class="lbst-cl"></div></section>'+
+  '<section class="lab-card"><button type="button" class="lab-go warn" id="lbst-ac">Make an accusation</button></section>';
+  var log=$('#lbst-log',b);
+  function paintLog(){log.innerHTML=S.log.filter(function(m){return m.who===S.cur||m.who==null}).map(function(m){return m.me?'<div class="lbst-m me">'+esc(m.t)+(m.fix?'<small>✎ '+esc(m.fix)+'</small>':'')+'</div>':'<div class="lbst-m"><b>'+esc(S.suspects[m.who]?S.suspects[m.who].name:'')+'</b>'+esc(m.t)+'</div>'}).join('')||'<p class="lab-mut">Question '+esc(S.suspects[S.cur].name)+'. Try: “Where were you last night?”</p>';log.scrollTop=log.scrollHeight}
+  function paintCl(){$('#lbst-cl',b).innerHTML=S.clues.length?S.clues.map(function(c){return '<span class="lbst-c">'+esc(c)+'</span>'}).join(''):'<p class="lab-mut">Clues you find will appear here.</p>'}
+  paintLog();paintCl();
+  b.querySelectorAll('.lbst-s').forEach(function(x){x.onclick=function(){S.cur=+x.dataset.i;js(SK,S);b.querySelectorAll('.lbst-s').forEach(function(y){y.classList.remove('on')});x.classList.add('on');paintLog()}});
+  $('#lbst-m',b).onclick=function(){L.mic(function(t){$('#lbst-q',b).value=t},'en-US',this)};
+  async function send(){var q=$('#lbst-q',b),t=q.value.trim();if(!t||busy)return;busy=true;q.value='';var sp=S.suspects[S.cur],mine={me:1,t:t,who:S.cur};S.log.push(mine);paintLog();log.insertAdjacentHTML('beforeend','<div class="lbst-m"><b>'+esc(sp.name)+'</b>'+L.spin()+'</div>');log.scrollTop=log.scrollHeight;
+   var hist=S.log.filter(function(m){return m.who===S.cur}).slice(-8).map(function(m){return {role:m.me?'user':'assistant',content:m.t}});
+   try{var j=await ai('You roleplay '+sp.name+' ('+sp.role+') in a detective game for an English learner (level '+L.level()+'). Case: '+S.victim+' Your secret: '+sp.secret+' What you really did: '+sp.truth+(S.suspects.indexOf(sp)===S.culprit?' YOU ARE THE CULPRIT: lie smoothly, but leave one small contradiction.':' You are innocent of the crime but protect your own secret.')+' Answer in 1-3 short simple English sentences, in character. Reveal a concrete clue only when the player asks a good, specific question. Reply JSON: {"reply":"","clue":"short clue text or empty","fix":"if the player\'s English had a mistake, a corrected version of their sentence, else empty","why":"very short reason if fix"}.',hist,{max:380,t:.8});
+    mine.fix=j.fix||'';if(j.fix&&j.fix.trim().toLowerCase().replace(/[.?!]/g,'')!==t.toLowerCase().replace(/[.?!]/g,''))L.err.add({k:'phrase',t:t,fix:j.fix,why:j.why||'',src:'Detective Story'});else mine.fix='';
+    S.log.push({who:S.cur,t:j.reply||'…'});if(j.clue&&S.clues.indexOf(j.clue)<0){S.clues.push(j.clue);L.buzz([15,30,15])}S.q++;js(SK,S);try{L.mark('speak')}catch(e){}paintLog();paintCl();L.say(j.reply,'en-US')}catch(e){S.log.pop();js(SK,S);paintLog();L.toast(L.aiErr(e))}finally{busy=false}}
+  $('#lbst-s',b).onclick=send;$('#lbst-q',b).onkeydown=function(e){if(e.key==='Enter')send()};
+  $('#lbst-ac',b).onclick=function(){b.innerHTML='<section class="lab-card"><h3>Who did it?</h3><p class="lab-mut">You asked '+S.q+' question'+(S.q===1?'':'s')+' and found '+S.clues.length+' clue'+(S.clues.length===1?'':'s')+'.</p><div class="lbst-pick">'+S.suspects.map(function(s,i){return '<button type="button" class="lab-opt" data-i="'+i+'"><b>'+esc(s.name)+'</b> · '+esc(s.role)+'</button>'}).join('')+'</div><button type="button" class="lab-go ghost" id="lbst-bk">Keep investigating</button></section>';
+   $('#lbst-bk',b).onclick=play;b.querySelectorAll('.lbst-pick .lab-opt').forEach(function(o){o.onclick=function(){var ok=+o.dataset.i===S.culprit;S.over=true;js(SK,S);if(ok){try{triggerConfetti()}catch(e){}L.buzz([20,60,20,60,40])}else L.buzz([40,40,40]);
+    b.innerHTML='<section class="lab-card" style="text-align:center"><h3>'+(ok?'Case solved!':'Wrong suspect')+'</h3><p>'+(ok?'Great detective work.':'The culprit was '+esc(S.suspects[S.culprit].name)+'.')+'</p><p class="lab-mut">'+esc(S.motive||'')+' '+esc(S.solution||'')+'</p><button type="button" class="lab-go" id="lbst-nw">New case</button></section>';$('#lbst-nw',b).onclick=function(){S=null;start()}}})}}
+ if(S&&!S.over)play();else start()})};
+/* ============ Micro Lessons: a vertical feed of 30-second lessons ============ */
+var ML=[
+['Say it better','Instead of “I have 20 years.”','Say: “I am 20 years old.”','In English we use “be” for age, not “have”.'],
+['Confusing pair','make vs do','make = create something new (make a cake, make a mistake). do = tasks and activities (do homework, do the dishes).','Q|Which is correct?|I need to ___ my homework.|do,make|0'],
+['Phrasal verb','give up','= stop trying.','“Don’t give up. You are close.”'],
+['Say it better','Instead of “I am agree.”','Say: “I agree.”','“Agree” is already a verb. No “am” needed.'],
+['Confusing pair','say vs tell','say + words: “She said hello.” tell + person: “She told me a secret.”','Q|Choose the correct sentence.|He ___ me the truth.|told,said|0'],
+['Pronunciation','Silent letters','knife, know, write, listen, island','Do not say the first or middle letter: “nife”, “now”, “rite”, “lisen”.'],
+['Say it better','Instead of “I have a headache in my head.”','Say: “I have a headache.”','Native speakers do not repeat the body part.'],
+['Phrasal verb','look forward to','= wait happily for something.','“I look forward to seeing you.” After “to” use -ing.'],
+['Confusing pair','few vs a few','a few = some, enough (positive). few = almost none (negative).','Q|“I have ___ friends here, so we can go out.”|a few,few|0'],
+['Say it better','Instead of “I am boring.”','Say: “I am bored.”','-ed = how you feel. -ing = what causes the feeling. “The movie is boring.”'],
+['Phrasal verb','run out of','= have no more.','“We ran out of milk.”'],
+['Confusing pair','its vs it’s','it’s = it is. its = belongs to it.','Q|The dog wagged ___ tail.|its,it’s|0'],
+['Say it better','Instead of “How do you think about it?”','Say: “What do you think about it?”','“How” asks about method. “What” asks for an opinion.'],
+['Pronunciation','-ed endings','worked /t/, played /d/, wanted /ɪd/','Three sounds, one spelling. Say them out loud.'],
+['Phrasal verb','turn down','= refuse (an offer) or lower (volume).','“She turned down the job.” “Please turn down the music.”'],
+['Say it better','Instead of “I want to know about…”','Say: “I’d like to know about…”','“Would like” is softer and more polite than “want”.'],
+['Confusing pair','affect vs effect','affect = verb (change something). effect = noun (the result).','Q|Sleep has a big ___ on mood.|effect,affect|0'],
+['Phrasal verb','get along with','= have a good relationship.','“I get along with my coworkers.”'],
+['Say it better','Instead of “I didn’t slept well.”','Say: “I didn’t sleep well.”','After did/didn’t use the base verb. The past is already in “did”.'],
+['Confusing pair','since vs for','since + a point in time (since 2020). for + a length of time (for 3 years).','Q|I have lived here ___ five years.|for,since|0'],
+['Say it better','Instead of “Open the light.”','Say: “Turn on the light.”','We open doors and boxes. We turn on lights and TVs.'],
+['Phrasal verb','figure out','= find the answer, understand.','“I can’t figure out this problem.”'],
+['Say it better','Instead of “I am studying since morning.”','Say: “I have been studying since morning.”','Use present perfect continuous for an action that started in the past and continues now.'],
+['Pronunciation','Word stress','PHOtograph, phoTOGraphy, photoGRAPHic','Stress moves when the word changes. Clap on the loud syllable.'],
+['Confusing pair','lose vs loose','lose /luːz/ = not win, misplace. loose /luːs/ = not tight.','Q|My keys are lost. I always ___ them.|lose,loose|0']];
+function mlCard(m,i){var q=m[3]&&m[3].indexOf('Q|')===0?m[3].split('|'):null,ex=q?null:m[3];
+ var h='<article class="lbml-c" data-i="'+i+'"><div class="lbml-k">'+esc(m[0])+'</div><h2>'+esc(m[1])+'</h2><p class="lbml-b">'+esc(m[2])+'</p>';
+ if(ex)h+='<p class="lbml-x">'+esc(ex)+'</p><button type="button" class="lab-ic" data-s="'+esc(m[1]+'. '+m[2]+' '+ex)+'" aria-label="Listen">'+IC.say+'</button>';
+ if(q){var o=q[3].split(','),ok=+q[4],ord=[0,1];if(i%2)ord=[1,0];h+='<div class="lbml-q"><b>'+esc(q[1])+'</b><p>'+esc(q[2])+'</p>'+ord.map(function(k){return '<button type="button" class="lab-opt" data-ok="'+(k===ok?1:0)+'">'+esc(o[k])+'</button>'}).join('')+'</div>'}
+ return h+'</article>'}
+L.apps.reels=function(){L.open('reels','Micro Lessons','30-second lessons. Swipe up for the next one.',function(b){
+ var seen=jg('lr_ml_seen',0),order=ML.map(function(_,i){return i}),k=+seen%ML.length,items=order.slice(k).concat(order.slice(0,k)).map(function(i){return ML[i]}),viewed={},gen=false;
+ b.innerHTML='<div class="lbml-feed" id="lbml-f"></div><div class="lbml-pg" id="lbml-p"></div>';var f=$('#lbml-f',b);
+ function add(arr){var s=f.children.length;f.insertAdjacentHTML('beforeend',arr.map(function(m,i){return mlCard(m,s+i)}).join(''));bind()}
+ function bind(){f.querySelectorAll('[data-s]:not([data-b])').forEach(function(x){x.dataset.b=1;x.onclick=function(){L.say(x.dataset.s,'en-US');L.buzz(8)}});
+  f.querySelectorAll('.lbml-q:not([data-b])').forEach(function(q){q.dataset.b=1;q.querySelectorAll('.lab-opt').forEach(function(o){o.onclick=function(){if(q.dataset.done)return;q.dataset.done=1;var ok=o.dataset.ok==='1';o.classList.add(ok?'ok':'no');if(!ok){q.querySelector('[data-ok="1"]').classList.add('ok');var c=q.closest('.lbml-c'),m=items[+c.dataset.i];if(m){var p=m[3].split('|');L.err.add({k:'phrase',t:p[2].replace('___','('+q.querySelectorAll('.lab-opt')[0].textContent+'/'+q.querySelectorAll('.lab-opt')[1].textContent+')'),fix:p[2].replace('___',p[3].split(',')[+p[4]]),why:m[1]+': '+m[2],src:'Micro Lessons'})}}L.buzz(ok?10:[30,40,30])}})})}
+ add(items);
+ function prog(){$('#lbml-p',b).textContent=Object.keys(viewed).length+' viewed today'}
+ var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting&&e.intersectionRatio>.6){var i=e.target.dataset.i;if(!viewed[i]){viewed[i]=1;js('lr_ml_seen',(+jg('lr_ml_seen',0))+1);prog();if(Object.keys(viewed).length===4)try{L.mark('micro');L.toast('Daily micro-lessons done ✓')}catch(x){};L.buzz(6)}
+  if(+i>=f.children.length-2&&!gen)more()}})},{root:f,threshold:[.6]});
+ function watch(){f.querySelectorAll('.lbml-c:not([data-w])').forEach(function(c){c.dataset.w=1;io.observe(c)})}watch();
+ async function more(){gen=true;try{var j=await ai('Write 5 new micro English lessons for a '+L.LN[L.lang()]+' speaker at level '+L.level()+'. Each: a common mistake or a useful phrase. Reply JSON {"l":[{"k":"Say it better|Phrasal verb|Confusing pair","t":"title","b":"explanation, max 22 words","x":"one example sentence"}]}',' ',{max:800,t:.9});(j.l||[]).forEach(function(l){items.push([l.k||'Lesson',l.t||'',l.b||'',l.x||''])});f.insertAdjacentHTML('beforeend',(j.l||[]).map(function(l,i){return mlCard(items[items.length-j.l.length+i],items.length-j.l.length+i)}).join(''));bind();watch();gen=false}catch(e){gen=false;if(!more.t){more.t=1;f.insertAdjacentHTML('beforeend','<article class="lbml-c"><div class="lbml-k">That’s all for now</div><h2>You finished the set</h2><p class="lbml-b">Come back tomorrow for more, or connect AI for endless lessons.</p></article>')}}}
+ prog();return function(){io.disconnect()}})};
+/* ============ Reality Scanner: point the camera, learn the words ============ */
+L.apps.scan=function(){L.open('scan','Reality Scanner','Take a photo. Learn the English for everything in it.',function(b){
+ b.innerHTML='<section class="lab-card lbsc-top"><div class="lbsc-pre" id="lbsc-pre"><svg viewBox="0 0 24 24"><path d="M9 3 7.2 5H4a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-3.2L15 3zm3 14a4.5 4.5 0 1 1 0-9 4.5 4.5 0 0 1 0 9z"/></svg><b>Photograph a room, a street, a menu, your desk</b><small>Or choose a picture from your gallery</small></div><div class="lbsc-bt"><label class="lab-go">Take a photo<input type="file" accept="image/*" capture="environment" id="lbsc-c" hidden></label><label class="lab-go ghost">Choose picture<input type="file" accept="image/*" id="lbsc-g" hidden></label></div></section><div id="lbsc-out"></div>';
+ var out=$('#lbsc-out',b);
+ function prep(file){return new Promise(function(ok,no){var im=new Image(),u=URL.createObjectURL(file);im.onload=function(){var m=1024,s=Math.min(1,m/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=Math.round(im.width*s);c.height=Math.round(im.height*s);c.getContext('2d').drawImage(im,0,0,c.width,c.height);URL.revokeObjectURL(u);ok(c.toDataURL('image/jpeg',.8))};im.onerror=no;im.src=u})}
+ async function run(file){if(!file)return;var url;try{url=await prep(file)}catch(e){L.toast('Could not open that picture');return}
+  $('#lbsc-pre',b).outerHTML='<img class="lbsc-img" src="'+url+'" alt="Your photo">';out.innerHTML=L.spin();
+  try{var j=await ai('You are an English teacher. Look at the photo. Pick the 8 most useful everyday objects or things a learner at level '+L.level()+' should know. Reply JSON ONLY: {"scene":"one short sentence describing the scene in English","items":[{"en":"word or short noun phrase","ipa":"/IPA/","tr":"translation into '+L.LN[L.lang()]+'","collo":"a common collocation","ex":"a simple example sentence about this photo"}]}',[{role:'user',content:[{type:'text',text:'Teach me the English words in this photo.'},{type:'image_url',image_url:{url:url,detail:'low'}}]}],{max:1400,t:.3,ms:45000});
+   var it=(j.items||[]).filter(function(x){return x&&x.en});if(!it.length)throw new Error('none');
+   var sv=(L.U().savedWords||[]);
+   out.innerHTML='<p class="lbsc-sc">'+esc(j.scene||'')+'</p>'+it.map(function(x,i){var s=sv.indexOf(String(x.en).toLowerCase())>=0;return '<div class="lbsc-w"><div class="lbsc-m"><b>'+esc(x.en)+'</b><i>'+esc(x.ipa||'')+'</i><span>'+esc(x.tr||x.uz||x.ru||'')+'</span><small>'+esc(x.collo||'')+'</small><em>'+esc(x.ex||'')+'</em></div><button type="button" class="lab-ic sm" data-s="'+i+'" aria-label="Listen">'+IC.say+'</button><button type="button" class="lab-ic sm'+(s?' on':'')+'" data-v="'+i+'" aria-label="Save word">'+(s?IC.check:'+')+'</button></div>'}).join('');
+   out.querySelectorAll('[data-s]').forEach(function(x){x.onclick=function(){L.say(it[+x.dataset.s].en+'. '+(it[+x.dataset.s].ex||''),'en-US')}});
+   out.querySelectorAll('[data-v]').forEach(function(x){x.onclick=function(){var w=String(it[+x.dataset.v].en).toLowerCase();try{saveWord(w)}catch(e){}x.classList.add('on');x.innerHTML=IC.check;L.buzz(10);L.mark('scan')}});L.mark('scan')}catch(e){out.innerHTML='<section class="lab-card"><p class="lbth-fb no">'+esc(e&&e.message==='none'?'I could not find clear objects. Try a brighter photo.':L.aiErr(e))+'</p></section>'}}
+ $('#lbsc-c',b).onchange=function(){run(this.files[0])};$('#lbsc-g',b).onchange=function(){run(this.files[0])}})};
+})();
+
+/* ============ 90-Day Path ============ */
+(function(){'use strict';
+var L=window.LAB,$=L.$,esc=L.esc,jg=L.jg,js=L.js,DK='lr_path_done',SKY='lr_path_start';
+function dnum(){var d=new Date();return Math.floor((d.getTime()-d.getTimezoneOffset()*6e4)/864e5)}
+function start(){var s=jg(SKY,null);return s}
+function day(){var s=start();return s==null?0:Math.max(1,Math.min(90,dnum()-s+1))}
+function tasksFor(d){var t=['words','review','think',d%3===0?'speak':'micro'];if(d%7===0)t.push('boss');return t}
+var TI={words:['Learn 3 new words','Tap each word to hear it and save it.'],review:['Review your flashcards','Open flashcards and go through the due words.'],think:['Say one thing in English','Use Think in English for any sentence from your day.'],micro:['Watch 4 micro lessons','Swipe through four 30-second lessons.'],speak:['Interview a suspect','Ask questions in Detective Story.'],boss:['Beat the weekly Boss Fight','Clear mistakes from your Error Bank.'],scan:['Bonus: scan your room','Learn 8 words from one photo.']};
+function done(){return jg(DK,{})}
+L.mark=function(k){var s=start();if(s==null)return;var d=day(),m=done();m[d]=m[d]||{};if(m[d][k])return;m[d][k]=1;js(DK,m);try{L.U();}catch(e){}};
+L.pathDay=function(){var d=day();return d?{day:d,phase:d<=30?'Foundation':d<=60?'Fluency':'Mastery',left:tasksFor(d).filter(function(k){return !(done()[d]||{})[k]})}:null};
+function words(d){var lv=d<=30?['A2','B1']:d<=60?['B1','B2']:['B2','C1'],pool=[];try{pool=Object.keys(miniLvl).filter(function(k){return lv.indexOf(miniLvl[k])>=0&&/^[a-z]+$/.test(k)}).sort()}catch(e){}
+ if(pool.length<20)try{pool=Object.keys(miniUz).filter(function(k){return /^[a-z]+$/.test(k)}).sort()}catch(e){}
+ var n=pool.length,out=[];for(var j=0;j<3&&n;j++)out.push(pool[((d-1)*3+j)*37%n]);return out}
+function streak(){var m=done(),d=day(),s=0;for(var i=d;i>=1;i--){var t=tasksFor(i).filter(function(k){return k!=='boss'&&k!=='speak'||true});var c=Object.keys(m[i]||{}).length;if(c>=3)s++;else if(i!==d)break}return s}
+L.apps.path=function(){L.open('path','90-Day Path','One clear plan. Four small tasks a day.',function(b){
+ function paint(){var s=start();
+  if(s==null){b.innerHTML='<section class="lab-card lbpa-hero"><h3>Fluent in 90 days</h3><p>Three phases. Every day gives you four short tasks: words, review, speaking and a micro lesson. About 20 minutes a day.</p><div class="lbpa-ph"><div><b>Days 1–30</b><span>Foundation</span><small>Daily words, core grammar, first sentences</small></div><div><b>Days 31–60</b><span>Fluency</span><small>Longer answers, stories, listening</small></div><div><b>Days 61–90</b><span>Mastery</span><small>Exam style tasks and real conversation</small></div></div><button type="button" class="lab-go" id="lbpa-s">Start today</button></section>';$('#lbpa-s',b).onclick=function(){js(SKY,dnum());paint()};return}
+  var d=day(),m=done(),tk=tasksFor(d),dn=(m[d]||{}),cnt=tk.filter(function(k){return dn[k]}).length,ph=d<=30?'Foundation':d<=60?'Fluency':'Mastery';
+  var cal='';for(var i=1;i<=90;i++){var c=Object.keys(m[i]||{}).length,t=tasksFor(i).length,cl=i>d?'f':c>=t?'a':c>0?'p':(i<d?'m':'');cal+='<i class="'+cl+(i===d?' t':'')+'" title="Day '+i+'">'+i+'</i>'}
+  b.innerHTML='<section class="lab-card lbpa-top"><div class="lber-ring" style="--p:'+(d/90).toFixed(3)+'"><b>'+d+'</b><small>of 90</small></div><div class="lber-tx"><h3>Day '+d+' · '+ph+'</h3><p>'+cnt+' of '+tk.length+' tasks done today · '+streak()+' day streak</p><div class="lbpa-bar"><i style="width:'+Math.round(cnt/tk.length*100)+'%"></i></div></div></section>'+
+  '<section id="lbpa-t">'+tk.map(function(k){var ok=dn[k];return '<div class="lbpa-t'+(ok?' ok':'')+'" data-k="'+k+'"><span class="lbpa-ck">'+(ok?L.IC.check:'')+'</span><div class="lbpa-m"><b>'+esc(TI[k][0])+'</b><small>'+esc(TI[k][1])+'</small></div><button type="button" class="lab-go sm" data-o="'+k+'">'+(ok?'Again':'Open')+'</button></div>'}).join('')+'</section><div id="lbpa-w"></div>'+
+  '<section class="lab-card"><h4>Your 90 days</h4><div class="lbpa-cal">'+cal+'</div><button type="button" class="lab-go ghost sm" id="lbpa-r">Restart plan</button></section>';
+  b.querySelectorAll('[data-o]').forEach(function(x){x.onclick=function(){var k=x.dataset.o;if(k==='words'){showWords(d);return}if(k==='review'){L.mark('review');try{L.close();setTimeout(function(){window.fcOpen()},260)}catch(e){}return}
+   var a={think:'think',micro:'reels',speak:'story',boss:'errors',scan:'scan'}[k];try{L.close();setTimeout(function(){L.apps[a]()},260)}catch(e){}}});
+  $('#lbpa-r',b).onclick=function(){if(this.dataset.c){js(SKY,null);js(DK,{});paint()}else{this.dataset.c=1;this.textContent='Tap again to erase progress'}}}
+ function showWords(d){var w=words(d),el=$('#lbpa-w',b);el.innerHTML='<section class="lab-card"><h4>Today’s words</h4>'+w.map(function(x,i){return '<div class="lbsc-w"><div class="lbsc-m"><b>'+esc(x)+'</b><span id="pw'+i+'">…</span></div><button type="button" class="lab-ic sm" data-s="'+esc(x)+'" aria-label="Listen">'+L.IC.say+'</button><button type="button" class="lab-ic sm" data-v="'+esc(x)+'" aria-label="Save">+</button></div>'}).join('')+'<button type="button" class="lab-go" id="pw-d">I learned them</button></section>';
+  w.forEach(function(x,i){var t='',lg=L.lang();try{if(lg==='uz')t=miniUz[x]||''}catch(e){}var el2=$('#pw'+i,b);if(t)el2.textContent=t;else try{if(lg==='uz')translateToUz(x).then(function(r){el2.textContent=r&&r.main||''});else LRW.tr(x,lg).then(function(r){el2.textContent=r&&r.m||''})}catch(e){}});
+  el.querySelectorAll('[data-s]').forEach(function(x){x.onclick=function(){L.say(x.dataset.s,'en-US')}});el.querySelectorAll('[data-v]').forEach(function(x){x.onclick=function(){try{saveWord(x.dataset.v)}catch(e){}x.innerHTML=L.IC.check;x.classList.add('on')}});
+  $('#pw-d',b).onclick=function(){L.mark('words');L.buzz([10,30,10]);paint()};el.scrollIntoView({behavior:'smooth',block:'start'})}
+ paint()})};
+})();
+
+</script><style id="lr-dl-css">.lc-card.dl-card{padding:0;background:none;border:0;box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none;overflow:visible}
+.lc-card.dl-card::before{display:none}
+.dl{position:relative;border-radius:30px;padding:22px;color:#eef1fb;font-family:Inter,system-ui,sans-serif;background:radial-gradient(520px 260px at 0% 0%,rgba(124,140,255,.34),transparent 70%),radial-gradient(420px 260px at 100% 100%,rgba(34,211,238,.16),transparent 70%),linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.015)),rgba(11,15,29,.82);border:1px solid rgba(165,180,252,.22);box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 30px 60px -36px rgba(0,0,0,.85)}
+.dl-hd{display:flex;align-items:center;gap:14px}.dl-hx{flex:1;min-width:0}.dl-kick{margin:0;font-size:12.5px;font-weight:600;color:#a5b4fc;letter-spacing:.02em}.dl-hx h2{margin:2px 0 0;font-size:clamp(20px,3.4vw,26px);line-height:1.15;letter-spacing:-.01em}
+.dl-orb{flex:none;width:58px;height:58px;border-radius:50%;background:radial-gradient(circle at 32% 28%,#fff 0,#c7d2fe 10%,#7c8cff 38%,#4338ca 70%,#1e1b4b);box-shadow:0 0 0 6px rgba(124,140,255,.14),0 0 34px rgba(124,140,255,.55);animation:dlo 4.5s ease-in-out infinite}
+@keyframes dlo{50%{transform:scale(1.05);box-shadow:0 0 0 9px rgba(124,140,255,.1),0 0 46px rgba(34,211,238,.5)}}
+.dl-hello{margin:14px 0 4px;color:#c7d2fe;font-size:15.5px;line-height:1.5;max-width:60ch}
+.dl-mid{display:flex;align-items:center;gap:18px;margin:14px 0 4px;flex-wrap:wrap}.dl-chips{display:flex;gap:8px;flex-wrap:wrap}.dl-pill{padding:7px 13px;border-radius:999px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);font-size:13.5px;font-weight:600}
+.dl .lber-ring:before{background:#121833}
+.dl-start{width:100%;margin-top:14px;min-height:56px;font-size:17px;border-radius:18px;box-shadow:0 14px 34px -14px rgba(124,140,255,.9)}
+.dl-skl{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px}
+.dl-sm{position:relative;overflow:hidden;text-align:left;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.05);color:#eef1fb;border-radius:16px;padding:11px 13px 14px;cursor:pointer;font:inherit;display:flex;justify-content:space-between;align-items:center;gap:6px;min-height:50px}
+.dl-sm span{font-weight:600;font-size:14px}.dl-sm em{font-style:normal;font-size:12px;color:#9aa3c4}.dl-sm i{position:absolute;left:0;bottom:0;height:4px;background:var(--c);border-radius:0 4px 4px 0}
+.dl-sm:active{transform:scale(.98)}
+.dl-ft{display:flex;gap:6px;margin-top:12px;flex-wrap:wrap}.dl-lk{background:none;border:0;color:#a5b4fc;font:600 13.5px Inter,system-ui,sans-serif;padding:8px 10px;cursor:pointer;border-radius:10px}.dl-lk:hover{background:rgba(255,255,255,.06)}
+@media(max-width:560px){.dl-skl{grid-template-columns:repeat(2,1fr)}.dl{padding:18px}}
+/* session */
+.lab-daily .lab-bd,.lab-daily-skills .lab-bd{padding-bottom:0}
+.dl-load{text-align:center;padding:60px 10px}.dl-load .dl-orb{margin:0 auto 20px;width:84px;height:84px}.dl-load h3{margin:0 0 6px}.dl-load p{color:var(--lm)}
+.dl-top{display:flex;align-items:center;gap:14px;margin:4px 0 18px}.dl-prog{flex:1;height:10px;border-radius:9px;background:rgba(255,255,255,.1);overflow:hidden}.dl-prog i{display:block;height:100%;border-radius:9px;background:linear-gradient(90deg,#7c8cff,#22d3ee);transition:width .4s}.dl-xp{font-weight:700;color:#fbbf24;font-size:14px;min-width:70px;text-align:right}
+.dl-k{display:flex;align-items:baseline;gap:10px;font-weight:700;font-size:13px;color:var(--c,#7c8cff);margin-bottom:6px}.dl-k small{color:var(--lm);font-weight:500}
+.dl-ins{margin:0 0 16px;font-size:clamp(20px,3.2vw,26px);font-weight:700;line-height:1.25;letter-spacing:-.01em}
+.dl-body{min-height:calc(100% - 140px);padding-bottom:140px}
+.dl-foot{position:fixed;left:0;right:0;bottom:0;z-index:6;display:flex;gap:12px;align-items:center;justify-content:space-between;padding:14px max(18px,calc((100% - 860px)/2 + 18px)) max(16px,env(safe-area-inset-bottom));background:linear-gradient(180deg,transparent,rgba(11,15,29,.94) 30%);}
+.dl-foot .lab-go{margin:0;min-width:140px}.dl-foot.fb{background:#121833;border-top:1px solid rgba(255,255,255,.12);align-items:center}
+.dl-foot.fb.ok{background:linear-gradient(180deg,#0f2f2a,#0c2420);border-top-color:#34d399}.dl-foot.fb.no{background:linear-gradient(180deg,#3a1722,#2a1019);border-top-color:#fb7185}.dl-foot.fb.mid{background:linear-gradient(180deg,#3a2f12,#2a2210);border-top-color:#fbbf24}
+.dl-fbx{flex:1;min-width:0}.dl-fbx b{font-size:18px}.dl-fbx b i{font-style:normal;color:#fbbf24;font-size:14px;margin-left:8px}.dl-ans2{margin:4px 0 0;font-weight:600}.dl-note{margin:2px 0 0;color:#cbd5f5;font-size:14px}
+.dl-opts{display:grid;gap:10px}.dl-o.sel{border-color:var(--la);background:rgba(124,140,255,.22)}.dl-o:disabled{opacity:1}
+.dl-sent{font-size:clamp(20px,3vw,25px);font-weight:600;line-height:1.4;margin:0 0 16px;background:rgba(255,255,255,.05);border-radius:18px;padding:16px 18px}.dl-blank{display:inline-block;border-bottom:3px solid #7c8cff;min-width:80px}
+.dl-hint{color:var(--lm);margin:-6px 0 12px}.dl-hint b{color:#fbbf24}
+.dl-ans{min-height:84px;border-radius:18px;background:rgba(0,0,0,.28);border:1px dashed rgba(255,255,255,.2);padding:12px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:18px}.dl-ph{color:var(--lm)}
+.dl-pool{display:flex;flex-wrap:wrap;gap:10px}.dl-chip{border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.08);color:#fff;border-radius:14px;padding:11px 16px;font:600 17px Inter,system-ui,sans-serif;cursor:pointer;transition:transform .1s}.dl-chip:active{transform:scale(.94)}.dl-chip.on{background:rgba(124,140,255,.28);border-color:#7c8cff}
+.dl-play{display:flex;align-items:center;gap:14px;margin:0 0 18px}.dl-big{width:84px;height:84px;border-radius:50%;border:0;background:linear-gradient(135deg,#7c8cff,#22d3ee);color:#fff;display:grid;place-items:center;cursor:pointer;box-shadow:0 14px 34px -12px rgba(34,211,238,.7)}.dl-big svg{width:34px;height:34px;fill:currentColor}.dl-big.rec{background:linear-gradient(135deg,#fb7185,#f59e0b)}.dl-big.live{animation:labp 1s infinite}
+.dl-heard{margin:14px 0 0;color:#cbd5f5;min-height:24px}.dl-self{display:grid;gap:10px;margin-top:10px}
+.dl-pass{background:rgba(255,255,255,.05);border-radius:18px;padding:16px 18px;margin-bottom:16px}.dl-pass p{font-size:17px;line-height:1.6;margin:6px 0 10px}.dl-q2{margin:0 0 16px}.dl-q2>p{font-weight:700;margin:0 0 8px}
+.dl-pr{display:grid;grid-template-columns:1fr 1fr;gap:18px}.dl-pr>div{display:grid;gap:10px;align-content:start}.dl-pi{text-align:left;border:2px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);color:#fff;border-radius:14px;padding:13px 14px;font:600 16px/1.35 Inter,system-ui,sans-serif;cursor:pointer;min-height:54px}.dl-pi.sel{border-color:#fff;background:rgba(255,255,255,.16)}.dl-pi.pd{border-color:var(--c);background:color-mix(in srgb,var(--c) 22%,transparent)}.dl-pi.okp{border-color:#34d399}.dl-pi.nop{border-color:#fb7185}
+.dl-pr.sh .dl-pi{min-height:50px;font-size:17px}
+@media(max-width:560px){.dl-pr{gap:10px}.dl-pi{font-size:14.5px;padding:11px}}
+textarea#dl-t{font-size:18px}
+.dl-res{text-align:center;padding-bottom:30px}.dl-res h2{margin:0 0 4px}.dl-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:16px 0}.dl-stats div{background:rgba(255,255,255,.06);border-radius:16px;padding:12px}.dl-stats b{font-size:24px;display:block}.dl-stats small{color:var(--lm)}
+.dl-sk{display:grid;gap:10px;text-align:left}.dl-skr{display:grid;grid-template-columns:110px 1fr 96px;align-items:center;gap:12px;font-size:14px}.dl-bar2{height:9px;border-radius:8px;background:rgba(255,255,255,.1);overflow:hidden}.dl-bar2 i{display:block;height:100%;border-radius:8px;transition:width .6s}.dl-skr em{font-style:normal;color:var(--lm);font-size:12.5px;text-align:right}.dl-skr em.up{color:#34d399}.dl-skr em.dn{color:#fb7185}
+.dl-bq{display:grid;gap:10px;text-align:left}.dl-bqi{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);border-radius:16px;padding:12px 14px}.dl-bqi.ok{border-color:rgba(52,211,153,.5)}.dl-bt{flex:none;width:30px;height:30px;border-radius:50%;border:2px solid rgba(255,255,255,.25);background:none;color:#04251a;display:grid;place-items:center;cursor:pointer;padding:0}.dl-bqi.ok .dl-bt{background:#34d399;border-color:#34d399}.dl-bt svg{width:18px;height:18px;fill:currentColor}.dl-bm{flex:1;min-width:0}.dl-bm b{display:block}.dl-bm small{color:var(--lm)}
+.dl-ra{display:flex;gap:12px;justify-content:center;margin-top:20px}
+.dl-sh{display:flex;gap:20px;align-items:center}.dl-big2{flex:none;text-align:center;width:110px;height:110px;border-radius:50%;display:grid;place-content:center;background:conic-gradient(from 200deg,#7c8cff,#22d3ee,#34d399,#7c8cff)}.dl-big2 b{font-size:34px;line-height:1;color:#0b0f1d}.dl-big2 small{color:#0b0f1d;font-weight:600;font-size:11px}.dl-sd{flex:1;min-width:0}.dl-sd p{margin:0 0 6px}.dl-sp{width:100%;max-width:260px;height:54px;display:block}
+.dl-ch{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.dl-ch.col{grid-template-columns:1fr}.dl-cc{text-align:left;border:2px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);color:#fff;border-radius:16px;padding:14px;font:inherit;cursor:pointer}.dl-cc b{display:block;font-size:16px}.dl-cc small{color:var(--lm)}.dl-cc.on{border-color:#7c8cff;background:rgba(124,140,255,.2)}
+@media(max-width:560px){.dl-ch{grid-template-columns:1fr}.dl-skr{grid-template-columns:88px 1fr 78px}}
+</style><script id="lr-dl">/* ================= Daily Luna: an adaptive daily English trainer ================= */
+(function(){'use strict';
+var D=document,L=window.LAB,esc=L.esc,$=function(s,r){return (r||D).querySelector(s)};
+/* ---------- content banks (work offline; AI adds personal content on top) ---------- */
+/* tier 0 = A2, 1 = B1, 2 = B2+ */
+var SENT=[
+[0,"I usually get up at seven o'clock."],[0,"She is going to visit her grandmother tomorrow."],[0,"We have lived in this city for five years."],[0,"Could you tell me where the station is?"],[0,"He doesn't like coffee, but he loves tea."],[0,"My brother is taller than me."],[0,"They were watching a film when the phone rang."],[0,"I'd like to book a table for two, please."],[0,"What time does the train to London leave?"],[0,"If it rains tomorrow, we will stay at home."],[0,"She has never been to another country."],[0,"There are many people in the park today."],
+[1,"If I had more time, I would learn another language."],[1,"The book that I borrowed from the library was fascinating."],[1,"He suggested going to the beach instead of staying inside."],[1,"I have been studying English for about two years now."],[1,"By the time we arrived, the film had already started."],[1,"She told me that she was looking for a new job."],[1,"You should have called me before you made that decision."],[1,"The meeting was postponed because the manager was ill."],[1,"Despite the heavy traffic, we arrived on time."],[1,"I'm not used to waking up so early in the morning."],[1,"He asked me whether I could help him with his homework."],[1,"It's important to eat healthy food and exercise regularly."],
+[2,"Had I known about the problem earlier, I would have fixed it immediately."],[2,"The number of students who study abroad has risen dramatically over the last decade."],[2,"Not only did she finish the project on time, but she also exceeded every expectation."],[2,"Whatever you decide, I will support you completely."],[2,"The new policy is likely to have a significant impact on small businesses."],[2,"He is said to be one of the most influential architects of his generation."],[2,"Rather than complaining, we should look for a practical solution."],[2,"Having finished the report, she left the office earlier than usual."],[2,"It was not until midnight that the storm finally calmed down."],[2,"Scientists are still trying to figure out what caused the sudden change."],[2,"The more you practise speaking, the more confident you will become."],[2,"Unless we act now, the damage to the environment may become irreversible."]];
+var WRONG=[
+[0,"He doesn't like football.","He don't like football.","He doesn't likes football.","With he, she or it use doesn't + the base verb."],
+[0,"There are three books on the table.","There is three books on the table.","There are three book on the table.","Plural nouns need “are” and a plural form."],
+[0,"I went to the cinema yesterday.","I go to the cinema yesterday.","I goed to the cinema yesterday.","“Go” is irregular. The past is “went”."],
+[0,"She is better than me at maths.","She is more good than me at maths.","She is gooder than me at maths.","Good becomes better. We do not add -er or more."],
+[0,"How much water do you drink every day?","How many water do you drink every day?","How much waters do you drink every day?","Water is uncountable, so we say “how much”."],
+[0,"We are waiting for the bus.","We are waiting the bus.","We are wait for the bus.","We wait FOR something. Present continuous: am/is/are + -ing."],
+[1,"I have lived here since 2019.","I live here since 2019.","I am living here since 2019.","Use the present perfect with “since”."],
+[1,"If it rains, we will cancel the picnic.","If it will rain, we will cancel the picnic.","If it rains, we would cancel the picnic.","First conditional: if + present simple, will + base verb."],
+[1,"She asked me where I was going.","She asked me where was I going.","She asked me where I am going.","Reported questions use statement word order and shift the tense back."],
+[1,"I'm interested in learning Spanish.","I'm interested to learn Spanish.","I'm interesting in learning Spanish.","Say “interested in” + -ing. “Interesting” describes the thing, not you."],
+[1,"The film was so boring that I fell asleep.","The film was so boring than I fell asleep.","The film was such boring that I fell asleep.","Use so + adjective + that."],
+[1,"He suggested that we take a taxi.","He suggested us to take a taxi.","He suggested to take us a taxi.","After suggest use a that-clause or an -ing form."],
+[2,"Hardly had we sat down when the lights went out.","Hardly we had sat down when the lights went out.","Hardly had we sat down than the lights went out.","Hardly had + subject + past participle … when."],
+[2,"She denied taking the money.","She denied to take the money.","She denied that she to take the money.","After deny use an -ing form."],
+[2,"I wish I had studied harder.","I wish I studied harder last year.","I wish I would study harder last year.","Use wish + past perfect for regrets about the past."],
+[2,"By next year, he will have finished his degree.","By next year, he will finish his degree already.","By next year, he finishes his degree.","Future perfect shows something completed before a future time."],
+[2,"The report, which was written by an expert, was convincing.","The report, that was written by an expert, was convincing.","The report, what was written by an expert, was convincing.","After a comma use “which”, never “that” or “what”."],
+[2,"Neither of the answers is correct.","Neither of the answers are correct.","Neither of the answers aren't correct.","Neither takes a singular verb. Never add a second negative."]];
+var GAP=[
+[0,"She ___ to school by bus every day.","goes",["go","going"],"Third person singular needs -s."],
+[0,"We ___ dinner when you called.","were having",["are having","have"],"Past continuous for an action in progress."],
+[0,"I haven't seen him ___ Monday.","since",["for","from"],"Since + a point in time."],
+[0,"There isn't ___ milk in the fridge.","any",["some","a"],"Use any in negatives."],
+[0,"He is the ___ student in our class.","tallest",["taller","most tall"],"Short adjectives take -est."],
+[0,"Can you pass me ___ salt, please?","the",["a","an"],"We mean one specific thing, so we use “the”."],
+[1,"I wish I ___ more free time.","had",["have","would have"],"Wish + past simple for present wishes."],
+[1,"She suggested ___ a break.","taking",["to take","take"],"Suggest + -ing."],
+[1,"The man ___ lives next door is a doctor.","who",["which","whose"],"Use “who” for people."],
+[1,"We ___ the project by Friday.","will have finished",["will finish","finished"],"Future perfect: done before a future time."],
+[1,"You ___ smoke here. It's forbidden.","mustn't",["don't have to","needn't"],"Mustn't = it is not allowed."],
+[1,"He asked me if I ___ coffee.","wanted",["want","will want"],"Reported speech shifts the tense back."],
+[2,"___ the weather been better, we would have gone hiking.","Had",["If","Should"],"Inverted third conditional."],
+[2,"The results were ___ than we expected.","far better",["the best","more better"],"Far + comparative adds emphasis."],
+[2,"She insisted ___ paying for dinner.","on",["to","for"],"Insist on + -ing."],
+[2,"It is high time we ___ the problem.","solved",["solve","will solve"],"It's high time + past simple."],
+[2,"He behaves as if he ___ everything.","knew",["knows","has known"],"As if + past simple for an unreal situation."],
+[2,"The proposal, ___ was rejected, had many flaws.","which",["that","what"],"Non-defining clause: comma + which."]];
+var READ=[
+[0,"Tom's morning","Tom wakes up at six every morning. He drinks a glass of water and goes for a short run in the park. After that he has breakfast with his sister. They usually eat eggs and toast. At eight o'clock Tom takes the bus to work. He works in a small bookshop near the station.",[["What does Tom do first after waking up?",["Runs in the park","Drinks water","Eats eggs"],1],["How does Tom go to work?",["By bus","On foot","By car"],0],["Where does Tom work?",["In a bank","In a bookshop","In a school"],1]]],
+[1,"The silent library","Last month, the town opened a library where nobody is allowed to speak. At first, many residents thought the idea was strange, but it quickly became popular among students. Visitors communicate using small notes, and even the librarians write instead of talk. The mayor says the project helps people concentrate, although some critics argue that it makes the library less friendly.",[["Why does the mayor support the project?",["It helps people concentrate","It saves money","It teaches sign language"],0],["Which group likes it most?",["Librarians","Students","Critics"],1],["What do critics say?",["It is too expensive","It is less friendly","It is too crowded"],1]]],
+[2,"Remote work","Remote work, once considered a perk, has become a permanent feature of many industries. Supporters point to higher productivity and a better work-life balance, whereas opponents warn that isolation can erode team spirit and make it harder for newcomers to learn from colleagues. Interestingly, several firms that rushed to abandon their offices are now introducing hybrid models, which attempt to combine flexibility with face-to-face collaboration.",[["What do hybrid models try to do?",["Combine flexibility and collaboration","Reduce salaries","Replace managers"],0],["Which risk do opponents mention?",["Lower salaries","Weaker team spirit","Longer commutes"],1],["What have some firms done?",["Closed completely","Reconsidered abandoning offices","Banned remote work for ever"],1]]]];
+var PROMPTS=[["Write one sentence about your weekend plans using the word “probably”.","probably"],["Write one sentence about a person you admire using “because”.","because"],["Describe your city in one sentence using “although”.","although"],["Write a sentence about your goal using “in order to”.","in order to"],["Write one sentence about yesterday using “while”.","while"],["Give someone advice using “should”.","should"]];
+/* ---------- helpers ---------- */
+function hash(s){s=String(s);var h=2166136261;for(var i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return h>>>0}
+function rngf(seed){var a=seed>>>0;return function(){a|=0;a=a+0x6D2B79F5|0;var t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function shuffle(a,r){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(r()*(i+1)),t=a[i];a[i]=a[j];a[j]=t}return a}
+function pick(a,r){return a[Math.floor(r()*a.length)]}
+function norm(s){return String(s||'').toLowerCase().replace(/[’‘]/g,"'").replace(/[^a-z0-9' ]+/g,' ').replace(/\s+/g,' ').trim()}
+function clamp(v,a,b){return Math.max(a,Math.min(b,v))}
+function sim(a,b){var x=norm(a).split(' ').filter(Boolean),y=norm(b).split(' ').filter(Boolean);if(!y.length)return 0;
+ var n=x.length,m=y.length,d=[],i,j;for(i=0;i<=n;i++){d[i]=[i]}for(j=1;j<=m;j++)d[0][j]=j;
+ for(i=1;i<=n;i++)for(j=1;j<=m;j++)d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+(x[i-1]===y[j-1]?0:1));
+ return clamp(1-d[n][m]/Math.max(n,m),0,1)}
+function speak(t,rate){try{if(window.speechSynthesis){speechSynthesis.cancel();var u=new SpeechSynthesisUtterance(t);u.lang='en-US';u.rate=rate||.95;speechSynthesis.speak(u);return}}catch(e){}L.say(t,'en-US')}
+var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+/* ---------- skills & CEFR ---------- */
+var SKILLS=['listening','speaking','reading','writing','vocab','grammar'];
+var SKN={listening:'Listening',speaking:'Speaking',reading:'Reading',writing:'Writing',vocab:'Vocabulary',grammar:'Grammar'};
+var SKC={listening:'#22d3ee',speaking:'#fb7185',reading:'#a78bfa',writing:'#fbbf24',vocab:'#34d399',grammar:'#60a5fa'};
+function cefr(v){return v<18?'A1':v<36?'A2':v<54?'B1':v<72?'B2':v<88?'C1':'C2'}
+function tier(v){return v<38?0:v<62?1:2}
+function n100(v){v=+v;if(!v&&v!==0)return null;return v<=9?v/9*100:clamp(v,0,100)}
+function U(){return L.U()}
+function save(){try{pfSave()}catch(e){}}
+function S(){var u=U();var d=u.dl=u.dl||{};
+ if(!d.sk){var p=u.placement||{},base={A1:12,A2:28,B1:45,B2:64,C1:80,C2:92}[p.cefr]||38,g=n100(p.g),r=n100(p.r),s=n100(p.s);
+  d.sk={listening:base,speaking:s!=null?clamp(s*.9,5,95):base-3,reading:r!=null?clamp(r*.9,5,95):base,writing:base-2,vocab:base,grammar:g!=null?clamp(g*.9,5,95):base};
+  d.placed=!!p.cefr}
+ d.xp=d.xp||0;d.streak=d.streak||0;d.last=d.last||'';d.hist=d.hist||{};d.acc=d.acc||{};d.bonus=d.bonus||{};d.tot=d.tot||0;return d}
+function overall(d){d=d||S();var s=0;SKILLS.forEach(function(k){s+=d.sk[k]});return s/SKILLS.length}
+function yday(){var t=new Date();t.setDate(t.getDate()-1);try{var o=t.getTimezoneOffset()*6e4;return new Date(t.getTime()-o).toISOString().slice(0,10)}catch(e){return''}}
+/* ---------- exercise types ---------- */
+var T={
+ match:{sk:['vocab'],lbl:'Match the words',ord:1},
+ listen:{sk:['listening'],lbl:'Listen and choose',ord:2},
+ gap:{sk:['grammar','vocab'],lbl:'Fill the gap',ord:3},
+ correct:{sk:['grammar'],lbl:'Find the correct sentence',ord:3},
+ join:{sk:['grammar','reading'],lbl:'Join the halves',ord:4},
+ wordorder:{sk:['grammar','writing'],lbl:'Build the sentence',ord:4},
+ read:{sk:['reading'],lbl:'Read and answer',ord:5},
+ dictate:{sk:['listening','writing'],lbl:'Dictation',ord:5},
+ say:{sk:['speaking'],lbl:'Say it aloud',ord:6},
+ write:{sk:['writing','vocab'],lbl:'Use it in a sentence',ord:7,ai:1},
+ think:{sk:['writing','speaking'],lbl:'Think in English',ord:7,ai:1}};
+var STYLE={games:{match:1.5,join:1.5,wordorder:1.5,listen:1.2,correct:1.2},speak:{say:1.8,think:1.5,dictate:1.2,write:1.2},study:{read:1.7,listen:1.4,gap:1.3,dictate:1.3},mixed:{}};
+function aiOn(){try{return !!aiKey()}catch(e){return false}}
+/* ---------- the AI pack: personal content for today ---------- */
+var PACK=null;
+function facts(d){var u=U(),sv=(u.savedWords||[]).slice(-12),er=[];try{er=L.err.active().slice(0,6).map(function(e){return {said:e.t,right:e.fix}})}catch(e){}
+ var film=[];try{film=JSON.parse(localStorage.getItem('lr_cinema_cards')||'[]').slice(0,8).map(function(c){return c.w})}catch(e){}
+ var due=[];try{due=(window.SRS?SRS.list().slice(0,8):[])}catch(e){}
+ return {first_name:String(u.name||'').split(' ')[0],goal:u.target||'',levels:SKILLS.reduce(function(o,k){o[k]=cefr(d.sk[k])+' ('+Math.round(d.sk[k])+'/100)';return o},{}),mother_tongue:L.LN[L.lang()],recent_saved_words:sv,film_words:film,due_words:due,common_mistakes:er,weakest:SKILLS.slice().sort(function(a,b){return d.sk[a]-d.sk[b]}).slice(0,2)}}
+async function buildPack(d){
+ if(PACK&&PACK.day===L.today())return PACK;var pk=d.pack;if(pk&&pk.day===L.today()){PACK=pk;return pk}
+ if(!aiOn())return null;
+ var lg=L.LN[L.lang()],lv=tier(overall(d));
+ try{var j=await L.ai('You are Luna, an expert English coach. Create TODAY\'s personal practice pack for ONE learner. Use their facts: reuse their saved words, film words and mistakes inside the sentences when natural. Keep sentences natural, 6-14 words, level-appropriate (A2/B1/B2 per the skill levels, a mix centred on the learner). Reply JSON ONLY:\n{"focus":"today\'s theme, max 5 words","hello":"2 short warm spoken sentences; use the first name once if given","sentences":[{"en":"","t":0|1|2}],"wrong":[{"ok":"correct sentence","bad":["wrong version 1 (one grammar error)","wrong version 2 (a different error)"],"note":"max 14 words explaining the rule"}],"gap":[{"s":"sentence with ___","a":"answer","d":["wrong 1","wrong 2"],"note":""}],"match":[{"en":"word","tr":"translation into '+lg+'"}],"read":{"title":"","text":"60-90 word passage","qs":[{"q":"","o":["","",""],"a":0}]},"write":[{"p":"one sentence-writing task using a target word","w":"target word"}],"think":[{"src":"a short everyday sentence in '+lg+'","en":"the most natural English"}]}\nCounts: sentences 10, wrong 3, gap 3, match 5, read 1 (3 questions), write 2, think 2. Never use markdown.',JSON.stringify(facts(d)),{max:2200,t:.7,ms:45000});
+  if(j&&j.sentences){j.day=L.today();d.pack=j;PACK=j;save();return j}}catch(e){}
+ return null}
+/* ---------- exercise generators ---------- */
+function usedSet(ses,k){ses.used=ses.used||{};ses.used[k]=ses.used[k]||[];return ses.used[k]}
+function fresh(arr,ses,k,r,t){var u=usedSet(ses,k),ok=arr.map(function(x,i){return i}).filter(function(i){return u.indexOf(i)<0&&(t==null||arr[i][0]===t)});if(!ok.length)ok=arr.map(function(x,i){return i}).filter(function(i){return t==null||arr[i][0]===t});if(!ok.length)ok=arr.map(function(x,i){return i});var i=pick(ok,r);u.push(i);return arr[i]}
+function sentFor(ses,r,t,key){var pk=PACK&&PACK.sentences;if(pk&&pk.length&&r()<.65){var c=pk.filter(function(x){return x&&x.en&&x.en.split(' ').length>=4&&(x.t==null||Math.abs(x.t-t)<=1)});if(c.length){var u=usedSet(ses,'ps'),ci=c.map(function(_,i){return i}).filter(function(i){return u.indexOf(c[i].en)<0});if(ci.length){var x=c[pick(ci,r)];u.push(x.en);return x.en}}}
+ return fresh(SENT,ses,key||'s',r,t)[1]}
+var GEN={
+ wordorder:function(ses,r,t){var s=sentFor(ses,r,t,'wo'),w=s.replace(/[.?!]$/,'').split(' '),end=s.slice(-1);if(!/[.?!]/.test(end))end='';var sh,n=0;do{sh=shuffle(w,r)}while(sh.join(' ')===w.join(' ')&&n++<5);return{words:sh,answer:s,punct:end}},
+ correct:function(ses,r,t){var x=fresh(WRONG,ses,'wr',r,t),pk=PACK&&PACK.wrong;if(pk&&pk.length&&r()<.6){var q=pk[Math.floor(r()*pk.length)];if(q&&q.ok&&q.bad&&q.bad.length>=2)x=[t,q.ok,q.bad[0],q.bad[1],q.note||'']}
+  var o=shuffle([x[1],x[2],x[3]],r);return{opts:o,ans:o.indexOf(x[1]),note:x[4]}},
+ gap:function(ses,r,t){var x=fresh(GAP,ses,'gp',r,t),pk=PACK&&PACK.gap;if(pk&&pk.length&&r()<.6){var q=pk[Math.floor(r()*pk.length)];if(q&&q.s&&q.s.indexOf('___')>=0&&q.a&&q.d&&q.d.length>=2)x=[t,q.s,q.a,q.d,q.note||'']}
+  var o=shuffle([x[2]].concat(x[3].slice(0,2)),r);return{s:x[1],opts:o,ans:o.indexOf(x[2]),note:x[4]}},
+ join:function(ses,r,t){var out=[],g=0;while(out.length<3&&g++<12){var s=sentFor(ses,r,t,'jn'),w=s.split(' ');if(w.length<6)continue;var k=Math.max(2,Math.floor(w.length/2));var a=w.slice(0,k).join(' '),b=w.slice(k).join(' ');if(out.some(function(p){return p[0]===a}))continue;out.push([a,b])}return{pairs:out}},
+ listen:function(ses,r,t){var s=sentFor(ses,r,t,'ls'),others=[],g=0;while(others.length<2&&g++<14){var o=sentFor(ses,r,t,'lo');if(o!==s&&others.indexOf(o)<0)others.push(o)}var o=shuffle([s].concat(others),r);return{text:s,opts:o,ans:o.indexOf(s)}},
+ dictate:function(ses,r,t){return{text:sentFor(ses,r,Math.min(t,1),'dc')}},
+ say:function(ses,r,t){return{text:sentFor(ses,r,t,'sy')}},
+ read:function(ses,r,t){var pk=PACK&&PACK.read;if(pk&&pk.text&&pk.qs&&pk.qs.length&&!ses.usedRead){ses.usedRead=1;return{title:pk.title||'Today\'s reading',text:pk.text,qs:pk.qs.slice(0,3).map(function(q){var c=q.o[q.a],o=shuffle(q.o,r);return[q.q,o,o.indexOf(c)]})}}
+  var x=fresh(READ,ses,'rd',r,t);return{title:x[1],text:x[2],qs:x[3].map(function(q){var c=q[1][q[2]],o=shuffle(q[1],r);return[q[0],o,o.indexOf(c)]})}},
+ write:function(ses,r,t){var pk=PACK&&PACK.write;if(pk&&pk.length&&r()<.8){var q=pk[Math.floor(r()*pk.length)];if(q&&q.p)return{p:q.p,w:q.w||''}}var x=pick(PROMPTS,r);return{p:x[0],w:x[1]}},
+ think:function(ses,r,t){var pk=PACK&&PACK.think;if(!pk||!pk.length)return null;var q=pk[Math.floor(r()*pk.length)];if(!q||!q.src||!q.en)return null;return{src:q.src,en:q.en}}};
+/* matching needs words + translations in the learner's language (may be async) */
+async function genMatch(ses,r,t){var lg=L.lang(),pk=PACK&&PACK.match;
+ if(pk&&pk.length>=4&&!ses.usedMatch){ses.usedMatch=1;return{pairs:pk.slice(0,5).map(function(x){return[x.en,x.tr]}),aud:1}}
+ var lv=['A2','B1','B2','C1'][Math.min(3,t+(r()<.4?1:0))],words=[];try{words=Object.keys(miniLvl).filter(function(k){return miniLvl[k]===lv&&/^[a-z]{3,}$/.test(k)})}catch(e){}
+ if(words.length<8)try{words=Object.keys(miniUz).filter(function(k){return /^[a-z]{3,}$/.test(k)})}catch(e){}
+ var u=usedSet(ses,'mw');words=shuffle(words.filter(function(w){return u.indexOf(w)<0}),r).slice(0,5);if(words.length<4)return null;words.forEach(function(w){u.push(w)});
+ var res=await Promise.all(words.map(async function(w){var m='';try{if(lg==='uz')m=(miniUz[w]||'').split(',')[0].trim();else if(window.LRW){var x=await Promise.race([LRW.tr(w,lg),new Promise(function(_,no){setTimeout(no,6000)})]);m=x&&x.m||''}}catch(e){}return[w,m]}));
+ res=res.filter(function(p){return p[1]});if(res.length<4)return null;return{pairs:res,aud:1}}
+async function make(type,ses,d){var r=rngf(hash(L.today()+type+(ses.n||0)+Math.random())),sk=T[type].sk[0],t=tier(d.sk[sk]);
+ if(d.acc[type]&&d.acc[type].n>=4&&d.acc[type].s/d.acc[type].n<.45)t=Math.max(0,t-1);
+ ses.n=(ses.n||0)+1;var x=null;try{x=type==='match'?await genMatch(ses,r,t):GEN[type](ses,r,t)}catch(e){x=null}
+ if(x){x.type=type;x.tier=t}return x}
+/* ---------- session planning ---------- */
+function minutes(d){return (d.pref&&d.pref.min)||15}
+function stepsFor(d){return minutes(d)<=10?6:minutes(d)>=30?10:8}
+function planSteps(d){var r=rngf(hash(L.today()+(U().name||'')+d.tot)),n=stepsFor(d),sty=STYLE[(d.pref&&d.pref.style)||'mixed']||{},ai=aiOn(),can=SR||false,w={},types=Object.keys(T).filter(function(k){return !T[k].ai||ai||k==='write'});
+ var last=(d.lastTypes||[]);
+ types.forEach(function(k){var need=0;T[k].sk.forEach(function(s){need+=(100-d.sk[s])/100});need/=T[k].sk.length;var x=.35+need;x*=(sty[k]||1);if(last.indexOf(k)>=0)x*=.6;if(k==='say'&&!can)x*=.5;if(k==='think'&&!ai)x=0;w[k]=x});
+ var out=[],cnt={};
+ function add(k){out.push(k);cnt[k]=(cnt[k]||0)+1}
+ add(r()<.5?'match':'listen');
+ if(can)add('say');else if(ai)add('think');
+ ['grammar','listening','writing'].forEach(function(s){});
+ var guard=0;while(out.length<n&&guard++<80){var tot=0,ks=types.filter(function(k){return (cnt[k]||0)<2&&w[k]>0});if(!ks.length)break;ks.forEach(function(k){tot+=w[k]*((cnt[k]||0)?.5:1)});var p=r()*tot,c=ks[ks.length-1];for(var i=0;i<ks.length;i++){var a=w[ks[i]]*((cnt[ks[i]]||0)?.5:1);if(p<a){c=ks[i];break}p-=a}add(c)}
+ if(!out.some(function(k){return T[k].sk.indexOf('reading')>=0})&&n>=8)out[out.length-1]='read';
+ out.sort(function(a,b){return T[a].ord-T[b].ord||0});
+ return out.map(function(k,i){return{id:'s'+i,type:k,done:0}})}
+/* ---------- bonus quests: the rest of the site, connected ---------- */
+function weakGrammar(){try{var sc=JSON.parse(localStorage.getItem('lunarise_grammar_scores')||'{}'),m=(Array.isArray(grammarModules)?grammarModules:[]).filter(function(x){return sc[x.id]!=null&&sc[x.id]<70});if(m.length)return m[0].id;var all=Array.isArray(grammarModules)?grammarModules:[];return all.length?all[Math.floor(hash(L.today())%Math.min(all.length,30))].id:null}catch(e){return null}}
+var BON={
+ words:{t:'Daily words with Luna',s:'Learn, play, then say new words to Luna',run:function(){try{LRDW.open()}catch(e){}}},
+ cards:{t:'Review your flashcards',s:'Words that are due, spaced for memory',run:function(){try{fcOpen()}catch(e){}},ev:function(k){return k==='cards'}},
+ errors:{t:'Beat your Error Bank',s:'A boss fight made from your own mistakes',run:function(){L.apps.errors()}},
+ grammar:{t:'Take a grammar quiz',s:'One topic that needs work',run:function(){var id=weakGrammar();try{navigateTo('grammar');if(id!=null)setTimeout(function(){try{openGrammarLesson(id);setTimeout(function(){try{setGrammarTab('quiz')}catch(e){}},160)}catch(e){}},140)}catch(e){}}},
+ reading:{t:'Read in Reading Lab',s:'One passage with exam questions',run:function(){try{navigateTo('reading')}catch(e){}},ev:function(k,x){return k==='exam'&&/^Reading Lab/.test(x)}},
+ shadow:{t:'Shadowing practice',s:'Repeat after the speaker, match the rhythm',run:function(){try{pfPractice('ielts','shadowing')}catch(e){try{navigateTo('certificates')}catch(x){}}},ev:function(k,x){return k==='exam'&&/^Shadowing/.test(x)}},
+ mock:{t:'Mini mock test',s:'IELTS & CEFR practice for your weakest skill',run:function(){try{navigateTo('certificates')}catch(e){}},ev:function(k,x){return k==='exam'}},
+ tutor:{t:'Talk to the AI Tutor',s:'Ask one real question, get a real answer',run:function(){try{navigateTo('ai-chat')}catch(e){}},ev:function(k){return k==='ai'}},
+ game:{t:'Play a game',s:'Galaxy Rush, Chess Arena and more',run:function(){try{navigateTo('games')}catch(e){}},ev:function(k){return k==='game'}},
+ music:{t:'Listen to music',s:'Let English sink in. Sing along to one song.',run:function(){try{navigateTo('dashboard');setTimeout(function(){var m=D.getElementById('lr-music')||D.querySelector('[data-k="music"]');m&&m.scrollIntoView({behavior:'smooth',block:'center'})},200)}catch(e){}}},
+ story:{t:'Solve a Detective Story',s:'Interview suspects in English',run:function(){L.apps.story()}},
+ reels:{t:'Swipe Micro Lessons',s:'Four 30-second lessons',run:function(){L.apps.reels()}},
+ think:{t:'Think in English',s:'Say it the way natives do',run:function(){L.apps.think()}},
+ scan:{t:'Scan your room',s:'Learn 8 words from one photo',run:function(){L.apps.scan()}},
+ path:{t:'Open your 90-Day Path',s:'Today\'s plan from the roadmap',run:function(){L.apps.path()}},
+ movies:{t:'Watch with smart subtitles',s:'Tap words in a film and save them',run:function(){try{navigateTo('movies')}catch(e){}}}};
+function pickBonus(d){var r=rngf(hash(L.today()+'b')),keys=[],er=0,due=0;try{er=L.err.active().length;due=window.SRS?SRS.list().length:0}catch(e){}
+ var pool=['grammar','reading','shadow','game','music','story','reels','think','scan','movies','mock','tutor','words'];if(due>=3)keys.push('cards');if(er>=3)keys.push('errors');
+ var sk=SKILLS.slice().sort(function(a,b){return d.sk[a]-d.sk[b]})[0];var pref={grammar:'grammar',reading:'reading',speaking:'shadow',listening:'movies',writing:'think',vocab:'scan'}[sk];if(pref&&keys.indexOf(pref)<0)keys.push(pref);
+ pool=shuffle(pool.filter(function(k){return keys.indexOf(k)<0}),r);while(keys.length<3)keys.push(pool.shift());return keys.slice(0,3)}
+/* ---------- exercise renderers: each returns {check()} and calls api.ready(bool) ---------- */
+var IC=L.IC,COL=['#7c8cff','#22d3ee','#fbbf24','#fb7185','#34d399'];
+function mcq(host,opts,api,extra){var sel=-1;host.innerHTML=(extra||'')+'<div class="dl-opts">'+opts.map(function(o,i){return '<button type="button" class="lab-opt dl-o" data-i="'+i+'">'+esc(o)+'</button>'}).join('')+'</div>';
+ host.querySelectorAll('.dl-o').forEach(function(b){b.onclick=function(){sel=+b.dataset.i;host.querySelectorAll('.dl-o').forEach(function(x){x.classList.remove('sel')});b.classList.add('sel');L.buzz(6);api.ready(true)}});
+ return {get:function(){return sel},mark:function(a){var bs=host.querySelectorAll('.dl-o');bs.forEach(function(x,i){x.disabled=true;if(i===a)x.classList.add('ok');else if(i===sel)x.classList.add('no')})}}}
+var R={
+ wordorder:function(host,d,api){var pool=d.words.map(function(w,i){return{w:w,i:i}}),ch=[];
+  host.innerHTML='<div class="dl-ans" id="dl-a"></div><div class="dl-pool" id="dl-p"></div>';var A=$('#dl-a',host),P=$('#dl-p',host);
+  function paint(){A.innerHTML=ch.length?ch.map(function(c,k){return '<button type="button" class="dl-chip on" data-k="'+k+'">'+esc(c.w)+'</button>'}).join(''):'<span class="dl-ph">Tap the words in the right order</span>';P.innerHTML=pool.map(function(c,k){return '<button type="button" class="dl-chip" data-k="'+k+'">'+esc(c.w)+'</button>'}).join('');
+   A.querySelectorAll('.dl-chip').forEach(function(b){b.onclick=function(){pool.push(ch.splice(+b.dataset.k,1)[0]);L.buzz(5);paint()}});P.querySelectorAll('.dl-chip').forEach(function(b){b.onclick=function(){ch.push(pool.splice(+b.dataset.k,1)[0]);L.buzz(5);paint()}});api.ready(!pool.length)}
+  paint();return{check:function(){var u=ch.map(function(c){return c.w}).join(' ')+(d.punct||'');var ok=norm(u)===norm(d.answer),s=ok?1:(sim(u,d.answer)>=.85?.5:0);return{ok:ok,score:s,shown:d.answer,say:d.answer,wrong:ok?null:{t:u,fix:d.answer,why:'Word order'}}}}},
+ correct:function(host,d,api){var m=mcq(host,d.opts,api);return{check:function(){var ok=m.get()===d.ans;m.mark(d.ans);return{ok:ok,score:ok?1:0,shown:d.opts[d.ans],say:d.opts[d.ans],note:d.note,wrong:ok?null:{t:d.opts[m.get()],fix:d.opts[d.ans],why:d.note}}}}},
+ gap:function(host,d,api){var m=mcq(host,d.opts,api,'<p class="dl-sent">'+esc(d.s).replace('___','<span class="dl-blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>')+'</p>');return{check:function(){var ok=m.get()===d.ans;m.mark(d.ans);var full=d.s.replace('___',d.opts[d.ans]);return{ok:ok,score:ok?1:0,shown:full,say:full,note:d.note,wrong:ok?null:{t:d.s.replace('___',d.opts[m.get()]),fix:full,why:d.note}}}}},
+ listen:function(host,d,api){var m=mcq(host,d.opts,api,'<div class="dl-play"><button type="button" class="dl-big" id="dl-pl" aria-label="Play">'+IC.say+'</button><button type="button" class="lab-chip" id="dl-sl">Slow</button></div>');
+  $('#dl-pl',host).onclick=function(){speak(d.text,.95)};$('#dl-sl',host).onclick=function(){speak(d.text,.6)};setTimeout(function(){speak(d.text,.95)},350);
+  return{check:function(){var ok=m.get()===d.ans;m.mark(d.ans);return{ok:ok,score:ok?1:0,shown:d.text,say:d.text,wrong:ok?null:{t:d.opts[m.get()],fix:d.text,why:'Listening'}}}}},
+ dictate:function(host,d,api){host.innerHTML='<div class="dl-play"><button type="button" class="dl-big" id="dl-pl" aria-label="Play">'+IC.say+'</button><button type="button" class="lab-chip" id="dl-sl">Slow</button></div><textarea id="dl-t" rows="3" placeholder="Type what you hear…" autocomplete="off" autocapitalize="off" spellcheck="false"></textarea>';
+  $('#dl-pl',host).onclick=function(){speak(d.text,.9)};$('#dl-sl',host).onclick=function(){speak(d.text,.6)};setTimeout(function(){speak(d.text,.9)},350);var t=$('#dl-t',host);t.oninput=function(){api.ready(t.value.trim().length>2)};
+  return{check:function(){var s=sim(t.value,d.text),ok=s>=.9;return{ok:ok,score:s>=.9?1:s>=.7?.6:s>=.5?.3:0,shown:d.text,say:d.text,note:ok?'':'You matched '+Math.round(s*100)+'% of the words.',wrong:ok?null:{t:t.value.trim(),fix:d.text,why:'Dictation'}}}}},
+ say:function(host,d,api){var best=-1,heard='';host.innerHTML='<p class="dl-sent">'+esc(d.text)+'</p><div class="dl-play"><button type="button" class="lab-chip" id="dl-pl">'+IC.say+' Listen</button>'+(SR?'<button type="button" class="dl-big rec" id="dl-mc" aria-label="Record">'+IC.mic+'</button>':'')+'</div><p class="dl-heard" id="dl-h"></p>'+(SR?'':'<div class="dl-self"><button type="button" class="lab-opt" data-v=".75">I said it clearly</button><button type="button" class="lab-opt" data-v=".4">I need more practice</button></div>');
+  $('#dl-pl',host).onclick=function(){speak(d.text,.9)};
+  if(SR){var mc=$('#dl-mc',host);mc.onclick=function(){if(mc.__r){try{mc.__r.stop()}catch(e){}return}var r=new SR();r.lang='en-US';r.interimResults=false;r.maxAlternatives=3;mc.__r=r;mc.classList.add('live');
+   r.onresult=function(e){var alts=[];for(var i=0;i<e.results[0].length;i++)alts.push(e.results[0][i].transcript);var sc=0,bt='';alts.forEach(function(a){var s=sim(a,d.text);if(s>sc){sc=s;bt=a}});heard=bt||alts[0]||'';best=Math.max(best,sc);$('#dl-h',host).innerHTML='I heard: <b>'+esc(heard)+'</b> · '+Math.round(sc*100)+'% match'+(sc<.8?'. Tap the mic to try again.':'');api.ready(true)};
+   r.onend=function(){mc.__r=null;mc.classList.remove('live');if(best<0)$('#dl-h',host).textContent='I did not hear you. Check the microphone and try again.'};r.onerror=function(){mc.__r=null;mc.classList.remove('live')};try{r.start()}catch(e){mc.__r=null}}}
+  else host.querySelectorAll('.dl-self .lab-opt').forEach(function(b){b.onclick=function(){best=+b.dataset.v;host.querySelectorAll('.dl-self .lab-opt').forEach(function(x){x.classList.remove('sel')});b.classList.add('sel');api.ready(true)}});
+  return{check:function(){var ok=best>=.8;return{ok:ok,score:best>=.9?1:best>=.8?.85:best>=.6?.55:.25,shown:d.text,say:d.text,note:SR?'You matched '+Math.round(best*100)+'% of the sentence.':'',wrong:ok?null:{t:heard||'(spoken)',fix:d.text,why:'Speaking'}}}}},
+ read:function(host,d,api){var ans=[];host.innerHTML='<div class="dl-pass"><b>'+esc(d.title)+'</b><p>'+esc(d.text)+'</p><button type="button" class="lab-chip" id="dl-pl">'+IC.say+' Listen</button></div>'+d.qs.map(function(q,i){return '<div class="dl-q2" data-q="'+i+'"><p>'+esc(q[0])+'</p>'+q[1].map(function(o,k){return '<button type="button" class="lab-opt dl-o" data-k="'+k+'">'+esc(o)+'</button>'}).join('')+'</div>'}).join('');
+  $('#dl-pl',host).onclick=function(){speak(d.text,.9)};
+  host.querySelectorAll('.dl-q2').forEach(function(q){q.querySelectorAll('.dl-o').forEach(function(b){b.onclick=function(){ans[+q.dataset.q]=+b.dataset.k;q.querySelectorAll('.dl-o').forEach(function(x){x.classList.remove('sel')});b.classList.add('sel');L.buzz(6);api.ready(d.qs.every(function(_,i){return ans[i]!=null}))}})});
+  return{check:function(){var c=0,w=[];d.qs.forEach(function(q,i){var qe=host.querySelectorAll('.dl-q2')[i];qe.querySelectorAll('.dl-o').forEach(function(x,k){x.disabled=true;if(k===q[2])x.classList.add('ok');else if(k===ans[i])x.classList.add('no')});if(ans[i]===q[2])c++;else w.push(q[0])});var s=c/d.qs.length;return{ok:s>=.67,score:s,shown:c+' of '+d.qs.length+' correct',noscroll:1}}}},
+ write:function(host,d,api){host.innerHTML='<p class="dl-sent">'+esc(d.p)+'</p>'+(d.w?'<p class="dl-hint">Use: <b>'+esc(d.w)+'</b></p>':'')+'<textarea id="dl-t" rows="3" placeholder="Write your sentence…" autocomplete="off"></textarea>';var t=$('#dl-t',host);t.oninput=function(){api.ready(t.value.trim().split(/\s+/).length>=3)};
+  return{check:async function(){var txt=t.value.trim();
+   try{var j=await L.ai('You are a kind English teacher for a learner at level '+cefr(S().sk.writing)+'. Judge the learner\'s sentence for the task. Reply JSON ONLY: {"score":0-1 (1 = natural and correct and uses the target word),"feedback":"one short sentence in English","better":"a corrected or more natural version, or empty if already perfect","why":"the rule in max 10 words or empty"}.','Task: '+d.p+'\nTarget word: '+(d.w||'none')+'\nSentence: '+txt,{max:260,t:.2});
+    var s=clamp(+j.score||0,0,1),ok=s>=.75;return{ok:ok,score:s,shown:j.better||txt,say:j.better||txt,note:j.feedback||'',wrong:ok?null:{t:txt,fix:j.better||'',why:j.why||j.feedback||''}}}
+   catch(e){var has=!d.w||norm(txt).indexOf(norm(d.w))>=0,n=txt.split(/\s+/).length,s=(has&&n>=5)?.7:.4;return{ok:s>=.7,score:s,shown:txt,note:has?'Saved. Connect AI to get detailed feedback.':'Try to use “'+d.w+'” in your sentence.'}}}}},
+ think:function(host,d,api){host.innerHTML='<p class="dl-sent">'+esc(d.src)+'</p><p class="dl-hint">Say it in natural English.</p><textarea id="dl-t" rows="2" placeholder="Type it in English…" autocomplete="off"></textarea>';var t=$('#dl-t',host);t.oninput=function(){api.ready(t.value.trim().length>2)};
+  return{check:async function(){var txt=t.value.trim();
+   try{var j=await L.ai('You are a kind English coach. The learner translated a sentence from '+L.LN[L.lang()]+' into English. Judge if it is natural and correct (not just understandable). Reply JSON ONLY: {"score":0-1,"feedback":"one short sentence","why":"the rule or the unnatural part in max 12 words, or empty"}.','Original: '+d.src+'\nNative version: '+d.en+'\nLearner: '+txt,{max:200,t:.2});var s=clamp(+j.score||0,0,1),ok=s>=.75;return{ok:ok,score:s,shown:d.en,say:d.en,note:j.feedback||'',wrong:ok?null:{t:txt,fix:d.en,why:j.why||j.feedback||''}}}
+   catch(e){var s=sim(txt,d.en),ok=s>=.7;return{ok:ok,score:s>=.7?.85:s>=.5?.5:.25,shown:d.en,say:d.en,wrong:ok?null:{t:txt,fix:d.en,why:'Think in English'}}}}}},
+ match:function(host,d,api){return pairing(host,d.pairs,api,true,d.aud)},
+ join:function(host,d,api){return pairing(host,d.pairs,api,false,0)}};
+function pairing(host,pairs,api,short,aud){var rs=shuffle(pairs.map(function(p,i){return{t:p[1],i:i}}),rngf(hash(pairs.join('|')+Math.random()))),sel=null,map={};
+ host.innerHTML='<p class="dl-hint">Tap one on the left, then its partner on the right.</p><div class="dl-pr'+(short?' sh':'')+'"><div id="dl-l"></div><div id="dl-r"></div></div>';var Lc=$('#dl-l',host),Rc=$('#dl-r',host);
+ function paint(){Lc.innerHTML=pairs.map(function(p,i){var m=map[i]!=null,c=m?COL[Object.keys(map).indexOf(String(i))%5]:'';return '<button type="button" class="dl-pi'+(sel===i?' sel':'')+(m?' pd':'')+'" data-i="'+i+'" style="'+(m?'--c:'+c:'')+'">'+esc(p[0])+'</button>'}).join('');
+  Rc.innerHTML=rs.map(function(r,k){var pi=-1;Object.keys(map).forEach(function(a){if(map[a]===k)pi=+a});var c=pi>=0?COL[Object.keys(map).indexOf(String(pi))%5]:'';return '<button type="button" class="dl-pi'+(pi>=0?' pd':'')+'" data-k="'+k+'" style="'+(pi>=0?'--c:'+c:'')+'">'+esc(r.t)+'</button>'}).join('');
+  Lc.querySelectorAll('.dl-pi').forEach(function(b){b.onclick=function(){var i=+b.dataset.i;if(aud)speak(pairs[i][0],.9);if(map[i]!=null){delete map[i];sel=i}else sel=i;L.buzz(5);paint()}});
+  Rc.querySelectorAll('.dl-pi').forEach(function(b){b.onclick=function(){var k=+b.dataset.k;if(sel==null)return;Object.keys(map).forEach(function(a){if(map[a]===k)delete map[a]});map[sel]=k;sel=null;L.buzz(8);paint()}});
+  api.ready(Object.keys(map).length===pairs.length)}
+ paint();return{check:function(){var c=0,w=[];pairs.forEach(function(p,i){if(rs[map[i]]&&rs[map[i]].i===i)c++;else w.push(p)});
+  Lc.querySelectorAll('.dl-pi').forEach(function(b){var i=+b.dataset.i;b.disabled=true;b.classList.add(rs[map[i]]&&rs[map[i]].i===i?'okp':'nop')});Rc.querySelectorAll('.dl-pi').forEach(function(b){b.disabled=true});
+  var s=c/pairs.length;return{ok:s>=.8,score:s,shown:pairs.map(function(p){return p[0]+' = '+p[1]}).join('  ·  '),note:c+' of '+pairs.length+' matched',wrongs:w.map(function(p){return short?{t:p[0],fix:p[1],why:'Vocabulary'}:{t:p[0]+' …',fix:p[0]+' '+p[1],why:'Sentence structure'}}),wrongkind:short?'word':'phrase'}}}}
+/* ---------- the session ---------- */
+var CUR=null,TOK=0;
+function delay(ms){return new Promise(function(r){setTimeout(r,ms)})}
+function snap(d){var o={};SKILLS.forEach(function(k){o[k]=d.sk[k]});return o}
+function quickSteps(sk){var d=S(),ai=aiOn(),r=rngf(hash(Date.now())),ks=Object.keys(T).filter(function(k){return T[k].sk.indexOf(sk)>=0&&(!T[k].ai||ai||k==='write')&&!(k==='think'&&!ai)});if(sk==='speaking'&&!ai&&!SR)ks=['say'];if(!ks.length)ks=['gap'];var out=[],c={};for(var i=0;i<4;i++){var k=pick(ks,r),g=0;while((c[k]||0)>=2&&g++<8)k=pick(ks,r);c[k]=(c[k]||0)+1;out.push({id:'q'+i,type:k,done:0})}return out}
+function newSes(d,quick){return{day:L.today(),steps:quick?quickSteps(quick):planSteps(d),i:0,n:0,used:{},xp:0,sc:0,cnt:0,quick:quick||'',before:snap(d),startedAt:Date.now()}}
+function todayDone(d){var h=d.hist[L.today()];return !!(h&&h.done)}
+async function start(quick){var d=S();if(!d.pref&&!quick)return prefs(function(){start()});
+ var tok=++TOK;
+ L.open('daily','Daily Luna',quick?'Quick practice · '+SKN[quick]:'Your session for today',function(b){
+  b.innerHTML='<div class="dl-load"><div class="dl-orb"></div><h3>Luna is preparing your session…</h3><p>Choosing exercises for your level.</p>'+L.spin()+'</div>';
+  (async function(){try{await Promise.race([buildPack(d),delay(quick?2500:7000)])}catch(e){}
+   if(tok!==TOK||!$('#lab-ov'))return;
+   var ses=(!quick&&d.ses&&d.ses.day===L.today()&&!d.ses.fin)?d.ses:null;if(!ses){ses=newSes(d,quick);if(!quick){d.ses=ses;save()}}
+   CUR={ses:ses,quick:quick,host:b,d:d,tok:tok};run()})();
+  return function(){CUR=null;TOK++;try{refresh()}catch(e){}}})}
+async function run(){var C=CUR;if(!C)return;var ses=C.ses,d=C.d,b=C.host;if(ses.i>=ses.steps.length)return finish();
+ var st=ses.steps[ses.i],tt=$('.lab-ti small');if(tt)tt.textContent=(ses.quick?'Quick practice':'Daily Luna')+' · '+(ses.i+1)+' of '+ses.steps.length;
+ var pct=Math.round(ses.i/ses.steps.length*100);
+ b.innerHTML='<div class="dl-top"><div class="dl-prog"><i style="width:'+pct+'%"></i></div><span class="dl-xp">+'+ses.xp+' XP</span></div><div class="dl-body"><div class="dl-k" style="--c:'+SKC[T[st.type].sk[0]]+'">'+esc(T[st.type].lbl)+' <small>'+esc(T[st.type].sk.map(function(k){return SKN[k]}).join(' · '))+'</small></div><div class="dl-host">'+L.spin()+'</div></div><div class="dl-foot" id="dl-ft"></div>';
+ var data=st.data;if(!data){data=await make(st.type,ses,d);if(!data){var alt=['correct','gap','wordorder'];for(var i=0;i<alt.length&&!data;i++){if(alt[i]!==st.type){data=await make(alt[i],ses,d);if(data)st.type=alt[i]}}}if(!data){ses.i++;return run()}st.data=data}
+ if(!CUR||CUR!==C)return;st.tier=data.tier||0;
+ var host=$('.dl-host',b),ft=$('#dl-ft',b),ready=false,busy=false,r;
+ $('.dl-k',b).insertAdjacentHTML('afterend','<p class="dl-ins">'+instr(st.type)+'</p>');
+ host.innerHTML='';
+ ft.innerHTML='<button type="button" class="lab-go ghost sm" id="dl-sk">Skip</button><button type="button" class="lab-go" id="dl-ck" disabled>Check</button>';
+ var ck=$('#dl-ck',b);
+ r=R[st.type](host,data,{ready:function(v){ready=!!v;ck.disabled=!v||busy}});
+ $('#dl-sk',b).onclick=function(){st.skipped=1;ses.i++;if(!ses.quick)save();run()};
+ ck.onclick=async function(){if(busy||!ready)return;busy=true;ck.disabled=true;ck.textContent='Checking…';var res;try{res=await r.check()}catch(e){res={ok:false,score:0,shown:'',note:'Something went wrong.'}}
+  grade(st,res,d);fb(st,res,b)}}
+function instr(t){return {wordorder:'Put the words in the correct order.',correct:'Only one sentence is correct.',gap:'Choose the word that fits.',join:'Join each beginning with its ending.',match:'Match each English word with its meaning.',listen:'Listen, then choose what you heard.',dictate:'Listen and type exactly what you hear.',say:'Listen, then say the sentence aloud.',read:'Read the text and answer the questions.',write:'Write one clear sentence.',think:'Translate it the way a native would say it.'}[t]}
+function grade(st,res,d){var C=CUR,ses=C.ses,s=clamp(res.score||0,0,1);st.done=1;st.score=s;st.ok=!!res.ok;
+ T[st.type].sk.forEach(function(k,j){var w=j===0?1:.5,cur=d.sk[k],ct=tier(cur),tt=st.tier||0,delta=(s-.62)*5*w;if(tt>ct&&s>=.8)delta+=w;if(tt<ct&&s<.5)delta-=.5*w;d.sk[k]=clamp(cur+delta,2,98)});
+ var a=d.acc[st.type]=d.acc[st.type]||{n:0,s:0};a.n++;a.s+=s;if(a.n>30){a.n=15;a.s=a.s/2}
+ var xp=Math.round(6+s*8);if(ses.quick)xp=Math.round(xp*.6);ses.xp+=xp;ses.sc+=s;ses.cnt++;st.xp=xp;
+ try{(res.wrongs||(res.wrong?[res.wrong]:[])).forEach(function(w){if(w&&w.t)L.err.add({k:res.wrongkind||'phrase',t:w.t,fix:w.fix||'',why:w.why||'',src:'Daily Luna'})})}catch(e){}
+ if(!ses.quick)d.ses=ses;save();if(s>=.8){L.buzz([10,40,10])}else L.buzz([28,40,28])}
+function fb(st,res,b){var ft=$('#dl-ft',b),ok=res.ok,last=CUR.ses.i>=CUR.ses.steps.length-1,s=Math.round((res.score||0)*100);
+ var title=ok?pick(['Correct!','Great!','Well done!','Perfect!'],Math.random):((res.score||0)>=.5?'Almost there':'Not quite');
+ ft.className='dl-foot fb '+(ok?'ok':(res.score>=.5?'mid':'no'));
+ ft.innerHTML='<div class="dl-fbx"><b>'+title+' <i>+'+st.xp+' XP</i></b>'+(res.shown&&!res.noscroll?'<p class="dl-ans2">'+esc(res.shown)+'</p>':res.shown?'<p class="dl-ans2">'+esc(res.shown)+'</p>':'')+(res.note?'<p class="dl-note">'+esc(res.note)+'</p>':'')+'</div>'+(res.say?'<button type="button" class="lab-ic sm" id="dl-hear" aria-label="Listen">'+IC.say+'</button>':'')+'<button type="button" class="lab-go" id="dl-nx">'+(last?'Finish':'Continue')+'</button>';
+ var hr=$('#dl-hear',b);if(hr)hr.onclick=function(){speak(res.say,.9)};
+ $('#dl-nx',b).onclick=function(){CUR.ses.i++;if(!CUR.ses.quick)save();run()};
+ try{ft.scrollIntoView({block:'end',behavior:'smooth'})}catch(e){}}
+/* ---------- results ---------- */
+function finish(){var C=CUR;if(!C)return;var ses=C.ses,d=C.d,b=C.host,n=ses.cnt||0,avg=n?ses.sc/n:0,pct=Math.round(avg*100),u=U(),first=false;
+ if(!ses.quick){ses.fin=1;var t=L.today();if(!d.hist[t]||!d.hist[t].done){first=true;d.xp+=ses.xp+50;ses.xp+=50;d.streak=(d.last===yday())?d.streak+1:(d.last===t?d.streak:1);d.last=t;d.tot++;
+   try{u.gamePts=(u.gamePts||0)+ses.xp}catch(e){}try{pfFeed('mission','Daily Luna · '+pct+'% · '+n+' exercises')}catch(e){}}
+  d.hist[t]={done:1,xp:ses.xp,avg:pct,lvl:Math.round(overall(d)*10)/10,n:n};Object.keys(d.hist).sort().slice(0,-40).forEach(function(k){delete d.hist[k]});
+  var seen={};d.lastTypes=ses.steps.map(function(s){return s.type}).filter(function(k){return !seen[k]&&(seen[k]=1)});d.ses=null}
+ else{d.xp+=ses.xp;try{u.gamePts=(u.gamePts||0)+ses.xp}catch(e){}}
+ save();var tok=C.tok;
+ if(pct>=70){try{triggerConfetti()}catch(e){}L.buzz([20,60,20,60,40])}
+ var tt=$('.lab-ti small');if(tt)tt.textContent='Session complete';
+ var line=pct>=85?'That was excellent. Your brain is building real habits.':pct>=65?'Solid work. Every correct answer makes the next one easier.':'Good effort. The mistakes are saved, we will fix them together tomorrow.';
+ b.innerHTML='<div class="dl-res"><div class="lber-ring big" style="--p:'+(avg).toFixed(3)+'"><b>'+pct+'%</b></div><h2>'+(ses.quick?'Quick practice done':'Today\'s session is done')+'</h2><p class="lab-mut">'+esc(line)+'</p><div class="dl-stats"><div><b>+'+ses.xp+'</b><small>XP earned</small></div><div><b>'+(ses.quick?d.streak:d.streak)+'</b><small>day streak</small></div><div><b>'+n+'</b><small>exercises</small></div></div>'+
+  '<h4 class="lab-h">Skill changes</h4><div class="dl-sk">'+SKILLS.map(function(k){var a=ses.before[k],z=d.sk[k],df=z-a;return '<div class="dl-skr"><span>'+SKN[k]+'</span><div class="dl-bar2"><i style="width:'+z.toFixed(1)+'%;background:'+SKC[k]+'"></i></div><em class="'+(df>.05?'up':df<-.05?'dn':'')+'">'+cefr(z)+' '+(df>.05?'▲ +':df<-.05?'▼ ':'· ')+df.toFixed(1)+'</em></div>'}).join('')+'</div>'+
+  (ses.quick?'':'<h4 class="lab-h">Bonus quests</h4>'+bonusHTML(d))+'<div class="dl-ra"><button type="button" class="lab-go ghost" id="dl-sks">My skills</button><button type="button" class="lab-go" id="dl-dn">Done</button></div></div>';
+ $('#dl-dn',b).onclick=function(){L.close()};$('#dl-sks',b).onclick=function(){setTimeout(skills,50)};bindBonus(b);}
+/* ---------- bonus quests ---------- */
+function bonusList(d){var t=L.today();d.bonus[t]=d.bonus[t]||{};if(!d.bonus[t].list){d.bonus[t].list=pickBonus(d);d.bonus[t].done={}}return d.bonus[t]}
+function bonusHTML(d){var B=bonusList(d);return '<div class="dl-bq">'+B.list.map(function(k){var q=BON[k],on=B.done[k];return '<div class="dl-bqi'+(on?' ok':'')+'"><button type="button" class="dl-bt" data-bt="'+k+'" aria-label="Mark done">'+(on?IC.check:'')+'</button><div class="dl-bm"><b>'+esc(q.t)+'</b><small>'+esc(q.s)+'</small></div><button type="button" class="lab-go sm" data-b="'+k+'">Open</button></div>'}).join('')+'</div>'}
+function tick(k,auto){var d=S(),B=bonusList(d);if(B.done[k])return;B.done[k]=1;d.xp+=15;try{U().gamePts=(U().gamePts||0)+15}catch(e){}save();L.toast('Bonus quest done · +15 XP ✓');try{refresh()}catch(e){}}
+function bindBonus(root){root.querySelectorAll('[data-b]').forEach(function(x){x.onclick=function(){var k=x.dataset.b;L.close();setTimeout(function(){try{BON[k].run()}catch(e){}},300)}});
+ root.querySelectorAll('[data-bt]').forEach(function(x){x.onclick=function(){tick(x.dataset.bt);x.parentNode.classList.add('ok');x.innerHTML=IC.check}})}
+function feed(k,x){try{var d=S(),B=bonusList(d);B.list.forEach(function(id){var q=BON[id];if(q&&q.ev&&!B.done[id]&&q.ev(k,String(x||'')))tick(id,1)})}catch(e){}}
+/* ---------- preferences ---------- */
+function prefs(cb){L.open('daily-set','Your daily plan','Two quick questions so Luna fits you.',function(b){var d=S(),pf=d.pref||{min:20,style:'mixed'},m=pf.min,s=pf.style;
+ function paint(){b.innerHTML='<section class="lab-card"><h3>How much time do you have each day?</h3><div class="dl-ch" id="pm">'+[[10,'10 min','6 exercises'],[20,'20 min','8 exercises'],[30,'30 min','10 exercises']].map(function(x){return '<button type="button" class="dl-cc'+(m===x[0]?' on':'')+'" data-v="'+x[0]+'"><b>'+x[1]+'</b><small>'+x[2]+'</small></button>'}).join('')+'</div></section><section class="lab-card"><h3>What suits you best?</h3><div class="dl-ch col" id="ps">'+[['mixed','Balanced','A bit of everything. Luna balances your skills.'],['games','Games & puzzles','More matching, sentence building and listening.'],['speak','Speaking first','More speaking, dictation and translation.'],['study','Reading & listening','More texts, grammar and listening.']].map(function(x){return '<button type="button" class="dl-cc'+(s===x[0]?' on':'')+'" data-v="'+x[0]+'"><b>'+x[1]+'</b><small>'+x[2]+'</small></button>'}).join('')+'</div></section><button type="button" class="lab-go" id="dl-sv" style="width:100%">'+(d.pref?'Save':'Save and start')+'</button>';
+  b.querySelectorAll('#pm .dl-cc').forEach(function(x){x.onclick=function(){m=+x.dataset.v;paint()}});b.querySelectorAll('#ps .dl-cc').forEach(function(x){x.onclick=function(){s=x.dataset.v;paint()}});
+  $('#dl-sv',b).onclick=function(){var had=!!d.pref;d.pref={min:m,style:s};save();L.close();try{refresh()}catch(e){}if(cb)setTimeout(cb,320)}}
+ paint()})}
+/* ---------- my skills ---------- */
+function spark(vals){if(vals.length<2)return '';var mn=Math.min.apply(null,vals)-1,mx=Math.max.apply(null,vals)+1,w=240,h=54,pts=vals.map(function(v,i){return (i/(vals.length-1)*w).toFixed(1)+','+(h-(v-mn)/(mx-mn)*h).toFixed(1)}).join(' ');return '<svg viewBox="0 0 '+w+' '+h+'" class="dl-sp"><polyline points="'+pts+'" fill="none" stroke="#22d3ee" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'}
+function skills(){L.open('daily-skills','My skills','Your level in each skill, updated after every exercise.',function(b){var d=S(),days=Object.keys(d.hist).sort().slice(-14),lv=days.map(function(k){return d.hist[k].lvl}).filter(function(v){return v!=null}),o=overall(d);
+ var er=[];try{er=L.err.active().slice(0,3)}catch(e){}
+ b.innerHTML='<section class="lab-card dl-sh"><div class="dl-big2"><b>'+cefr(o)+'</b><small>Overall level</small></div><div class="dl-sd"><p><b>'+Math.round(o)+'</b> / 100 · '+d.tot+' session'+(d.tot===1?'':'s')+' · '+d.streak+' day streak</p>'+spark(lv)+'<small class="lab-mut">'+(lv.length>1?'Last '+lv.length+' days':'Complete a few sessions to see your growth.')+'</small></div></section>'+
+ '<section class="lab-card"><h4>Skills</h4><div class="dl-sk">'+SKILLS.map(function(k){var v=d.sk[k];return '<div class="dl-skr"><span>'+SKN[k]+'</span><div class="dl-bar2"><i style="width:'+v.toFixed(1)+'%;background:'+SKC[k]+'"></i></div><em>'+cefr(v)+' · '+Math.round(v)+'</em></div>'}).join('')+'</div></section>'+
+ '<section class="lab-card"><h4>How you do by exercise</h4><div class="dl-sk">'+Object.keys(T).map(function(k){var a=d.acc[k];return '<div class="dl-skr"><span>'+esc(T[k].lbl)+'</span><div class="dl-bar2"><i style="width:'+(a?Math.round(a.s/a.n*100):0)+'%;background:#7c8cff"></i></div><em>'+(a?Math.round(a.s/a.n*100)+'%':'new')+'</em></div>'}).join('')+'</div></section>'+
+ (er.length?'<section class="lab-card"><h4>Your top mistakes</h4>'+er.map(function(e){return '<div class="lber-r"><div class="lber-m"><s>'+esc(e.t)+'</s>'+(e.fix?'<b>'+esc(e.fix)+'</b>':'')+'</div></div>'}).join('')+'<button type="button" class="lab-go ghost sm" id="dl-eb">Open Error Bank</button></section>':'')+
+ '<section class="lab-card"><h4>Your plan</h4><p>'+minutes(d)+' minutes a day · '+({mixed:'Balanced',games:'Games & puzzles',speak:'Speaking first',study:'Reading & listening'}[(d.pref&&d.pref.style)||'mixed'])+'</p><button type="button" class="lab-go ghost sm" id="dl-pf">Change my plan</button></section>';
+ var eb=$('#dl-eb',b);if(eb)eb.onclick=function(){L.close();setTimeout(function(){L.apps.errors()},300)};$('#dl-pf',b).onclick=function(){L.close();setTimeout(function(){prefs(function(){setTimeout(skills,60)})},300)}})}
+/* ---------- the home card ---------- */
+function greetTime(){var h=new Date().getHours();return h<5?'Good night':h<12?'Good morning':h<18?'Good afternoon':'Good evening'}
+function status(d){var t=L.today(),n=stepsFor(d);if(todayDone(d))return{k:'done',done:n,n:n};var s=d.ses&&d.ses.day===t?d.ses:null;if(s)return{k:'prog',done:s.i,n:s.steps.length};return{k:'new',done:0,n:n}}
+function card(){var d=S(),st=status(d),u=U(),nm=String(u.name||'').split(' ')[0],weak=SKILLS.slice().sort(function(a,b){return d.sk[a]-d.sk[b]})[0],pk=d.pack&&d.pack.day===L.today()?d.pack:null;
+ var focus=pk&&pk.focus?pk.focus:SKN[weak]+' first';var hello=st.k==='done'?'Today\'s session is complete. Come back tomorrow, or practise any skill below.':st.k==='prog'?'You are '+st.done+' of '+st.n+' exercises in. Let\'s finish it.':greetTime()+(nm?', '+nm:'')+'. Today we focus on '+focus.toLowerCase()+'.';
+ var pct=st.n?st.done/st.n:0,min=minutes(d);
+ var btn=st.k==='done'?'Practise more':st.k==='prog'?'Continue session':'Start today\'s session';
+ return '<div class="dl"><div class="dl-hd"><div class="dl-orb"></div><div class="dl-hx"><p class="dl-kick">Daily Luna</p><h2>'+esc(st.k==='done'?'All done for today':'Today: '+focus)+'</h2></div><button type="button" class="lab-ic sm" data-dl="hello" aria-label="Hear Luna">'+IC.say+'</button></div>'+
+ '<p class="dl-hello">'+esc(hello)+'</p>'+
+ '<div class="dl-mid"><div class="lber-ring" style="--p:'+pct.toFixed(3)+'"><b>'+st.done+'/'+st.n+'</b><small>today</small></div><div class="dl-chips"><span class="dl-pill">🔥 '+d.streak+' day streak</span><span class="dl-pill">'+cefr(overall(d))+' level</span><span class="dl-pill">'+d.xp+' XP</span></div></div>'+
+ '<button type="button" class="lab-go dl-start" data-dl="start">'+btn+(st.k==='new'?' · ~'+min+' min':'')+'</button>'+
+ '<div class="dl-skl">'+SKILLS.map(function(k){return '<button type="button" class="dl-sm" data-dl="quick" data-k="'+k+'" style="--c:'+SKC[k]+'"><span>'+SKN[k]+'</span><i style="width:'+d.sk[k].toFixed(0)+'%"></i><em>'+cefr(d.sk[k])+'</em></button>'}).join('')+'</div>'+
+ '<div class="dl-ft"><button type="button" class="dl-lk" data-dl="skills">My skills</button><button type="button" class="dl-lk" data-dl="bonus">Bonus quests '+(function(){var B=bonusList(d),c=0;B.list.forEach(function(k){if(B.done[k])c++});return c+'/'+B.list.length})()+'</button><button type="button" class="dl-lk" data-dl="prefs">Plan</button></div></div>'}
+function refresh(){var el=D.getElementById('lc-card');if(el&&el.querySelector('.dl')||el&&!el.querySelector('.lc-in'))el.innerHTML=card()}
+function bonusOpen(){L.open('daily-bonus','Bonus quests','The rest of LunaRise, picked for your weak spots.',function(b){var d=S();b.innerHTML='<section class="lab-card"><p class="lab-mut">Each one trains a different skill. Finish it, then tick it. Some tick by themselves.</p>'+bonusHTML(d)+'</section>';bindBonus(b)})}
+D.addEventListener('click',function(e){var x=e.target.closest&&e.target.closest('[data-dl]');if(!x)return;var k=x.dataset.dl;
+ if(k==='start')start();else if(k==='quick')start(x.dataset.k);else if(k==='skills')skills();else if(k==='bonus')bonusOpen();else if(k==='prefs')prefs(function(){});
+ else if(k==='hello'){var d=S(),pk=d.pack&&d.pack.day===L.today()?d.pack:null,t=pk&&pk.hello?pk.hello:'Hello! Ready to grow your English today? Let\'s start.';try{if(window.LC&&LC.say)LC.say(t);else L.say(t,'en-US')}catch(e){L.say(t,'en-US')}}});
+window.DL={on:function(){return true},card:card,start:function(q){start(q)},open:function(){start()},skills:skills,refresh:refresh,feed:feed,state:function(){return S()},levels:function(){var d=S();return SKILLS.reduce(function(o,k){o[k]=cefr(d.sk[k]);return o},{})}};
+function wrapFeed(){var _pf=window.pfFeed;if(typeof _pf==='function'&&!_pf.__dl){var w=function(k,x){try{feed(k,x)}catch(e){}return _pf.apply(this,arguments)};w.__dl=1;window.pfFeed=w}}
+function boot(){wrapFeed();try{if(window.LC){LC.next=function(){start()};LC.open=function(){start()};LC.nag=function(){}}}catch(e){}try{refresh()}catch(e){}}
+setTimeout(boot,900);setTimeout(boot,3500);
 })();
 </script></body>
 </html>
