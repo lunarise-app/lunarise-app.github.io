@@ -9388,106 +9388,7 @@ void main(){
             </div>
         </section>
 
-        <section id="view-listening" class="view-panel hidden space-y-6">
-            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                <div>
-                    <h2 class="text-2xl lg:text-3xl font-extrabold text-white flex items-center gap-2">
-                        <i class="fa-solid fa-headphones text-teal-400"></i> IELTS & CEFR Audio Engine
-                    </h2>
-                    <p class="text-xs lg:text-sm text-slate-400">Interactive browser TTS playback engine with real exam scenario scripts.</p>
-                </div>
-                <div class="flex flex-wrap items-center gap-3 glass p-2.5 rounded-2xl border border-slate-800">
-                    <div class="flex items-center gap-2 text-xs">
-                        <i class="fa-solid fa-microphone-lines text-slate-400"></i>
-                        <span class="text-slate-300">Accent:</span>
-                        <select id="audio-voice-select" onchange="updateAudioVoice()" class="bg-slate-900 border border-slate-700 text-white text-xs rounded-lg px-2 py-1 outline-none">
-                            <option value="US">English (US Native)</option>
-                            <option value="UK">English (UK RP Accent)</option>
-                        </select>
-                    </div>
-                    <div class="flex items-center gap-2 text-xs">
-                        <span class="text-slate-300">Speed:</span>
-                        <select id="audio-rate-select" class="bg-slate-900 border border-slate-700 text-white text-xs rounded-lg px-2 py-1 outline-none">
-                            <option value="0.75">0.75x</option>
-                            <option value="1.0" selected>1.0x (Normal)</option>
-                            <option value="1.25">1.25x</option>
-                            <option value="1.5">1.5x</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <button onclick="loadListeningScenario(0)" class="listening-card glass-card p-4 rounded-xl text-left border-indigo-500/40">
-                    <div class="text-xs font-bold text-indigo-400 mb-1">Scenario 1</div>
-                    <div class="font-bold text-sm text-white">University Registration</div>
-                    <div class="text-[11px] text-slate-400">IELTS Part 1 Conversation</div>
-                </button>
-                <button onclick="loadListeningScenario(1)" class="listening-card glass-card p-4 rounded-xl text-left">
-                    <div class="text-xs font-bold text-teal-400 mb-1">Scenario 2</div>
-                    <div class="font-bold text-sm text-white">Tech Innovation Conference</div>
-                    <div class="text-[11px] text-slate-400">IELTS Part 2 Monologue</div>
-                </button>
-                <button onclick="loadListeningScenario(2)" class="listening-card glass-card p-4 rounded-xl text-left">
-                    <div class="text-xs font-bold text-amber-400 mb-1">Scenario 3</div>
-                    <div class="font-bold text-sm text-white">Airport Booking Inquiry</div>
-                    <div class="text-[11px] text-slate-400">Business & Travel CEFR B2</div>
-                </button>
-                <button onclick="loadListeningScenario(3)" class="listening-card glass-card p-4 rounded-xl text-left">
-                    <div class="text-xs font-bold text-rose-400 mb-1">Scenario 4</div>
-                    <div class="font-bold text-sm text-white">Marine Biology Podcast</div>
-                    <div class="text-[11px] text-slate-400">Academic Lecture CEFR C1</div>
-                </button>
-            </div>
-
-            <div class="glass-card p-6 rounded-3xl space-y-6">
-                <div class="flex flex-col md:flex-row items-center justify-between gap-4 border-b border-slate-800 pb-4">
-                    <div>
-                        <h3 id="current-scenario-title" class="text-xl font-bold text-white">University Campus Tour & Registration</h3>
-                        <p id="current-scenario-desc" class="text-xs text-slate-400">Listen carefully to the conversation between the administrator and student.</p>
-                    </div>
-
-                    <div class="flex items-center gap-3">
-                        <button id="btn-play-audio" onclick="togglePlayAudio()" class="w-12 h-12 rounded-2xl gradient-btn flex items-center justify-center text-white text-xl shadow-lg">
-                            <i class="fa-solid fa-play"></i>
-                        </button>
-                        <button onclick="stopAudio()" class="w-10 h-10 rounded-xl bg-slate-800 hover:bg-slate-700 flex items-center justify-center text-slate-300 text-sm">
-                            <i class="fa-solid fa-square"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <div class="bg-slate-900/90 rounded-2xl p-4 border border-slate-800 flex flex-col gap-2">
-                    <div class="flex justify-between text-[11px] text-slate-400">
-                        <span id="audio-time-curr">00:00</span>
-                        <span id="audio-status-label" class="text-indigo-400 font-semibold">Engine Ready</span>
-                        <span id="audio-time-total">00:30</span>
-                    </div>
-                    <div class="w-full bg-slate-800 h-2.5 rounded-full overflow-hidden cursor-pointer">
-                        <div id="audio-progress-bar" class="bg-gradient-to-r from-teal-400 to-indigo-500 h-full w-[0%] transition-all"></div>
-                    </div>
-                </div>
-
-                <div>
-                    <button onclick="toggleTranscript()" class="text-xs font-bold text-indigo-400 hover:underline flex items-center gap-1 mb-2">
-                        <i class="fa-solid fa-file-lines"></i> <span id="transcript-btn-text">Show Interactive Audio Transcript</span>
-                    </button>
-                    <div id="listening-transcript" class="hidden bg-slate-950 p-4 rounded-2xl border border-slate-800 text-xs text-slate-300 leading-relaxed max-h-48 overflow-y-auto custom-scrollbar font-mono">
-                    </div>
-                </div>
-
-                <div class="space-y-4 pt-4 border-t border-slate-800">
-                    <h4 class="text-base font-bold text-white flex items-center gap-2">
-                        <i class="fa-solid fa-circle-question text-teal-400"></i> Interactive Question Sheet
-                    </h4>
-                    <div id="listening-questions-container" class="space-y-4">
-                    </div>
-                    <button onclick="gradeListeningQuiz()" class="gradient-btn px-6 py-3 rounded-xl font-bold text-xs shadow-lg">
-                        Submit & Grade Answers
-                    </button>
-                </div>
-            </div>
-        </section>
+        <section id="view-listening" class="view-panel hidden space-y-6"><div id="lrb-au-root"></div></section>
 
         <section id="view-dictionary" class="view-panel hidden">
           <div class="lx dxv">
@@ -9781,6 +9682,7 @@ void main(){
                 <h2 class="gm-h">Game Zone</h2>
                 <p class="text-sm text-indigo-100/80 mt-3" style="max-width:52ch">Learn English while you play. Pop talking balloons with Lumi, solve sums in the sky with a 3D panda, spell words on a metro run, type down neon drones, swipe Real or Wrong, build crosswords around the world, race your class through space or beat a chess engine.</p>
                 <div class="gm-chips" id="gm-chips"></div>
+                <div id="lrb-my-root"></div>
             </div>
             <div class="gm-grid">
                 <button class="gm-card kgc" style="--gc:rgba(244,114,182,.7);--ga:rgba(56,189,248,.5);--gb:linear-gradient(120deg,#fde047,#f472b6)" onclick="kgOpen('balloon')">
@@ -9926,7 +9828,7 @@ void main(){
                         <div class="flex gap-2 mt-2"><input id="ch-chat-in" maxlength="140" placeholder="Say something nice…" onkeydown="if(event.key==='Enter')chChatSend()" class="flex-1 min-w-0 bg-slate-900/80 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white outline-none focus:border-indigo-400"><button class="pf-btn" onclick="chChatSend()" aria-label="Send"><i class="fa-solid fa-paper-plane"></i></button></div>
                     </div>
                     <div class="pf-card"><div class="pf-h"><i class="fa-solid fa-circle-info text-sky-400"></i> Game</div><div id="ch-status" class="text-sm font-bold text-white"></div><div id="ch-info" class="text-[11px] text-slate-400 mt-1 leading-relaxed"></div></div>
-                    <div class="pf-card"><div class="pf-h"><i class="fa-solid fa-list-ol text-cyan-400"></i> Moves</div><div id="ch-moves" class="ch-moves"></div></div>
+                    <div id="lrb-chc"></div><div class="pf-card"><div class="pf-h"><i class="fa-solid fa-list-ol text-cyan-400"></i> Moves</div><div id="ch-moves" class="ch-moves"></div></div>
                     <div class="pf-card"><div class="pf-h"><i class="fa-solid fa-trophy text-amber-400"></i> Your record</div><div id="ch-record" class="grid grid-cols-4 gap-2 text-center"></div></div>
                 </div>
             </div>
@@ -9989,7 +9891,7 @@ void main(){
                     <label>OpenAI API key <small>(saved only on this device)</small></label>
                     <input id="ai-key" type="password" placeholder="sk-…" autocomplete="off" spellcheck="false">
                     <div class="ai-mbtns"><button class="ai-big" onclick="aiKeySave()">Save &amp; test</button><button class="ai-ghost" onclick="aiKeyRemove()">Remove</button></div>
-                    <p class="ai-mn">For the published app, put the key on a private server instead (ai_proxy.gs) and set <code>LR_AI_PROXY</code> — keys inside the app file can be stolen by anyone who opens it.</p>
+                    
                 </div>
             </div>
         </section>
@@ -24297,10 +24199,10 @@ function renderGrammarLesson() {
     document.getElementById('grammar-modal-title').innerHTML = escapeHTML(m.title) + `<span class="gl-mt" dir="${gDir()}" id="gl-mt"></span>`;
     document.getElementById('grammar-modal-level').textContent = `${m.level} • ${m.category}`;
     gTitles(lang).then(map => { const e = document.getElementById('gl-mt'); if (e && map[m.id]) e.textContent = meta.f + ' ' + map[m.id]; }).catch(() => { });
-    const tabs = [['lesson', L.lesson, 'fa-book-open'], ['formula', L.formula, 'fa-table-list'], ['examples', L.examples, 'fa-comments'], ['mistakes', L.mistakes, 'fa-triangle-exclamation'], ['quiz', L.quiz, 'fa-bolt']];
+    const tabs = [['lesson', L.lesson, 'fa-book-open'], ['formula', L.formula, 'fa-table-list'], ['examples', L.examples, 'fa-comments'], ['mistakes', L.mistakes, 'fa-triangle-exclamation'], ['quiz', L.quiz, 'fa-bolt'], ['build', 'Write', 'fa-pen-to-square']];
     document.getElementById('grammar-modal-tabs').innerHTML = tabs.map(([id, label, icon]) => `<button onclick="setGrammarTab('${id}')" class="gl-tab ${tab === id ? 'on' : ''}"><i class="fa-solid ${icon}"></i><span>${escapeHTML(label)}</span></button>`).join('');
     const c = document.getElementById('grammar-modal-content'); let h = '';
-    if (tab === 'quiz') { gqEnter(); return; }
+    if (tab === 'quiz') { gqEnter(); return; } if (tab === 'build') { try { LRB.gramBuild(document.getElementById('grammar-modal-content'), m); } catch (e) { console.error(e); } return; }
     h += gLessonLangRow();
     if (need) h += `<div class="gl-wait"><i class="fa-solid fa-circle-notch fa-spin"></i> ${escapeHTML(L.wait)}</div>`;
     if (tab === 'lesson') {
@@ -24394,7 +24296,7 @@ function nextGrammarQuestion() {
     scores[m.id] = Math.max(scores[m.id] || 0, percent); localStorage.setItem('lunarise_grammar_scores', JSON.stringify(scores));
     if (percent >= 80) { const pr = JSON.parse(localStorage.getItem('lunarise_grammar_progress') || '{}'); pr[m.id] = true; localStorage.setItem('lunarise_grammar_progress', JSON.stringify(pr)); try { triggerConfetti(); } catch (e) { } }
     document.getElementById('grammar-modal-content').innerHTML = `<div class="gl-done"><div class="gl-trophy"><i class="fa-solid ${percent >= 80 ? 'fa-trophy' : 'fa-rotate-right'}"></i></div><h3>${escapeHTML(percent >= 80 ? L.mastered : L.practice)}</h3><p>${escapeHTML(L.scored)}: <b>${percent}%</b> (${currentGrammarScore}/${QZ.length})</p>
-        <div class="gl-dbtn"><button onclick="gqAgain()">${escapeHTML(L.again)}</button><button class="p" onclick="setGrammarTab('lesson')">${escapeHTML(L.review)}</button></div></div>`;
+        <div class="gl-dbtn"><button onclick="gqAgain()">${escapeHTML(L.again)}</button><button class="p" onclick="setGrammarTab('lesson')">${escapeHTML(L.review)}</button><button class="p" onclick="setGrammarTab('build')">Write 3 sentences</button></div></div>`;
     grammarProgress();
 }
 /* wrap grid render to add translated titles */
@@ -24979,6 +24881,7 @@ const mentorAvatarCache = {};
         function chApply(m, byAI) {
             const pos = CH.pos; chTick();
             const san = pos.san(m), uci = pos.uci(m), cap = pos.b[(m >> 7) & 127] || ((m >> 18) & 1), mover = pos.side; if (CH.sayOn) setTimeout(() => chSay(san), 150);
+            try { window.LRB && LRB.chMove && LRB.chMove({ san, mover, cap: ((pos.b[(m >> 7) & 127] || 0) & 7), ep: (!pos.b[(m >> 7) & 127] && ((m >> 18) & 1)) ? 1 : 0, from: m & 127, to: (m >> 7) & 127, ply: CH.moves.length, me: CH.color, sans: CH.sans.slice(-14), sayOn: !!CH.sayOn }); } catch (e) { }
             pos.makeMove(m); CH.moves.push(uci); CH.sans.push(san); CH.last = [m & 127, (m >> 7) & 127]; CH.sel = -1; CH.targets = []; CH.hint = null;
             if (CH.tc > 0) CH.clock[mover] += CH.inc * 1000;
             if (CH.online && byAI === false) chNetMove(CH.moves.length - 1, uci, mover);
@@ -25492,7 +25395,7 @@ nextGrammarQuestion=function(){ _oldNextGrammar(); setTimeout(updateGrammarAnaly
                 try { lrRecover(); } catch (e) { }
             }
 
-            try { loadListeningScenario(0); } catch(e) { console.error('Listening init error:', e); }
+            
             try { lxHome(); } catch(e) { console.error('Dictionary init error:', e); }
             try { renderGrammarCategories(); grammarProgress(); } catch(e) { console.error('Grammar init error:', e); }
         });
@@ -29420,13 +29323,14 @@ const CHAR = (() => {
         else if (q.k === 'side') { [1, 2].forEach(l => { const o = block(l, q.d); o.tut = 'side'; }); coinLine(0, q.d - 10, 6); }
     }
 
+    const WLX = () => (window.LRMY && LRMY.on() && LRMY.dash().length >= 4) ? LRMY.dash() : WL;
     /* ---------- word hunt ---------- */
     function nextWord() {
         const d = D(), n = S.spelled, tiers = n < 2 ? [0] : n < 4 ? [0, 1] : n < 7 ? [1] : n < 10 ? [1, 2] : [1, 2, 2], t = pick(tiers);
-        let c = WL.filter(w => tier(w) === t && !S.used[w.en]); if (!c.length) c = WL.filter(w => tier(w) === t);
-        c = c.map(w => ({ w, k: (d.words[w.en] || 0) + Math.random() * 1.5 })).sort((a, b) => a.k - b.k).slice(0, 8);
+        let c = WLX().filter(w => tier(w) === t && !S.used[w.en]); if (!c.length) c = WLX().filter(w => tier(w) === t);
+        if (!c.length) c = WLX().slice(); c = c.map(w => ({ w, k: (d.words[w.en] || 0) + Math.random() * 1.5 })).sort((a, b) => a.k - b.k).slice(0, 8);
         const w = pick(c).w; S.used[w.en] = 1; S.word = w; S.got = 0; S.wmiss = 0; S.missAt = 0; S.need = true; S.lensOn = S.lens > 0; if (S.lens > 0) S.lens--;
-        board(); say(); fillLetters(); const nx = WL.filter(x => tier(x) === t && !S.used[x.en]); if (nx.length) VOICE.pre([pick(nx).en.toLowerCase()], 'word');
+        board(); say(); fillLetters(); const nx = WLX().filter(x => tier(x) === t && !S.used[x.en]); if (nx.length) VOICE.pre([pick(nx).en.toLowerCase()], 'word');
     }
     function say() { if (S.word) VOICE.say(S.word.en.toLowerCase(), { st: 'word', wait: 1400 }); }
     function sfx(kind, k) {
@@ -29583,7 +29487,7 @@ const CHAR = (() => {
     }
     function offerSave() {
         if (S.saves <= 0) { over(); return; }
-        const pool = S.doneW.length ? S.doneW.map(x => x.w) : WL.filter(w => tier(w) < 2), w = pick(pool), others = shuffle(WL.filter(x => x.en !== w.en && Math.abs(x.en.length - w.en.length) < 3)).slice(0, 2);
+        const pool = S.doneW.length ? S.doneW.map(x => x.w) : (WLX().filter(w => tier(w) < 2).length ? WLX().filter(w => tier(w) < 2) : WLX()), w = pick(pool), near = WLX().filter(x => x.en !== w.en && Math.abs(x.en.length - w.en.length) < 3), others = shuffle(near.length >= 2 ? near : WLX().filter(x => x.en !== w.en)).slice(0, 2);
         S.mode = 'save'; S.saveT = 7; S.saveQ = { w, opts: shuffle([w].concat(others)).map(x => x.en) };
         KGX.screen(`<div class="kg-panel wr wr-save"><h2>Second chance</h2><p class="wr-p">Pick the English word to keep running.</p><div class="wr-q"><span>${w.em}</span><b>${window.lrgT ? lrgT(w.en, w.uz) : E(w.uz)}</b></div><div class="wr-opts">${S.saveQ.opts.map((o, i) => `<button onclick="KGD2.ans(${i})">${E(o.toLowerCase())}</button>`).join('')}</div><div class="wr-tm"><s id="wr-tm"></s></div><button class="kg-btn ghost" onclick="KGD2.giveUp()">No thanks</button></div>`, 'dim');
     }
@@ -29886,6 +29790,7 @@ const CHAR = (() => {
 
     /* ---------- words ---------- */
     function wordFor(kind) {
+        if (window.LRMY && LRMY.on()) { const my = LRMY.neon(S, kind); if (my) return my; }
         const w = S.wave, used = new Set(S.drones.map(d => d.ans[0])), free = a => !used.has(a[0]) && !S.drones.some(d => d.ans === a);
         if (S.modeK === 'tr') {
             const tiers = w <= 3 ? [0] : w <= 6 ? [0, 1] : [0, 1, 1, 2], pool = VOC[pick(tiers)].filter(v => kind === 'scout' || kind === 'bomber' ? v.en.length <= 7 : v.en.length >= 5);
@@ -29898,6 +29803,7 @@ const CHAR = (() => {
         return null;
     }
     function bossWords() {
+        if (window.LRMY && LRMY.on()) { const my = LRMY.boss(S); if (my) return my; }
         if (S.modeK === 'tr') return shuffle(VOC[Math.min(2, Math.floor(S.wave / 5))]).slice(0, 3).map(v => ({ ans: v.en, uz: v.uz }));
         return [{ ans: pick(NW.phr) }, { ans: pick(NW.long) }, { ans: pick(NW.phr) }];
     }
@@ -30492,18 +30398,18 @@ const CHAR = (() => {
     }
     function go(kind) {
         SND.play('click'); const d = D(); S.kind = kind;
-        if (kind === 'ai') return aiEp();
+        if (kind === 'ai' || (window.LRMY && LRMY.on() && kind !== 'daily')) return aiEp();
         if (kind === 'daily') { if (d.daily[dayKey()]) KGX.toast("You already played today's show. You can play it again for fun.", '', 2400); const r = seeded(daySeed()); startEp(episode(ALL, r)); return; }
         startEp(episode(pool()));
     }
     async function aiEp() {
         const key = (typeof aiKey === 'function') ? aiKey() : '', model = (typeof LR_AI_MODEL !== 'undefined') ? LR_AI_MODEL : 'gpt-4o-mini';
         if (!key) { KGX.toast('AI is not connected on this device. Playing the normal show.', 'bad', 2600); S.kind = 'show'; return startEp(episode(pool())); }
-        KGX.screen(`<div class="kg-panel rw-pan"><div class="kg-big">🤖</div><h3>Writing tonight's episode…</h3><p class="kg-mut">The AI is writing 24 new sentences.</p></div>`, 'dim');
+        KGX.screen(`<div class="kg-panel rw-pan"><div class="kg-big">🤖</div><h3>Writing tonight's episode…</h3><p class="kg-mut">${window.LRMY && LRMY.on() ? 'The AI is writing 24 sentences with your saved words.' : 'The AI is writing 24 new sentences.'}</p></div>`, 'dim');
         const topic = S.deck === 'mix' ? 'a mix of grammar, vocabulary, idioms/phrasal verbs and collocations' : DECKS[S.deck].n;
         try {
             const c = new AbortController(), to = setTimeout(() => c.abort(), 40000);
-            const r = await lrAIFetch('https://api.openai.com/v1/chat/completions', { method: 'POST', signal: c.signal, headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + key }, body: JSON.stringify({ model, temperature: 1, response_format: { type: 'json_object' }, max_tokens: 2600, messages: [{ role: 'system', content: 'You write quiz cards for English learners (B1–C1). Return ONLY JSON: {"cards":[{"deck":"gram|vocab|idiom|coll","s":"one sentence","ok":true|false,"fix":"the corrected sentence if ok is false, changing as few words as possible","why":"short reason"}]}. About half the sentences must be wrong, each with exactly one typical learner mistake.' }, { role: 'user', content: `Make 24 cards about ${topic}.` }] }) });
+            const r = await lrAIFetch('https://api.openai.com/v1/chat/completions', { method: 'POST', signal: c.signal, headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + key }, body: JSON.stringify({ model, temperature: 1, response_format: { type: 'json_object' }, max_tokens: 2600, messages: (window.LRMY && LRMY.on()) ? LRMY.rwMsgs() : [{ role: 'system', content: 'You write quiz cards for English learners (B1–C1). Return ONLY JSON: {"cards":[{"deck":"gram|vocab|idiom|coll","s":"one sentence","ok":true|false,"fix":"the corrected sentence if ok is false, changing as few words as possible","why":"short reason"}]}. About half the sentences must be wrong, each with exactly one typical learner mistake.' }, { role: 'user', content: `Make 24 cards about ${topic}.` }] }) });
             clearTimeout(to); const j = await r.json(), txt = j.choices && j.choices[0] && j.choices[0].message.content, data = JSON.parse(txt || '{}');
             const cards = (data.cards || []).filter(x => x && typeof x.s === 'string' && x.s.length > 3 && x.s.length < 140 && typeof x.ok === 'boolean' && (x.ok || x.fix)).map((x, i) => ({ id: 5000 + i, d: DECKS[x.deck] ? x.deck : 'gram', s: x.s.trim(), ok: x.ok, fix: String(x.fix || '').trim(), why: String(x.why || '').trim() }));
             cards.forEach(c => { c.span = errSpan(c); }); if (cards.length < 10) throw new Error('few');
@@ -32082,7 +31988,7 @@ window.kgLive = function () {
             <div class="mu-vis">${'<i></i>'.repeat(20).replace(/<i><\/i>/g, () => `<i style="animation-delay:${(Math.random() * -0.9).toFixed(2)}s;animation-duration:${(0.6 + Math.random() * 0.7).toFixed(2)}s"></i>`)}</div>
             <div class="mu-seek"><span id="mu-cur">0:00</span><input type="range" id="mu-seek" min="0" max="100" step="0.1" value="0"><span id="mu-dur">0:00</span></div>
             <div class="mu-ctl"><button class="sm" id="mu-shuf" aria-label="Shuffle"><i class="fa-solid fa-shuffle"></i></button><button id="mu-prev" aria-label="Previous"><i class="fa-solid fa-backward-step"></i></button><button class="pp" id="mu-np-pp" aria-label="Play"><i class="fa-solid fa-play"></i></button><button id="mu-next" aria-label="Next"><i class="fa-solid fa-forward-step"></i></button><button class="sm" id="mu-rep" aria-label="Repeat"><i class="fa-solid fa-repeat"></i></button></div>
-            <div class="mu-ext"><button id="mu-np-fav"><i class="fa-regular fa-heart"></i> Save</button><button id="mu-sleep"><i class="fa-regular fa-moon"></i> Sleep</button><button id="mu-full"><i class="fa-solid fa-circle-play"></i> Full song</button><button id="mu-lbtn"><i class="fa-solid fa-align-center"></i> Lyrics</button><button id="mu-qbtn"><i class="fa-solid fa-list-ol"></i> Queue</button></div>
+            <div class="mu-ext"><button id="mu-np-fav"><i class="fa-regular fa-heart"></i> Save</button><button id="mu-sleep"><i class="fa-regular fa-moon"></i> Sleep</button><button id="mu-full"><i class="fa-solid fa-circle-play"></i> Full song</button><button id="mu-lbtn"><i class="fa-solid fa-align-center"></i> Lyrics</button><button id="mu-gbtn"><i class="fa-solid fa-puzzle-piece"></i> Gap-fill</button><button id="mu-qbtn"><i class="fa-solid fa-list-ol"></i> Queue</button></div>
             <div class="mu-vol"><i class="fa-solid fa-volume-low"></i><input type="range" id="mu-vol" min="0" max="1" step="0.01"><i class="fa-solid fa-volume-high"></i><button id="mu-awk" aria-label="Keep screen on" title="Keep screen on"><i class="fa-solid fa-sun"></i></button></div>
         </div><div id="mu-sheet"></div>`;
         document.body.appendChild(d);
@@ -32153,7 +32059,7 @@ window.kgLive = function () {
         $('mu-shuf').onclick = () => { S().shuf = !S().shuf; save(); ui(); };
         $('mu-rep').onclick = () => { const m = S(); m.rep = (m.rep + 1) % 3; save(); ui(); };
         $('mu-np-fav').onclick = () => { if (cur()) toggleFav(cur()); };
-        $('mu-lbtn').onclick = () => lyToggle(); $('mu-lyr').onclick = e => { const p = e.target.closest && e.target.closest('p[data-i]'); if (p) { const i = +p.dataset.i; if (LY.lines && LY.lines[i]) lyOffSet(LY.lines[i].t - au.currentTime); else if (LY.est) { LY.anchor = { i, t: au.currentTime + (LY.off || 0) }; lyTick(true); } } };
+        $('mu-lbtn').onclick = () => lyToggle(); $('mu-gbtn').onclick = () => { try { LRB.gapToggle(); } catch (e) { console.error(e); } }; $('mu-lyr').onclick = e => { const p = e.target.closest && e.target.closest('p[data-i]'); if (p) { const i = +p.dataset.i; if (LY.lines && LY.lines[i]) lyOffSet(LY.lines[i].t - au.currentTime); else if (LY.est) { LY.anchor = { i, t: au.currentTime + (LY.off || 0) }; lyTick(true); } } };
         $('mu-np-more').onclick = () => { if (cur()) sheet(cur()); };
         $('mu-awk').onclick = () => { S().awake = S().awake === false; save(); awake(); if (typeof showToast === 'function') showToast(S().awake === false ? 'Screen may turn off while playing' : 'Screen stays on while Now Playing is open ☀️'); };
         $('mu-sleep').onclick = setSleep;
@@ -32226,7 +32132,7 @@ window.kgLive = function () {
         const tip = `<div class="src">${r.src}${r.drift ? ' · timing adapted automatically to this version' : ''}</div>`;
         if (r.sync) { LY.lines = r.sync; box.classList.add('sync'); box.innerHTML = '<p class="mu-int on" id="mu-lyi">♪ ♪ ♪</p>' + r.sync.map((l, i) => l.x ? `<p data-i="${i}">${E(l.x)}</p>` : `<p class="mu-int" data-i="${i}">♪ ♪ ♪</p>`).join('') + tip; lyTick(true); }
         else { let n = 0; box.innerHTML = r.plain.map(l => l.trim() ? `<p data-i="${n++}">${E(l)}</p>` : '<p class="sp"></p>').join('') + `<div class="src">${r.src} · estimated line timing</div>`; LY.est = n; box.classList.add('sync'); lyTick(true); }
-        box.scrollTop = 0;
+        box.scrollTop = 0; try { window.LRB && LRB.gapRender && LRB.gapRender(); } catch (e) { }
     }
     function lyTick(force) {
         if (!LY.on || !(LY.lines || LY.est)) return; let i = -1; const ct = au.currentTime + (LY.off || 0) + LY.g + .2;
@@ -32248,6 +32154,7 @@ window.kgLive = function () {
     const muBoot = () => { const go = () => { build(); ui(); }; if ('requestIdleCallback' in window) requestIdleCallback(go, { timeout: 7000 }); else setTimeout(go, 3500); };
     document.addEventListener('DOMContentLoaded', muBoot);
     if (document.readyState !== 'loading') muBoot();
+    window.LRMU = { LY, au, cur: () => cur(), lyToggle: (v) => lyToggle(v), lyLoad: () => lyLoad() };
 })();
 /*MUSIC_END*/
 </script>
@@ -39000,11 +38907,11 @@ Return ONLY JSON with:
         $('grammar-modal-title').innerHTML = E(m.title) + `<span class="gl-mt" dir="${gDir()}" id="gl-mt"></span>`;
         $('grammar-modal-level').textContent = `${m.level} • ${m.category}`;
         gTitles(lang).then((map) => { const e = $('gl-mt'); if (e && map[m.id]) e.textContent = meta.f + ' ' + map[m.id]; }).catch(() => { });
-        const tabs = [['lesson', L.lesson, 'fa-book-open'], ['formula', L.formula, 'fa-table-list'], ['examples', L.examples + ' · 20', 'fa-comments'], ['mistakes', L.mistakes + ' · 20', 'fa-triangle-exclamation'], ['practice', x.practice, 'fa-dumbbell'], ['quiz', L.quiz + ' · 20', 'fa-bolt']];
+        const tabs = [['lesson', L.lesson, 'fa-book-open'], ['formula', L.formula, 'fa-table-list'], ['examples', L.examples + ' · 20', 'fa-comments'], ['mistakes', L.mistakes + ' · 20', 'fa-triangle-exclamation'], ['practice', x.practice, 'fa-dumbbell'], ['quiz', L.quiz + ' · 20', 'fa-bolt'], ['build', 'Write', 'fa-pen-to-square']];
         $('grammar-modal-tabs').innerHTML = tabs.map(([id, label, icon]) => `<button onclick="setGrammarTab('${id}')" class="gl-tab ${tab === id ? 'on' : ''}"><i class="fa-solid ${icon}"></i><span>${E(label)}</span></button>`).join('');
         const c = $('grammar-modal-content');
         if (tab === 'quiz') { gqEnter(); return; }
-        if (tab === 'practice') { pxEnter(); return; }
+        if (tab === 'practice') { pxEnter(); return; } if (tab === 'build') { try { LRB.gramBuild(c, m); } catch (e) { console.error(e); } return; }
         const kind = tab === 'examples' ? 'ex' : tab === 'mistakes' ? 'mk' : 'fm';
         const pk = cached(m, kind);
         let h = gLessonLangRow();
@@ -56272,7 +56179,19 @@ function onState(C,s){C.state.last=s;uiPlay(C)}
 function uiPlay(C){if(!C.ad)return;var pl=!C.ad.paused();C.pp.innerHTML=pl?ICON.pause:ICON.play;C.p.classList.toggle('cn-paused',!pl)}
 function autoFit(C){var v=C.video;if(!v||!v.videoWidth)return;var r=C.stage.getBoundingClientRect();if(!r.width)return;var va=v.videoWidth/v.videoHeight,sa=r.width/r.height,crop=1-Math.min(va,sa)/Math.max(va,sa);C.p.classList.toggle('cn-fill',crop<.13||C.fill===true)}
 function hudSync(C){var LV=['','All new words','Balanced','Hard words'],q=C.p.querySelector('[data-a=lvl]'),z=C.p.querySelector('[data-a=pz]');if(q)q.textContent=LV[SET.lvl];if(z){z.textContent=SET.pz===false?'Keep playing':'Pause on tap';z.classList.toggle('off',SET.pz===false)}var nn=jg(KC,[]).length;C.p.querySelector('.cn-cnt').textContent=nn+(nn===1?' word':' words')+' saved from films'}
-function emptyState(C,k){if(C.cues&&C.cues.length)return;var h={listen:'<div class="cn-wave"><i></i><i></i><i></i><i></i><i></i></div><b>Getting the dialogue ready…</b><span>Every word will be tappable.</span>',whisper:'<div class="cn-wave"><i></i><i></i><i></i><i></i><i></i></div><b>Listening to the film…</b><span>Lines appear here a few seconds after they are spoken. Tap any word.</span>',native:'<b>This player keeps its own controls.</b><span>Smart subtitles work with YouTube videos and film files. You can still load your own subtitle file.</span><button type="button" class="cn-b cn-pill" data-a="file">Load .srt / .vtt</button>',ytstt:'<div class="cn-wave"><i></i><i></i><i></i><i></i><i></i></div><b>Writing the dialogue for you…</b><span>Lines appear here as the film plays, every word tappable. YouTube\'s own subtitles are on in the meantime.</span>',ytcc:'<b>Subtitles are on inside the video.</b><span>YouTube shows its own English subtitles when this video has them. Want tappable words? Load a subtitle file.</span><button type="button" class="cn-b cn-pill" data-a="file">Load .srt / .vtt</button>',none:'<div class="cn-wave off"><i></i><i></i><i></i><i></i><i></i></div><b>Dialogue appears while the film plays.</b><span>Have a subtitle file? Add it and every line shows up here.</span><button type="button" class="cn-b cn-pill" data-a="file">Load .srt / .vtt</button>'}[k]||'';C.list.innerHTML='<div class="cn-empty">'+h+'</div>';C.lines=[]}
+function emptyState(C,k){if(C.cues&&C.cues.length)return;var h={listen:'<div class="cn-wave"><i></i><i></i><i></i><i></i><i></i></div><b>Getting the dialogue ready…</b><span>Every word will be tappable.</span>',whisper:'<div class="cn-wave"><i></i><i></i><i></i><i></i><i></i></div><b>Listening to the film…</b><span>Lines appear here a few seconds after they are spoken. Tap any word.</span>',native:'<b>This player keeps its own controls.</b><span>Smart subtitles work with YouTube videos and film files. You can still load your own subtitle file.</span><button type="button" class="cn-b cn-pill" data-a="file">Load .srt / .vtt</button>',ytstt:'<div class="cn-wave"><i></i><i></i><i></i><i></i><i></i></div><b>Writing the dialogue for you…</b><span>Lines appear here as the film plays, every word tappable. YouTube\'s own subtitles are on in the meantime.</span><div class="cn-dbg"></div>',ytcc:'<b>Tappable subtitles could not be loaded.</b><span>YouTube English subtitles stay on inside the video. For tappable words, try again, let Luna write the lines from the sound, or load a subtitle file.</span><div class="cn-acts"><button type="button" class="cn-b cn-pill" data-a="retry">Try again</button><button type="button" class="cn-b cn-pill" data-a="mic">Caption from sound</button><button type="button" class="cn-b cn-pill" data-a="file">Load .srt / .vtt</button></div><div class="cn-dbg"></div>',none:'<div class="cn-wave off"><i></i><i></i><i></i><i></i><i></i></div><b>Dialogue appears while the film plays.</b><span>Have a subtitle file? Add it and every line shows up here.</span><button type="button" class="cn-b cn-pill" data-a="file">Load .srt / .vtt</button>'}[k]||'';C.list.innerHTML='<div class="cn-empty">'+h+'</div>';C.lines=[];if(k==='ytcc'||k==='ytstt')dbgInfo(C)}
+function dbgInfo(C){if(!/[?&]dbg=1/.test(location.search))return;setTimeout(function(){var el=C.list&&C.list.querySelector('.cn-dbg');if(!el)return;el.textContent='Checking server…';var id=C.src&&C.src.id,out=[];
+ var L=window.LRCALL;if(!L){el.textContent='DEBUG: no server connection in this build';return}
+ L({op:'hello'},12000).then(function(j){out.push('server v'+(j&&j.v))},function(e){out.push('hello: '+(e&&e.message))}).then(function(){return L({op:'yt_caps',v:id},25000)}).then(function(j){out.push('captions: '+(j&&j.cues?j.cues.length+' lines':'none'))},function(e){out.push('captions: '+(e&&e.message))}).then(function(){out.push('sound: '+(C.sttErr||(C.stt&&C.stt.ok?'ok':'pending')));el.textContent='DEBUG · '+out.join(' · ')})},400)}
+function micCaps(C){if(C.mic){try{C.mic.stop()}catch(e){}C.mic=null;emptyState(C,'ytcc');return}
+ var SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){toast('This browser cannot write captions from sound. Try Chrome on Android.');return}
+ var r=new SR();r.lang='en-US';r.continuous=true;r.interimResults=false;var live=true,first=true;C.mic={stop:function(){live=false;try{r.stop()}catch(e){}}};
+ r.onresult=function(ev){for(var i=ev.resultIndex;i<ev.results.length;i++){if(!ev.results[i].isFinal)continue;var tx=clean(ev.results[i][0].transcript);if(!tx)continue;var t=0;try{t=C.ad.t()||0}catch(e){}var n=tx.split(' ').length,d=Math.max(1.6,Math.min(8,n*.42));addLive(C,[{s:Math.max(0,t-d),e:t,t:tx,live:1}])}};
+ r.onerror=function(e){if(e&&(e.error==='not-allowed'||e.error==='service-not-allowed')){live=false;C.mic=null;toast('Allow the microphone so Luna can hear the film.');emptyState(C,'ytcc')}};
+ r.onend=function(){if(live&&!C.dead){try{r.start()}catch(e){}}else if(C.dead){C.mic=null}};
+ try{r.start()}catch(e){toast('Could not start listening');C.mic=null;return}
+ if(!C.cues.length){C.list.innerHTML='<div class="cn-empty"><div class="cn-wave"><i></i><i></i><i></i><i></i><i></i></div><b>Listening to the film…</b><span>Lines appear a few seconds after they are spoken. Turn the volume up and do not use headphones. Tap any word.</span><button type="button" class="cn-b cn-pill" data-a="mic">Stop listening</button></div>'}
+ toast('Luna is listening to the film')}
 function findCues(C){var src=C.src,pre=src.cues;if(pre&&pre.length){setCues(C,pre);return}
  var job=src.k==='yt'?subsYT(src.id):src.k==='ia'?subsIA(src.id).catch(function(){return null}):Promise.resolve(null);
  job.then(function(c){if(C.dead)return;if(c&&c.length){setCues(C,c);return}noCaps(C)}).catch(function(){noCaps(C)})}
@@ -56285,7 +56204,7 @@ function sttStart(C){var id=C.src&&C.src.id;if(!id||C.stt||typeof window.LRCALL!
  function get(k){S.busy[k]=1;S.n++;
   window.LRCALL({op:'yt_stt',v:id,k:k,device:dev},75000).then(function(j){S.n--;delete S.busy[k];if(S.dead||C.dead)return;
    if(j&&j.ok){S.got[k]=1;S.ok++;S.fail=0;if(j.dur)S.dur=j.dur;var add=(j.cues||[]).map(function(x){return{s:+x[0],e:+x[1],t:String(x[2]),live:1}}).filter(function(x){return x.t&&x.e>x.s});if(add.length){S.live=true;addLive(C,add)}}
-   else{S.fail++;S.next=Date.now()+4000}}).catch(function(e){S.n--;delete S.busy[k];var m=String(e&&e.message||e);if(/limit/.test(m)){giveUp('limit');return}if(/busy/.test(m)){S.next=Date.now()+3000;return}S.fail++;S.next=Date.now()+(S.fail<3?4000:9000);if(S.fail>=4&&!S.ok)giveUp('fail')})}
+   else{S.fail++;S.next=Date.now()+4000}}).catch(function(e){S.n--;delete S.busy[k];var m=String(e&&e.message||e);C.sttErr=m;if(/limit/.test(m)){giveUp('limit');return}if(/busy/.test(m)){S.next=Date.now()+3000;return}S.fail++;S.next=Date.now()+(S.fail<3?4000:9000);if(S.fail>=4&&!S.ok)giveUp('fail')})}
  function loop(){if(S.dead||C.dead){clearInterval(S.tm);return}if(!C.ad)return;var t=0;try{t=C.ad.t()||0}catch(e){}var k0=Math.floor(t/60);
   if(S.dur&&k0*60>S.dur+30)return;if(Date.now()<S.next)return;
   var want=[k0];if(S.got[k0]!==undefined)want.push(k0+1);if(S.got[k0]!==undefined&&S.got[k0+1]!==undefined)want.push(k0+2);
@@ -56331,6 +56250,8 @@ function wireUI(C){var p=C.p,ad=function(){return C.ad};
   else if(a==='pz'){SET.pz=SET.pz===false;js(KS,SET);hudSync(C)}
   else if(a==='cc'){if(C.yt){C.ccUser=1;ytCC(C,!C.ccOn)}}
   else if(a==='file'){C.file.click()}
+  else if(a==='retry'){if(C.stt){C.stt.dead=true;clearInterval(C.stt.tm);C.stt=null}C.retried=0;emptyState(C,'listen');findCues(C)}
+  else if(a==='mic'){micCaps(C)}
   else if(a==='deck'){if(ad())ad().pause();window.LCS.deck()}
   else if(a==='go'){var li=b.closest('.cn-l');if(li&&ad()){var c=C.cues[+li.dataset.i];ad().seek(Math.max(0,c.s-.1));ad().play();C.userScroll=0}}
   else if(a==='wclose'){closeWord(C,true)}
@@ -57881,5 +57802,969 @@ function card(){var d=S(),st=status(d),u=U(),nm=String(u.name||'').split(' ')[0]
  '<div class="dl-ft"><button type="button" class="dl-lk" data-dl="skills">Progress</button><button type="button" class="dl-lk" data-dl="bonus">Luna\'s side missions '+done+'/'+bt+'</button><button type="button" class="dl-lk" data-dl="prefs">Plan</button></div></div>'}
 
 })();
+</script><style id="lrb-css">/* ===== LunaRise Boost (v143) ===== */
+.lrb{--b-card:rgba(20,27,52,.82);--b-card2:rgba(30,40,74,.7);--b-line:rgba(255,255,255,.09);--b-ink:#eef1fb;--b-mut:#9aa6c8;--b-acc:#7c8cff;--b-acc2:#22d3ee;--b-ok:#34d399;--b-bad:#fb7185;--b-warn:#fbbf24;color:var(--b-ink);font-family:Inter,system-ui,sans-serif;max-width:860px;margin:0 auto;display:block}
+.lrb *{box-sizing:border-box}
+.lrb-hd{display:flex;flex-wrap:wrap;gap:14px;align-items:flex-end;justify-content:space-between;margin:0 0 16px}
+.lrb-hd h2{margin:0;font-size:28px;font-weight:800;letter-spacing:-.02em}
+.lrb-hd p{margin:4px 0 0;color:var(--b-mut);font-size:14px;line-height:1.5;max-width:520px}
+.lrb-set{display:flex;gap:10px}
+.lrb-set label{display:flex;flex-direction:column;gap:3px;font-size:11px;color:var(--b-mut);font-weight:600}
+.lrb select,.lrb input[type=text],.lrb textarea{background:rgba(8,12,28,.7);border:1px solid var(--b-line);color:var(--b-ink);border-radius:12px;font:inherit;font-size:14px;padding:9px 11px;outline:none}
+.lrb select:focus,.lrb input:focus,.lrb textarea:focus{border-color:var(--b-acc);box-shadow:0 0 0 3px rgba(124,140,255,.22)}
+.lrb-card{background:linear-gradient(180deg,var(--b-card2),var(--b-card));border:1px solid var(--b-line);border-radius:22px;padding:18px;margin:0 0 14px;box-shadow:0 12px 34px rgba(0,0,0,.28)}
+.lrb-card h3{margin:6px 0 2px;font-size:21px;font-weight:700;letter-spacing:-.01em}
+.lrb-ct{display:flex;align-items:center;gap:9px;margin:0 0 12px}
+.lrb-ct b{font-size:15px;font-weight:700}.lrb-ct small{color:var(--b-mut);font-size:12px;margin-left:auto;text-align:right}
+.lrb-ct svg{width:18px;height:18px;color:var(--b-acc2);flex:none}
+.lrb-mut{color:var(--b-mut);font-size:13.5px;line-height:1.5;margin:0}
+.lrb-in{display:block;margin:0 0 10px}.lrb-in span{display:block;font-size:12px;color:var(--b-mut);font-weight:600;margin:0 0 5px}
+.lrb-in input{width:100%;min-height:46px}
+.lrb-chips{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px}
+.lrb-chips button,.lrb-sg button{border:1px solid var(--b-line);background:rgba(255,255,255,.05);color:var(--b-ink);border-radius:999px;font:inherit;font-size:13px;padding:8px 13px;min-height:38px;cursor:pointer;transition:background .15s,border-color .15s}
+.lrb-chips button:hover,.lrb-sg button:hover{background:rgba(255,255,255,.1)}
+.lrb-chips button.alt{border-style:dashed;color:var(--b-acc2)}
+.lrb-row{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 12px}
+.lrb-sg{display:inline-flex;background:rgba(8,12,28,.6);border:1px solid var(--b-line);border-radius:14px;padding:3px;gap:2px;flex-wrap:wrap}
+.lrb-sg button{border:0;background:transparent;border-radius:11px;color:var(--b-mut);font-weight:600}
+.lrb-sg button.on{background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;box-shadow:0 6px 16px -6px rgba(99,102,241,.8)}
+.lrb-go{display:inline-flex;align-items:center;justify-content:center;gap:9px;width:100%;min-height:50px;border:0;border-radius:16px;background:linear-gradient(135deg,#6366f1,#8b5cf6 60%,#22d3ee);color:#fff;font:inherit;font-size:15px;font-weight:700;cursor:pointer;box-shadow:0 12px 26px -10px rgba(99,102,241,.9);transition:transform .15s,opacity .15s}
+.lrb-go:active{transform:scale(.985)}.lrb-go:disabled{opacity:.6;cursor:wait}.lrb-go svg{width:20px;height:20px}
+.lrb-msg{margin:10px 2px 0;font-size:13px;color:var(--b-mut);min-height:18px}.lrb-msg.err,.lrb-bad{color:var(--b-bad)}
+.lrb-sc{display:flex;gap:10px;overflow-x:auto;padding:2px 2px 8px;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch}
+.lrb-scc{flex:0 0 200px;scroll-snap-align:start;text-align:left;border:1px solid var(--b-line);background:rgba(255,255,255,.04);color:var(--b-ink);border-radius:16px;padding:12px;cursor:pointer;font:inherit;display:flex;flex-direction:column;gap:5px;min-height:96px}
+.lrb-scc b{font-size:14px;line-height:1.3}.lrb-scc small{color:var(--b-mut);font-size:12px;margin-top:auto}
+.lrb-scc.on{border-color:var(--b-acc);background:rgba(124,140,255,.14)}
+.lrb-tag{display:inline-block;font-size:11px;font-weight:700;color:#c7d0ff;background:rgba(124,140,255,.18);border-radius:8px;padding:2px 8px;width:max-content}
+.lrb-tags{display:flex;flex-wrap:wrap;gap:6px}
+/* player */
+.lrb-eq{display:flex;align-items:flex-end;justify-content:center;gap:5px;height:46px;margin:16px 0 6px}
+.lrb-eq i{width:6px;height:10px;border-radius:4px;background:linear-gradient(180deg,var(--b-acc2),var(--b-acc));opacity:.5;transition:height .2s}
+.lrb-eq.on i{animation:lrbeq 1s ease-in-out infinite;opacity:1}
+.lrb-eq i:nth-child(2){animation-delay:.12s}.lrb-eq i:nth-child(3){animation-delay:.24s}.lrb-eq i:nth-child(4){animation-delay:.08s}.lrb-eq i:nth-child(5){animation-delay:.3s}.lrb-eq i:nth-child(6){animation-delay:.18s}.lrb-eq i:nth-child(7){animation-delay:.05s}
+@keyframes lrbeq{0%,100%{height:10px}50%{height:42px}}
+.lrb-now{text-align:center;min-height:44px;margin:0 0 12px;font-size:15px;line-height:1.5;color:var(--b-ink)}
+.lrb-ctl{display:flex;justify-content:center;align-items:center;gap:14px;margin:0 0 14px}
+.lrb-bt{width:68px;height:68px;border-radius:50%;border:0;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;display:grid;place-items:center;cursor:pointer;box-shadow:0 14px 30px -10px rgba(99,102,241,.95);transition:transform .15s}
+.lrb-bt svg{width:30px;height:30px}.lrb-bt:active{transform:scale(.94)}.lrb-bt.on{background:linear-gradient(135deg,#0ea5e9,#6366f1)}
+.lrb-ib{width:46px;height:46px;border-radius:50%;border:1px solid var(--b-line);background:rgba(255,255,255,.06);color:var(--b-ink);display:grid;place-items:center;cursor:pointer;font:inherit;font-size:20px;font-weight:700;flex:none}
+.lrb-ib svg{width:20px;height:20px}.lrb-ib.sm{width:40px;height:40px}.lrb-ib.sm svg{width:18px;height:18px}.lrb-ib:hover{background:rgba(255,255,255,.12)}
+.lrb-ib.on,.lrb-ib.done{background:rgba(52,211,153,.2);border-color:rgba(52,211,153,.6);color:var(--b-ok)}
+.lrb-prog{height:7px;border-radius:6px;background:rgba(255,255,255,.1);overflow:hidden}.lrb-prog i{display:block;height:100%;width:0;border-radius:6px;background:linear-gradient(90deg,var(--b-acc2),var(--b-acc));transition:width .3s}
+.lrb-pc{display:flex;justify-content:space-between;gap:10px;margin-top:9px;font-size:12.5px;color:var(--b-mut)}
+.lrb-lk{background:none;border:0;color:var(--b-acc2);font:inherit;font-size:12.5px;font-weight:600;cursor:pointer;padding:6px 0;text-align:right}
+/* questions */
+.lrb-qc{padding:14px 0;border-top:1px solid var(--b-line)}.lrb-qc:first-child{border-top:0;padding-top:2px}
+.lrb-qc>p{margin:0 0 10px;font-size:15px;line-height:1.45}
+.lrb-ops{display:grid;gap:8px}
+.lrb-op{display:flex;align-items:center;gap:11px;text-align:left;width:100%;min-height:48px;border:1px solid var(--b-line);background:rgba(255,255,255,.04);color:var(--b-ink);border-radius:14px;padding:9px 12px;font:inherit;font-size:14.5px;cursor:pointer;transition:background .15s,border-color .15s}
+.lrb-op i{flex:none;width:28px;height:28px;border-radius:9px;background:rgba(255,255,255,.1);display:grid;place-items:center;font-style:normal;font-size:12.5px;font-weight:700}
+.lrb-op.on{border-color:var(--b-acc);background:rgba(124,140,255,.16)}.lrb-op.on i{background:var(--b-acc);color:#fff}
+.lrb-op.ok{border-color:var(--b-ok);background:rgba(52,211,153,.14)}.lrb-op.ok i{background:var(--b-ok);color:#06281c}
+.lrb-op.bad{border-color:var(--b-bad);background:rgba(251,113,133,.13)}.lrb-op.bad i{background:var(--b-bad);color:#2b0710}
+.lrb-why{margin:9px 2px 0!important;font-size:13px!important;color:var(--b-mut)}
+.lrb-q .lrb-go{margin-top:6px}
+/* transcript */
+.lrb-ln{padding:10px 0;border-top:1px solid var(--b-line)}.lrb-ln:first-child{border-top:0}
+.lrb-lh{display:flex;align-items:center;gap:10px}.lrb-lh p{flex:1;margin:0;font-size:15px;line-height:1.5}
+.lrb-lh em{display:block;font-style:normal;font-size:11px;font-weight:700;color:var(--b-acc2);margin-bottom:1px}
+.lrb-lh em.sp1{color:#f0abfc}.lrb-lh em.sp2{color:var(--b-warn)}
+.lrb-ln.now{background:rgba(124,140,255,.12);border-radius:12px;padding-left:8px;padding-right:8px;margin:0 -8px}
+.lrb-ln.rec .mic{background:rgba(251,113,133,.25);border-color:var(--b-bad);color:var(--b-bad);animation:lrbpulse 1.1s infinite}
+@keyframes lrbpulse{0%,100%{box-shadow:0 0 0 0 rgba(251,113,133,.5)}50%{box-shadow:0 0 0 9px rgba(251,113,133,0)}}
+.lrb-res{margin:10px 0 2px 50px;padding:12px;border-radius:14px;background:rgba(8,12,28,.55);border:1px solid var(--b-line)}
+.lrb-hear{margin:0;color:var(--b-mut);font-size:14px}
+.lrb-sco{display:flex;align-items:baseline;gap:9px;margin-bottom:6px}.lrb-sco b{font-size:30px;font-weight:800}.lrb-sco span{font-size:13px;font-weight:700}
+.lrb-sco.great b,.lrb-sco.great span{color:var(--b-ok)}.lrb-sco.good b,.lrb-sco.good span{color:var(--b-acc2)}.lrb-sco.mid b,.lrb-sco.mid span{color:var(--b-warn)}.lrb-sco.low b,.lrb-sco.low span{color:var(--b-bad)}
+.lrb-wd{margin:0 0 4px;font-size:16px;line-height:1.7}.lrb-wd .ok{color:var(--b-ok)}.lrb-wd .miss{color:var(--b-bad);text-decoration:underline wavy rgba(251,113,133,.7);text-underline-offset:4px}
+.lrb-said{margin:0 0 8px;font-size:12.5px;color:var(--b-mut)}
+.lrb-ra{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}.lrb-ra button{border:1px solid var(--b-line);background:rgba(255,255,255,.07);color:var(--b-ink);border-radius:11px;font:inherit;font-size:13px;font-weight:600;padding:8px 12px;min-height:38px;cursor:pointer}
+.lrb-coach{margin-top:10px;padding-top:10px;border-top:1px dashed var(--b-line);font-size:13.5px;line-height:1.5}.lrb-coach ul{margin:0;padding-left:18px}.lrb-coach li{margin:3px 0}
+.lrb-voc{display:grid;gap:8px}.lrb-vw{display:flex;align-items:center;gap:10px;padding:8px 2px}.lrb-vw div{flex:1;min-width:0}.lrb-vw b{display:block;font-size:15px}.lrb-vw small{color:var(--b-mut);font-size:12.5px}
+@media (max-width:560px){.lrb-hd h2{font-size:24px}.lrb-card{padding:15px;border-radius:20px}.lrb-scc{flex-basis:170px}.lrb-res{margin-left:0}}
+@media (prefers-reduced-motion:reduce){.lrb-eq.on i,.lrb-ln.rec .mic{animation:none}.lrb-eq.on i{height:26px}}
+/* hide developer notes from learners */
+.ai-mn{display:none!important}
+/* grammar sentence builder */
+.lrb-gb{max-width:none;display:block}
+.lrb-gbh h3{margin:10px 0 4px;font-size:22px;font-weight:800;letter-spacing:-.01em;color:#fff}
+.lrb-tag.ok{color:#a7f3d0;background:rgba(52,211,153,.18)}
+.lrb-fm{margin:16px 0;padding:14px;border-radius:16px;background:rgba(8,12,28,.55);border:1px solid var(--b-line)}
+.lrb-fm small{display:block;font-size:11px;font-weight:700;color:var(--b-mut);margin-bottom:5px;text-transform:none;letter-spacing:.02em}
+.lrb-fm code{display:block;font:600 13.5px/1.6 ui-monospace,SFMono-Regular,Menlo,monospace;color:#c7d0ff;white-space:pre-wrap;word-break:break-word}
+.lrb-kw{margin-top:12px}.lrb-kw button{margin:0 6px 6px 0;border:1px solid var(--b-line);background:rgba(255,255,255,.06);color:var(--b-ink);border-radius:999px;font:inherit;font-size:13px;padding:6px 12px;min-height:34px;cursor:pointer}
+.lrb-gbl{list-style:none;margin:0 0 16px;padding:0;display:grid;gap:14px}
+.lrb-gbl label{display:flex;align-items:center;gap:10px;margin:0 0 6px;font-size:13px;font-weight:600;color:var(--b-mut)}
+.lrb-gbl label b{flex:none;width:26px;height:26px;border-radius:9px;background:rgba(124,140,255,.22);color:#c7d0ff;display:grid;place-items:center;font-size:13px}
+.lrb-gbl textarea{width:100%;resize:vertical;min-height:64px;line-height:1.5;font-size:15.5px}
+.lrb-gbr{margin-top:9px;padding:12px;border-radius:14px;border:1px solid var(--b-line);background:rgba(8,12,28,.5)}
+.lrb-gbr.ok{border-color:rgba(52,211,153,.5);background:rgba(52,211,153,.07)}.lrb-gbr.bad{border-color:rgba(251,113,133,.5);background:rgba(251,113,133,.06)}.lrb-gbr.mid{border-color:rgba(251,191,36,.5);background:rgba(251,191,36,.06)}
+.lrb-pill{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;border-radius:999px;padding:4px 11px}.lrb-pill svg{width:14px;height:14px}
+.lrb-pill.ok{background:rgba(52,211,153,.2);color:var(--b-ok)}.lrb-pill.bad{background:rgba(251,113,133,.2);color:var(--b-bad)}.lrb-pill.mid{background:rgba(251,191,36,.2);color:var(--b-warn)}
+.lrb-fix{margin:10px 0 0;display:flex;flex-direction:column;gap:2px;font-size:15px;line-height:1.5}.lrb-fix small{font-size:11px;font-weight:700;color:var(--b-mut)}.lrb-fix span{color:#a7f3d0}.lrb-fix.alt span{color:#c7d0ff}
+.lrb-why2{margin:8px 0 0;font-size:13.5px;line-height:1.55;color:var(--b-ink)}.lrb-why2.tr{color:var(--b-mut)}.lrb-why2 i,.lrb-sumc i{font-style:normal;margin-right:4px}
+.lrb-sumc{margin-top:16px;padding:16px;border-radius:18px;background:linear-gradient(135deg,rgba(99,102,241,.2),rgba(34,211,238,.1));border:1px solid var(--b-line)}
+.lrb-sumc>div{display:flex;align-items:center;gap:12px;flex-wrap:wrap}.lrb-sumc b{font-size:17px}.lrb-sumc p{margin:10px 0 0;font-size:14px;line-height:1.5}.lrb-sumc p.tr{color:var(--b-mut)}
+.lrb-stars{display:inline-flex;gap:3px}.lrb-stars i{width:24px;height:24px;color:rgba(255,255,255,.2)}.lrb-stars i.on{color:var(--b-warn)}.lrb-stars svg{width:100%;height:100%}
+.lrb-coach ul{list-style:disc}
+/* my words switch */
+.lrb-my{max-width:none;margin:0 0 4px;padding:14px 16px;border-radius:20px;background:linear-gradient(135deg,rgba(124,140,255,.16),rgba(34,211,238,.08));border:1px solid var(--b-line)}
+.lrb-my.on{border-color:rgba(124,140,255,.6);box-shadow:0 0 0 3px rgba(124,140,255,.14)}
+.lrb-myh{display:flex;align-items:center;gap:14px}.lrb-myh>div{flex:1;min-width:0}
+.lrb-myh b{display:block;font-size:16px;font-weight:700}.lrb-myh small{display:block;margin-top:2px;color:var(--b-mut);font-size:13px;line-height:1.45}
+.lrb-sw{flex:none;position:relative;width:56px;height:32px;border-radius:999px;border:0;background:rgba(255,255,255,.16);cursor:pointer;transition:background .2s;padding:0}
+.lrb-sw i{position:absolute;top:4px;left:4px;width:24px;height:24px;border-radius:50%;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.4);transition:transform .2s}
+.lrb-sw.on{background:linear-gradient(135deg,#6366f1,#22d3ee)}.lrb-sw.on i{transform:translateX(24px)}.lrb-sw:disabled{opacity:.45;cursor:not-allowed}
+.lrb-myc{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0 8px}.lrb-myc span{font-size:12.5px;padding:4px 10px;border-radius:999px;background:rgba(255,255,255,.09)}.lrb-myc span.more{color:var(--b-mut);background:none}
+.lrb-my .lrb-mut{font-size:12.5px}
+/* lyrics gap-fill */
+#mu-lyr p.lrb-gl{cursor:default}
+.lrb-gp{font:inherit;color:#fde68a;background:rgba(251,191,36,.14);border:1px dashed rgba(251,191,36,.7);border-radius:9px;padding:1px 8px;margin:0 2px;cursor:pointer;display:inline-block;line-height:1.3}
+.lrb-gp u{text-decoration:none;display:inline-block;border-bottom:2px solid currentColor;margin-left:2px;min-width:1.2em;height:.9em;vertical-align:-1px}
+.lrb-gw{border-radius:7px;padding:0 5px}.lrb-gw.ok{background:rgba(52,211,153,.22);color:#6ee7b7}.lrb-gw.miss{background:rgba(251,113,133,.2);color:#fda4af}
+.lrb-gchip{position:sticky;top:-14px;z-index:3;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px;margin:-14px -12px 8px;padding:9px 10px;background:rgba(10,14,32,.82);backdrop-filter:blur(10px);font-size:12.5px;color:#cbd5e1;-webkit-mask-image:none}
+.lrb-gchip b{font-weight:800;color:#fff}.lrb-gchip span{font-weight:800;color:#6ee7b7}.lrb-gchip em{font-style:normal;color:#fda4af}
+.lrb-gchip button{border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);color:#e2e8f0;border-radius:999px;font:inherit;font-size:12px;padding:5px 11px;cursor:pointer}
+#mu-gbtn.on{background:linear-gradient(135deg,#f59e0b,#ec4899);color:#fff}
+.lrb-gsheet{position:fixed;inset:0;z-index:99999;display:flex;align-items:flex-end;justify-content:center;background:rgba(3,6,18,.55);opacity:0;transition:opacity .2s}
+.lrb-gsheet.in{opacity:1}
+.lrb-gsc{width:min(560px,100%);background:linear-gradient(180deg,#1b2347,#0f1630);border:1px solid rgba(255,255,255,.12);border-radius:26px 26px 0 0;padding:20px 18px max(20px,env(safe-area-inset-bottom));color:#eef1fb;font-family:Inter,system-ui,sans-serif;transform:translateY(24px);transition:transform .22s}
+.lrb-gsheet.in .lrb-gsc{transform:none}
+.lrb-gsc h3{margin:0 0 4px;font-size:22px}
+.lrb-gq{margin:0 0 16px;font-size:19px;line-height:1.5;font-weight:700;text-align:center}.lrb-gq i{font-style:normal;color:#fde68a;border-bottom:2px dashed #fbbf24;padding:0 6px}
+.lrb-gos{display:grid;gap:9px}.lrb-gos button,.lrb-gms button{min-height:52px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.07);color:#fff;border-radius:16px;font:inherit;font-size:18px;font-weight:700;cursor:pointer}
+.lrb-gos button.ok{background:rgba(52,211,153,.25);border-color:#34d399}.lrb-gos button.bad{background:rgba(251,113,133,.25);border-color:#fb7185;animation:lrbshake .35s}
+@keyframes lrbshake{0%,100%{transform:none}25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
+.lrb-gx{display:block;margin:14px auto 0;background:none;border:0;color:#9aa6c8;font:inherit;font-size:14px;cursor:pointer;padding:8px 16px}
+.lrb-gms{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.lrb-gms button{min-height:44px;padding:0 14px;font-size:15px}.lrb-gms button span{color:#67e8f9;font-size:12.5px;margin-left:6px}.lrb-gms button.on span{color:#6ee7b7}
+.lrb-gsc .lrb-mut{color:#9aa6c8;font-size:13.5px}
+/* AI story */
+.lrb-st{position:fixed;inset:0;z-index:99990;overflow:auto;background:radial-gradient(120% 80% at 50% 0,#1a2150,#080b1c);opacity:0;transition:opacity .18s;font-family:Inter,system-ui,sans-serif;color:#eef1fb;-webkit-overflow-scrolling:touch}
+.lrb-st.in{opacity:1}body.lrb-st-lock{overflow:hidden}
+.lrb-stc{max-width:640px;margin:0 auto;padding:max(16px,env(safe-area-inset-top)) 16px max(28px,env(safe-area-inset-bottom))}
+.lrb-sth{display:flex;gap:12px;align-items:flex-start;margin-bottom:14px}.lrb-sth h2{margin:0;font-size:22px;line-height:1.2}.lrb-sth p{margin:4px 0 0;color:#9aa6c8;font-size:13.5px}
+.lrb-sx{flex:none;width:42px;height:42px;border-radius:50%;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.07);color:#fff;display:grid;place-items:center;cursor:pointer}.lrb-sx svg{width:18px;height:18px}
+.lrb-ctl{display:flex;justify-content:space-between;align-items:baseline;margin:16px 0 8px}.lrb-ctl small{color:#9aa6c8}
+.lrb-st .lrb-chips{display:flex;flex-wrap:wrap;gap:8px}.lrb-st .lrb-chips button{min-height:40px;padding:0 14px;border-radius:999px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);color:#dbe3ff;font:inherit;font-size:14px;cursor:pointer}
+.lrb-st .lrb-chips button.on{background:linear-gradient(135deg,#6d5efc,#22d3ee);color:#fff;border-color:transparent;font-weight:700}
+.lrb-st .lrb-seg{display:flex;flex-wrap:wrap;gap:6px}.lrb-st .lrb-seg button{min-height:40px;padding:0 14px;border-radius:12px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);color:#dbe3ff;font:inherit;font-size:14px;cursor:pointer}.lrb-st .lrb-seg button.on{background:#fff;color:#0b1020;font-weight:700}
+.lrb-row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media(max-width:420px){.lrb-row2{grid-template-columns:1fr}}
+.lrb-st .lrb-go{width:100%;min-height:54px;margin-top:20px;border:0;border-radius:16px;background:linear-gradient(135deg,#6d5efc,#ec4899);color:#fff;font:inherit;font-size:16px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer}.lrb-st .lrb-go:disabled{opacity:.45}.lrb-st .lrb-go svg{width:18px;height:18px}
+.lrb-ld{text-align:center;padding-top:30vh}.lrb-ld p{color:#9aa6c8}.lrb-spin{width:46px;height:46px;margin:0 auto 16px;border-radius:50%;border:4px solid rgba(255,255,255,.15);border-top-color:#22d3ee;animation:lrbsp 1s linear infinite}@keyframes lrbsp{to{transform:rotate(360deg)}}
+.lrb-story{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:22px;padding:18px 18px 8px}.lrb-story p{margin:0 0 14px;font-size:18px;line-height:1.7;border-radius:10px;transition:background .2s}.lrb-story p.now{background:rgba(34,211,238,.12);box-shadow:0 0 0 6px rgba(34,211,238,.12)}
+.lrb-tw{font:inherit;color:#fde68a;background:rgba(251,191,36,.14);border:0;border-bottom:2px solid #fbbf24;border-radius:6px 6px 0 0;padding:0 3px;cursor:pointer}
+.lrb-tip{margin:12px 0;padding:12px 14px;border-radius:14px;background:rgba(255,255,255,.07);color:#cbd5e1;font-size:14.5px;min-height:48px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}.lrb-tip b{color:#fff;font-size:16px}.lrb-tip span{color:#67e8f9}
+.lrb-mini{margin-left:auto;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);color:#fff;border-radius:999px;padding:6px 12px;font:inherit;font-size:13px;cursor:pointer}
+.lrb-bar{display:flex;gap:8px;flex-wrap:wrap}.lrb-bar .lrb-go{width:auto;flex:1 1 140px;margin-top:0}
+.lrb-st .lrb-gh{min-height:50px;padding:0 16px;border-radius:16px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.07);color:#fff;font:inherit;font-size:15px;font-weight:600;cursor:pointer}.lrb-st .lrb-gh.wide{width:100%;margin-top:14px}
+.lrb-qz{margin-top:18px}.lrb-qz h3{margin:0 0 10px}.lrb-qq{margin-bottom:14px;padding:14px;border-radius:18px;background:rgba(255,255,255,.06)}.lrb-qq p{margin:0 0 10px;font-weight:700}.lrb-qo{display:grid;gap:8px}.lrb-qo button{min-height:48px;text-align:left;padding:0 14px;border-radius:14px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);color:#fff;font:inherit;font-size:15px;cursor:pointer}.lrb-qo button.ok{background:rgba(52,211,153,.22);border-color:#34d399}.lrb-qo button.bad{background:rgba(251,113,133,.22);border-color:#fb7185}.lrb-qq small{display:block;margin-top:8px;color:#9aa6c8}.lrb-sc{font-weight:800;color:#6ee7b7;text-align:center}
+.lrb-st .lrb-gx{display:block;margin:12px auto 0;background:none;border:0;color:#9aa6c8;font:inherit;cursor:pointer;padding:8px 16px}
+/* mentors study room */
+.lrb-vid{border-radius:20px;overflow:hidden;background:#000;aspect-ratio:16/9;margin-bottom:12px;border:1px solid rgba(255,255,255,.12)}.lrb-vid iframe{width:100%;height:100%;border:0;display:block}
+.lrb-vph{height:100%;display:flex;flex-direction:column;gap:10px;align-items:center;justify-content:center;text-align:center;padding:18px;background:radial-gradient(90% 90% at 50% 0,#3a1530,#0b0e22)}.lrb-vph b{font-size:18px}.lrb-vph span{color:#9aa6c8;font-size:13.5px;max-width:320px}.lrb-vph a{display:inline-flex;align-items:center;text-decoration:none}
+.lrb-lab{display:block;margin:12px 0 0;font-size:13px;font-weight:700;color:#cbd5e1}.lrb-lab small{font-weight:500;color:#9aa6c8}
+.lrb-lab input,.lrb-lab textarea{display:block;width:100%;margin-top:6px;box-sizing:border-box;border-radius:14px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.07);color:#fff;font:inherit;font-size:15px;padding:12px 14px}.lrb-lab textarea{resize:vertical;min-height:90px}
+.lrb-in{display:flex;gap:8px;margin-top:6px}.lrb-in input{margin-top:0;flex:1;min-width:0}.lrb-in .lrb-gh{min-height:48px}
+.lrb-ext{display:block;margin:8px 2px 0;font-size:13px;color:#67e8f9}
+.lrb-mq{margin-top:16px}.lrb-mq .lrb-seg{margin-top:12px}
+.lrb-err{color:#fda4af;margin:12px 0 0}
+.lrb-qn{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,.14);font-size:13px;margin-right:6px}
+.lrb-res2{text-align:center;padding:16px 8px 4px}.lrb-res2 b{display:block;font-size:34px;color:#6ee7b7}.lrb-res2>span{color:#cbd5e1}
+.lrb-mstudy{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:44px;margin-top:8px;border-radius:12px;border:0;background:linear-gradient(135deg,#6d5efc,#ec4899);color:#fff;font:inherit;font-size:13px;font-weight:800;cursor:pointer}.lrb-mstudy svg{width:15px;height:15px}
+.lrb-mt .lrb-gms{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:12px 0}.lrb-mt .lrb-gms button{min-height:42px;padding:0 14px;border-radius:14px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.07);color:#fff;font:inherit;cursor:pointer}.lrb-mt .lrb-gms span{color:#67e8f9;font-size:12.5px;margin-left:6px}
+.lrb-mt .lrb-ct{display:flex;align-items:center;gap:8px;margin-bottom:6px}.lrb-mt .lrb-ct svg{width:18px;height:18px}.lrb-mt .lrb-mut{color:#9aa6c8;font-size:13.5px;margin:0}
+/* chess commentary */
+.lrb-chcard{background:rgba(15,23,42,.72);border:1px solid rgba(255,255,255,.1);border-radius:18px;padding:14px;margin-bottom:12px;color:#e2e8f0;font-family:Inter,system-ui,sans-serif}
+.lrb-chh{display:flex;align-items:center;gap:8px;margin-bottom:10px}.lrb-chh svg{width:18px;height:18px;color:#67e8f9}.lrb-chh small{margin-left:auto;color:#67e8f9;font-weight:700;font-size:11px}
+.lrb-ctabs{display:flex;gap:4px;padding:3px;border-radius:12px;background:rgba(255,255,255,.06);margin-bottom:12px}.lrb-ctabs button{flex:1;min-height:38px;border:0;border-radius:10px;background:none;color:#9aa6c8;font:inherit;font-size:13.5px;font-weight:700;cursor:pointer}.lrb-ctabs button.on{background:#fff;color:#0b1020}
+.lrb-cnow{padding:12px;border-radius:14px;background:linear-gradient(135deg,rgba(109,94,252,.22),rgba(34,211,238,.12));border:1px solid rgba(255,255,255,.1)}.lrb-cm{font-size:12px;color:#9aa6c8;font-weight:700}.lrb-cl{font-size:19px;font-weight:800;margin:3px 0 6px;color:#fff;line-height:1.25}.lrb-cnow p{margin:0;font-size:14px;line-height:1.55;color:#cbd5e1}
+.lrb-cp{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:10px;padding:9px 10px;border-radius:12px;background:rgba(0,0,0,.25)}.lrb-cp b{color:#fde68a}.lrb-cp span{flex:1 1 140px;font-size:12.5px;color:#9aa6c8}.lrb-cp button{min-width:36px;min-height:36px;border-radius:999px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);color:#fff;font:inherit;font-size:12.5px;padding:0 10px;cursor:pointer;display:grid;place-items:center}.lrb-cp button svg{width:16px;height:16px}.lrb-cp button.on{color:#6ee7b7}
+.lrb-crow{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}.lrb-cg{flex:1 1 130px;min-height:44px;border-radius:12px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.07);color:#fff;font:inherit;font-size:13.5px;font-weight:700;display:flex;gap:6px;align-items:center;justify-content:center;cursor:pointer}.lrb-cg svg{width:16px;height:16px}.lrb-cg.on{background:linear-gradient(135deg,#6d5efc,#22d3ee);border-color:transparent}.lrb-cg:disabled{opacity:.45}
+.lrb-cai{margin-top:8px;font-size:14px;line-height:1.55;color:#cbd5e1}.lrb-cai p{margin:0}.lrb-sp{display:inline-block;width:12px;height:12px;border-radius:50%;border:2px solid #334155;border-top-color:#22d3ee;animation:lrbsp .8s linear infinite;vertical-align:-1px}
+.lrb-chist{margin-top:10px;max-height:150px;overflow:auto;display:grid;gap:5px}.lrb-chist div{display:flex;gap:8px;font-size:12.5px;color:#9aa6c8}.lrb-chist i{font-style:normal;font-weight:800;color:#e2e8f0;flex:none}
+.lrb-gl{display:grid;gap:6px;max-height:340px;overflow:auto}.lrb-gi{display:flex;gap:8px;align-items:center;padding:9px 10px;border-radius:12px;background:rgba(255,255,255,.05)}.lrb-gi div{flex:1;min-width:0}.lrb-gi b{display:block;color:#fff}.lrb-gi span{font-size:12.5px;color:#9aa6c8}.lrb-gi button{flex:none;width:38px;height:38px;border-radius:50%;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.07);color:#fff;display:grid;place-items:center;cursor:pointer}.lrb-gi svg{width:16px;height:16px}
+.lrb-tp{margin:0;padding-left:20px;display:grid;gap:8px;font-size:14px;line-height:1.5;color:#cbd5e1}
+.cn-acts{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:12px}.cn-dbg{margin-top:12px;font-size:11px;color:#fbbf24;word-break:break-word}
+</style><script id="lrb-js">/* ===== LunaRise Boost: shared helpers (v143) ===== */
+(function(){'use strict';
+var D=document,W=window;
+var B=W.LRB=W.LRB||{};
+B.$=function(s,r){return (r||D).querySelector(s)};
+B.$$=function(s,r){return Array.prototype.slice.call((r||D).querySelectorAll(s))};
+B.esc=function(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})};
+B.jget=function(k,d){try{var v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}};
+B.jset=function(k,v){try{localStorage.setItem(k,JSON.stringify(v));return true}catch(e){return false}};
+B.toast=function(m){try{showToast(m)}catch(e){}};
+B.aiOn=function(){try{return !!aiKey()}catch(e){return false}};
+B.user=function(){try{return state.user||{}}catch(e){return{}}};
+B.save=function(){try{pfSave()}catch(e){}};
+B.level=function(){try{return (W.LAB&&LAB.level&&LAB.level())||'B1'}catch(e){return 'B1'}};
+B.langCode=function(){try{return (W.LRW&&LRW.lang&&LRW.lang())||'uz'}catch(e){return 'uz'}};
+B.langName=function(c){try{var l=trL(c||B.langCode());return{n:l.n||c,f:l.f||'',rtl:!!l.rtl}}catch(e){return{n:c||'Uzbek',f:'',rtl:false}}};
+/* one place to ask the AI for JSON: retries once, repairs loose JSON */
+B.ai=async function(sys,user,o){
+  o=o||{};
+  if(!B.aiOn())throw new Error('noai');
+  var last=null;
+  for(var i=0;i<2;i++){
+    try{
+      var r=await LAB.ai(sys,user,{t:o.t==null?.6:o.t,max:o.max||1600,ms:o.ms||45000,json:o.json!==false});
+      if(o.check&&!o.check(r))throw new Error('shape');
+      return r
+    }catch(e){last=e;if(e&&(e.message==='limit'||e.message==='noai'))break}
+  }
+  throw last||new Error('ai')
+};
+B.aiErr=function(e){try{return LAB.aiErr(e)}catch(x){return 'The AI did not answer. Check your internet and try again.'}};
+/* words: normalise for comparison */
+B.norm=function(s){return String(s||'').toLowerCase().replace(/[’‘`]/g,"'").replace(/[^a-z0-9' ]+/g,' ').replace(/\s+/g,' ').trim()};
+B.shuffle=function(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t}return a};
+B.pick=function(a){return a[Math.floor(Math.random()*a.length)]};
+/* speech synthesis with sentence callbacks */
+var VO=[];function loadV(){try{VO=speechSynthesis.getVoices()||[]}catch(e){}}
+try{loadV();speechSynthesis.addEventListener('voiceschanged',loadV)}catch(e){}
+B.voices=function(acc){var re=acc==='UK'?/^en[-_]GB/i:acc==='AU'?/^en[-_]AU/i:/^en[-_]US/i;var v=VO.filter(function(x){return re.test(x.lang)});if(!v.length)v=VO.filter(function(x){return /^en/i.test(x.lang)});return v};
+B.speak=function(text,o,done){
+  o=o||{};
+  if(!('speechSynthesis' in W)){done&&done(false);return null}
+  try{speechSynthesis.cancel()}catch(e){}
+  var u=new SpeechSynthesisUtterance(text),vs=B.voices(o.acc||'US'),vi=o.voice||0;
+  u.lang=(o.acc==='UK'?'en-GB':'en-US');
+  if(vs.length)u.voice=vs[Math.min(vi,vs.length-1)];
+  u.rate=o.rate||1;u.pitch=o.pitch||1;
+  var fin=false,f=function(ok){if(fin)return;fin=true;clearTimeout(wd);done&&done(ok)};
+  /* some Android voices never fire onend: a watchdog frees the player */
+  var wd=setTimeout(function(){f(true)},Math.max(4000,text.length*(o.rate&&o.rate<.9?140:95)+2500));
+  u.onend=function(){f(true)};u.onerror=function(e){f(false)};
+  setTimeout(function(){try{speechSynthesis.speak(u)}catch(e){f(false)}},60);
+  return u
+};
+B.stopSpeak=function(){try{speechSynthesis.cancel()}catch(e){}};
+/* speech recognition wrapper: one phrase, with interim text */
+B.listen=function(o,cb){
+  var SR=W.SpeechRecognition||W.webkitSpeechRecognition;
+  if(!SR){cb({err:'unsupported'});return null}
+  var r;try{r=new SR()}catch(e){cb({err:'unsupported'});return null}
+  r.lang=o.lang||'en-US';r.interimResults=true;r.continuous=false;r.maxAlternatives=3;
+  var fin=false,txt='',conf=0,dn=function(x){if(fin)return;fin=true;cb(x)};
+  r.onresult=function(e){var s='';for(var i=e.resultIndex;i<e.results.length;i++){var a=e.results[i][0];s+=a.transcript+' ';conf=a.confidence||conf;if(e.results[i].isFinal)txt=(txt+' '+a.transcript).trim()}if(!txt)cb({interim:s.trim()},true);};
+  r.onerror=function(e){dn({err:e&&e.error||'error',text:txt})};
+  r.onend=function(){dn({text:txt,conf:conf})};
+  try{r.start()}catch(e){dn({err:'start'})}
+  return r
+};
+/* compare what was said with the target sentence: per-word hits + score 0-100 */
+B.compare=function(target,said){
+  var T=B.norm(target).split(' ').filter(Boolean),S=B.norm(said).split(' ').filter(Boolean);
+  var n=T.length,m=S.length,dp=[],i,j;
+  for(i=0;i<=n;i++){dp[i]=[];for(j=0;j<=m;j++)dp[i][j]=0}
+  var same=function(a,b){if(a===b)return true;if(a.length>3&&b.length>3&&Math.abs(a.length-b.length)<=1){var d=0,k;for(k=0;k<Math.min(a.length,b.length);k++)if(a[k]!==b[k])d++;return d<=1&&a.length>4}return false};
+  for(i=1;i<=n;i++)for(j=1;j<=m;j++)dp[i][j]=same(T[i-1],S[j-1])?dp[i-1][j-1]+1:Math.max(dp[i-1][j],dp[i][j-1]);
+  var hit=new Array(n).fill(false);i=n;j=m;
+  while(i>0&&j>0){if(same(T[i-1],S[j-1])){hit[i-1]=true;i--;j--}else if(dp[i-1][j]>=dp[i][j-1])i--;else j--}
+  var ok=hit.filter(Boolean).length,extra=Math.max(0,m-ok);
+  var score=n?Math.max(0,Math.round(ok/n*100-Math.min(15,extra*3))):0;
+  return{words:T,hit:hit,score:score,said:S.join(' ')}
+};
+/* the dictionary's Uzbek (or learner-language) meaning for a word, sync from cache */
+B.hit=function(w,code){try{var h=LRW.hit(w,code||'uz');return h&&h.m?String(h.m):''}catch(e){return ''}};
+B.tr=function(w,code){try{return LRW.tr(w,code||'uz').then(function(r){return r&&r.m?String(r.m):''},function(){return ''})}catch(e){return Promise.resolve('')}};
+B.savedWords=function(){var u=B.user();return (u.savedWords||[]).filter(function(w){return typeof w==='string'&&w.trim()})};
+B.saveWord=function(w){var u=B.user();u.savedWords=u.savedWords||[];if(u.savedWords.some(function(x){return String(x).toLowerCase()===String(w).toLowerCase()}))return false;u.savedWords.push(w);B.save();try{updateHeaderUI()}catch(e){}return true};
+B.hasWord=function(w){return B.savedWords().some(function(x){return x.toLowerCase()===String(w).toLowerCase()})};
+/* lightweight JSON extraction from a text reply */
+B.parse=function(t){try{return JSON.parse(t)}catch(e){var a=t.indexOf('{'),b=t.lastIndexOf('}');if(a>=0&&b>a){try{return JSON.parse(t.slice(a,b+1))}catch(x){}}}return null};
+/* an English-only icon set (no emoji dependence on the device font) */
+B.IC={play:'<svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg>',pause:'<svg viewBox="0 0 24 24"><path d="M7 5h4v14H7zM13 5h4v14h-4z" fill="currentColor"/></svg>',mic:'<svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>',vol:'<svg viewBox="0 0 24 24"><path d="M4 9.5v5h4l5 4v-13l-5 4z" fill="currentColor"/><path d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>',redo:'<svg viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.6-5.9M20 4v5h-5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>',prev:'<svg viewBox="0 0 24 24"><path d="M7 5v14M19 5.5v13L9 12z" fill="currentColor" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>',next:'<svg viewBox="0 0 24 24"><path d="M17 5v14M5 5.5v13L15 12z" fill="currentColor" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>',check:'<svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>',x:'<svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>',spark:'<svg viewBox="0 0 24 24"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8zM18.5 16l.8 2.2 2.2.8-2.2.8-.8 2.2-.8-2.2-2.2-.8 2.2-.8z" fill="currentColor"/></svg>',star:'<svg viewBox="0 0 24 24"><path d="M12 3.5l2.6 5.4 5.9.8-4.3 4.1 1 5.9-5.2-2.8-5.2 2.8 1-5.9L3.5 9.7l5.9-.8z" fill="currentColor"/></svg>',book:'<svg viewBox="0 0 24 24"><path d="M5 4.5h10a3 3 0 0 1 3 3V20H8a3 3 0 0 1-3-3zM5 17a3 3 0 0 1 3-3h10" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>',pen:'<svg viewBox="0 0 24 24"><path d="M4 20l1-4L16.5 4.5a2 2 0 0 1 3 3L8 19z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>',back:'<svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>'};
+/* views: run a mount function the first time a view opens (and again if it is wiped) */
+var mounts={};
+B.onView=function(id,fn){mounts[id]=fn;try{if(D.body.getAttribute('data-view')===id)setTimeout(function(){fn(true)},0)}catch(e){}};
+function chk(){var v=D.body.getAttribute('data-view');if(v&&mounts[v]){try{mounts[v](false)}catch(e){console.error('LRB mount '+v,e)}}}
+try{new MutationObserver(chk).observe(D.body,{attributes:true,attributeFilter:['data-view']})}catch(e){}
+})();
+
+/* ===== Audio Engine: AI scenario generator, sentence player, speaking check ===== */
+(function(){'use strict';
+var B=LRB,$=B.$,$$=B.$$,esc=B.esc,IC=B.IC;
+var HK='lrb_scn',PK='lrb_au_pref';
+var TOPICS=['Booking a hotel room','A job interview','A doctor’s appointment','Lecture: climate change','Podcast: how sleep works','Airport check-in','Renting a flat','A museum tour','Ordering at a restaurant','Calling customer service','Planning a trip abroad','Talk: how black holes form','University open day','Buying a phone','A study group meeting','Volunteering abroad'];
+var KINDS={conversation:'Conversation',monologue:'Monologue',lecture:'Lecture'};
+var LVS=['A2','B1','B2','C1'];
+var A={scn:null,i:-1,play:false,tok:0,sel:{},graded:false,sc:{},showT:false,busy:false,gen:{topic:'',lv:'',kind:'conversation',len:'std'}};
+var P=Object.assign({acc:'US',rate:1},B.jget(PK,{}));
+function savePref(){B.jset(PK,P)}
+function hist(){return B.jget(HK,[])}
+function pushHist(s){var h=hist().filter(function(x){return x.id!==s.id});h.unshift(s);B.jset(HK,h.slice(0,12))}
+function splitLines(t){return String(t||'').replace(/\s+/g,' ').split(/(?<=[.?!])\s+(?=[A-Z“"'‘(])/).map(function(x){return x.trim()}).filter(Boolean)}
+function builtins(){try{return listeningScenarios.map(function(s,i){return{id:'b'+i,builtin:1,title:s.title,desc:s.desc,level:['B1','B2','B2','C1'][i]||'B2',kind:i===0?'conversation':i===3?'lecture':'monologue',speakers:['Speaker'],lines:splitLines(s.text).map(function(t){return{s:0,t:t}}),qs:s.questions.map(function(q){return{q:q.q,o:q.opts.slice(),a:q.ans,why:''}}),vocab:[]}})}catch(e){return[]}}
+function valid(r){if(!r||!Array.isArray(r.lines)||r.lines.length<4||!Array.isArray(r.questions)||r.questions.length<3)return false;return r.questions.every(function(q){return q&&q.q&&Array.isArray(q.o)&&q.o.length>=3&&typeof q.a==='number'&&q.a>=0&&q.a<q.o.length})&&r.lines.every(function(l){return l&&String(l.t||'').trim()})}
+function norm(r,g){var sp=(Array.isArray(r.speakers)&&r.speakers.length?r.speakers:['Speaker']).map(String).slice(0,3);
+  return{id:'g'+Date.now(),ts:Date.now(),title:String(r.title||g.topic||'Listening').slice(0,80),desc:String(r.desc||'').slice(0,200),level:g.lv,kind:g.kind,topic:g.topic,speakers:sp,
+   lines:r.lines.slice(0,26).map(function(l){var s=Number(l.s);return{s:isFinite(s)&&s>=0&&s<sp.length?s:0,t:String(l.t).trim()}}),
+   qs:r.questions.slice(0,8).map(function(q){return{q:String(q.q),o:q.o.slice(0,4).map(String),a:q.a,why:String(q.why||'')}}),
+   vocab:(r.vocab||[]).slice(0,8).filter(function(v){return v&&v.w}).map(function(v){return{w:String(v.w),m:String(v.m||'')}})}}
+function root(){return $('#lrb-au-root')}
+/* ---------- shell ---------- */
+function shell(){
+  var r=root();if(!r)return;
+  var lv=B.level();if(LVS.indexOf(lv)<0)lv=/^C/.test(lv)?'C1':/^A/.test(lv)?'A2':'B1';
+  if(!A.gen.lv)A.gen.lv=lv;
+  r.innerHTML='<div class="lrb lrb-au">'+
+  '<header class="lrb-hd"><div><h2>Audio Engine</h2><p>Unlimited listening practice. Choose any topic and Luna writes the script, reads it aloud, asks questions and checks how you speak.</p></div>'+
+  '<div class="lrb-set"><label>Accent<select id="lrb-acc"><option value="US">US</option><option value="UK">UK</option></select></label><label>Speed<select id="lrb-rate"><option value=".75">0.75×</option><option value=".9">0.9×</option><option value="1">1×</option><option value="1.15">1.15×</option><option value="1.3">1.3×</option></select></label></div></header>'+
+  '<section class="lrb-card lrb-gen" aria-label="Create a scenario"><div class="lrb-ct">'+IC.spark+'<b>Create your own scenario</b></div>'+
+  '<label class="lrb-in"><span>Topic</span><input id="lrb-topic" type="text" maxlength="80" placeholder="Anything: ordering food, a job interview, black holes…" autocomplete="off"></label>'+
+  '<div class="lrb-chips" id="lrb-tchips"></div>'+
+  '<div class="lrb-row"><div class="lrb-sg" role="group" aria-label="Level" id="lrb-lv"></div><div class="lrb-sg" role="group" aria-label="Format" id="lrb-kd"></div></div>'+
+  '<div class="lrb-row"><div class="lrb-sg" role="group" aria-label="Length" id="lrb-ln"><button type="button" data-v="short">Short · 1 min</button><button type="button" data-v="std">Standard · 2 min</button></div></div>'+
+  '<button type="button" class="lrb-go" id="lrb-gen">'+IC.spark+' Generate scenario</button><p class="lrb-msg" id="lrb-gmsg" role="status"></p></section>'+
+  '<section class="lrb-card" aria-label="Ready-made scenarios"><div class="lrb-ct"><b>Ready-made and recent</b></div><div class="lrb-sc" id="lrb-sc"></div></section>'+
+  '<div id="lrb-au-play"></div></div>';
+  $('#lrb-acc').value=P.acc;$('#lrb-rate').value=String(P.rate);
+  $('#lrb-acc').onchange=function(){P.acc=this.value;savePref();if(A.play)restart()};
+  $('#lrb-rate').onchange=function(){P.rate=parseFloat(this.value)||1;savePref();if(A.play)restart()};
+  var tc=$('#lrb-tchips');tc.innerHTML=B.shuffle(TOPICS).slice(0,6).map(function(t){return '<button type="button" data-t="'+esc(t)+'">'+esc(t)+'</button>'}).join('')+'<button type="button" class="alt" data-t="*">Surprise me</button>';
+  tc.onclick=function(e){var b=e.target.closest('button');if(!b)return;var t=b.dataset.t;if(t==='*')t=B.pick(TOPICS);$('#lrb-topic').value=t;A.gen.topic=t};
+  $('#lrb-topic').oninput=function(){A.gen.topic=this.value};
+  function seg(id,items,key){var el=$(id);el.innerHTML=items.map(function(x){return '<button type="button" data-v="'+x[0]+'" class="'+(A.gen[key]===x[0]?'on':'')+'">'+x[1]+'</button>'}).join('');el.onclick=function(e){var b=e.target.closest('button');if(!b)return;A.gen[key]=b.dataset.v;$$('button',el).forEach(function(x){x.classList.toggle('on',x===b)})}}
+  seg('#lrb-lv',LVS.map(function(x){return[x,x]}),'lv');
+  seg('#lrb-kd',Object.keys(KINDS).map(function(k){return[k,KINDS[k]]}),'kind');
+  var ln=$('#lrb-ln');$$('button',ln).forEach(function(b){b.classList.toggle('on',b.dataset.v===A.gen.len)});ln.onclick=function(e){var b=e.target.closest('button');if(!b)return;A.gen.len=b.dataset.v;$$('button',ln).forEach(function(x){x.classList.toggle('on',x===b)})};
+  $('#lrb-gen').onclick=generate;
+  paintList();
+  if(A.scn)paintPlayer();
+}
+function paintList(){
+  var el=$('#lrb-sc');if(!el)return;var all=builtins().concat([]),h=hist();
+  var cards=h.concat(all).map(function(s){return '<button type="button" class="lrb-scc'+(A.scn&&A.scn.id===s.id?' on':'')+'" data-id="'+esc(s.id)+'"><span class="lrb-tag">'+esc(s.level||'')+'</span><b>'+esc(s.title)+'</b><small>'+esc(KINDS[s.kind]||'Listening')+' · '+s.lines.length+' sentences'+(s.builtin?'':' · yours')+'</small></button>'}).join('');
+  el.innerHTML=cards||'<p class="lrb-mut">Nothing here yet.</p>';
+  el.onclick=function(e){var b=e.target.closest('.lrb-scc');if(!b)return;var s=hist().concat(builtins()).filter(function(x){return x.id===b.dataset.id})[0];if(s){load(s,true)}}
+}
+/* ---------- generate ---------- */
+async function generate(){
+  if(A.busy)return;
+  var g=A.gen,topic=String(g.topic||'').trim();if(!topic){topic=B.pick(TOPICS);$('#lrb-topic').value=topic;g.topic=topic}
+  var msg=$('#lrb-gmsg'),btn=$('#lrb-gen');
+  if(!B.aiOn()){msg.className='lrb-msg err';msg.textContent='AI is not connected yet. Open AI Tutor once to connect it, or pick a ready-made scenario below.';return}
+  A.busy=true;btn.disabled=true;msg.className='lrb-msg';var steps=['Writing the script…','Adding questions…','Choosing key words…'],si=0;msg.textContent=steps[0];var iv=setInterval(function(){si=(si+1)%steps.length;msg.textContent=steps[si]},3500);
+  var n=g.len==='short'?8:14,two=g.kind==='conversation';
+  var sys='You write English listening-practice scripts for learners. Reply with JSON only, no other text:\n{"title":"short title","desc":"one sentence: who is speaking and where","speakers":["Name1"'+(two?',"Name2"':'')+'],"lines":[{"s":0,"t":"one sentence spoken"}],"questions":[{"q":"question","o":["A","B","C"],"a":0,"why":"why this is right, max 14 words"}],"vocab":[{"w":"useful word or phrase from the script","m":"simple English meaning, max 8 words"}]}\nRules: level '+g.lv+' (CEFR). Format: '+g.kind+(two?' between two speakers with natural turns, first names, realistic details':g.kind==='lecture'?' by one academic speaker with a clear structure':' by one speaker')+'. Exactly '+n+' lines; every line is ONE sentence of at most 22 words; "s" is the speaker index. Include concrete details (numbers, names, times, prices) so questions can test them. 5 questions: mix detail, number, gist and inference; exactly 3 options each; vary where the right answer sits ("a" is its index); wrong options must be plausible; never use "all of the above". 5 vocab items that appear in the script.';
+  try{
+    var r=await B.ai(sys,'Topic: '+topic.replace(/[\r\n]+/g,' '),{t:.8,max:2400,ms:55000,check:valid});
+    var s=norm(r,g);pushHist(s);load(s,true);paintList();msg.textContent='';
+  }catch(e){msg.className='lrb-msg err';msg.textContent=B.aiErr(e)}
+  clearInterval(iv);A.busy=false;btn.disabled=false
+}
+/* ---------- player ---------- */
+function load(s,scroll){
+  stop();A.scn=s;A.i=-1;A.sel={};A.graded=false;A.sc={};A.showT=false;paintList();paintPlayer();
+  if(scroll){var p=$('#lrb-au-play');if(p)p.scrollIntoView({behavior:'smooth',block:'start'})}
+}
+function paintPlayer(){
+  var el=$('#lrb-au-play');if(!el||!A.scn)return;var s=A.scn;
+  var tags='<span class="lrb-tag">'+esc(s.level||'')+'</span><span class="lrb-tag">'+esc(KINDS[s.kind]||'Listening')+'</span>'+(s.speakers.length>1?'<span class="lrb-tag">'+s.speakers.length+' speakers</span>':'');
+  el.innerHTML='<article class="lrb-card lrb-pl" aria-label="Player"><div class="lrb-tags">'+tags+'</div><h3>'+esc(s.title)+'</h3><p class="lrb-mut">'+esc(s.desc)+'</p>'+
+  '<div class="lrb-eq" id="lrb-eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><p class="lrb-now" id="lrb-now" aria-live="polite">Press play and listen. Questions are below.</p>'+
+  '<div class="lrb-ctl"><button type="button" class="lrb-ib" data-a="prev" aria-label="Previous sentence">'+IC.prev+'</button><button type="button" class="lrb-bt" data-a="play" id="lrb-play" aria-label="Play">'+IC.play+'</button><button type="button" class="lrb-ib" data-a="next" aria-label="Next sentence">'+IC.next+'</button><button type="button" class="lrb-ib" data-a="again" aria-label="Repeat sentence">'+IC.redo+'</button></div>'+
+  '<div class="lrb-prog" id="lrb-prog" role="progressbar" aria-valuemin="0" aria-valuemax="'+s.lines.length+'"><i id="lrb-pbar"></i></div><div class="lrb-pc"><span id="lrb-pc">0 / '+s.lines.length+'</span><button type="button" class="lrb-lk" data-a="tr" id="lrb-trb">Show transcript and speaking practice</button></div></article>'+
+  '<section class="lrb-card lrb-q" aria-label="Questions"><div class="lrb-ct"><b>Questions</b><small id="lrb-qsc"></small></div><div id="lrb-qs"></div><button type="button" class="lrb-go" id="lrb-chk">Check answers</button></section>'+
+  '<section class="lrb-card lrb-trc" id="lrb-trc" hidden aria-label="Transcript"><div class="lrb-ct"><b>Transcript</b><small>Tap '+'the speaker to hear a sentence. Tap the microphone, say it, and Luna scores you.</small></div><div id="lrb-tr"></div></section>'+
+  (s.vocab&&s.vocab.length?'<section class="lrb-card" aria-label="Key words"><div class="lrb-ct"><b>Key words</b><small>Tap + to save a word to My Words</small></div><div class="lrb-voc" id="lrb-voc"></div></section>':'');
+  var ctl=$('.lrb-ctl',el);ctl.onclick=function(e){var b=e.target.closest('button');if(!b)return;var a=b.dataset.a;if(a==='play')toggle();else if(a==='prev')go(A.i<=0?0:A.i-1);else if(a==='next')go(Math.min(s.lines.length-1,A.i+1));else if(a==='again')go(Math.max(0,A.i))};
+  $('#lrb-trb').onclick=function(){setT(!A.showT)};
+  paintQs();paintTr();paintVoc();$('#lrb-chk').onclick=grade;setT(A.showT,true)
+}
+function setT(on,quiet){A.showT=!!on;var c=$('#lrb-trc'),b=$('#lrb-trb');if(c)c.hidden=!on;if(b)b.textContent=on?'Hide transcript':'Show transcript and speaking practice';if(on&&!quiet){var n=$('#lrb-trc');if(n)n.scrollIntoView({behavior:'smooth',block:'nearest'})}}
+function paintQs(){
+  var s=A.scn,el=$('#lrb-qs');if(!el)return;
+  el.innerHTML=s.qs.map(function(q,qi){return '<div class="lrb-qc" data-q="'+qi+'"><p><b>'+(qi+1)+'.</b> '+esc(q.q)+'</p><div class="lrb-ops">'+q.o.map(function(o,oi){return '<button type="button" class="lrb-op" data-q="'+qi+'" data-o="'+oi+'"><i>'+String.fromCharCode(65+oi)+'</i><span>'+esc(o)+'</span></button>'}).join('')+'</div><p class="lrb-why" hidden></p></div>'}).join('');
+  el.onclick=function(e){var b=e.target.closest('.lrb-op');if(!b||A.graded)return;var q=+b.dataset.q;A.sel[q]=+b.dataset.o;$$('.lrb-op[data-q="'+q+'"]',el).forEach(function(x){x.classList.toggle('on',x===b)})}
+}
+function grade(){
+  var s=A.scn;if(A.graded){retry();return}
+  var n=s.qs.length,answered=Object.keys(A.sel).length;if(answered<n){B.toast('Answer all '+n+' questions first');return}
+  var ok=0;s.qs.forEach(function(q,qi){var row=$('.lrb-qc[data-q="'+qi+'"]'),good=A.sel[qi]===q.a;if(good)ok++;$$('.lrb-op',row).forEach(function(b,oi){b.classList.remove('on');if(oi===q.a)b.classList.add('ok');else if(oi===A.sel[qi])b.classList.add('bad')});var w=$('.lrb-why',row);if(q.why||!good){w.hidden=false;w.textContent=(good?'Correct. ':'The answer is '+String.fromCharCode(65+q.a)+'. ')+(q.why||'')}});
+  A.graded=true;var pct=Math.round(ok/n*100);$('#lrb-qsc').textContent=ok+' / '+n+' · '+pct+'%';var c=$('#lrb-chk');c.textContent='Try again';
+  setT(true);toast2(ok,n);
+  try{var u=B.user();u.auStats=u.auStats||{n:0,best:0,ok:0,all:0};u.auStats.n++;u.auStats.ok+=ok;u.auStats.all+=n;u.auStats.best=Math.max(u.auStats.best,pct);B.save()}catch(e){}
+  try{pfFeed('listening','Finished the listening “'+s.title+'” ('+ok+'/'+n+')')}catch(e){}
+  if(pct>=80){try{triggerConfetti()}catch(e){}}
+}
+function toast2(ok,n){B.toast(ok===n?'Perfect score!':ok/n>=.6?'Good listening: '+ok+' of '+n:'Listen again and try once more')}
+function retry(){A.sel={};A.graded=false;paintQs();var c=$('#lrb-chk');if(c)c.textContent='Check answers';var q=$('#lrb-qsc');if(q)q.textContent=''}
+/* ---------- transcript + speaking check ---------- */
+function paintTr(){
+  var s=A.scn,el=$('#lrb-tr');if(!el)return;
+  el.innerHTML=s.lines.map(function(l,i){var sp=s.speakers.length>1?'<em class="sp'+(l.s%3)+'">'+esc(s.speakers[l.s]||'')+'</em>':'';
+   return '<div class="lrb-ln" data-i="'+i+'"><div class="lrb-lh"><button type="button" class="lrb-ib sm" data-a="say" aria-label="Hear sentence '+(i+1)+'">'+IC.vol+'</button><p>'+sp+'<span class="lrb-tx">'+esc(l.t)+'</span></p><button type="button" class="lrb-ib sm mic" data-a="mic" aria-label="Say sentence '+(i+1)+' aloud">'+IC.mic+'</button></div><div class="lrb-res" hidden></div></div>'}).join('');
+  el.onclick=function(e){var b=e.target.closest('button');if(!b){var ln=e.target.closest('.lrb-ln');return}var ln=b.closest('.lrb-ln'),i=+ln.dataset.i;var a=b.dataset.a;
+    if(a==='say'){go(i,true)}else if(a==='mic'){shadow(i)}else if(a==='slow'){B.stopSpeak();A.play=false;ui();B.speak(s.lines[i].t,{acc:P.acc,rate:.6,voice:s.lines[i].s,pitch:pitchFor(s,s.lines[i].s)},null)}else if(a==='retry'){shadow(i)}else if(a==='coach'){coach(i,b)}}
+}
+var rec=null;
+function shadow(i){
+  var s=A.scn,ln=$('.lrb-ln[data-i="'+i+'"]'),res=$('.lrb-res',ln),mic=$('.mic',ln);
+  stop();if(rec){try{rec.abort&&rec.abort()}catch(e){}rec=null}
+  $$('.lrb-ln.rec').forEach(function(x){x.classList.remove('rec')});
+  ln.classList.add('rec');res.hidden=false;res.innerHTML='<p class="lrb-hear">Listening… say the sentence now.</p>';
+  rec=B.listen({lang:P.acc==='UK'?'en-GB':'en-US'},function(x,interim){
+    if(interim){var h=$('.lrb-hear',res);if(h)h.textContent=x.interim||'Listening…';return}
+    ln.classList.remove('rec');rec=null;
+    if(x.err){res.innerHTML='<p class="lrb-bad">'+(x.err==='unsupported'?'This browser cannot check speech. Use Chrome on Android or desktop.':x.err==='not-allowed'||x.err==='service-not-allowed'?'Microphone is blocked. Allow it for this site and try again.':x.err==='no-speech'?'I did not hear anything. Tap the microphone and try again.':'Could not listen. Try again.')+'</p><div class="lrb-ra"><button type="button" data-a="retry">Try again</button></div>';return}
+    var c=B.compare(s.lines[i].t,x.text||'');
+    var words=s.lines[i].t.split(/\s+/);
+    /* show the original words (with punctuation) coloured by whether they were heard */
+    var T=c.words,k=0,html=words.map(function(w){var nw=B.norm(w).split(' ').filter(Boolean);if(!nw.length)return esc(w);var ok=true;nw.forEach(function(){if(!c.hit[k++])ok=false});return '<span class="'+(ok?'ok':'miss')+'">'+esc(w)+'</span>'}).join(' ');
+    var best=Math.max(A.sc[i]||0,c.score);A.sc[i]=best;
+    var tier=c.score>=90?['great','Excellent']:c.score>=70?['good','Good']:c.score>=40?['mid','Nearly there']:['low','Try again'];
+    res.innerHTML='<div class="lrb-sco '+tier[0]+'"><b>'+c.score+'</b><span>'+tier[1]+'</span></div><p class="lrb-wd">'+html+'</p>'+(x.text?'<p class="lrb-said">You said: “'+esc(x.text)+'”</p>':'')+
+     '<div class="lrb-ra"><button type="button" data-a="retry">Try again</button><button type="button" data-a="slow">Hear it slowly</button>'+(c.score<90&&B.aiOn()?'<button type="button" data-a="coach">Coach me</button>':'')+'</div><div class="lrb-coach" hidden></div>';
+    res.dataset.said=x.text||'';
+    if(c.score>=90){mic.classList.add('done')}
+  });
+  if(!rec){/* listen() already reported the error */}
+}
+async function coach(i,btn){
+  var s=A.scn,ln=$('.lrb-ln[data-i="'+i+'"]'),res=$('.lrb-res',ln),box=$('.lrb-coach',res),said=res.dataset.said||'';
+  var c=B.compare(s.lines[i].t,said),miss=c.words.filter(function(w,k){return !c.hit[k]});
+  box.hidden=false;box.innerHTML='<p class="lrb-mut">Luna is listening to the difference…</p>';btn.disabled=true;
+  var lg=B.langName(),extra=B.langCode()==='en'?'':' Also add "tr": the same advice in '+lg.n+' (max 25 words).';
+  try{var r=await B.ai('You are a kind pronunciation coach for a learner whose first language is '+lg.n+'. Reply JSON only: {"tips":["tip 1","tip 2"],"tr":""}. Give at most 2 short tips (max 18 words each) about the specific sounds or stress the learner likely got wrong. Be concrete: name the sound, the mouth position or the stressed syllable.'+extra,
+    'Target sentence: '+s.lines[i].t+'\nThe speech recogniser heard: '+(said||'(nothing)')+'\nWords that were missed or different: '+(miss.join(', ')||'none'),{t:.3,max:400,ms:25000});
+    var tips=(r.tips||[]).slice(0,2);box.innerHTML='<ul>'+tips.map(function(t){return '<li>'+esc(t)+'</li>'}).join('')+'</ul>'+(r.tr?'<p class="lrb-mut" dir="auto">'+esc(r.tr)+'</p>':'')}
+  catch(e){box.innerHTML='<p class="lrb-bad">'+esc(B.aiErr(e))+'</p>'}
+  btn.disabled=false
+}
+function paintVoc(){
+  var s=A.scn,el=$('#lrb-voc');if(!el)return;
+  el.innerHTML=s.vocab.map(function(v){var sv=B.hasWord(v.w);return '<div class="lrb-vw"><div><b>'+esc(v.w)+'</b><small>'+esc(v.m)+'</small></div><button type="button" class="lrb-ib sm'+(sv?' on':'')+'" data-w="'+esc(v.w)+'" aria-label="'+(sv?'Saved':'Save word')+'">'+(sv?IC.check:'+')+'</button></div>'}).join('');
+  el.onclick=function(e){var b=e.target.closest('button');if(!b)return;var w=b.dataset.w;if(B.hasWord(w)){B.toast('Already in My Words');return}B.saveWord(w);b.classList.add('on');b.innerHTML=IC.check;B.toast('Saved “'+w+'”')}
+}
+/* ---------- playback ---------- */
+function pitchFor(s,sp){var vs=B.voices(P.acc);if(s.speakers.length<2)return 1;if(vs.length>=2)return 1;return sp===0?1.12:.82}
+function ui(){
+  var b=$('#lrb-play');if(b){b.innerHTML=A.play?IC.pause:IC.play;b.setAttribute('aria-label',A.play?'Pause':'Play');b.classList.toggle('on',A.play)}
+  var eq=$('#lrb-eq');if(eq)eq.classList.toggle('on',A.play);
+  var s=A.scn;if(!s)return;var n=s.lines.length,i=Math.max(0,A.i+1);
+  var bar=$('#lrb-pbar');if(bar)bar.style.width=(A.i<0?0:(A.i+1)/n*100)+'%';var pc=$('#lrb-pc');if(pc)pc.textContent=Math.max(0,A.i+1)+' / '+n;
+  var now=$('#lrb-now');if(now){if(A.i<0)now.textContent='Press play and listen. Questions are below.';else if(A.showT)now.textContent=s.lines[A.i].t;else now.textContent='Sentence '+(A.i+1)+' of '+n+(s.speakers.length>1?' · '+(s.speakers[s.lines[A.i].s]||''):'')}
+  $$('.lrb-ln').forEach(function(x){x.classList.toggle('now',+x.dataset.i===A.i&&A.play)});
+  if(A.showT&&A.play){var cur=$('.lrb-ln.now');if(cur){var r=cur.getBoundingClientRect();if(r.top<80||r.bottom>innerHeight-80)cur.scrollIntoView({block:'center',behavior:'smooth'})}}
+}
+function go(i,single){
+  var s=A.scn;if(!s)return;if(!('speechSynthesis' in window)){B.toast('This browser cannot read text aloud');return}
+  var my=++A.tok;A.i=i;A.play=true;ui();var l=s.lines[i];
+  B.speak(l.t,{acc:P.acc,rate:P.rate,voice:l.s,pitch:pitchFor(s,l.s)},function(){
+    if(my!==A.tok)return;
+    if(single){A.play=false;ui();return}
+    if(i+1>=s.lines.length){A.play=false;A.i=s.lines.length-1;ui();var now=$('#lrb-now');if(now)now.textContent='Finished. Answer the questions, or play it again.';return}
+    setTimeout(function(){if(my===A.tok)go(i+1)},s.speakers.length>1?420:240)
+  })
+}
+function toggle(){if(A.play){stop();return}var s=A.scn;if(!s)return;go(A.i>=s.lines.length-1||A.i<0?0:A.i)}
+function stop(){A.tok++;A.play=false;B.stopSpeak();ui()}
+function restart(){var i=Math.max(0,A.i);stop();setTimeout(function(){go(i)},120)}
+/* ---------- mount ---------- */
+function mount(){
+  var r=root();if(!r)return;
+  if(!r.firstChild){shell()}
+}
+B.onView('listening',mount);
+/* leaving the page stops the voice and the microphone */
+try{new MutationObserver(function(){var v=document.body.getAttribute('data-view');if(v!=='listening'&&(A.play||rec)){stop();if(rec){try{rec.abort&&rec.abort()}catch(e){}rec=null}}}).observe(document.body,{attributes:true,attributeFilter:['data-view']})}catch(e){}
+B.au={state:A,load:load,stop:stop,generate:generate,builtins:builtins,grade:grade,shell:shell};
+})();
+
+/* ===== Grammar Pro: AI Sentence Builder (a "Write" tab inside every lesson) ===== */
+(function(){'use strict';
+var B=LRB,$=B.$,$$=B.$$,esc=B.esc,IC=B.IC;
+var drafts={},results={};
+var PROMPTS=['About you or your daily life','About a friend, a family member or someone you know','About a plan, a place or something you saw'];
+function keysOf(m){return String(m.keys||'').split(',').map(function(x){return x.trim()}).filter(Boolean).slice(0,6)}
+function gl(){try{return gLang()}catch(e){return 'uz'}}
+function stars(n){var h='';for(var i=0;i<3;i++)h+='<i class="'+(i<n?'on':'')+'">'+IC.star+'</i>';return '<span class="lrb-stars" aria-label="'+n+' of 3">'+h+'</span>'}
+B.gramBuild=function(c,m){
+  if(!c||!m)return;
+  var d=drafts[m.id]=drafts[m.id]||['','',''],res=results[m.id]||null,ex=(m.examples||[]).slice(0,3).map(function(e){return e[0]});
+  var best=((B.user().gb||{})[m.id]||{}).best||0;
+  var keys=keysOf(m);
+  c.innerHTML='<div class="lrb lrb-gb"><div class="lrb-gbh"><div class="lrb-tags"><span class="lrb-tag">Sentence Builder</span>'+(best?'<span class="lrb-tag ok">Best '+best+'/3</span>':'')+'</div><h3>Write 3 sentences with “'+esc(m.title)+'”</h3><p class="lrb-mut">Use this grammar in your own life. Luna checks every sentence, fixes it and explains the mistake.</p></div>'+
+  '<div class="lrb-fm"><small>Pattern</small><code>'+esc(m.formula)+'</code>'+(keys.length?'<div class="lrb-kw"><small>Helpful words</small>'+keys.map(function(k){return '<button type="button" data-k="'+esc(k)+'">'+esc(k)+'</button>'}).join('')+'</div>':'')+'</div>'+
+  '<ol class="lrb-gbl">'+[0,1,2].map(function(i){return '<li data-i="'+i+'"><label for="lrb-gs'+i+'"><b>'+(i+1)+'</b><span>'+esc(PROMPTS[i])+'</span></label><textarea id="lrb-gs'+i+'" rows="2" maxlength="220" placeholder="'+(ex[i]?'For example: '+esc(ex[i]):'Write one sentence')+'" spellcheck="false" autocapitalize="sentences">'+esc(d[i])+'</textarea><div class="lrb-gbr" hidden></div></li>'}).join('')+'</ol>'+
+  '<button type="button" class="lrb-go" id="lrb-gck">'+IC.spark+' Check with Luna</button><p class="lrb-msg" id="lrb-gmsg2" role="status"></p><div id="lrb-gsum"></div></div>';
+  $$('textarea',c).forEach(function(t,i){t.oninput=function(){d[i]=t.value}});
+  $('.lrb-kw',c)&&($('.lrb-kw',c).onclick=function(e){var b=e.target.closest('button');if(!b)return;var t=$$('textarea',c).filter(function(x){return !x.value.trim()})[0]||document.activeElement;if(t&&t.tagName==='TEXTAREA'){t.value=(t.value?t.value+' ':'')+b.dataset.k;t.dispatchEvent(new Event('input'));t.focus()}});
+  $('#lrb-gck').onclick=function(){check(c,m)};
+  if(res)show(c,m,res)
+};
+async function check(c,m){
+  var d=drafts[m.id],items=[];d.forEach(function(t,i){t=String(t||'').trim();if(t)items.push({i:i,t:t})});
+  var msg=$('#lrb-gmsg2',c),btn=$('#lrb-gck',c);
+  if(!items.length){msg.className='lrb-msg err';msg.textContent='Write at least one sentence first.';return}
+  if(!B.aiOn()){msg.className='lrb-msg err';msg.textContent='AI is not connected yet. Open AI Tutor once to connect it, then come back.';return}
+  btn.disabled=true;msg.className='lrb-msg';msg.textContent='Luna is reading your sentences…';
+  var lg=B.langName(gl()),extra=gl()==='en'?'':' Also give "tr": the same explanation in '+lg.n+' (max 28 words), and "tip_tr" in '+lg.n+'.';
+  try{
+    var r=await B.ai('You are a precise but kind English grammar teacher. The learner studies the topic "'+m.title+'" (pattern: '+m.formula+'). For EACH sentence decide: "ok" (grammatically correct and natural), "uses" (it really uses the topic grammar), "fixed" (the corrected sentence; identical to the original if ok), "why" (max 24 words, simple English; name the exact error and the rule, or say what is good), "better" (a more natural version, or empty). Reply JSON only: {"items":[{"i":0,"ok":true,"uses":true,"fixed":"","why":"","tr":"","better":""}],"tip":"one practical tip for this topic, max 20 words","tip_tr":""}.'+extra+' Keep the same order and the same "i" values as given.',
+      items.map(function(x){return x.i+': '+x.t}).join('\n'),{t:.2,max:1200,ms:40000,check:function(r){return r&&Array.isArray(r.items)&&r.items.length>=1}});
+    var byI={};r.items.forEach(function(x,k){var ix=(x&&typeof x.i==='number'&&items.some(function(y){return y.i===x.i}))?x.i:items[k]&&items[k].i;if(ix!=null)byI[ix]=x});
+    var out={items:items.map(function(x){var a=byI[x.i]||{};return{i:x.i,t:x.t,ok:!!a.ok,uses:a.uses!==false,fixed:String(a.fixed||x.t),why:String(a.why||''),tr:String(a.tr||''),better:String(a.better||'')}}),tip:String(r.tip||''),tip_tr:String(r.tip_tr||''),n:items.length};
+    results[m.id]=out;show(c,m,out);record(m,out);msg.textContent=''
+  }catch(e){msg.className='lrb-msg err';msg.textContent=B.aiErr(e)}
+  btn.disabled=false
+}
+function record(m,out){
+  var good=out.items.filter(function(x){return x.ok&&x.uses}).length;
+  try{var u=B.user();u.gb=u.gb||{};var o=u.gb[m.id]||{best:0,n:0};o.n=(o.n||0)+1;if(out.n>=3)o.best=Math.max(o.best||0,good);o.ts=Date.now();u.gb[m.id]=o;B.save()}catch(e){}
+  out.items.forEach(function(x){if(!x.ok){try{LAB.err.add({k:'grammar',t:x.t,fix:x.fixed,why:x.why,src:'Sentence Builder · '+m.title})}catch(e){}}});
+  try{pfFeed('grammar','Wrote sentences with “'+m.title+'” ('+good+'/'+out.n+' correct)')}catch(e){}
+  if(good===3&&out.n>=3){try{triggerConfetti()}catch(e){}}
+}
+function show(c,m,out){
+  var lg=B.langName(gl()),rtl=lg.rtl?' dir="rtl"':'';
+  out.items.forEach(function(x){
+    var li=$('li[data-i="'+x.i+'"]',c);if(!li)return;var box=$('.lrb-gbr',li);box.hidden=false;
+    var st=x.ok&&x.uses?['ok','Correct']:x.ok&&!x.uses?['mid','Correct English, but not this grammar']:['bad','Needs a fix'];
+    box.className='lrb-gbr '+st[0];
+    box.innerHTML='<div class="lrb-gbs"><span class="lrb-pill '+st[0]+'">'+(st[0]==='ok'?IC.check:st[0]==='bad'?IC.x:'!')+' '+st[1]+'</span></div>'+
+      (x.ok?'':'<p class="lrb-fix"><small>Better</small><span>'+esc(x.fixed)+'</span></p>')+
+      (x.why?'<p class="lrb-why2">'+esc(x.why)+'</p>':'')+
+      (x.tr?'<p class="lrb-why2 tr"'+rtl+'><i>'+esc(lg.f)+'</i> '+esc(x.tr)+'</p>':'')+
+      (x.better&&x.better!==x.fixed&&x.better!==x.t?'<p class="lrb-fix alt"><small>More natural</small><span>'+esc(x.better)+'</span></p>':'')+
+      '<div class="lrb-ra"><button type="button" data-a="say" data-t="'+esc(x.fixed)+'">Hear it</button>'+(x.ok?'':'<button type="button" data-a="use" data-t="'+esc(x.fixed)+'" data-i="'+x.i+'">Use the fix</button>')+'</div>';
+  });
+  var good=out.items.filter(function(x){return x.ok&&x.uses}).length,sum=$('#lrb-gsum',c);
+  sum.innerHTML='<div class="lrb-sumc"><div>'+stars(good)+'<b>'+good+' of '+out.n+' correct</b></div>'+(out.tip?'<p>'+esc(out.tip)+'</p>':'')+(out.tip_tr?'<p class="tr"'+rtl+'><i>'+esc(lg.f)+'</i> '+esc(out.tip_tr)+'</p>':'')+(out.n<3?'<p class="lrb-mut">Write all 3 sentences to earn the full star score.</p>':'')+'</div>';
+  c.onclick=function(e){var b=e.target.closest('button[data-a]');if(!b)return;if(b.dataset.a==='say'){try{speakText(b.dataset.t)}catch(x){B.speak(b.dataset.t,{},null)}}else if(b.dataset.a==='use'){var ta=$('#lrb-gs'+b.dataset.i,c);if(ta){ta.value=b.dataset.t;drafts[m.id][+b.dataset.i]=b.dataset.t;ta.focus()}}};
+  var last=$('#lrb-gck',c);if(last)last.innerHTML=IC.spark+' Check again'
+}
+})();
+
+/* ===== Game Zone: "Only my words" ===== */
+(function(){'use strict';
+var B=LRB,$=B.$,$$=B.$$,esc=B.esc;
+var K='lrb_my_on',EM=['⭐','💡','🎯','📘','🧠','✨','🔥','🚀','🌟','🧩','🎒','🔑'];
+function words(){return B.savedWords().filter(function(w){return /^[A-Za-z][A-Za-z' -]{1,24}$/.test(w.trim())}).map(function(w){return w.trim()})}
+function enough(){return words().length>=4}
+var MY=B.my={
+  min:4,
+  on:function(){return !!B.jget(K,false)&&enough()},
+  flag:function(){return !!B.jget(K,false)},
+  set:function(v){B.jset(K,!!v);if(v)MY.prep();paint()},
+  words:words,
+  uz:function(w){return B.hit(w,'uz')},
+  prep:function(){var ws=words().filter(function(w){return !B.hit(w,'uz')}).slice(0,40),i=0;(function nx(){if(i>=ws.length)return;var w=ws[i++];B.tr(w,'uz').then(function(){setTimeout(nx,60)})})()},
+  /* Word Dash needs emoji + english + uzbek, single plain words */
+  dash:function(){return words().filter(function(w){return /^[a-z]{3,9}$/i.test(w)}).map(function(w,i){return{em:EM[(w.charCodeAt(0)+w.length)%EM.length],en:w.toLowerCase(),uz:MY.uz(w)}})},
+  /* Neon Typer: one drone word. Same rules as the normal bank: different first letters on screen */
+  neon:function(S,kind){
+    var all=words().map(function(w){return{w:w.toLowerCase(),uz:MY.uz(w)}});if(all.length<MY.min)return null;
+    var tr=S.modeK==='tr';if(tr)all=all.filter(function(x){return x.uz});if(all.length<3)return null;
+    var onScreen=S.drones.map(function(d){return d.ans}),firsts={};S.drones.forEach(function(d){firsts[d.ans[0]]=1});
+    var want=kind==='carrier'?function(x){return x.w.length>=5}:function(x){return x.w.length<=9};
+    var pool=all.filter(want);if(!pool.length)pool=all;
+    var order=B.shuffle(pool),seen=S.usedW||{};
+    for(var pass=0;pass<2;pass++)for(var i=0;i<order.length;i++){var x=order[i];if(onScreen.indexOf(x.w)>=0||firsts[x.w[0]])continue;if(pass===0&&seen[x.w])continue;seen[x.w]=1;return{ans:x.w,uz:tr?x.uz:(x.uz||'')}}
+    return null
+  },
+  boss:function(S){var all=words().map(function(w){return{ans:w.toLowerCase(),uz:MY.uz(w)}});if(S.modeK==='tr')all=all.filter(function(x){return x.uz});if(all.length<3)return null;return B.shuffle(all).slice(0,3)},
+  /* Real or Wrong: the AI writes cards that all use the learner's words */
+  rwMsgs:function(){
+    var ws=B.shuffle(words()).slice(0,12);
+    return[{role:'system',content:'You write quiz cards for English learners (B1–C1) that train SPECIFIC vocabulary. Return ONLY JSON: {"cards":[{"deck":"vocab","s":"one sentence that contains the target word","ok":true|false,"fix":"the corrected sentence if ok is false, changing as few words as possible","why":"short reason, max 14 words"}]}. Every sentence must contain one of the target words (use each at least once, twice if you can). About half the sentences must be wrong. A wrong sentence uses the target word incorrectly (wrong meaning, wrong collocation, wrong preposition or wrong form) so that fixing it teaches how the word is really used. Do not make a sentence wrong by misspelling.'},{role:'user',content:'Target words: '+ws.join(', ')+'. Make 24 cards.'}]
+  }
+};
+/* ---------- the switch on the Games page ---------- */
+function paint(){
+  var r=$('#lrb-my-root');if(!r)return;
+  var ws=words(),ok=ws.length>=MY.min,on=MY.flag()&&ok;
+  r.innerHTML='<div class="lrb lrb-my'+(on?' on':'')+(ok?'':' off')+'"><div class="lrb-myh"><div><b>Only my words</b><small>'+(ok?'Word Dash, Neon Typer and Real or Wrong use the '+ws.length+' words you saved.':'Save at least '+MY.min+' words in the Dictionary to unlock this. You have '+ws.length+'.')+'</small></div>'+
+   '<button type="button" class="lrb-sw'+(on?' on':'')+'" role="switch" aria-checked="'+on+'" aria-label="Only my words"'+(ok?'':' disabled')+'><i></i></button></div>'+
+   (on?'<div class="lrb-myc">'+ws.slice(-10).reverse().map(function(w){return '<span>'+esc(w)+'</span>'}).join('')+(ws.length>10?'<span class="more">+'+(ws.length-10)+' more</span>':'')+'</div><p class="lrb-mut">Real or Wrong needs AI: Luna writes sentences that test how your words are used.</p>':'')+'</div>';
+  var sw=$('.lrb-sw',r);if(sw)sw.onclick=function(){MY.set(!MY.flag());B.toast(MY.flag()?'Games now use only your saved words':'Games use all words again')}
+}
+window.LRMY=MY;
+B.onView('games',function(){paint();MY.prep()});
+})();
+
+/* ===== Music: Lyrics Gap-Fill ===== */
+(function(){'use strict';
+var B=LRB,$=B.$,$$=B.$$,esc=B.esc;
+var STOP='the and you your with that this have for are was were but not what when where which who whom from they them their there then than will would could should about into over just like been being does did done can cant dont don\'t i\'m it\'s that\'s you\'re we\'re they\'re i\'ll i\'ve ain\'t gonna wanna gotta cause yeah baby oh ooh hey uh na la'.split(' ');
+var FILL=['love','time','heart','night','light','dream','fire','mind','life','home','day','eyes','soul','rain','sky','run'];
+var G={on:false,key:'',res:{},total:0,hit:0,miss:0,hint:B.jget('lrb_gap_hint',true),lines:{},done:false};
+function M(){return window.LRMU||null}
+function seed(s){var h=2166136261;for(var i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return function(){h=Math.imul(h^h>>>15,2246822507);h=Math.imul(h^h>>>13,3266489909);h^=h>>>16;return(h>>>0)/4294967296}}
+function tokens(t){var out=[],re=/([A-Za-z][A-Za-z']*)|([^A-Za-z]+)/g,m;while((m=re.exec(t)))out.push(m[1]?{w:m[1]}:{p:m[2]});return out}
+function pickBlanks(t,i,key){
+  var tk=tokens(t),cand=[];tk.forEach(function(x,k){if(x.w&&x.w.replace(/'/g,'').length>=4&&STOP.indexOf(x.w.toLowerCase())<0)cand.push(k)});
+  var words=tk.filter(function(x){return x.w}).length;if(words<4||!cand.length)return{tk:tk,b:[]};
+  var rnd=seed(key+'|'+i),n=words>=9&&cand.length>=3?2:1,b=[];
+  cand=cand.slice();while(b.length<n&&cand.length){var j=Math.floor(rnd()*cand.length);var k=cand.splice(j,1)[0];if(b.every(function(x){return Math.abs(x-k)>1}))b.push(k)}
+  return{tk:tk,b:b.sort(function(a,c){return a-c})}
+}
+function pool(){var m=M();if(!m||!m.LY.lines&&!G.allWords)return G.allWords||[];return G.allWords}
+function collect(box){var set={};$$('p[data-i]',box).forEach(function(p){tokens(p.dataset.t||p.textContent).forEach(function(x){if(x.w&&x.w.replace(/'/g,'').length>=4&&STOP.indexOf(x.w.toLowerCase())<0)set[x.w.toLowerCase()]=1})});return Object.keys(set)}
+function opts(ans,all,rnd){
+  var a=ans.toLowerCase(),near=all.filter(function(w){return w!==a&&Math.abs(w.length-a.length)<=2&&w[0]!==a[0]}),far=all.filter(function(w){return w!==a});
+  var d=B.shuffle(near.length>=2?near:far).slice(0,2);if(d.length<2)d=d.concat(B.shuffle(FILL.filter(function(w){return w!==a&&d.indexOf(w)<0})).slice(0,2-d.length));
+  return B.shuffle([a].concat(d))
+}
+/* called by the music code every time the lyrics are drawn */
+B.gapRender=function(){
+  var m=M();if(!m)return;var box=$('#mu-lyr');if(!box)return;
+  if(m.LY.key!==G.key){G.key=m.LY.key;G.res={};G.hit=0;G.miss=0;G.total=0;G.done=false;G.lines={}}
+  document.body.classList.toggle('lrb-gap-on',G.on);
+  if(!G.on)return;
+  var ps=$$('p[data-i]',box);if(!ps.length)return;
+  G.allWords=collect(box);G.total=0;
+  ps.forEach(function(p){
+    var i=+p.dataset.i;if(p.classList.contains('mu-int'))return;var txt=p.dataset.t||p.textContent;p.dataset.t=txt;
+    var pb=G.lines[i]||(G.lines[i]=pickBlanks(txt,i,G.key));if(!pb.b.length)return;
+    p.classList.add('lrb-gl');
+    p.innerHTML=pb.tk.map(function(x,k){
+      if(x.p)return esc(x.p);var bi=pb.b.indexOf(k);if(bi<0)return esc(x.w);
+      var id=i+'.'+k,r=G.res[id];G.total++;
+      if(r)return '<span class="lrb-gw '+r+'">'+esc(x.w)+'</span>';
+      return '<button type="button" class="lrb-gp" data-i="'+i+'" data-k="'+k+'" aria-label="Missing word, '+x.w.length+' letters">'+(G.hint?esc(x.w[0]):'')+'<u>'+'&nbsp;'.repeat(Math.max(2,x.w.length-(G.hint?1:0)))+'</u></button>'
+    }).join('')
+  });
+  chip(box)
+};
+function chip(box){
+  var c=$('.lrb-gchip',box);if(!c){c=document.createElement('div');c.className='lrb-gchip';box.insertBefore(c,box.firstChild)}
+  var left=G.total-G.hit-G.miss;
+  c.innerHTML='<b>Gap-fill</b><span>'+G.hit+' / '+G.total+'</span>'+(G.miss?'<em>'+G.miss+' missed</em>':'')+'<button type="button" data-a="hint" aria-pressed="'+G.hint+'">First letter '+(G.hint?'on':'off')+'</button>'+(G.done||left===0&&G.total?'<button type="button" data-a="sum">Results</button>':'');
+}
+function resolve(id,ok){if(G.res[id])return;G.res[id]=ok?'ok':'miss';if(ok)G.hit++;else G.miss++}
+/* tapping a blank opens the three choices */
+function sheet(i,k,btn){
+  var pb=G.lines[i],ans=pb.tk[k].w,o=opts(ans,G.allWords||[]);
+  var sh=$('#lrb-gsheet');if(sh)sh.remove();
+  sh=document.createElement('div');sh.id='lrb-gsheet';sh.className='lrb-gsheet';sh.setAttribute('role','dialog');sh.setAttribute('aria-label','Choose the missing word');
+  var line=pb.tk.map(function(x,j){return x.p?esc(x.p):(j===k?'<i>_____</i>':esc(x.w))}).join('');
+  sh.innerHTML='<div class="lrb-gsc"><p class="lrb-gq">'+line+'</p><div class="lrb-gos">'+o.map(function(w){return '<button type="button" data-w="'+esc(w)+'">'+esc(w)+'</button>'}).join('')+'</div><button type="button" class="lrb-gx" data-a="close">Close</button></div>';
+  document.body.appendChild(sh);requestAnimationFrame(function(){sh.classList.add('in')});
+  sh.onclick=function(e){var b=e.target.closest('button');if(!b){if(e.target===sh)close();return}
+    if(b.dataset.a==='close'){close();return}
+    var w=b.dataset.w,ok=w===ans.toLowerCase(),id=i+'.'+k;
+    b.classList.add(ok?'ok':'bad');$$('.lrb-gos button',sh).forEach(function(x){x.disabled=true;if(x.dataset.w===ans.toLowerCase())x.classList.add('ok')});
+    resolve(id,ok);try{navigator.vibrate&&navigator.vibrate(ok?12:[30,40,30])}catch(x){}
+    setTimeout(function(){close();B.gapRender()},ok?380:900)};
+  function close(){sh.classList.remove('in');setTimeout(function(){sh.remove()},200)}
+}
+/* lines that have already passed reveal themselves */
+function sweep(){
+  var m=M();if(!G.on||!m||!m.LY.on)return;var ci=m.LY.ci,changed=false;
+  if(ci>=1){Object.keys(G.lines).forEach(function(i){if(+i<ci-1)G.lines[i].b.forEach(function(k){var id=i+'.'+k;if(!G.res[id]){G.res[id]='miss';G.miss++;changed=true}})})}
+  var last=m.LY.lines?m.LY.lines.length-1:(m.LY.est||0)-1;
+  if(!G.done&&G.total&&(m.au.ended||(last>0&&ci>=last&&m.au.duration&&m.au.currentTime>m.au.duration-3))){G.done=true;changed=true;finish()}
+  if(changed&&!$('#lrb-gsheet'))B.gapRender()
+}
+function finish(){
+  var left=0;Object.keys(G.lines).forEach(function(i){G.lines[i].b.forEach(function(k){if(!G.res[i+'.'+k]){G.res[i+'.'+k]='miss';G.miss++}})});
+  var pct=G.total?Math.round(G.hit/G.total*100):0;B.toast('Gap-fill: '+G.hit+' of '+G.total+' ('+pct+'%)');
+  try{var u=B.user();u.gap=u.gap||{n:0,best:0};u.gap.n++;u.gap.best=Math.max(u.gap.best,pct);B.save()}catch(e){}
+  try{pfFeed('music','Finished a lyrics gap-fill ('+G.hit+'/'+G.total+')')}catch(e){}
+}
+function summary(){
+  var miss=[];Object.keys(G.lines).forEach(function(i){G.lines[i].b.forEach(function(k){if(G.res[i+'.'+k]==='miss')miss.push(G.lines[i].tk[k].w.toLowerCase())})});
+  miss=miss.filter(function(w,i){return miss.indexOf(w)===i});
+  var sh=document.createElement('div');sh.id='lrb-gsheet';sh.className='lrb-gsheet';var pct=G.total?Math.round(G.hit/G.total*100):0;
+  sh.innerHTML='<div class="lrb-gsc"><h3>'+G.hit+' of '+G.total+' · '+pct+'%</h3><p class="lrb-mut">'+(miss.length?'Words you missed. Save them to practise in games and flashcards.':'You found every word. Excellent listening!')+'</p>'+(miss.length?'<div class="lrb-gms">'+miss.map(function(w){var sv=B.hasWord(w);return '<button type="button" data-w="'+esc(w)+'" class="'+(sv?'on':'')+'">'+esc(w)+' <span>'+(sv?'Saved':'+ Save')+'</span></button>'}).join('')+'</div>':'')+'<button type="button" class="lrb-gx" data-a="close">Close</button></div>';
+  var old=$('#lrb-gsheet');if(old)old.remove();document.body.appendChild(sh);requestAnimationFrame(function(){sh.classList.add('in')});
+  sh.onclick=function(e){var b=e.target.closest('button');if(!b){if(e.target===sh){sh.remove()}return}if(b.dataset.a==='close'){sh.classList.remove('in');setTimeout(function(){sh.remove()},200);return}var w=b.dataset.w;if(!B.hasWord(w)){B.saveWord(w);b.classList.add('on');b.querySelector('span').textContent='Saved';B.toast('Saved “'+w+'”')}}
+}
+B.gapToggle=function(){
+  var m=M();if(!m){return}
+  if(!m.cur()){B.toast('Play a song first, then turn on Gap-fill');return}
+  G.on=!G.on;var b=$('#mu-gbtn');if(b)b.classList.toggle('on',G.on);
+  if(G.on){if(!m.LY.on)m.lyToggle(true);else B.gapRender();B.toast('Tap the blanks and choose the missing word')}
+  else{document.body.classList.remove('lrb-gap-on');var box=$('#mu-lyr');if(box){$$('p.lrb-gl',box).forEach(function(p){p.classList.remove('lrb-gl');p.textContent=p.dataset.t});var c=$('.lrb-gchip',box);if(c)c.remove();G.lines={}}}
+};
+document.addEventListener('click',function(e){
+  var gp=e.target.closest&&e.target.closest('.lrb-gp');
+  if(gp){e.stopPropagation();e.preventDefault();sheet(+gp.dataset.i,+gp.dataset.k,gp);return}
+  var gw=e.target.closest&&e.target.closest('.lrb-gw');if(gw){e.stopPropagation();return}
+  var ch=e.target.closest&&e.target.closest('.lrb-gchip button');
+  if(ch){e.stopPropagation();var a=ch.dataset.a;if(a==='hint'){G.hint=!G.hint;B.jset('lrb_gap_hint',G.hint);B.gapRender()}else if(a==='sum')summary()}
+},true);
+setInterval(sweep,400);
+B.gap=G;
+})();
+
+/* ===== My Words: AI Story Builder ===== */
+(function(){'use strict';
+var B=LRB,$=B.$,$$=B.$$,esc=B.esc,IC=B.IC;
+var GEN=['Funny','Mystery','Everyday life','Sci-fi','Inspiring','Adventure'];
+var S={sel:[],lv:'',genre:'Funny',len:'short',st:null,busy:false,tok:0,play:false,ans:{}};
+function lvl(){var l=B.level();return['A2','B1','B2','C1'].indexOf(l)>=0?l:/^C/.test(l)?'C1':/^A/.test(l)?'A2':'B1'}
+function recent(){return B.savedWords().filter(function(w){return w.length<=24}).slice(-40).reverse()}
+function root(){var r=$('#lrb-st');if(!r){r=document.createElement('div');r.id='lrb-st';r.className='lrb-st';r.setAttribute('role','dialog');r.setAttribute('aria-modal','true');r.setAttribute('aria-label','AI Story Builder');document.body.appendChild(r)}return r}
+function close(){B.stopSpeak();S.play=false;var r=$('#lrb-st');if(r){r.classList.remove('in');setTimeout(function(){r.remove()},180)}document.body.classList.remove('lrb-st-lock')}
+B.storyOpen=function(){
+  var ws=recent();if(ws.length<4){B.toast('Save at least 4 words first');return}
+  if(!S.lv)S.lv=lvl();S.sel=S.sel.filter(function(w){return ws.indexOf(w)>=0});if(!S.sel.length)S.sel=ws.slice(0,10);
+  S.st=null;S.ans={};S.busy=false;document.body.classList.add('lrb-st-lock');
+  var r=root();requestAnimationFrame(function(){r.classList.add('in')});setup()
+};
+function setup(){
+  var ws=recent(),r=root();
+  r.innerHTML='<div class="lrb-stc"><div class="lrb-sth"><button type="button" class="lrb-sx" data-a="close" aria-label="Close">'+IC.x+'</button><div><h2>AI Story Builder</h2><p>Luna writes a short story that uses your own saved words, so you meet them in context.</p></div></div>'+
+  '<div class="lrb-ctl"><b>Your words</b><small>'+S.sel.length+' selected · pick 4 to 12</small></div>'+
+  '<div class="lrb-chips" id="lrb-stw">'+ws.map(function(w){return '<button type="button" class="'+(S.sel.indexOf(w)>=0?'on':'')+'" data-w="'+esc(w)+'" aria-pressed="'+(S.sel.indexOf(w)>=0)+'">'+esc(w)+'</button>'}).join('')+'</div>'+
+  '<div class="lrb-ctl"><b>Genre</b></div><div class="lrb-seg" id="lrb-stg">'+GEN.map(function(g){return '<button type="button" class="'+(S.genre===g?'on':'')+'" data-g="'+g+'">'+g+'</button>'}).join('')+'</div>'+
+  '<div class="lrb-row2"><div><div class="lrb-ctl"><b>Level</b></div><div class="lrb-seg" id="lrb-stl">'+['A2','B1','B2','C1'].map(function(g){return '<button type="button" class="'+(S.lv===g?'on':'')+'" data-l="'+g+'">'+g+'</button>'}).join('')+'</div></div>'+
+  '<div><div class="lrb-ctl"><b>Length</b></div><div class="lrb-seg" id="lrb-stn"><button type="button" class="'+(S.len==='short'?'on':'')+'" data-n="short">Short</button><button type="button" class="'+(S.len==='long'?'on':'')+'" data-n="long">Longer</button></div></div></div>'+
+  '<button type="button" class="lrb-go" data-a="go"'+(S.sel.length<4?' disabled':'')+'>'+IC.spark+' Write my story</button></div>';
+  bind(r)
+}
+function bind(r){
+  r.onclick=function(e){var b=e.target.closest('button');if(!b)return;
+    if(b.dataset.a==='close')return close();
+    if(b.dataset.a==='tw')return tapWord(b);
+    if(b.dataset.w&&!b.dataset.a){var w=b.dataset.w,i=S.sel.indexOf(w);if(i>=0)S.sel.splice(i,1);else if(S.sel.length<12)S.sel.push(w);else B.toast('Up to 12 words');return setup()}
+    if(b.dataset.g){S.genre=b.dataset.g;return setup()}
+    if(b.dataset.l){S.lv=b.dataset.l;return setup()}
+    if(b.dataset.n){S.len=b.dataset.n;return setup()}
+    var a=b.dataset.a;
+    if(a==='go'||a==='again')return gen();
+    if(a==='edit'){B.stopSpeak();S.play=false;return setup()}
+    if(a==='listen')return listen();
+    if(a==='save'){var w2=b.dataset.w2;if(w2&&!B.hasWord(w2)){B.saveWord(w2);b.classList.add('on');B.toast('Saved “'+w2+'”')}return}
+    if(a==='tw'){return tapWord(b)}
+    if(a==='opt'){return answer(+b.dataset.q,+b.dataset.o)}
+    if(a==='sq'){S.quiz=true;return paint()}
+  }
+}
+function validStory(r){return r&&Array.isArray(r.paragraphs)&&r.paragraphs.length>=1&&r.paragraphs.every(function(p){return typeof p==='string'&&p.length>20})}
+async function gen(){
+  if(S.busy)return;S.busy=true;S.ans={};S.quiz=false;S.tr={};
+  var r=root();r.innerHTML='<div class="lrb-stc lrb-ld"><div class="lrb-spin"></div><b>Luna is writing your story…</b><p>Using '+S.sel.length+' of your words</p></div>';
+  var ws=S.sel.slice(),n=S.len==='long'?'4 short paragraphs of about 55 words each':'2 short paragraphs of about 55 words each';
+  var sys='You are Luna, a gifted English teacher who writes short, vivid stories for learners. Reply with ONE valid JSON object only.';
+  var user='Write an original '+S.genre.toLowerCase()+' story for a CEFR '+S.lv+' learner. Length: '+n+'. You MUST use every one of these words exactly as written (you may add endings only when the grammar needs it): '+ws.join(', ')+'. Make the story coherent, with a real beginning, a small problem and a satisfying end. Use simple, natural vocabulary for the level apart from the target words. '+
+  'JSON shape: {"title":"short title","paragraphs":["..."],"used":["each target word you used"],"questions":[{"q":"comprehension question about the story","o":["A","B","C"],"a":0,"why":"one short reason"}]} with exactly 2 questions, 3 options each, a is the index of the correct option.';
+  try{
+    var j=await B.ai(sys,user,{t:.85,max:1800,check:validStory});
+    S.st={title:String(j.title||'Your story').slice(0,70),ps:j.paragraphs.slice(0,5).map(String),qs:(j.questions||[]).filter(function(q){return q&&q.q&&Array.isArray(q.o)&&q.o.length>=2&&Number.isInteger(q.a)&&q.a>=0&&q.a<q.o.length}).slice(0,3).map(function(q){return{q:String(q.q),o:q.o.slice(0,4).map(String),a:q.a,why:String(q.why||'')}}),words:ws};
+    S.busy=false;try{var u=B.user();u.stories=(u.stories||0)+1;B.save();pfFeed('words','Read an AI story with my saved words')}catch(e){}
+    paint()
+  }catch(e){S.busy=false;var m=e&&e.message==='noai'?'Add your AI key in AI Tutor to use this.':e&&e.message==='limit'?'Daily AI limit reached. Try again tomorrow.':B.aiErr(e);
+    r.innerHTML='<div class="lrb-stc lrb-ld"><b>Could not write the story</b><p>'+esc(m)+'</p><button type="button" class="lrb-go" data-a="go">Try again</button><button type="button" class="lrb-gx" data-a="edit">Change words</button></div>'}
+}
+function hl(t){
+  var ws=S.st.words,out=esc(t);
+  ws.slice().sort(function(a,b){return b.length-a.length}).forEach(function(w){
+    var re=new RegExp('\\b('+w.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'[a-z]{0,3})\\b','gi');
+    out=out.replace(re,function(m){return '<button type="button" class="lrb-tw" data-a="tw" data-w="'+m.toLowerCase()+'">'+m+'</button>'})
+  });return out
+}
+function paint(){
+  var r=root(),st=S.st;if(!st)return;
+  var q=S.quiz&&st.qs.length;
+  r.innerHTML='<div class="lrb-stc"><div class="lrb-sth"><button type="button" class="lrb-sx" data-a="close" aria-label="Close">'+IC.x+'</button><div><h2>'+esc(st.title)+'</h2><p>'+esc(S.genre)+' · '+esc(S.lv)+' · tap a highlighted word</p></div></div>'+
+  '<article class="lrb-story">'+st.ps.map(function(p,i){return '<p data-p="'+i+'">'+hl(p)+'</p>'}).join('')+'</article>'+
+  '<div class="lrb-tip" id="lrb-sttip" aria-live="polite">Tap any highlighted word to see its meaning.</div>'+
+  '<div class="lrb-bar"><button type="button" class="lrb-go" data-a="listen">'+(S.play?IC.pause+' Stop':IC.play+' Listen')+'</button><button type="button" class="lrb-gh" data-a="again">New story</button><button type="button" class="lrb-gh" data-a="edit">Change words</button></div>'+
+  (st.qs.length?(q?quiz():'<button type="button" class="lrb-gh wide" data-a="sq">Check my understanding</button>'):'')+'</div>';
+  S.ans&&Object.keys(S.ans).length&&0
+}
+function quiz(){
+  var st=S.st,done=Object.keys(S.ans).length===st.qs.length,sc=st.qs.filter(function(q,i){return S.ans[i]===q.a}).length;
+  return '<div class="lrb-qz"><h3>Quick check</h3>'+st.qs.map(function(q,i){var a=S.ans[i],has=a!=null;
+    return '<div class="lrb-qq"><p>'+esc(q.q)+'</p><div class="lrb-qo">'+q.o.map(function(o,k){var c=has?(k===q.a?'ok':k===a?'bad':''):'';return '<button type="button" data-a="opt" data-q="'+i+'" data-o="'+k+'" class="'+c+'"'+(has?' disabled':'')+'>'+esc(o)+'</button>'}).join('')+'</div>'+(has&&q.why?'<small>'+esc(q.why)+'</small>':'')+'</div>'}).join('')+
+  (done?'<p class="lrb-sc">'+sc+' / '+st.qs.length+(sc===st.qs.length?' · Perfect reading!':' · Read it once more and try again.')+'</p>':'')+'</div>'
+}
+function answer(i,k){if(S.ans[i]!=null)return;S.ans[i]=k;var y=$('#lrb-st'),sy=y?y.scrollTop:0;paint();var y2=$('#lrb-st');if(y2)y2.scrollTop=sy}
+async function tapWord(b){
+  var w=b.dataset.w,tip=$('#lrb-sttip');if(!tip)return;
+  var base=S.st.words.filter(function(x){return w.indexOf(x.toLowerCase())===0}).sort(function(a,c){return c.length-a.length})[0]||w;
+  var m=B.hit(base)||'';tip.innerHTML='<b>'+esc(base)+'</b> <span>'+(m?esc(m):'…')+'</span> <button type="button" class="lrb-mini" data-a="save" data-w2="'+esc(base)+'">'+(B.hasWord(base)?'Saved':'+ Save')+'</button>';
+  B.speak(base,{acc:'US',rate:.9});
+  if(!m){var t=await B.tr(base);if(t&&tip.isConnected){tip.querySelector('span').textContent=t}else if(tip.isConnected){tip.querySelector('span').textContent='Tap the speaker to hear it.'}}
+}
+function listen(){
+  if(S.play){B.stopSpeak();S.play=false;S.tok++;return paint()}
+  S.play=true;var my=++S.tok;paint();var ps=S.st.ps.slice(),i=0;
+  (function next(){if(my!==S.tok||!S.play)return;if(i>=ps.length){S.play=false;paint();return}
+    $$('.lrb-story p').forEach(function(p,k){p.classList.toggle('now',k===i)});
+    B.speak(ps[i],{acc:'US',rate:.92},function(){i++;next()})})()
+}
+})();
+/* add the button under the My words list */
+(function(){var B=LRB,IC=B.IC;
+  function inject(){var bot=document.getElementById('mw-bot');if(!bot)return;
+    if(B.savedWords().length<4){var o=bot.querySelector('.lrb-stbtn');if(o)o.remove();return}
+    if(bot.querySelector('.lrb-stbtn'))return;
+    var b=document.createElement('button');b.type='button';b.className='dx-btn wide lrb-stbtn';b.innerHTML=IC.spark+' AI Story from my words';b.onclick=function(){B.storyOpen()};bot.appendChild(b)}
+  function watch(){var bot=document.getElementById('mw-bot');if(!bot){setTimeout(watch,1500);return}
+    new MutationObserver(function(){inject()}).observe(bot,{childList:true});inject()}
+  document.addEventListener('click',function(e){if(e.target.closest&&e.target.closest('[onclick*="showSavedWords"]'))setTimeout(watch,200)},true);
+  setTimeout(watch,3000)
+})();
+
+/* ===== Mentors: watch inside the site + AI lesson test ===== */
+(function(){'use strict';
+var B=LRB,$=B.$,$$=B.$$,esc=B.esc,IC=B.IC,KEY='lrb_mv';
+var S={m:null,vid:'',notes:'',topic:'',lv:'',busy:false,qz:null,ans:{},tok:0};
+function find(h){try{return topMentors.filter(function(m){return m.handle===h})[0]}catch(e){return null}}
+function vidId(u){u=String(u||'').trim();if(/^[\w-]{11}$/.test(u))return u;var m=u.match(/(?:youtu\.be\/|[?&]v=|\/embed\/|\/shorts\/|\/live\/)([\w-]{11})/);return m?m[1]:''}
+function mem(){return B.jget(KEY,{})}
+function lvl(){var l=B.level();return['A2','B1','B2','C1'].indexOf(l)>=0?l:/^C/.test(l)?'C1':/^A/.test(l)?'A2':'B1'}
+function root(){var r=$('#lrb-mt');if(!r){r=document.createElement('div');r.id='lrb-mt';r.className='lrb-st lrb-mt';r.setAttribute('role','dialog');r.setAttribute('aria-modal','true');document.body.appendChild(r)}return r}
+function close(){var r=$('#lrb-mt');if(r){var f=r.querySelector('iframe');if(f)f.src='about:blank';r.classList.remove('in');setTimeout(function(){r.remove()},180)}document.body.classList.remove('lrb-st-lock')}
+B.mentorStudy=function(h){
+  var m=find(h);if(!m)return;S.m=m;var sv=mem()[h]||{};S.vid=sv.v||'';S.notes=sv.n||'';S.topic=sv.t||'';S.lv=S.lv||lvl();S.qz=null;S.ans={};S.busy=false;
+  document.body.classList.add('lrb-st-lock');var r=root();requestAnimationFrame(function(){r.classList.add('in')});paint()
+};
+function save(){var o=mem();o[S.m.handle]={v:S.vid,n:S.notes.slice(0,6000),t:S.topic};B.jset(KEY,o)}
+function paint(){
+  var m=S.m,r=root(),yt='https://www.youtube.com/@'+encodeURIComponent(m.handle);
+  r.innerHTML='<div class="lrb-stc"><div class="lrb-sth"><button type="button" class="lrb-sx" data-a="close" aria-label="Close">'+IC.x+'</button><div><h2>'+esc(m.name)+' · Study room</h2><p>'+esc(m.channel)+' · '+esc(m.focus)+'</p></div></div>'+
+  '<div class="lrb-vid" id="lrb-vid">'+(S.vid?'<iframe src="https://www.youtube-nocookie.com/embed/'+S.vid+'?rel=0&modestbranding=1&playsinline=1" title="Lesson video" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>':'<div class="lrb-vph"><b>Watch a lesson here</b><span>Open the channel, copy a video link, and paste it below. The video plays inside LunaRise.</span><a href="'+yt+'/videos" target="_blank" rel="noopener noreferrer" class="lrb-gh">Browse '+esc(m.channel)+' videos</a></div>')+'</div>'+
+  '<label class="lrb-lab">Video link<div class="lrb-in"><input id="lrb-mvl" type="url" inputmode="url" placeholder="Paste a YouTube link" value="'+(S.vid?'https://youtu.be/'+S.vid:'')+'" autocomplete="off"><button type="button" class="lrb-gh" data-a="play">Play</button></div></label>'+
+  (S.vid?'<a class="lrb-ext" href="https://www.youtube.com/watch?v='+S.vid+'" target="_blank" rel="noopener noreferrer">Video will not play? Open it on YouTube</a>':'')+
+  '<div class="lrb-card lrb-mq"><div class="lrb-ct">'+IC.spark+'<b>AI lesson test</b></div>'+
+  '<p class="lrb-mut">Luna cannot watch the video, so she builds the test from what you tell her. For questions about the exact lesson, paste the transcript (on YouTube: <i>… more → Show transcript</i>) or your own notes.</p>'+
+  '<label class="lrb-lab">Lesson topic<input id="lrb-mtp" type="text" maxlength="90" placeholder="e.g. Present perfect vs past simple" value="'+esc(S.topic)+'"></label>'+
+  '<label class="lrb-lab">Transcript or notes <small>(optional, best results)</small><textarea id="lrb-mnt" rows="4" maxlength="6000" placeholder="Paste the transcript or write what you learned">'+esc(S.notes)+'</textarea></label>'+
+  '<div class="lrb-seg" id="lrb-mlv">'+['A2','B1','B2','C1'].map(function(g){return '<button type="button" class="'+(S.lv===g?'on':'')+'" data-l="'+g+'">'+g+'</button>'}).join('')+'</div>'+
+  '<button type="button" class="lrb-go" data-a="gen"'+(S.busy?' disabled':'')+'>'+IC.spark+' '+(S.busy?'Writing your test…':'Make a 5-question test')+'</button><div id="lrb-mqz">'+(S.qz?quiz():'')+'</div></div></div>';
+  bind(r)
+}
+function bind(r){
+  r.onclick=function(e){var b=e.target.closest('button');if(!b)return;
+    if(b.dataset.a==='close')return close();
+    if(b.dataset.l){S.lv=b.dataset.l;keep();return paint()}
+    if(b.dataset.a==='play'){var v=vidId($('#lrb-mvl').value);if(!v){B.toast('That does not look like a YouTube link');return}keep();S.vid=v;save();return paint()}
+    if(b.dataset.a==='gen')return gen();
+    if(b.dataset.a==='opt')return pick(+b.dataset.q,+b.dataset.o);
+    if(b.dataset.a==='sv'){var w=b.dataset.w;if(w&&!B.hasWord(w)){B.saveWord(w);b.classList.add('on');b.textContent='Saved';B.toast('Saved “'+w+'”')}return}
+    if(b.dataset.a==='retry'){S.ans={};S.qz.qs=B.shuffle(S.qz.qs);var q=$('#lrb-mqz');if(q)q.innerHTML=quiz();return}
+  }
+}
+function keep(){var t=$('#lrb-mtp'),n=$('#lrb-mnt');if(t)S.topic=t.value.trim();if(n)S.notes=n.value;if(S.m)save()}
+function valid(r){return r&&Array.isArray(r.questions)&&r.questions.length>=3&&r.questions.every(function(q){return q&&q.q&&Array.isArray(q.o)&&q.o.length>=3&&Number.isInteger(q.a)&&q.a>=0&&q.a<q.o.length})}
+async function gen(){
+  keep();if(S.busy)return;
+  if(!S.topic&&S.notes.trim().length<40){B.toast('Add a lesson topic or paste some notes first');return}
+  S.busy=true;S.ans={};S.qz=null;paint();
+  var m=S.m,hasN=S.notes.trim().length>=40;
+  var sys='You are Luna, an expert English teacher who writes sharp, fair lesson tests. Reply with ONE valid JSON object only.';
+  var user='A CEFR '+S.lv+' learner watched an English lesson by '+m.name+' ('+m.channel+', focus: '+m.focus+'). Topic: '+(S.topic||'(not given)')+'.\n'+
+  (hasN?'Their transcript/notes (base every question ONLY on this material):\n"""'+S.notes.slice(0,5000)+'"""\n':'No transcript was given, so test the standard knowledge of this topic, and never pretend to know what was said in the video.\n')+
+  'Write exactly 5 multiple-choice questions, 3 options each (one clearly correct, plausible distractors), mixed: 2 meaning/usage, 2 apply-the-rule or fill-the-gap, 1 spot-the-mistake. Questions in English only. Add a one-line reason for each answer.\n'+
+  'JSON: {"questions":[{"q":"...","o":["...","...","..."],"a":0,"why":"..."}],"words":["up to 4 useful words or phrases from the lesson"]}';
+  try{
+    var j=await B.ai(sys,user,{t:.5,max:1700,check:valid});
+    S.qz={qs:j.questions.slice(0,5).map(function(q){return{q:String(q.q),o:q.o.slice(0,3).map(String),a:q.a,why:String(q.why||'')}}),words:(j.words||[]).map(String).filter(function(w){return w.length>1&&w.length<30}).slice(0,4),hasN:hasN};
+    S.busy=false;paint();var z=$('#lrb-mqz');if(z)z.scrollIntoView({behavior:'smooth',block:'start'})
+  }catch(e){S.busy=false;paint();var z2=$('#lrb-mqz');if(z2)z2.innerHTML='<p class="lrb-err">'+esc(e&&e.message==='noai'?'Add your AI key in AI Tutor to use this.':e&&e.message==='limit'?'Daily AI limit reached. Try again tomorrow.':B.aiErr(e))+'</p>'}
+}
+function quiz(){
+  var q=S.qz,n=q.qs.length,done=Object.keys(S.ans).length===n,sc=q.qs.filter(function(x,i){return S.ans[i]===x.a}).length;
+  return '<div class="lrb-qz">'+q.qs.map(function(x,i){var a=S.ans[i],has=a!=null;
+    return '<div class="lrb-qq"><p><span class="lrb-qn">'+(i+1)+'</span> '+esc(x.q)+'</p><div class="lrb-qo">'+x.o.map(function(o,k){var c=has?(k===x.a?'ok':k===a?'bad':''):'';return '<button type="button" data-a="opt" data-q="'+i+'" data-o="'+k+'" class="'+c+'"'+(has?' disabled':'')+'>'+esc(o)+'</button>'}).join('')+'</div>'+(has&&x.why?'<small>'+esc(x.why)+'</small>':'')+'</div>'}).join('')+
+  (done?'<div class="lrb-res2"><b>'+sc+' / '+n+'</b><span>'+(sc===n?'Perfect. You understood this lesson.':sc>=3?'Good work. Review the red answers.':'Watch the lesson again, then retry.')+'</span>'+(q.words.length?'<div class="lrb-gms">'+q.words.map(function(w){return '<button type="button" data-a="sv" data-w="'+esc(w)+'" class="'+(B.hasWord(w)?'on':'')+'">'+esc(w)+' <span>'+(B.hasWord(w)?'Saved':'+ Save')+'</span></button>'}).join('')+'</div>':'')+'<button type="button" class="lrb-gh" data-a="retry">Try again</button></div>':'')+'</div>'
+}
+function pick(i,k){if(S.ans[i]!=null)return;S.ans[i]=k;var z=$('#lrb-mqz'),y=$('#lrb-mt'),sy=y.scrollTop;z.innerHTML=quiz();y.scrollTop=sy;
+  if(Object.keys(S.ans).length===S.qz.qs.length){var sc=S.qz.qs.filter(function(x,j){return S.ans[j]===x.a}).length;try{var u=B.user();u.mq=u.mq||{n:0,best:0};u.mq.n++;u.mq.best=Math.max(u.mq.best,sc);B.save();pfFeed('mentor','Mentor lesson test: '+sc+'/'+S.qz.qs.length);if(sc===S.qz.qs.length)triggerConfetti()}catch(e){}}}
+/* a Study button on every mentor card */
+function decorate(){
+  $$('#mentors-grid a.glass-card').forEach(function(a){if(a.querySelector('.lrb-mstudy'))return;
+    var h=(a.getAttribute('href')||'').split('/@')[1];if(!h)return;h=decodeURIComponent(h);
+    var b=document.createElement('button');b.type='button';b.className='lrb-mstudy';b.innerHTML=IC.play+' Study here · AI test';
+    b.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();B.mentorStudy(h)});a.appendChild(b)})
+}
+function watch(){var g=$('#mentors-grid');if(!g){setTimeout(watch,1500);return}new MutationObserver(decorate).observe(g,{childList:true});decorate()}
+setTimeout(watch,2500);B.onView&&B.onView('mentors',function(){setTimeout(function(){watch();decorate()},300)})
+})();
+
+/* ===== Chess Arena: English commentary, strategy phrases, glossary ===== */
+(function(){'use strict';
+var B=LRB,$=B.$,$$=B.$$,esc=B.esc,IC=B.IC,PK='lrb_ch_pref';
+var N={1:'pawn',2:'knight',3:'bishop',4:'rook',5:'queen',6:'king'},V={1:1,2:3,3:3,4:5,5:9,6:0};
+var CAP={N:'Knight',B:'Bishop',R:'Rook',Q:'Queen',K:'King'};
+var P=Object.assign({voice:false,tab:'live'},B.jget(PK,{}));
+var F=[],tok=0,ai=false,lastSans=[];
+function sq(x){return 'abcdefgh'[x&7]+((x>>4)+1)}
+function pick(a,k){return a[(k||0)%a.length]}
+var CENTER={d4:1,e4:1,d5:1,e5:1};
+/* build one commentary entry from a move */
+function describe(o){
+  var s=o.san.replace(/[+#!?]/g,''),to=sq(o.to),me=o.mover===o.me,who=me?'You':'Your opponent',k=o.ply,mate=/#/.test(o.san),chk=/\+/.test(o.san);
+  var pc=/^O-O/.test(s)?'K':(CAP[s[0]]?s[0]:'P'),pt={P:1,N:2,B:3,R:4,Q:5,K:6}[pc],cap=o.cap,line,idea,phrase;
+  if(/^O-O/.test(s)){var long=/^O-O-O/.test(s);line=(long?'Castles queenside':'Castles kingside');idea='The king moves to safety and the rook joins the game.';phrase={en:'castle',d:'to move the king to safety and bring the rook out'}}
+  else if(cap||o.ep){var cn=o.ep?'pawn':N[cap],pn=pc==='P'?'Pawn':CAP[pc];line=pn+' takes '+cn+' on '+to;
+    var gain=(o.ep?1:V[cap])-V[pt];
+    if(mate){idea='A capture that ends the game.';}
+    else if(gain>=2){idea='Winning material: a '+cn+' is worth more than a '+N[pt]+'.';phrase={en:'win material',d:'to capture more value than you lose'}}
+    else if(gain<=-2){idea='A sacrifice. The '+N[pt]+' is worth more, so there must be a plan behind it.';phrase={en:'sacrifice',d:'to give up material for an attack or position'}}
+    else{idea='An even exchange. Trades help the side that is ahead.';phrase={en:'exchange',d:'to trade pieces of similar value'}}}
+  else{
+    var base=pc==='P'?'Pawn to '+to:CAP[pc]+' to '+to;line=base;
+    if(pc==='P'&&CENTER[to]){idea='A pawn in the centre takes space and opens lines for the pieces.';phrase={en:'control the centre',d:'to hold the middle squares d4, e4, d5, e5'}}
+    else if((pc==='N'||pc==='B')&&k<=12){idea='Developing a minor piece. Bring every piece into the game early.';phrase={en:'develop a piece',d:'to move a piece from its starting square to an active square'}}
+    else if(pc==='Q'&&k<=8){idea='An early queen move can be risky. It may be chased by minor pieces.';phrase={en:'lose time',d:'to waste moves while the opponent improves'}}
+    else if(pc==='R'){idea='The rook looks for an open file or the seventh rank.';phrase={en:'open file',d:'a column with no pawns where rooks are strong'}}
+    else if(pc==='K'){idea='A king step. In the endgame the king becomes an active piece.';phrase={en:'activate the king',d:'to bring the king into the fight in the endgame'}}
+    else if(pc==='P'){idea=pick(['Pawns cannot go back, so every pawn move changes the structure.','A quiet pawn move that restricts the opponent.','This pawn move prepares to open the position.'],k);phrase={en:'pawn structure',d:'the pattern formed by all the pawns'}}
+    else{idea=pick(['A flexible move that improves the piece.','The piece goes to a more active square.','Quietly improving the position.'],k);phrase={en:'improve the piece',d:'to move a piece to a better square'}}
+    if(/=/.test(o.san)){}}
+  var pr=s.match(/=([NBRQ])/);if(pr){line+=', promotes to a '+N[{N:2,B:3,R:4,Q:5}[pr[1]]];idea='The pawn reaches the last rank and becomes a stronger piece.';phrase={en:'promote',d:'to turn a pawn into a queen, rook, bishop or knight'}}
+  if(mate){line+=' — checkmate!';idea='The king is attacked and has no escape. The game is over.';phrase={en:'checkmate',d:'a king in check with no legal way out'}}
+  else if(chk){line+=' — check!';idea=(me?'Your opponent':'You')+' must answer the check at once. '+idea;phrase=phrase||{en:'check',d:'a direct attack on the king'}}
+  return{n:Math.ceil(k/2)+(o.mover===0?'.':'…'),san:o.san,who:who,line:line,idea:idea,phrase:phrase,me:me,say:line.replace(/ — /,', ')+'. '+idea}
+}
+B.chMove=function(o){
+  if(!o.ply&&F.length)F=[];lastSans=(o.sans||[]).concat([o.san]);o.ply=o.ply+1;var e=describe(o);e.id=++tok;F.unshift(e);F=F.slice(0,60);paint();
+  if(P.voice){try{if(o.sayOn)return;setTimeout(function(){B.speak(e.say,{acc:'US',rate:.95})},350)}catch(x){}}
+};
+B.chReset=function(){F=[];tok=0;paint()};
+var GL=[
+['Opening','The first phase: develop pieces, control the centre, castle.'],['Middlegame','The phase after development, full of plans and tactics.'],['Endgame','Few pieces remain. Kings become active and pawns promote.'],
+['Check','A direct attack on the king. You must respond.'],['Checkmate','The king is in check and cannot escape. The game ends.'],['Stalemate','No legal move and not in check. The game is a draw.'],
+['Castling','A special move: the king goes two squares and the rook jumps over it.'],['En passant','A special pawn capture: you take a pawn that has just moved two squares.'],['Promotion','A pawn reaching the last rank becomes a queen, rook, bishop or knight.'],
+['Fork','One piece attacks two or more enemy pieces at the same time.'],['Pin','A piece cannot move without exposing a more valuable piece behind it.'],['Skewer','Like a pin, but the more valuable piece is in front and must move.'],
+['Discovered attack','Moving one piece reveals an attack from the piece behind it.'],['Sacrifice','Giving up material on purpose for a stronger position or attack.'],['Exchange','Trading pieces of similar value.'],
+['Tempo','A unit of time, one move. Gaining a tempo means making progress with threats.'],['Zugzwang','Any move you make makes your position worse, but you must move.'],['Gambit','An opening where a pawn is offered for faster development.'],
+['Blunder','A very bad mistake that loses material or the game.'],['Open file','A column with no pawns. Rooks love open files.'],['Outpost','A strong square, often for a knight, that enemy pawns cannot attack.'],
+['Weak square','A square your pawns can no longer protect.'],['Passed pawn','A pawn with no enemy pawns in front of it or on neighbouring files.'],['Pawn structure','The shape formed by all the pawns on the board.'],
+['Initiative','Having the power to make threats so the opponent must react.'],['Fianchetto','Developing a bishop to b2 or g2 (b7 or g7) on a long diagonal.'],['Back-rank mate','A checkmate on the first rank, often because the king is trapped by its own pawns.'],
+['Opposition','Kings face each other with one square between them. A key endgame idea.'],['Material','The total value of the pieces: pawn 1, knight 3, bishop 3, rook 5, queen 9.'],['Resign','To give up the game because you are losing.']];
+var STRAT=['Control the centre.','Develop your knights and bishops before you attack.','Castle early to protect your king.','Do not move the same piece twice in the opening without a reason.','Look for forks, pins and skewers before every move.','Before you move, ask: what does my opponent threaten?','Trade pieces when you are ahead, avoid trades when you are behind.','Rooks belong on open files.','In the endgame, activate your king.','A passed pawn must be pushed.'];
+function root(){return $('#lrb-chc')}
+function paint(){
+  var r=root();if(!r)return;
+  var tabs='<div class="lrb-ctabs" role="tablist">'+[['live','Live'],['glo','Glossary'],['tips','Strategy']].map(function(t){return '<button type="button" role="tab" aria-selected="'+(P.tab===t[0])+'" data-t="'+t[0]+'" class="'+(P.tab===t[0]?'on':'')+'">'+t[1]+'</button>'}).join('')+'</div>';
+  var body='';
+  if(P.tab==='live'){
+    var c=F[0];
+    body=(c?'<div class="lrb-cnow"><div class="lrb-cm">'+esc(c.who)+' · '+esc(c.n)+' '+esc(c.san)+'</div><div class="lrb-cl">'+esc(c.line)+'</div><p>'+esc(c.idea)+'</p>'+(c.phrase?'<div class="lrb-cp"><b>'+esc(c.phrase.en)+'</b><span>'+esc(c.phrase.d)+'</span><button type="button" data-a="say" data-w="'+esc(c.phrase.en)+'" aria-label="Hear it">'+IC.vol+'</button><button type="button" data-a="sv" data-w="'+esc(c.phrase.en)+'" class="'+(B.hasWord(c.phrase.en)?'on':'')+'">'+(B.hasWord(c.phrase.en)?'Saved':'+ Save')+'</button></div>':'')+'</div>':'<div class="lrb-cnow lrb-cmt"><p>Make a move. Luna will explain every move in English, so you learn chess words while you play.</p></div>')+
+     '<div class="lrb-crow"><button type="button" class="lrb-cg" data-a="ask"'+(F.length?'':' disabled')+'>'+IC.spark+' Ask Luna about this move</button><button type="button" class="lrb-cg'+(P.voice?' on':'')+'" data-a="voice" aria-pressed="'+P.voice+'">'+IC.vol+' Voice '+(P.voice?'on':'off')+'</button></div><div id="lrb-cai" class="lrb-cai" aria-live="polite"></div>'+
+     (F.length>1?'<div class="lrb-chist">'+F.slice(1,24).map(function(x){return '<div><i>'+esc(x.n)+' '+esc(x.san)+'</i><span>'+esc(x.line)+'</span></div>'}).join('')+'</div>':'')}
+  else if(P.tab==='glo'){body='<div class="lrb-gl">'+GL.map(function(g){return '<div class="lrb-gi"><div><b>'+esc(g[0])+'</b><span>'+esc(g[1])+'</span></div><button type="button" data-a="say" data-w="'+esc(g[0])+'" aria-label="Hear '+esc(g[0])+'">'+IC.vol+'</button></div>'}).join('')+'</div>'}
+  else{body='<ol class="lrb-tp">'+STRAT.map(function(t){return '<li>'+esc(t)+'</li>'}).join('')+'</ol>'}
+  var keep=r.querySelector('.lrb-cai'),txt=keep?keep.innerHTML:'';
+  r.innerHTML='<div class="lrb-chcard"><div class="lrb-chh">'+IC.book+'<b>Commentary</b><small>English</small></div>'+tabs+body+'</div>';
+  var k2=r.querySelector('.lrb-cai');if(k2&&txt&&ai!==false)k2.innerHTML=txt
+}
+async function ask(){
+  var box=$('#lrb-cai');if(!box||!F.length)return;box.innerHTML='<span class="lrb-sp"></span> Luna is thinking…';
+  try{var sans=lastSans.slice(-14).join(' ');
+    var j=await B.ai('You are Luna, a friendly chess coach who teaches English too. Reply with ONE valid JSON object only.','CEFR '+B.level()+' learner. Recent moves (SAN): '+sans+'. The last move was '+F[0].san+'. In 2 short sentences, explain the idea behind the last move and what to watch next. Use simple English. Do not invent facts about the board beyond the move list; say "probably" if unsure. JSON: {"explain":"...","word":"one chess word from your answer","meaning":"its meaning in simple English"}',{t:.4,max:350,check:function(r){return r&&r.explain}});
+    box.innerHTML='<p>'+esc(j.explain)+'</p>'+(j.word?'<div class="lrb-cp"><b>'+esc(j.word)+'</b><span>'+esc(j.meaning||'')+'</span><button type="button" data-a="sv" data-w="'+esc(j.word)+'">+ Save</button></div>':'');ai=true
+  }catch(e){box.textContent=e&&e.message==='noai'?'Add your AI key in AI Tutor to use this.':B.aiErr(e)}
+}
+document.addEventListener('click',function(e){var r=root();if(!r||!r.contains(e.target))return;var b=e.target.closest('button');if(!b)return;
+  if(b.dataset.t){P.tab=b.dataset.t;B.jset(PK,P);return paint()}
+  var a=b.dataset.a;if(a==='voice'){P.voice=!P.voice;B.jset(PK,P);return paint()}
+  if(a==='ask')return ask();
+  if(a==='say'){B.speak(b.dataset.w,{acc:'US',rate:.9});return}
+  if(a==='sv'){var w=b.dataset.w;if(w&&!B.hasWord(w)){B.saveWord(w);b.classList.add('on');b.textContent='Saved';B.toast('Saved “'+w+'”')}}
+});
+B.chPaint=paint;setTimeout(paint,1500);setInterval(function(){var r=root();if(r&&!r.firstChild)paint()},2000)
+})();
+
 </script></body>
 </html>
