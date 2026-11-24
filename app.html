@@ -8490,6 +8490,18 @@ html.paused .sx *,body.lite .sx *,body.fx-off .sx *,body[data-view="games"] .sx 
 body.lite .sx .sx-ms-box,body.fx-off .sx .sx-ms-box{display:none}
 @media (prefers-reduced-motion:reduce){.sx *{animation:none!important}}
 body.th-fade #lr-bg{opacity:0}
+/* modern scrollbars: slim and quiet everywhere, none inside the word-card screen */
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,.16);border-radius:4px;border:0}
+::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,.3)}
+.lrb-st,.lrb-st *{scrollbar-width:none!important;-ms-overflow-style:none}
+.lrb-st::-webkit-scrollbar,.lrb-st *::-webkit-scrollbar{display:none!important;width:0!important;height:0!important}
+
+/* the planet breathes and drifts a little, so it feels alive */
+.sx-feat{animation:featFloat 18s ease-in-out infinite alternate}
+@keyframes featFloat{from{transform:translate3d(-1.1vmin,.7vmin,0) scale(1)}to{transform:translate3d(1.1vmin,-.8vmin,0) scale(1.035)}}
+@media (orientation:landscape){.sx-feat{left:60%}}
 
 .sp-vig{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 130% 95% at 50% 38%,transparent 52%,rgba(1,5,18,.45)),linear-gradient(180deg,rgba(1,5,18,.1),transparent 30%,transparent 62%,rgba(1,5,18,.45))}
 </style><script id="lr-space">/* ===== LunaRise space background (v148): a calm, silky sky of baked layers =====
@@ -8686,15 +8698,15 @@ body.th-fade #lr-bg{opacity:0}
 
     /* ---------- planets: layout (landscape / portrait), look and spin ---------- */
     var PLANETS = [
-        { k: 'jupiter', hp: 110, beta: 6, rim: .22, glow2: '255,214,170', T: 60, s: 36, L: [85, 24], P: [76, 17], per: 170, dx: '-1.2vmin', dy: '.8vmin', dur: 90, tex: {} },
-        { k: 'saturn', hp: 130, beta: 17, rim: .3, glow2: '255,226,170', T: 34, s: 17, L: [47, 18], P: [28, 31], per: 220, tilt: -20, ring: 2.35, dx: '1vmin', dy: '1.2vmin', dur: 110, tex: {} },
+        { k: 'jupiter', diff: 0.1, hp: 110, beta: 6, rim: .22, glow2: '255,214,170', T: 60, s: 36, L: [85, 24], P: [76, 17], per: 170, dx: '-1.2vmin', dy: '.8vmin', dur: 90, tex: {} },
+        { k: 'saturn', diff: 0.09, hp: 130, beta: 17, rim: .3, glow2: '255,226,170', T: 34, s: 17, L: [47, 18], P: [28, 31], per: 220, tilt: -20, ring: 2.35, dx: '1vmin', dy: '1.2vmin', dur: 110, tex: {} },
         { k: 'earth', hp: 140, beta: 12, rim: 1, glow2: '96,168,255', T: 56, s: 31, L: [14, 76], P: [24, 80], per: 320, cper: 210, tilt: -14, glow: '96,168,255', dx: '.8vmin', dy: '-1vmin', dur: 120, tex: { cloud: 1 } },
         { k: 'moon', hp: 380, beta: 4, rim: 0, hard: 1, T: 44, s: 6.4, L: [29, 61], P: [48, 69], per: 900, dx: '-.6vmin', dy: '.5vmin', dur: 70, tex: { craters: 46, seed: 31, cs: 1.1 } },
         { k: 'mars', hp: 150, beta: 10, rim: .55, glow2: '255,150,100', T: 46, s: 8.6, L: [63, 77], P: [63, 59], per: 520, tilt: -10, glow: '255,150,100', dx: '.8vmin', dy: '.8vmin', dur: 84, tex: { craters: 8, seed: 12, cs: .5 } },
         { k: 'venus', hp: -420, beta: 4, rim: .9, glow2: '255,200,120', T: 48, s: 11.5, L: [37, 55], P: [17, 56], per: 700, rev: 1, glow: '255,222,160', dx: '-.6vmin', dy: '-.8vmin', dur: 96, tex: {} },
         { k: 'mercury', hp: 420, beta: 4, rim: 0, hard: 1, T: 40, s: 4.4, L: [66, 40], P: [76, 46], per: 900, dx: '.5vmin', dy: '.5vmin', dur: 60, tex: { craters: 60, seed: 5, cs: 1 } },
-        { k: 'uranus', hp: -190, beta: 26, rim: .75, glow2: '150,235,240', T: 48, s: 13, L: [80, 68], P: [82, 80], per: 420, tilt: 8, glow: '150,230,240', dx: '-.8vmin', dy: '.6vmin', dur: 104, tex: {} },
-        { k: 'neptune', hp: 170, beta: 8, rim: .85, glow2: '90,130,255', T: 48, s: 10.5, L: [94, 47], P: [55, 92], per: 380, glow: '90,130,255', dx: '.6vmin', dy: '-.7vmin', dur: 100, tex: {} }
+        { k: 'uranus', diff: 0.04, hp: -190, beta: 26, rim: .75, glow2: '150,235,240', T: 48, s: 13, L: [80, 68], P: [82, 80], per: 420, tilt: 8, glow: '150,230,240', dx: '-.8vmin', dy: '.6vmin', dur: 104, tex: {} },
+        { k: 'neptune', diff: 0.06, hp: 170, beta: 8, rim: .85, glow2: '90,130,255', T: 48, s: 10.5, L: [94, 47], P: [55, 92], per: 380, glow: '90,130,255', dx: '.6vmin', dy: '-.7vmin', dur: 100, tex: {} }
     ];
     var root = null, built = false, building = false, want = false, bakedKey = '', texCache = {};
 
@@ -8774,12 +8786,12 @@ body.th-fade #lr-bg{opacity:0}
     function ensureHero(k) {
         if (heroTex[k] || heroBusy[k]) return; heroBusy[k] = 1;
         heroQ = heroQ.then(function () { return bakeHero(PL(k)); }).then(function (tx) {
-            var ks = Object.keys(heroTex); if (ks.length >= (weak ? 3 : 6)) { var kill = ks.filter(function (z) { return z !== k && !(hero && hero._k === z); })[0]; if (kill) { delete heroTex[kill]; delete heroGeo[kill]; } }
-            heroTex[k] = tx; heroBusy[k] = 0;
+            var ks = Object.keys(heroTex); if (ks.length >= (weak ? 4 : 9)) { var kill = ks.filter(function (z) { return z !== k && z !== want_k && !(hero && hero._k === z); })[0]; if (kill) { delete heroTex[kill]; delete heroGeo[kill]; } }
+            heroTex[k] = tx; heroBusy[k] = 0; if (want_k === k && root && themeOn()) wantPlanet(k);
         }).catch(function () { heroBusy[k] = 0; });
     }
     function geom(p, D) {
-        var n = D * D, u0 = new Float32Array(n), vr = new Int32Array(n), sh = new Uint8Array(n), rm = new Uint8Array(n), sp = new Uint8Array(n), ea = new Uint8Array(n), idx = new Int32Array(n), cnt = 0;
+        var n = D * D, mu = new Float32Array(n), u0 = new Float32Array(n), vr = new Int32Array(n), sh = new Uint8Array(n), rm = new Uint8Array(n), sp = new Uint8Array(n), ea = new Uint8Array(n), idx = new Int32Array(n), cnt = 0;
         var W = D * 2, th = (p.tilt || 0) * Math.PI / 180, ct = Math.cos(th), stt = Math.sin(th), be = (p.beta || 0) * Math.PI / 180, cb = Math.cos(be), sb = Math.sin(be);
         var L = [-.62, .5, .6], ll = Math.sqrt(L[0] * L[0] + L[1] * L[1] + L[2] * L[2]); L[0] /= ll; L[1] /= ll; L[2] /= ll;
         var hx = L[0], hy = L[1], hz = L[2] + 1, hl = Math.sqrt(hx * hx + hy * hy + hz * hz); hx /= hl; hy /= hl; hz /= hl;
@@ -8792,18 +8804,18 @@ body.th-fade #lr-bg{opacity:0}
             var fr = Math.pow(1 - z, 2.6); rm[i] = clamp(fr * (.25 + .75 * clamp(ndl * 1.6 + .35, 0, 1)) * (p.rim || 0), 0, 1) * 255;
             var ndh = nx * hx + ny * hy + z * hz; sp[i] = p.k === 'earth' ? Math.pow(Math.max(0, ndh), 150) * 255 : 0;
             var xr = sx * ct + sy * stt, yr = -sx * stt + sy * ct, yup = -yr, py2 = yup * cb + z * sb, pz2 = -yup * sb + z * cb, lat = Math.asin(clamp(py2, -1, 1)), lon = Math.atan2(xr, pz2);
-            var u = lon / TAU; u0[i] = u - Math.floor(u);
+            var u = lon / TAU; u0[i] = u - Math.floor(u); mu[i] = p.diff ? 1 + p.diff * Math.cos(lat * 7) : 1;
             vr[i] = clamp(Math.floor((.5 - lat / Math.PI) * D), 0, D - 1) * W;
         }
-        return { u0: u0, vr: vr, sh: sh, rm: rm, sp: sp, ea: ea, idx: idx, cnt: cnt };
+        return { mu: mu, u0: u0, vr: vr, sh: sh, rm: rm, sp: sp, ea: ea, idx: idx, cnt: cnt };
     }
     function heroDraw() {
-        var tx = hero._tx, g = hero._g, W = tx.W, rgb = tx.rgb, spc = tx.spec, lit = tx.lit, cl = tx.cld, o32 = heroImg.o32, idx = g.idx, n = g.cnt, u0 = g.u0, vr = g.vr, sh = g.sh, rm = g.rm, sp = g.sp, ea = g.ea;
-        var rf = ((rot % 1) + 1) % 1, rf2 = (((rot * 1.22) % 1) + 1) % 1, gl = hero._rc, rR = gl[0], rG = gl[1], rB = gl[2];
+        var tx = hero._tx, g = hero._g, mu = g.mu, W = tx.W, rgb = tx.rgb, spc = tx.spec, lit = tx.lit, cl = tx.cld, o32 = heroImg.o32, idx = g.idx, n = g.cnt, u0 = g.u0, vr = g.vr, sh = g.sh, rm = g.rm, sp = g.sp, ea = g.ea;
+        var gl = hero._rc, rR = gl[0], rG = gl[1], rB = gl[2];
         for (var k = 0; k < n; k++) {
-            var i = idx[k], xf = u0[i] + rf; if (xf >= 1) xf -= 1; xf *= W; var xi = xf | 0, fx = xf - xi, x2 = xi + 1 === W ? 0 : xi + 1, base = vr[i], a = (base + xi) << 2, b = (base + x2) << 2;
+            var i = idx[k], xf = u0[i] + rot * mu[i]; xf = (xf - (xf | 0)) * W; var xi = xf | 0, fx = xf - xi, x2 = xi + 1 === W ? 0 : xi + 1, base = vr[i], a = (base + xi) << 2, b = (base + x2) << 2;
             var r = rgb[a] + (rgb[b] - rgb[a]) * fx, g2 = rgb[a + 1] + (rgb[b + 1] - rgb[a + 1]) * fx, bl = rgb[a + 2] + (rgb[b + 2] - rgb[a + 2]) * fx, c = 0;
-            if (cl) { var x3 = u0[i] + rf2; if (x3 >= 1) x3 -= 1; c = cl[base + ((x3 * W) | 0)] / 255; r += (255 - r) * c; g2 += (255 - g2) * c; bl += (255 - bl) * c; }
+            if (cl) { var x3 = u0[i] + rot * 1.22 * mu[i]; x3 -= x3 | 0; c = cl[base + ((x3 * W) | 0)] / 255; r += (255 - r) * c; g2 += (255 - g2) * c; bl += (255 - bl) * c; }
             var s = sh[i] / 255; r *= s; g2 *= s; bl *= s;
             if (lit && s < .55) { var lv = lit[base + xi] / 255 * (1 - s * 1.8) * (1 - c); if (lv > 0) { r += 255 * lv * .8; g2 += 190 * lv * .8; bl += 96 * lv * .8; } }
             if (spc) { var sv = spc[base + xi] * sp[i] / 65025 * (1 - c * .85); if (sv > 0) { r += 255 * sv; g2 += 250 * sv; bl += 240 * sv; } }
@@ -8827,20 +8839,25 @@ body.th-fade #lr-bg{opacity:0}
         el.style.setProperty('--hs', p.T); el.style.setProperty('--g', p.glow2 || '0,0,0'); el.classList.toggle('noatm', !p.glow2);
         var rb = el.querySelector('.hr-rb'), rf = el.querySelector('.hr-rf'); rb.innerHTML = ''; rf.innerHTML = '';
         if (p.ring) { var rc = bakeRing(Math.min(900, Math.round(D * p.ring * .5))); rb.appendChild(rc); rf.appendChild(copy(rc)); el.style.setProperty('--rs', p.ring); el.style.setProperty('--rt', (p.tilt || 0) + 'deg'); rb.style.display = rf.style.display = ''; } else { rb.style.display = rf.style.display = 'none'; }
-        rot = Math.random(); lastT = 0; heroDraw(); heroOn = true; requestAnimationFrame(function () { el.classList.add('on'); }); hloop();
+        rot = 1000 + Math.random(); lastT = 0; heroDraw(); heroOn = true; requestAnimationFrame(function () { el.classList.add('on'); }); hloop();
         var box = root.querySelector('.sx-pls'); if (box) { box.classList.add('has-spot'); var els = box.querySelectorAll('.pl'); for (var i = 0; i < els.length; i++) els[i].classList.toggle('spot', els[i].dataset.k === k); }
         if (done) done();
     }
     function hideHero() { if (hero) hero.classList.remove('on'); heroOn = false; clearTimeout(ht); var box = root && root.querySelector('.sx-pls'); if (box) { box.classList.remove('has-spot'); var els = box.querySelectorAll('.pl'); for (var i = 0; i < els.length; i++) els[i].classList.remove('spot'); } }
-    function spot() {
-        if (!root || heroPaused()) return;
-        var k = ORDER[si % ORDER.length]; if (!heroTex[k]) { ensureHero(k); return; }
-        si++; ensureHero(ORDER[si % ORDER.length]);
-        if (heroOn) { hero.classList.remove('on'); clearTimeout(ht); setTimeout(function () { if (root && themeOn()) showHero(k); }, 1500); } else showHero(k);
+    var VIEWMAP = { dashboard: 'earth', exams: 'mars', certificates: 'mars', reading: 'moon', dictionary: 'saturn', grammar: 'jupiter', 'ai-chat': 'neptune', profile: 'uranus', club: 'venus', movies: 'mercury', mentors: 'mercury', games: 'venus', chess: 'mercury' }, want_k = null, swapT = 0;
+    function planetFor(v) { if (VIEWMAP[v]) return VIEWMAP[v]; var h = 0; for (var i = 0; i < v.length; i++) h = (h * 31 + v.charCodeAt(i)) >>> 0; return ORDER[h % ORDER.length]; }
+    function wantPlanet(k) {
+        want_k = k; if (!root) return;
+        if (hero && hero._k === k && heroOn) return;
+        if (!heroTex[k]) { ensureHero(k); return; }
+        clearTimeout(swapT);
+        if (heroOn) { hero.classList.remove('on'); clearTimeout(ht); swapT = setTimeout(function () { if (root && themeOn() && want_k === k) showHero(k); }, 1100); } else showHero(k);
     }
+    function curView() { return (document.body && document.body.dataset.view) || 'dashboard'; }
     function startSpot() {
-        clearInterval(st); try { if (matchMedia('(prefers-reduced-motion:reduce)').matches) return; } catch (e) { }
-        ensureHero(ORDER[0]); st = setInterval(spot, 13000); setTimeout(spot, 5000); setTimeout(spot, 9000);
+        clearInterval(st); wantPlanet(planetFor(curView()));
+        if (!startSpot.mo) { try { startSpot.mo = new MutationObserver(function () { wantPlanet(planetFor(curView())); }); startSpot.mo.observe(document.body, { attributes: true, attributeFilter: ['data-view'] }); } catch (e) { } }
+        var rest = ORDER.slice(), i = 0; (function nx() { if (i >= rest.length) return; ensureHero(rest[i++]); setTimeout(nx, 2500); })();
     }
     function copy(c) { var o = mk(c.width, c.height); o.getContext('2d').drawImage(c, 0, 0); return o; }
 
@@ -8849,7 +8866,7 @@ body.th-fade #lr-bg{opacity:0}
         try {
             if (!ensureRoot()) { building = false; return; }
             bakedKey = sizeKey(); bakeSky(); await tick();
-            await bakePlanets(); built = true; root.classList.add('rdy'); startMeteors(); startSpot();
+            built = true; root.classList.add('rdy'); startMeteors(); startSpot();
         } catch (e) { console.warn('[space]', e); }
         building = false;
     }
@@ -8882,7 +8899,7 @@ body.th-fade #lr-bg{opacity:0}
     function prewarm() { if (!built && !building) idle(function () { build(); }); }
     window.LRSPACE = { start: start, show: show, prewarm: prewarm, get ready() { return built; } };
     window.__startSpace = start;
-    window.__spHero = function (k) { return new Promise(function (res) { clearInterval(st); ensureHero(k); (function w() { if (heroTex[k]) { if (heroOn) hideHero(); showHero(k); res(1); } else setTimeout(w, 200); })(); }); };
+    window.__spHero = function (k) { return new Promise(function (res) { ensureHero(k); wantPlanet(k); (function w() { if (hero && hero._k === k && heroOn) res(1); else setTimeout(w, 200); })(); }); };
     window.__sp = { warp: function () { for (var i = 0; i < 4; i++) setTimeout(meteor, i * 260); } };
     if (themeOn() && !window.__lrLab) {
         var go = function () { start(); };
@@ -42316,6 +42333,8 @@ window.__MLD = {
 
     /* ---------- the catalogue ---------- */
     let BASE = D.books.map(r => ({ id: String(r[0]), gid: r[0], title: r[1], author: r[2], year: r[3], genre: r[4], rating: r[5], level: r[6], len: r[7], blurb: r[8] }));
+    const JUNKRE = /dictionar|encyclop|cyclop|lexicon|gazetteer|almanac|bulletin|magazine|proceedings|bibliograph|index of|catalogue/i;
+    BASE = BASE.filter(b => !JUNKRE.test(b.title));
     const myBooks = () => JG('ml_my', []).map(m => ({ id: m.id, my: 1, title: m.title, author: m.author || 'Your own text', year: 0, genre: 'My books', rating: 0, level: 'Mine', len: m.len || 0, blurb: 'Text you added yourself. It stays on this device.' }));
     const all = () => myBooks().concat(BASE);
     /* more books: the Books 2 action writes books/catalog.json next to the texts, and it is merged in here */
@@ -42325,7 +42344,7 @@ window.__MLD = {
         try {
             const r = await fetch(new URL('books/catalog.json', location.href).href, { cache: 'no-cache' }); if (!r.ok) return; const j = await r.json();
             const seen = new Set(BASE.map(b => b.id)), key = (b) => norm(b.title) + '|' + norm(b.author), tk = new Set(BASE.map(key)); let n = 0;
-            (j.books || []).forEach(r => { const b = { id: String(r[0]), gid: r[0], title: r[1], author: r[2], year: r[3], genre: r[4], rating: r[5], level: r[6], len: r[7], blurb: r[8] }; if (!b.title || seen.has(b.id) || tk.has(key(b))) return; seen.add(b.id); tk.add(key(b)); BASE.push(b); n++; });
+            (j.books || []).forEach(r => { const b = { id: String(r[0]), gid: r[0], title: r[1], author: r[2], year: r[3], genre: r[4], rating: r[5], level: r[6], len: r[7], blurb: r[8] }; if (!b.title || JUNKRE.test(b.title) || seen.has(b.id) || tk.has(key(b))) return; seen.add(b.id); tk.add(key(b)); BASE.push(b); n++; });
             Object.keys(j.authors || {}).forEach(a => { if (!D.authors[a]) D.authors[a] = j.authors[a]; });
             if (n) { C.n = 48; paintCat(); }
         } catch (e) { catLoaded = 0; }
@@ -42345,7 +42364,7 @@ window.__MLD = {
 
     function coverHTML(b, cls) {
         const p = palOf(b), g = GICON[b.genre] || 'fa-book';
-        const img = b.my ? '' : '<img alt="" loading="lazy" decoding="async" src="https://www.gutenberg.org/cache/epub/' + b.gid + '/pg' + b.gid + '.cover.medium.jpg" data-gid="' + b.gid + '" data-t="' + esc(b.title) + '" data-a="' + esc(b.author) + '" onload="if(this.naturalWidth>60)this.classList.add(\'on\');else window.mlCv(this)" onerror="window.mlCv(this)">';
+        const img = b.my ? '' : '<img alt="" loading="lazy" decoding="async" src="https://www.gutenberg.org/cache/epub/' + b.gid + '/pg' + b.gid + '.cover.medium.jpg" data-gid="' + b.gid + '" data-t="' + esc(b.title) + '" data-au="' + esc(b.author) + '" onload="if(this.naturalWidth>60)this.classList.add(\'on\');else window.mlCv(this)" onerror="window.mlCv(this)">';
         return '<span class="ml-cv ' + (cls || '') + '" style="--a:' + p[0] + ';--b:' + p[1] + '"><i class="fa-solid ' + g + ' ml-cvi"></i><span class="ml-cvt">' + esc(b.title) + '</span><span class="ml-cva">' + esc(b.author) + '</span>' + img + '</span>';
     }
 
@@ -42372,7 +42391,7 @@ window.__MLD = {
             if (miss[gid]) { img.remove(); return; }
             q.push(async () => {
                 if (!img.isConnected) return;
-                const ti = clean(img.dataset.t), au = String(img.dataset.a || '').replace(/\(.*?\)/g, '').split(/[;,]/)[0].trim();
+                const ti = clean(img.dataset.t), au = String(img.dataset.au || '').replace(/\(.*?\)/g, '').split(/[;,]/)[0].trim();
                 const ac = new AbortController(), to = setTimeout(() => ac.abort(), 9000);
                 try {
                     const u = 'https://openlibrary.org/search.json?limit=5&fields=cover_i,title&title=' + encodeURIComponent(ti) + (au && !/unknown|various|anonymous/i.test(au) ? '&author=' + encodeURIComponent(au) : '');
@@ -42591,7 +42610,7 @@ window.__MLD = {
             if (!titleOk(b, probe)) { const L = bad(); L.push(b.id); JS('ml_bad', L); rd.innerHTML = '<div class="ml-load"><button class="ml-x" data-a="back" aria-label="Back to library"><i class="fa-solid fa-chevron-left"></i></button><div class="ml-load-c"><b>This edition isn’t available</b><span>The library returned a different book. It has been hidden from your shelf.</span></div></div>'; return; }
             cachePut(b.id, raw);
         }
-        const doc0 = parse(raw, b); if (tok !== R.tok) return; const doc = doc0;
+        await sleep(60); if (tok !== R.tok) return; const doc0 = parse(raw, b); if (tok !== R.tok) return; const doc = doc0;
         if (doc.T < 50) { rd.innerHTML = '<div class="ml-load"><button class="ml-x" data-a="back"><i class="fa-solid fa-chevron-left"></i></button><div class="ml-load-c"><b>This text is empty</b></div></div>'; return; }
         makeSegs(doc0); R.d0 = doc0; R.segs = doc0.segs; R.lvl = adOK() ? lvlOf(b) : 'O'; R.gated = false; R.skipTo = 0; R.wg = 0;
         await adPrep(R.lvl); if (tok !== R.tok) return;
