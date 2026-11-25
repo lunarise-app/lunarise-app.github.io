@@ -19158,7 +19158,7 @@ Respond ONLY with minified JSON: {"title":string,"topic":string (1-2 English wor
         }
 
         function openSubscriptionModal() {
-            try { promoCheckExpiry(); promoSay('Codes give 1 year of PRO. Each code works once.'); } catch (e) { }
+            try { promoCheckExpiry(); promoSay('Enter your promo code to start PRO. Each code works once.'); } catch (e) { }
             document.getElementById('modal-subscription').classList.remove('hidden');
         }
 
@@ -39701,8 +39701,35 @@ ${p.p}`;
         const os = /android/i.test(ua) ? 'Android' : (/iphone|ipad|ipod/i.test(ua) || (/Mac/i.test(pf) && navigator.maxTouchPoints > 1)) ? 'iOS' : /windows/i.test(ua) ? 'Windows' : /mac/i.test(ua) ? 'macOS' : /cros/i.test(ua) ? 'ChromeOS' : /linux/i.test(ua) ? 'Linux' : 'Other';
         const br = /edg\//i.test(ua) ? 'Edge' : /opr\/|opera/i.test(ua) ? 'Opera' : /samsungbrowser/i.test(ua) ? 'Samsung' : /firefox|fxios/i.test(ua) ? 'Firefox' : /chrome|crios/i.test(ua) ? 'Chrome' : /safari/i.test(ua) ? 'Safari' : 'Other';
         const m = Math.min(screen.width || 0, screen.height || 0), ty = !m ? '' : m < 600 ? 'phone' : m < 1000 ? 'tablet' : 'desktop';
-        return { os: os, br: br, ty: ty, lg: String(navigator.language || '').slice(0, 12) };
+        let dv = '', md = '', osv = '', hi = {}; try { hi = JSON.parse(LS.get('lr_hi') || '{}') || {}; } catch (e) { }
+        if (os === 'iOS') { dv = (/ipad/i.test(ua) || !/iphone|ipod/i.test(ua)) ? 'iPad' : 'iPhone'; const v = /OS (\d+)[_.](\d+)/.exec(ua); if (v) osv = 'iOS ' + v[1] + '.' + v[2]; }
+        else if (os === 'Android') {
+            const m0 = /Android[^;)]*;\s*([^;)]+?)(?:\sBuild|\)|;)/.exec(ua); md = String(hi.m || (m0 && m0[1]) || '').trim(); if (/^(K|Android|Mobile)$/i.test(md)) md = '';
+            dv = devBrand(md) || (ty === 'tablet' ? 'Android tablet' : 'Android phone'); const v = /Android (\d+)/.exec(ua); if (v) osv = 'Android ' + v[1];
+        }
+        else if (os === 'Windows') { dv = 'Windows PC'; const pv = parseInt(String(hi.p || '').split('.')[0], 10); osv = pv >= 13 ? 'Windows 11' : pv > 0 ? 'Windows 10' : ''; }
+        else if (os === 'macOS') dv = 'Mac'; else if (os === 'ChromeOS') dv = 'Chromebook'; else if (os === 'Linux') dv = 'Linux PC';
+        return { os: os, br: br, ty: ty, lg: String(navigator.language || '').slice(0, 12), dv: dv, md: md.slice(0, 32), osv: osv, sc: (screen.width || 0) + 'x' + (screen.height || 0), cc: GEO.cc, ct: GEO.ct };
     }
+    function devBrand(m) {
+        m = String(m || ''); if (!m) return '';
+        return /^(SM-|GT-|SC-|SCG|SHV|SAMSUNG)/i.test(m) ? 'Samsung' : /pixel/i.test(m) ? 'Google Pixel' : /redmi|poco|xiaomi|^mi\b|^m\d{4}[a-z]\d/i.test(m) || /^\d{5,}[A-Z0-9]{3,}$/i.test(m) ? 'Xiaomi' :
+            /^(CPH|PH[A-Z]M|PG[A-Z]M|PD\d)/i.test(m) || /oppo/i.test(m) ? 'OPPO' : /^RMX|realme/i.test(m) ? 'realme' : /^V\d{4}|vivo/i.test(m) ? 'vivo' : /oneplus|^(IN20|KB20|LE2|NE22|HD19|GM19)/i.test(m) ? 'OnePlus' :
+            /huawei|^(ELS|ANA|LYA|NOH|JAD|ALN|MAR|NAM|JNY|TNA|VOG|STK|MRD|DRA|AMN|BKL|CLT|EML)-/i.test(m) ? 'Huawei' : /honor|^(RMO|NTH|PGT|ANY|VNE|ALI|REA|MGA|HJR)-/i.test(m) ? 'Honor' :
+            /infinix/i.test(m) ? 'Infinix' : /tecno/i.test(m) ? 'TECNO' : /itel/i.test(m) ? 'itel' : /^moto|^XT\d{4}|motorola/i.test(m) ? 'Motorola' : /nokia|^TA-\d/i.test(m) ? 'Nokia' : /^(SO-|XQ-|F\d{4}|G\d{4}\b)|sony/i.test(m) ? 'Sony' : /lenovo|^TB-/i.test(m) ? 'Lenovo' : /^(KFT|KFM|AFT|KF[A-Z]{2,3})|amazon/i.test(m) ? 'Amazon' : '';
+    }
+    const GEO = { cc: '', ct: '' };
+    (function () { try { const g = JSON.parse(LS.get('lr_geo') || 'null'); if (g && /^[A-Z]{2}$/.test(g.cc || '')) { GEO.cc = g.cc; GEO.ct = String(g.ct || '').slice(0, 40); } } catch (e) { } })();
+    function geoLoad() {
+        try { const g = JSON.parse(LS.get('lr_geo') || 'null'); if (g && /^[A-Z]{2}$/.test(g.cc || '') && Date.now() - (g.t || 0) < 7 * 864e5) return; } catch (e) { }
+        if (BOT) return;
+        const T = (u) => { const c = new AbortController(), t = setTimeout(() => c.abort(), 5000); return fetch(u, { signal: c.signal, cache: 'no-store' }).then(r => r.json()).finally(() => clearTimeout(t)); };
+        T('https://get.geojs.io/v1/ip/geo.json').then(j => ({ cc: j.country_code, ct: j.city }))
+            .catch(() => T('https://ipwho.is/').then(j => ({ cc: j.country_code, ct: j.city })))
+            .catch(() => T('https://api.country.is/').then(j => ({ cc: j.country, ct: '' })))
+            .then(g => { if (g && /^[A-Za-z]{2}$/.test(g.cc || '')) { GEO.cc = g.cc.toUpperCase(); GEO.ct = String(g.ct || '').replace(/[<>"\\]/g, '').slice(0, 40); LS.set('lr_geo', JSON.stringify({ cc: GEO.cc, ct: GEO.ct, t: Date.now() })); lastSrv = 0; setTimeout(() => { try { if (lastO) srvBeat(lastO); } catch (e) { } }, 400); } }).catch(() => { });
+    }
+    try { if (navigator.userAgentData && navigator.userAgentData.getHighEntropyValues) navigator.userAgentData.getHighEntropyValues(['model', 'platformVersion']).then(h => LS.set('lr_hi', JSON.stringify({ m: h.model || '', p: h.platformVersion || '' }))).catch(() => { }); } catch (e) { }
     /* the same numbers as the heartbeat, but written by the LunaRise server (never blocked by database rules) */
     let lastO = null;
     function srvBody(o) {
@@ -39725,7 +39752,7 @@ ${p.p}`;
     addEventListener('pagehide', srvFlush);
     function startStats() {
         if (/[?&]introT=/.test(location.search)) return;
-        setTimeout(beat, 3500); setTimeout(visit, 5000); setTimeout(cfgCheck, 4500); setTimeout(giftCheck, 6000);
+        setTimeout(beat, 3500); setTimeout(visit, 5000); setTimeout(cfgCheck, 4500); setTimeout(giftCheck, 6000); setTimeout(geoLoad, 2500);
         document.addEventListener('visibilitychange', () => { if (document.hidden) { hiddenAt = Date.now(); LS.set('lr_vlast', String(Date.now())); } else if (hiddenAt && Date.now() - hiddenAt > 30 * 60000) { LS.set('lr_vlast', '0'); setTimeout(visit, 1500); } });
         setInterval(beat, 90000);
         document.addEventListener('visibilitychange', () => { if (!document.hidden) { firstDone = firstDone && dayKey(Date.now()) === LS.get('lr_sd'); beat(); } });
@@ -39761,7 +39788,7 @@ ${p.p}`;
         btn.disabled = true; btn.style.opacity = .6; say('Checking…');
         let j = null, reached = false;
         try { j = await call({ op: 'redeem', code, device: dev() }, 20000); reached = true; }
-        catch (e) { const m = String(e.message); if (/used|rate|invalid/.test(m)) { j = { ok: false, error: m }; reached = true; } }
+        catch (e) { const m = String(e.message); if (/used|rate|invalid|expired/.test(m)) { j = { ok: false, error: m }; reached = true; } }
         const bot = (typeof LR_PROMO_API !== 'undefined' && LR_PROMO_API) ? LR_PROMO_API : '';
         if (bot && (!j || (!j.ok && j.error === 'invalid'))) {
             try {
@@ -39771,13 +39798,13 @@ ${p.p}`;
             } catch (e) { }
         }
         if (j && j.ok && j.expires) {
-            const u = U(); u.isPro = true; u.proUntil = j.expires; u.proPlan = '1 Year (promo)'; try { pfSave(); } catch (e) { }
+            const u = U(); u.isPro = true; u.proUntil = j.expires; u.proPlan = String(j.plan || '1 year').replace(/^./, c => c.toUpperCase()) + ' (promo)'; try { pfSave(); } catch (e) { }
             try { updateHeaderUI(); } catch (e) { } try { renderProfile(); } catch (e) { }
             inp.value = ''; say('🎉 PRO activated until ' + new Date(j.expires).toLocaleDateString('en-GB') + '!', 'ok');
             try { triggerConfetti(); } catch (e) { } lastBeat = 0; beat();
             setTimeout(() => { try { closeModal('modal-subscription'); } catch (e) { } }, 1800);
         } else if (!reached) say('Could not reach the server. Try again.', 'err');
-        else { const e = (j && j.error) || ''; say(e === 'used' ? 'This code has already been used.' : e === 'rate' ? 'Too many wrong attempts. Try again in 10 minutes.' : 'Code not found. Check it and try again.', 'err'); }
+        else { const e = (j && j.error) || ''; say(e === 'used' ? 'This code has already been used.' : e === 'expired' ? 'This code has expired. Ask for a new one.' : e === 'rate' ? 'Too many wrong attempts. Try again in 10 minutes.' : 'Code not found. Check it and try again.', 'err'); }
         btn.disabled = false; btn.style.opacity = 1;
     };
 
@@ -40303,7 +40330,7 @@ ${p.p}`;
     }
     addEventListener('resize', () => { if (!A) return; const ind = A.querySelector('.adm-tabi'); if (ind) ind.style.transition = 'none'; paintTabs(); requestAnimationFrame(() => { if (ind) ind.style.transition = ''; }); });
     window.LRADM3_H = { adm, toast, copy, applyFlags, legacy: open, markOwner, setTab: (t) => { tab = t; LS.set('lr_adm_tab', t); } };
-    function openNew() { if (window.LRADM3) { LRADM3.bind(window.LRADM3_H); LRADM3.open(); } else open(); }
+    function openNew() { if (window.LRADM4) { LRADM4.open(window.LRADM3_H); } else if (window.LRADM3) { LRADM3.bind(window.LRADM3_H); LRADM3.open(); } else open(); }
     window.LRAdmin = { open: () => (adminOk ? openNew() : authUser().then(u => { adminOk = isAdminUser(u); if (adminOk) openNew(); else toast('This panel is only for the site owner.'); })), _beat: () => { lastBeat = 0; beat(); }, _cfg: cfgCheck, _gift: giftCheck };
 
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', startStats); else startStats();
@@ -55030,7 +55057,7 @@ async function subsIA(id){var r=await ft('https://archive.org/metadata/'+encodeU
 function subsYT(id){
  function direct(){return ft('https://www.youtube.com/api/timedtext?v='+encodeURIComponent(id)+'&lang=en&fmt=json3',6000).then(function(r){return r.ok?r.text():''}).then(function(t){if(!t)return null;var c=fromJson3(JSON.parse(t));return c.length?c:null}).catch(function(){return null})}
  function viaServer(){if(!window.LRCALL)return Promise.resolve(null);return LRCALL({op:'yt_caps',v:id},18000).then(function(j){return j&&j.ok&&j.cues&&j.cues.length?j.cues.map(function(x){return{s:x[0],e:x[1],t:clean(x[2])}}):null}).catch(function(){return null})}
- function viaPage(){var P='https://api.allorigins.win/raw?url=';return ft(P+encodeURIComponent('https://www.youtube.com/watch?v='+id+'&hl=en'),12000).then(function(r){return r.text()}).then(function(h){var m=/"captionTracks":(\[.*?\])/.exec(h);if(!m)return null;var tr=JSON.parse(m[1]),en=tr.filter(function(x){return /^en/.test(x.languageCode)})[0]||tr[0];if(!en)return null;var u=en.baseUrl.replace(/\\u0026/g,'&')+'&fmt=json3';return ft(P+encodeURIComponent(u),12000).then(function(r){return r.text()}).then(function(t2){var c=fromJson3(JSON.parse(t2));return c.length?c:null})}).catch(function(){return null})}
+ function viaPage(){var P='https://api.allorigins.win/raw?url=';return ft(P+encodeURIComponent('https://www.youtube.com/watch?v='+id+'&hl=en'),12000).then(function(r){return r.text()}).then(function(h){var m=/"captionTracks":(\[.*?\])/.exec(h);if(!m)return null;var tr=JSON.parse(m[1]),en0=tr.filter(function(x){return /^en/.test(x.languageCode)}),en=en0.filter(function(x){return x.kind!=='asr'})[0]||en0[0]||tr[0];if(!en)return null;var u=en.baseUrl.replace(/\\u0026/g,'&')+'&fmt=json3'+(/^en/.test(en.languageCode)?'':'&tlang=en');return ft(P+encodeURIComponent(u),12000).then(function(r){return r.text()}).then(function(t2){var c=fromJson3(JSON.parse(t2));return c.length?c:null})}).catch(function(){return null})}
  return anyOk([direct(),viaServer(),viaPage()].concat(PIPED.map(function(h){return viaPiped(id,h)}),INV.map(function(h){return viaInv(id,h)})))}
 /* ---------- word meaning in this scene ---------- */
 var MC={};
@@ -55122,7 +55149,7 @@ function findCues(C){var src=C.src,pre=src.cues;if(pre&&pre.length){setCues(C,pr
  var job=src.k==='yt'?subsYT(src.id):src.k==='ia'?subsIA(src.id).catch(function(){return null}):Promise.resolve(null);
  job.then(function(c){if(C.dead)return;if(c&&c.length){setCues(C,c);return}noCaps(C)}).catch(function(){noCaps(C)})}
 /* ---- YouTube films without readable subtitles: the LunaRise server listens to the film's sound and writes the dialogue ---- */
-function sttStart(C){var id=C.src&&C.src.id;if(!id||C.stt||typeof window.LRCALL!=='function')return false;
+function sttStart(C){return false;var id=C.src&&C.src.id;if(!id||C.stt||typeof window.LRCALL!=='function')return false;
  var S={dead:false,got:{},busy:{},n:0,fail:0,ok:0,next:0,dur:0,live:false};C.stt=S;
  var dev='';try{dev=typeof promoDevice==='function'?promoDevice():''}catch(e){}
  function giveUp(why){if(S.dead)return;S.dead=true;clearInterval(S.tm);if(!C.dead&&!C.cues.length)emptyState(C,'ytcc')}
@@ -55141,7 +55168,7 @@ function sttStart(C){var id=C.src&&C.src.id;if(!id||C.stt||typeof window.LRCALL!
 function ytCC(C,on){var pl=C.ad&&C.ad.raw;if(!pl)return;try{if(on){pl.loadModule('captions');pl.setOption('captions','track',{languageCode:'en'})}else pl.unloadModule('captions')}catch(e){}C.ccOn=!!on;C.p.classList.toggle('cn-cc',!!on);var b=C.p.querySelector('[data-a=cc]');if(b)b.classList.toggle('on',!!on)}
 function noCaps(C){if(C.cues.length)return;var v=C.video;
  if(C.yt){ytCC(C,true);emptyState(C,sttStart(C)?'ytstt':'ytcc');if(!C.retried){C.retried=1;C.timers.push(setTimeout(function(){if(!C.dead&&!C.cues.length&&!(C.stt&&C.stt.live))findCues(C)},25000))}return}
- if(v&&!C.noCors){var w=whisperStart(v,function(add){addLive(C,add)},function(){return SET.auto!==false&&!C.dead});if(w){C.wh=w;emptyState(C,'whisper');C.timers.push(setTimeout(function(){if(!C.dead&&!C.cues.length)emptyState(C,'none')},70000));return}}
+ if(false&&v&&!C.noCors){var w=whisperStart(v,function(add){addLive(C,add)},function(){return SET.auto!==false&&!C.dead});if(w){C.wh=w;emptyState(C,'whisper');C.timers.push(setTimeout(function(){if(!C.dead&&!C.cues.length)emptyState(C,'none')},70000));return}}
  emptyState(C,'none')}
 function setCues(C,c){if(C.yt)ytCC(C,false);C.cues=c.slice().sort(function(a,b){return a.s-b.s});C.cur=-1;buildList(C);C.p.classList.add('cn-has')}
 function addLive(C,add){var first=!C.cues.length;add.forEach(function(n){if(C.cues.some(function(x){return Math.abs(x.s-n.s)<1.2&&x.t.slice(0,12)===n.t.slice(0,12)}))return;C.cues.push(n)});C.cues.sort(function(a,b){return a.s-b.s});for(var i=0;i<C.cues.length-1;i++)if(C.cues[i].e>C.cues[i+1].s)C.cues[i].e=Math.max(C.cues[i].s+.4,C.cues[i+1].s);C.cur=-1;if(first)C.list.innerHTML='';buildList(C,true);C.p.classList.add('cn-has')}
@@ -55563,9 +55590,9 @@ if(document.body)start();else document.addEventListener('DOMContentLoaded',start
         if (C.cues.length) return '';
         if (C.p.classList.contains('cn-native')) return '';
         var t = Date.now() - (C.mv2.born || (C.mv2.born = Date.now()));
-        if (C.ccOn) return 'Showing the video’s own captions · tappable subtitles will appear when ready';
+        if (C.ccOn) return t < 40000 ? 'Showing the film’s own subtitles · loading tappable text…' : 'These subtitles can’t be read for tapping on this film';
         if (t < 2500) return '';
-        return t < 30000 ? 'Getting subtitles…' : 'No subtitles found yet';
+        return t < 30000 ? 'Loading the film’s subtitles…' : 'This film has no readable subtitles yet';
     }
     function tick(C) {
         var M = C.mv2; if (C.dead || !D.body.contains(C.p)) { clearInterval(M.tm); closeCard(C, false, true); return; }
@@ -55575,10 +55602,17 @@ if(document.body)start();else document.addEventListener('DOMContentLoaded',start
         /* auto-pause at the end of a line */
         if (CFG.ap && !paused && M.idx >= 0 && C.cues[M.idx] && !M.replay && M.apDone !== M.idx && t >= C.cues[M.idx].e - .06) { M.apDone = M.idx; try { a.pause(); } catch (e) { } }
         if (M.replay && !paused && t >= M.replay.end) { try { a.pause(); } catch (e) { } M.replay.btn && M.replay.btn.classList.remove('run'); M.replay = null; }
+        if (!C.cues.length && C.video && C.video.textTracks && C.video.textTracks.length && Date.now() - (M.ttT || 0) > 1500) {
+            M.ttT = Date.now(); try {
+                var tl = [].slice.call(C.video.textTracks).filter(function (x) { return x.kind === 'subtitles' || x.kind === 'captions'; });
+                tl.sort(function (a, b) { return (/^en/.test(a.language) ? 0 : 1) - (/^en/.test(b.language) ? 0 : 1); });
+                var tk = tl[0]; if (tk) { if (tk.mode === 'disabled') tk.mode = 'hidden'; var cs = tk.cues ? [].slice.call(tk.cues) : []; if (cs.length) { C.cues = cs.map(function (q) { return { s: q.startTime, e: q.endTime, t: String(q.text || '').replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim() }; }).filter(function (q) { return q.t; }); C.p.classList.add('cn-has'); } }
+            } catch (e) { }
+        }
         var i = idxAt(C.cues, t);
         if (i !== M.idx || C.cues.length !== M.n) { if (!(M.sheet && paused && M.idx >= 0 && i !== M.idx && !M.replay)) render(C, i); }
         /* subtitles move up when the controls are showing */
-        var pill = pillText(C); if (M.pillT !== pill) { M.pillT = pill; if (pill) { M.pill.hidden = false; M.pill.innerHTML = '<span>' + esc(pill) + '</span>' + (/No subtitles/.test(pill) ? '<button type="button" data-k="retry">Try again</button><button type="button" data-k="file">Load .srt</button><button type="button" data-k="mic">Listen</button>' : ''); } else M.pill.hidden = true; }
+        var pill = pillText(C); if (M.pillT !== pill) { M.pillT = pill; if (pill) { M.pill.hidden = false; M.pill.innerHTML = '<span>' + esc(pill) + '</span>' + (/no readable|can’t be read/.test(pill) ? '<button type="button" data-k="retry">Try again</button><button type="button" data-k="file">Load .srt</button>' : ''); } else M.pill.hidden = true; }
         /* a word card closes by itself when the viewer starts the film */
         if (M.sheet) { if (!paused && !M.replay) { M.noPlay++; if (M.noPlay > 6 && Date.now() - M.openedAt > 900) closeCard(C, false); } else M.noPlay = 0; }
     }
@@ -55683,7 +55717,611 @@ if(document.body)start();else document.addEventListener('DOMContentLoaded',start
         var ps = [].slice.call(box.querySelectorAll('.mv2-ex')); for (var i = 0; i < ps.length; i++) { if (!alive()) return; var t2 = await trSentence(list[i], main); if (alive() && t2) ps[i].querySelector('.tr').textContent = t2; }
     }
 })();
-</script><script id="lr-tg">/* Telegram Mini App: when the site is opened inside Telegram it fills the screen, matches the theme and remembers the invite code */
+</script><style id="adm4-css">/* LunaRise Admin 4 — analytics console */
+#adm4{--bg:#0c0e16;--pn:#141724;--pn2:#1a1e2f;--ln:rgba(255,255,255,.07);--ln2:rgba(255,255,255,.12);--tx:#eef0fb;--mu:#a0a8c6;--mu2:#6e7899;--ac:#8b7bff;--ac-t:#1a1240;
+ --c1:#8b7bff;--c2:#2dd4bf;--c3:#fbbf24;--c4:#f472b6;--c5:#38bdf8;--c6:#fb923c;--c7:#a3e635;--c8:#94a3b8;--good:#34d399;--bad:#fb7185;--warn:#fbbf24;--sh:0 18px 40px -22px rgba(0,0,0,.7);
+ position:fixed;inset:0;z-index:100000;display:flex;background:var(--bg);color:var(--tx);font:14px/1.45 'Inter','Outfit',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;opacity:0;transform:translateY(10px);transition:opacity .22s,transform .22s;overscroll-behavior:contain;-webkit-tap-highlight-color:transparent}
+#adm4[data-th=light]{--bg:#f2f3fa;--pn:#fff;--pn2:#f6f7fd;--ln:rgba(20,24,50,.08);--ln2:rgba(20,24,50,.14);--tx:#161a2e;--mu:#555f86;--mu2:#8089ad;--ac:#5b4be0;--ac-t:#fff;
+ --c1:#5b4be0;--c2:#0d9488;--c3:#b7791f;--c4:#d6336c;--c5:#0b7fc0;--c6:#d9480f;--c7:#4d7c0f;--c8:#64748b;--good:#059669;--bad:#e11d48;--warn:#b7791f;--sh:0 14px 30px -20px rgba(30,40,90,.35)}
+#adm4.in{opacity:1;transform:none}
+#adm4,#adm4 *{box-sizing:border-box}
+:where(#adm4) button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;padding:0}
+#adm4 svg{display:block}
+#adm4 .ico{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;flex:none}
+html.a4-open,html.a4-open body{overflow:hidden!important}
+/* sidebar */
+.a4-side{flex:none;width:232px;display:flex;flex-direction:column;gap:4px;padding:18px 14px;background:var(--pn);border-right:1px solid var(--ln);overflow:auto}
+.a4-brand{display:flex;align-items:center;gap:11px;padding:4px 8px 16px}
+.a4-logo{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(140deg,var(--c1),var(--c5));color:#fff;box-shadow:0 10px 24px -10px var(--c1)}
+.a4-brand b{display:block;font-size:16px;letter-spacing:-.01em}.a4-brand small{color:var(--mu2);font-size:11.5px}
+.a4-nav{display:flex;flex-direction:column;gap:3px}
+.a4-nb{display:flex;align-items:center;gap:12px;padding:11px 12px;border-radius:12px;color:var(--mu);font-weight:600;text-align:left;width:100%;transition:background .15s,color .15s}
+.a4-nb:hover{background:var(--pn2);color:var(--tx)}
+.a4-nb.on{background:var(--ac);color:var(--ac-t);box-shadow:0 10px 22px -12px var(--ac)}
+.a4-nb .n{margin-left:auto;font-size:11px;font-weight:700;padding:2px 7px;border-radius:99px;background:var(--pn2);color:var(--mu)}
+.a4-nb.on .n{background:rgba(255,255,255,.22);color:inherit}
+.a4-sp{flex:1}
+.a4-sep{height:1px;background:var(--ln);margin:8px 6px}
+/* main */
+.a4-main{flex:1;min-width:0;min-height:0;display:flex;flex-direction:column}
+.a4-top{flex:none;display:flex;align-items:center;gap:10px;padding:14px 22px;border-bottom:1px solid var(--ln);background:var(--bg)}
+.a4-top h1{margin:0;font:700 20px/1.2 'Outfit','Inter',sans-serif;letter-spacing:-.015em}
+.a4-live{display:inline-flex;align-items:center;gap:7px;font-size:12px;color:var(--mu);padding:4px 10px;border-radius:99px;background:var(--pn);border:1px solid var(--ln);white-space:nowrap}
+.a4-live i{width:7px;height:7px;border-radius:50%;background:var(--good);box-shadow:0 0 0 0 var(--good);animation:a4p 2s infinite}
+.a4-live.off i{background:var(--bad);animation:none}
+@keyframes a4p{0%{box-shadow:0 0 0 0 rgba(52,211,153,.55)}80%,100%{box-shadow:0 0 0 7px rgba(52,211,153,0)}}
+.a4-ib{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:var(--pn);border:1px solid var(--ln);color:var(--mu);transition:background .15s,color .15s}
+.a4-ib:hover{color:var(--tx);background:var(--pn2)}
+.a4-ib.sp{animation:a4s .8s linear infinite}@keyframes a4s{to{transform:rotate(360deg)}}
+.a4-body{flex:1;min-height:0;overflow:auto;padding:22px}
+.a4-wrap{max-width:1500px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
+.a4-hi{display:flex;align-items:flex-end;gap:14px;flex-wrap:wrap}
+.a4-hi h2{margin:0;font:700 26px/1.15 'Outfit','Inter',sans-serif;letter-spacing:-.02em}.a4-hi p{margin:4px 0 0;color:var(--mu)}
+.a4-hi .r{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
+/* grid + cards */
+.a4-g{display:grid;gap:16px;grid-template-columns:repeat(12,minmax(0,1fr))}
+.s12{grid-column:span 12}.s8{grid-column:span 8}.s7{grid-column:span 7}.s6{grid-column:span 6}.s5{grid-column:span 5}.s4{grid-column:span 4}.s3{grid-column:span 3}
+.a4-c{background:var(--pn);border:1px solid var(--ln);border-radius:18px;padding:18px;box-shadow:var(--sh);min-width:0}
+.a4-c>h3,.a4-ch3{margin:0 0 2px;font:700 15px/1.3 'Outfit','Inter',sans-serif;display:flex;align-items:center;gap:8px}
+.a4-sub{margin:0 0 12px;color:var(--mu2);font-size:12.5px}
+.a4-h{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px}.a4-h>div{flex:1;min-width:0}.a4-h h3{margin:0;font:700 15px/1.3 'Outfit','Inter',sans-serif}.a4-h p{margin:2px 0 0;color:var(--mu2);font-size:12.5px}
+/* KPI */
+.a4-kg{display:grid;gap:14px;grid-template-columns:repeat(4,minmax(0,1fr))}
+.a4-k{position:relative;background:var(--pn);border:1px solid var(--ln);border-radius:18px;padding:16px 16px 12px;box-shadow:var(--sh);overflow:hidden;min-width:0;display:flex;flex-direction:column;gap:2px}
+.a4-k .t{display:flex;align-items:center;gap:8px;color:var(--mu);font-size:12.5px;font-weight:600}
+.a4-k .t i{width:26px;height:26px;border-radius:9px;display:grid;place-items:center;background:color-mix(in srgb,var(--kc) 18%,transparent);color:var(--kc)}
+.a4-k .t i .ico{width:15px;height:15px}
+.a4-k .v{font:700 30px/1.1 'Outfit','Inter',sans-serif;letter-spacing:-.02em;margin-top:6px;font-variant-numeric:tabular-nums}
+.a4-k .d{font-size:12px;color:var(--mu2);display:flex;gap:6px;align-items:center;min-height:18px;flex-wrap:wrap}
+.a4-up{color:var(--good);font-weight:700}.a4-dn{color:var(--bad);font-weight:700}
+.a4-sp svg,.a4-k svg.a4-sp{width:100%;height:34px;margin-top:6px}
+svg.a4-sp{width:100%;height:34px}
+/* chips + buttons */
+.a4-btn{display:inline-flex;align-items:center;gap:8px;padding:9px 14px;border-radius:12px;background:var(--pn2);border:1px solid var(--ln2);font-weight:600;font-size:13px;color:var(--tx);transition:transform .1s,background .15s}
+.a4-btn:hover{background:var(--ln)}.a4-btn:active{transform:scale(.97)}
+.a4-btn.pri{background:var(--ac);color:var(--ac-t);border-color:transparent;box-shadow:0 10px 22px -12px var(--ac)}
+.a4-btn.bad{color:var(--bad)}.a4-btn.sm{padding:6px 10px;font-size:12px;border-radius:9px}
+.a4-btn:disabled{opacity:.5;pointer-events:none}.a4-btn .ico{width:16px;height:16px}
+.a4-btn.armed{background:var(--bad);color:#fff}
+.a4-chips{display:flex;gap:6px;flex-wrap:wrap}
+.a4-chip{padding:6px 12px;border-radius:99px;background:var(--pn2);border:1px solid var(--ln);font-size:12.5px;font-weight:600;color:var(--mu)}
+.a4-chip.on{background:var(--ac);color:var(--ac-t);border-color:transparent}
+.a4-chip b{font-weight:700;opacity:.8;margin-left:3px}
+.a4-seg{display:inline-flex;background:var(--pn2);border:1px solid var(--ln);border-radius:11px;padding:3px}
+.a4-seg button{padding:5px 11px;border-radius:8px;font-size:12px;font-weight:700;color:var(--mu)}.a4-seg button.on{background:var(--ac);color:var(--ac-t)}
+.a4-in,.a4-sel{width:100%;padding:10px 12px;border-radius:11px;background:var(--pn2);border:1px solid var(--ln2);color:var(--tx);font:inherit;outline:0;min-width:0}
+.a4-in:focus,.a4-sel:focus{border-color:var(--ac);box-shadow:0 0 0 3px color-mix(in srgb,var(--ac) 28%,transparent)}
+.a4-sel{appearance:auto}
+.a4-lbl{display:block;font-size:12px;font-weight:700;color:var(--mu);margin:0 0 6px}
+.a4-sr{position:relative;flex:1;min-width:180px}.a4-sr .ico{position:absolute;left:12px;top:11px;color:var(--mu2);width:18px;height:18px}.a4-sr input{padding-left:38px}
+.a4-tag{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:99px;font-size:11px;font-weight:700;background:var(--pn2);color:var(--mu);white-space:nowrap}
+.a4-tag.g{background:color-mix(in srgb,var(--good) 18%,transparent);color:var(--good)}.a4-tag.r{background:color-mix(in srgb,var(--bad) 18%,transparent);color:var(--bad)}
+.a4-tag.y{background:color-mix(in srgb,var(--warn) 20%,transparent);color:var(--warn)}.a4-tag.v{background:color-mix(in srgb,var(--c1) 20%,transparent);color:var(--c1)}.a4-tag.b{background:color-mix(in srgb,var(--c5) 20%,transparent);color:var(--c5)}
+/* charts */
+.a4-chw{position:relative}
+.a4-chs{width:100%;height:auto;overflow:visible}
+.a4-chs text{fill:var(--mu2);font-size:10.5px;font-family:inherit}
+.a4-chs .gl{stroke:var(--ln);stroke-width:1}
+.a4-cx{position:absolute;top:0;bottom:24px;width:1px;background:var(--ln2);pointer-events:none;display:none}
+.a4-tp{position:absolute;z-index:3;top:6px;pointer-events:none;background:var(--bg);border:1px solid var(--ln2);border-radius:11px;padding:8px 11px;font-size:12px;box-shadow:var(--sh);white-space:nowrap;min-width:120px}
+.a4-tp b{display:block;margin-bottom:3px}.a4-tp span{display:flex;align-items:center;gap:7px;color:var(--mu)}.a4-tp span i{width:8px;height:8px;border-radius:3px}.a4-tp span em{margin-left:auto;font-style:normal;color:var(--tx);font-weight:700;padding-left:14px}
+.a4-lg{display:flex;gap:14px;flex-wrap:wrap;margin-top:8px;font-size:12px;color:var(--mu)}.a4-lg i{display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:6px}
+.a4-dn2{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+.a4-dn2>svg{width:150px;height:150px;flex:none}
+.a4-dn2 .ct{font:700 7px 'Outfit',sans-serif;fill:var(--tx)}.a4-dn2 .cs{font-size:3.1px;fill:var(--mu2)}
+.a4-dl{flex:1;min-width:140px;display:flex;flex-direction:column;gap:6px}
+.a4-dl div{display:flex;align-items:center;gap:8px;font-size:13px}.a4-dl i{width:10px;height:10px;border-radius:3px;flex:none}.a4-dl span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.a4-dl em{font-style:normal;color:var(--mu);font-variant-numeric:tabular-nums}.a4-dl b{font-variant-numeric:tabular-nums}
+.a4-bl{display:flex;flex-direction:column;gap:9px}
+.a4-bi{display:grid;grid-template-columns:minmax(96px,1.5fr) minmax(0,1fr) auto;gap:10px;align-items:center;font-size:13px}
+.a4-bi .l{display:flex;align-items:center;gap:8px;min-width:0}.a4-bi .l span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.a4-bi .b{height:9px;border-radius:99px;background:var(--pn2);overflow:hidden}.a4-bi .b i{display:block;height:100%;border-radius:99px;background:var(--bc,var(--c1));min-width:3px;transition:width .5s}
+.a4-bi .n{font-variant-numeric:tabular-nums;font-weight:700;text-align:right}.a4-bi .n small{color:var(--mu2);font-weight:600;margin-left:5px}
+.a4-fl{font-size:16px;line-height:1;width:22px;text-align:center;flex:none}
+.a4-bdg{width:22px;height:22px;border-radius:7px;display:grid;place-items:center;font-size:11px;font-weight:800;color:#fff;flex:none;background:var(--bc,var(--c8))}
+.a4-fn{display:flex;flex-direction:column;gap:7px}
+.a4-fr{display:grid;grid-template-columns:84px minmax(0,1fr) 92px;gap:10px;align-items:center;font-size:13px}
+.a4-fr .b{height:26px;border-radius:8px;background:var(--pn2);overflow:hidden}.a4-fr .b i{display:flex;align-items:center;padding-left:9px;height:100%;border-radius:8px;font-size:12px;font-weight:700;color:#fff;background:var(--bc);min-width:30px;transition:width .5s}
+.a4-fr .p{text-align:right;color:var(--mu);font-size:12px}.a4-fr .p b{color:var(--tx)}
+.a4-rg{position:relative;width:150px;height:150px;flex:none}
+.a4-rg svg{width:100%;height:100%;transform:rotate(-90deg)}.a4-rg .m{position:absolute;inset:0;display:grid;place-items:center;text-align:center}.a4-rg .m b{font:700 26px/1 'Outfit',sans-serif;display:block}.a4-rg .m small{color:var(--mu2);font-size:11.5px}
+.a4-ins{display:flex;flex-direction:column;gap:9px;margin-top:12px}
+.a4-ins div{display:flex;gap:10px;align-items:flex-start;font-size:13px;color:var(--mu);line-height:1.4}.a4-ins div i{width:8px;height:8px;border-radius:50%;margin-top:6px;flex:none;background:var(--c1)}.a4-ins b{color:var(--tx)}
+.a4-hm{display:grid;grid-template-columns:34px repeat(24,minmax(0,1fr));gap:3px;align-items:center}
+.a4-hm span{font-size:10px;color:var(--mu2);text-align:center}.a4-hm span.d{text-align:left}
+.a4-hm i{aspect-ratio:1;border-radius:4px;background:var(--c1);opacity:var(--o);min-height:10px}.a4-hm i.z{background:var(--ln);opacity:1}
+/* tables */
+.a4-tw{overflow:auto;margin:0 -6px}
+.a4-t{width:100%;border-collapse:collapse;font-size:13px}
+.a4-t th{text-align:left;padding:8px 10px;color:var(--mu2);font-size:11.5px;font-weight:700;white-space:nowrap;border-bottom:1px solid var(--ln)}
+.a4-t td{padding:9px 10px;border-bottom:1px solid var(--ln);vertical-align:middle}
+.a4-t tr.cl{cursor:pointer}.a4-t tr.cl:hover td{background:var(--pn2)}
+.a4-t .r{text-align:right;font-variant-numeric:tabular-nums}
+.a4-t .nm{display:flex;align-items:center;gap:10px;min-width:180px}.a4-t .nm b{display:block;font-weight:700}.a4-t .nm small{display:block;color:var(--mu2);font-size:11.5px;max-width:240px;overflow:hidden;text-overflow:ellipsis}
+.a4-av{width:34px;height:34px;border-radius:50%;flex:none;display:grid;place-items:center;font-weight:800;color:#fff;background:hsl(var(--h) 55% 48%);overflow:hidden;font-size:14px}.a4-av img{width:100%;height:100%;object-fit:cover}
+.a4-dv{display:inline-flex;align-items:center;gap:7px}
+.a4-code{font:700 13px/1 ui-monospace,'SF Mono',Menlo,Consolas,monospace;letter-spacing:.04em}
+.a4-tl{display:flex;flex-direction:column;gap:10px}.a4-tl>div{display:flex;gap:10px;align-items:center}.a4-tl small{color:var(--mu2);display:block}
+.a4-em{padding:26px;text-align:center;color:var(--mu2)}
+.a4-warn{padding:12px 14px;border-radius:13px;background:color-mix(in srgb,var(--warn) 14%,transparent);border:1px solid color-mix(in srgb,var(--warn) 40%,transparent);font-size:13px;color:var(--tx)}
+.a4-warn b{color:var(--warn)}
+.a4-sk{height:96px;border-radius:16px;background:linear-gradient(100deg,var(--pn) 30%,var(--pn2) 50%,var(--pn) 70%);background-size:200% 100%;animation:a4k 1.3s linear infinite}@keyframes a4k{to{background-position:-200% 0}}
+/* drawer */
+.a4-dr{position:absolute;inset:0;z-index:5;display:flex;justify-content:flex-end;background:rgba(5,7,14,.55);opacity:0;pointer-events:none;transition:opacity .2s;backdrop-filter:blur(3px)}
+.a4-dr.in{opacity:1;pointer-events:auto}
+.a4-dp{width:min(520px,100%);height:100%;background:var(--bg);border-left:1px solid var(--ln2);display:flex;flex-direction:column;transform:translateX(30px);transition:transform .25s}.a4-dr.in .a4-dp{transform:none}
+.a4-dh{display:flex;align-items:center;gap:14px;padding:18px 20px;border-bottom:1px solid var(--ln)}.a4-dh .a4-av{width:54px;height:54px;font-size:21px}.a4-dh h3{margin:0;font:700 18px/1.2 'Outfit',sans-serif}.a4-dh p{margin:2px 0 0;color:var(--mu);font-size:12.5px;word-break:break-all}
+.a4-db{flex:1;overflow:auto;padding:18px 20px;display:flex;flex-direction:column;gap:14px}
+.a4-kv{display:grid;grid-template-columns:1fr 1fr;gap:10px}.a4-kv>div{background:var(--pn);border:1px solid var(--ln);border-radius:13px;padding:10px 12px;min-width:0}.a4-kv small{display:block;color:var(--mu2);font-size:11.5px;margin-bottom:2px}.a4-kv b{font-weight:700;word-break:break-word}
+.a4-sec{font:700 12px 'Inter',sans-serif;color:var(--mu2);text-transform:none;letter-spacing:.02em;margin:4px 0 -4px}
+.a4-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.a4-rl{margin-top:4px;padding:11px 13px;border-radius:12px;background:var(--pn);border:1px solid var(--ln);display:flex;gap:10px;align-items:center}
+.a4-codes{display:flex;flex-direction:column;gap:6px;margin-top:12px}.a4-codes>div{display:flex;gap:8px;align-items:center;padding:9px 12px;border-radius:12px;background:var(--pn2);border:1px solid var(--ln)}.a4-codes .a4-code{flex:1}
+.a4-toast{position:absolute;left:50%;bottom:90px;transform:translateX(-50%);z-index:9;background:var(--tx);color:var(--bg);padding:10px 16px;border-radius:99px;font-weight:600;font-size:13px;box-shadow:var(--sh);animation:a4t .25s;max-width:90vw;text-align:center}@keyframes a4t{from{opacity:0;transform:translate(-50%,10px)}}
+.a4-n{display:flex;gap:8px;align-items:center}.a4-n .a4-in{text-align:center;width:90px}
+.a4-pl{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}.a4-pl button{padding:10px 6px;border-radius:12px;background:var(--pn2);border:1px solid var(--ln2);font-weight:700;font-size:13px;line-height:1.2}.a4-pl button small{display:block;color:var(--mu2);font-weight:600;font-size:11px}.a4-pl button.on{background:var(--ac);color:var(--ac-t);border-color:transparent}.a4-pl button.on small{color:inherit;opacity:.8}
+.a4-f2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+/* responsive */
+@media (max-width:1180px){.a4-kg{grid-template-columns:repeat(2,minmax(0,1fr))}.s8,.s7,.s5,.s4,.s3{grid-column:span 12}.s6{grid-column:span 12}}
+@media (min-width:760px) and (max-width:1180px){.s4.h,.s6.h{grid-column:span 6}}
+@media (max-width:820px){
+ #adm4{flex-direction:column-reverse}
+ .a4-side{width:auto;flex-direction:row;padding:6px 8px calc(6px + env(safe-area-inset-bottom,0px));border-right:0;border-top:1px solid var(--ln);gap:2px;justify-content:space-around;overflow:visible}
+ .a4-brand,.a4-sp,.a4-sep,.a4-side .x{display:none}
+ .a4-nav{flex-direction:row;flex:1;justify-content:space-around;gap:2px}
+ .a4-nb{flex-direction:column;gap:3px;padding:7px 4px;font-size:10.5px;width:auto;flex:1;text-align:center;min-width:0;justify-content:center;align-items:center}.a4-nb .n{display:none}.a4-nb span.tx{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+ .a4-top{padding:10px 14px;padding-top:calc(10px + env(safe-area-inset-top,0px))}.a4-top h1{font-size:18px}
+ .a4-body{padding:14px}.a4-g{gap:12px}.a4-hi h2{font-size:22px}
+ .a4-top .hid{display:none}.a4-top .tl{display:grid}
+ .a4-dn2>svg{width:130px;height:130px}.a4-kg{gap:10px}.a4-k .v{font-size:25px}
+ .a4-f2{grid-template-columns:1fr}.a4-pl{grid-template-columns:repeat(3,minmax(0,1fr))}
+ .a4-bi{grid-template-columns:minmax(90px,1.4fr) minmax(0,1fr) auto}
+ .a4-dp{width:100%;border-left:0}
+}
+@media (min-width:821px){.a4-top .tl{display:none}}
+@media (max-width:420px){.a4-fr{grid-template-columns:78px minmax(0,1fr) 64px}.a4-c{padding:14px;border-radius:16px}}
+@media (prefers-reduced-motion:reduce){#adm4 *{animation:none!important;transition:none!important}}
+.a4-codes>div.a4-row{background:none;border:0;padding:0}
+</style><script id="adm4-js">/* LunaRise Admin 4 — analytics console (devices, countries, people, growth, promo codes) */
+(function () {
+  'use strict';
+  var H = null, A = null, tab = 'overview', timer = 0, uid = 0, armed = '', armT = 0, busy = false;
+  var D = { stats: null, ana: null, accts: null, promos: null, vis: null, errs: {} };
+  var S = { rng: 14, uf: 'all', uq: '', us: 'seen', ud: '', uc: '', uw: 'accounts', pn: 50, pf: 'all', pq: '', open: '', plan: 365, made: [], madeDays: 365, theme: 'dark', dr: null, drA: null };
+  var CH = {};
+  var COL = ['var(--c1)', 'var(--c2)', 'var(--c3)', 'var(--c4)', 'var(--c5)', 'var(--c6)', 'var(--c7)', 'var(--c8)'];
+  var LSG = function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } };
+  var LSS = function (k, v) { try { localStorage.setItem(k, v); } catch (e) { } };
+  var esc = function (s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
+  var fmt = function (n) { n = +n || 0; return n.toLocaleString('en-US'); };
+  var pc = function (a, b) { return b ? Math.round(a / b * 1000) / 10 : 0; };
+  var sum = function (a) { return a.reduce(function (s, x) { return s + (+x || 0); }, 0); };
+  var MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  function dS(t) { if (!t) return '–'; var d = new Date(t); return d.getDate() + ' ' + MON[d.getMonth()] + ' ' + d.getFullYear(); }
+  function dT(t) { if (!t) return '–'; var d = new Date(t); return d.getDate() + ' ' + MON[d.getMonth()] + ', ' + ('0' + d.getHours()).slice(-2) + ':' + ('0' + d.getMinutes()).slice(-2); }
+  function ago(t) { if (!t) return 'never'; var s = Math.max(0, (Date.now() - t) / 1000); if (s < 90) return 'just now'; if (s < 3600) return Math.round(s / 60) + ' min ago'; if (s < 86400) return Math.round(s / 3600) + ' h ago'; if (s < 86400 * 30) return Math.round(s / 86400) + ' d ago'; return dS(t); }
+  function dk(k) { return +k.slice(6, 8) + ' ' + MON[+k.slice(4, 6) - 1]; }
+  function flag(cc) { if (!/^[A-Z]{2}$/.test(cc || '')) return '🌐'; return String.fromCodePoint(127397 + cc.charCodeAt(0), 127397 + cc.charCodeAt(1)); }
+  var RN = null;
+  function cname(cc) { if (!cc || cc === '??') return 'Unknown'; try { RN = RN || new Intl.DisplayNames(['en'], { type: 'region' }); return RN.of(cc) || cc; } catch (e) { return cc; } }
+  function hue(s) { var h = 0; s = String(s); for (var i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) % 360; return h; }
+  function say(m) { if (!A) return; var o = A.querySelector('.a4-toast'); if (o) o.remove(); var t = document.createElement('div'); t.className = 'a4-toast'; t.textContent = m; A.appendChild(t); setTimeout(function () { t.remove(); }, 2600); }
+  function errMsg(e) { var m = String(e && e.message || e); return /not admin/.test(m) ? 'Not allowed: sign in with the owner Google account' : /unknown op/.test(m) ? 'Update the LunaRise server file to v17 first' : m; }
+  var IC = {
+    grid: '<path d="M3 3h7v7H3zM14 3h7v7h-7zM14 14h7v7h-7zM3 14h7v7H3z"/>',
+    globe: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3.3 3 14.7 0 18M12 3c-3 3.3-3 14.7 0 18"/>',
+    users: '<circle cx="9" cy="8" r="3.4"/><path d="M2.5 20c.6-3.6 3.2-5.4 6.5-5.4s5.9 1.8 6.5 5.4"/><path d="M16 4.8a3.2 3.2 0 0 1 0 6.2M18 14.8c2 .6 3.2 2.2 3.6 5"/>',
+    trend: '<path d="M3 17l6-6 4 4 8-9"/><path d="M15 6h6v6"/>',
+    ticket: '<path d="M3 9a2 2 0 0 0 0 6v3h18v-3a2 2 0 0 1 0-6V6H3z"/><path d="M14 6v12" stroke-dasharray="2 3"/>',
+    inbox: '<path d="M3 13l3-8h12l3 8v6H3z"/><path d="M3 13h5l1 3h6l1-3h5"/>',
+    sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
+    moon: '<path d="M21 13A9 9 0 1 1 11 3a7 7 0 0 0 10 10z"/>',
+    x: '<path d="M6 6l12 12M18 6L6 18"/>', ref: '<path d="M20 11a8 8 0 1 0-2.3 6M20 4v7h-7"/>',
+    search: '<circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/>', dl: '<path d="M12 4v11M7 11l5 5 5-5M5 20h14"/>',
+    copy: '<rect x="8" y="8" width="12" height="12" rx="2.5"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/>',
+    link: '<path d="M10 14a4.5 4.5 0 0 0 6.4 0l3-3a4.5 4.5 0 0 0-6.4-6.4l-1 1M14 10a4.5 4.5 0 0 0-6.4 0l-3 3A4.5 4.5 0 0 0 11 19.4l1-1"/>',
+    trash: '<path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/>', crown: '<path d="M3 8l4.5 4L12 5l4.5 7L21 8l-2 11H5z"/>',
+    phone: '<rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/>', tablet: '<rect x="4" y="3" width="16" height="18" rx="2.5"/><path d="M11 18h2"/>',
+    laptop: '<rect x="5" y="5" width="14" height="10" rx="1.6"/><path d="M2.5 19h19"/>', eye: '<path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
+    bolt: '<path d="M13 2L4 14h7l-1 8 9-12h-7z"/>', clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>', star: '<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/>',
+    send: '<path d="M21 3L10 14M21 3l-7 18-4-7-7-4z"/>', shield: '<path d="M12 3l8 3v6c0 4.5-3.2 8-8 9-4.8-1-8-4.5-8-9V6z"/>', plus: '<path d="M12 5v14M5 12h14"/>'
+  };
+  var ic = function (n, c) { return '<svg class="ico ' + (c || '') + '" viewBox="0 0 24 24" aria-hidden="true">' + (IC[n] || '') + '</svg>'; };
+
+  /* ---------- charts ---------- */
+  function niceMax(v) { if (v <= 4) return 4; var p = Math.pow(10, Math.floor(Math.log10(v))), n = v / p; return (n <= 1 ? 1 : n <= 2 ? 2 : n <= 5 ? 5 : 10) * p; }
+  function spark(v, c) {
+    var h = 34, n = v.length; if (n < 2) return '<svg class="a4-sp" viewBox="0 0 100 34"></svg>';
+    var mx = Math.max.apply(null, v), mn = Math.min.apply(null, v); if (mx === mn) { mx += 1; mn -= 1; }
+    var d = v.map(function (y, i) { return (i ? 'L' : 'M') + (i / (n - 1) * 100).toFixed(1) + ' ' + (h - 4 - (y - mn) / (mx - mn) * (h - 9)).toFixed(1); }).join(''), id = 'sg' + (uid++);
+    return '<svg class="a4-sp" viewBox="0 0 100 ' + h + '" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="' + id + '" x1="0" x2="0" y1="0" y2="1"><stop offset="0" style="stop-color:' + c + ';stop-opacity:.34"/><stop offset="1" style="stop-color:' + c + ';stop-opacity:0"/></linearGradient></defs><path d="' + d + 'L100 ' + h + 'L0 ' + h + 'Z" fill="url(#' + id + ')"/><path d="' + d + '" fill="none" style="stroke:' + c + '" stroke-width="2" vector-effect="non-scaling-stroke" stroke-linejoin="round" stroke-linecap="round"/></svg>';
+  }
+  function lineC(id, labels, series, o) {
+    o = o || {}; var W = 640, Hh = o.h || 220, pl = 36, pr = 10, pt = 10, pb = 26, all = [], n = labels.length;
+    series.forEach(function (s) { all = all.concat(s.v); });
+    var mx = niceMax(Math.max.apply(null, all.concat([1]))), X = function (i) { return pl + (n < 2 ? 0 : i / (n - 1) * (W - pl - pr)); }, Y = function (v) { return pt + (1 - v / mx) * (Hh - pt - pb); };
+    var g = '', k;
+    for (k = 0; k <= 4; k++) { var yy = pt + k / 4 * (Hh - pt - pb); g += '<line class="gl" x1="' + pl + '" x2="' + (W - pr) + '" y1="' + yy + '" y2="' + yy + '"/><text x="' + (pl - 6) + '" y="' + (yy + 3.5) + '" text-anchor="end">' + fmt(Math.round(mx * (1 - k / 4))) + '</text>'; }
+    var step = Math.max(1, Math.ceil(n / 7)); for (var i = 0; i < n; i += step) g += '<text x="' + X(i) + '" y="' + (Hh - 7) + '" text-anchor="middle">' + esc(labels[i]) + '</text>';
+    var body = '', gid = 'lg' + (uid++);
+    series.forEach(function (s, si) {
+      var d = s.v.map(function (y, i) { return (i ? 'L' : 'M') + X(i).toFixed(1) + ' ' + Y(y).toFixed(1); }).join('');
+      if (si === 0 && o.area !== false && n > 1) body += '<defs><linearGradient id="' + gid + '" x1="0" x2="0" y1="0" y2="1"><stop offset="0" style="stop-color:' + s.c + ';stop-opacity:.3"/><stop offset="1" style="stop-color:' + s.c + ';stop-opacity:0"/></linearGradient></defs><path d="' + d + 'L' + X(n - 1) + ' ' + (Hh - pb) + 'L' + X(0) + ' ' + (Hh - pb) + 'Z" fill="url(#' + gid + ')"/>';
+      body += '<path d="' + d + '" fill="none" style="stroke:' + s.c + '" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>';
+      if (n <= 16) s.v.forEach(function (y, i) { body += '<circle cx="' + X(i).toFixed(1) + '" cy="' + Y(y).toFixed(1) + '" r="2.6" style="fill:' + s.c + '"/>'; });
+    });
+    CH[id] = { labels: labels, series: series, W: W, X: X, n: n };
+    return '<div class="a4-chw" data-ch="' + id + '"><svg class="a4-chs" viewBox="0 0 ' + W + ' ' + Hh + '" role="img" aria-label="' + esc(o.label || 'Chart') + '">' + g + body + '</svg><i class="a4-cx"></i><div class="a4-tp" hidden></div></div>' +
+      (series.length > 1 || o.legend ? '<div class="a4-lg">' + series.map(function (s) { return '<span><i style="background:' + s.c + '"></i>' + esc(s.n) + '</span>'; }).join('') + '</div>' : '');
+  }
+  function barsC(id, labels, vals, color, o) {
+    o = o || {}; var W = 640, Hh = o.h || 170, pl = 30, pr = 6, pt = 8, pb = 24, n = labels.length, mx = niceMax(Math.max.apply(null, vals.concat([1]))), bw = (W - pl - pr) / n, g = '', b = '';
+    for (var k = 0; k <= 3; k++) { var yy = pt + k / 3 * (Hh - pt - pb); g += '<line class="gl" x1="' + pl + '" x2="' + (W - pr) + '" y1="' + yy + '" y2="' + yy + '"/><text x="' + (pl - 5) + '" y="' + (yy + 3.5) + '" text-anchor="end">' + fmt(Math.round(mx * (1 - k / 3))) + '</text>'; }
+    vals.forEach(function (v, i) { var h = v / mx * (Hh - pt - pb), x = pl + i * bw + bw * .16; b += '<rect x="' + x.toFixed(1) + '" y="' + (Hh - pb - h).toFixed(1) + '" width="' + (bw * .68).toFixed(1) + '" height="' + Math.max(h, v ? 2 : 0).toFixed(1) + '" rx="4" style="fill:' + color + '"/>'; });
+    var step = Math.max(1, Math.ceil(n / (o.lab || 8))); for (var i = 0; i < n; i += step) g += '<text x="' + (pl + i * bw + bw / 2).toFixed(1) + '" y="' + (Hh - 7) + '" text-anchor="middle">' + esc(labels[i]) + '</text>';
+    CH[id] = { labels: labels, series: [{ n: o.name || 'Value', c: color, v: vals }], W: W, X: function (i) { return pl + i * bw + bw / 2; }, n: n };
+    return '<div class="a4-chw" data-ch="' + id + '"><svg class="a4-chs" viewBox="0 0 ' + W + ' ' + Hh + '" role="img" aria-label="' + esc(o.label || 'Chart') + '">' + g + b + '</svg><i class="a4-cx"></i><div class="a4-tp" hidden></div></div>';
+  }
+  function donut(items, cap, sub) {
+    var tot = sum(items.map(function (x) { return x.v; })) || 1, off = 25, c = '';
+    items.forEach(function (x) { var p = x.v / tot * 100; if (p <= 0) return; c += '<circle cx="18" cy="18" r="15.9155" fill="none" style="stroke:' + x.c + '" stroke-width="4.2" stroke-dasharray="' + Math.max(p - (items.length > 1 ? .7 : 0), .1).toFixed(2) + ' ' + (100 - Math.max(p - (items.length > 1 ? .7 : 0), .1)).toFixed(2) + '" stroke-dashoffset="' + off.toFixed(2) + '"/>'; off -= p; });
+    var s = '<svg viewBox="0 0 36 36" role="img" aria-label="' + esc(cap) + '"><circle cx="18" cy="18" r="15.9155" fill="none" style="stroke:var(--pn2)" stroke-width="4.2"/>' + c + '<text class="ct" x="18" y="19.6" text-anchor="middle">' + fmt(tot === 1 && !items.length ? 0 : sum(items.map(function (x) { return x.v; }))) + '</text><text class="cs" x="18" y="24" text-anchor="middle">' + esc(sub || 'total') + '</text></svg>';
+    var l = '<div class="a4-dl">' + items.map(function (x) { return '<div><i style="background:' + x.c + '"></i><span>' + esc(x.k) + '</span><b>' + fmt(x.v) + '</b><em>' + Math.round(x.v / tot * 100) + '%</em></div>'; }).join('') + '</div>';
+    return '<div class="a4-dn2">' + s + l + '</div>';
+  }
+  function ring(p, label, color) {
+    var r = 15.9155, d = Math.max(0, Math.min(100, p));
+    return '<div class="a4-rg"><svg viewBox="0 0 36 36" aria-hidden="true"><circle cx="18" cy="18" r="' + r + '" fill="none" style="stroke:var(--pn2)" stroke-width="3.4"/><circle cx="18" cy="18" r="' + r + '" fill="none" style="stroke:' + (color || 'var(--c1)') + '" stroke-width="3.4" stroke-linecap="round" stroke-dasharray="' + d.toFixed(1) + ' ' + (100 - d).toFixed(1) + '"/></svg><div class="m"><div><b>' + (Math.round(p * 10) / 10) + '%</b><small>' + esc(label) + '</small></div></div></div>';
+  }
+  function badge(k, i) { return '<span class="a4-bdg" style="--bc:' + COL[i % 8] + '">' + esc(String(k).charAt(0).toUpperCase()) + '</span>'; }
+  function barList(rows, o) {
+    o = o || {}; var mx = Math.max.apply(null, rows.map(function (r) { return r.v; }).concat([1]));
+    if (!rows.length) return '<div class="a4-em">No data yet</div>';
+    return '<div class="a4-bl">' + rows.map(function (r, i) { return '<div class="a4-bi" style="--bc:' + (r.c || o.c || COL[i % 8]) + '"><div class="l">' + (r.pre || '') + '<span>' + esc(r.k) + '</span></div><div class="b"><i style="width:' + Math.max(2, r.v / mx * 100).toFixed(1) + '%"></i></div><div class="n">' + fmt(r.v) + (r.s != null ? '<small>' + r.s + '</small>' : '') + '</div></div>'; }).join('') + '</div>';
+  }
+  function funnel(steps) {
+    var top = steps[0][1] || 1;
+    return '<div class="a4-fn">' + steps.map(function (s, i) { var w = Math.max(5, s[1] / top * 100), prev = i ? steps[i - 1][1] : 0; return '<div class="a4-fr"><span>' + esc(s[0]) + '</span><div class="b"><i style="width:' + w.toFixed(1) + '%;--bc:' + COL[i % 8] + '">' + fmt(s[1]) + '</i></div><span class="p"><b>' + pc(s[1], top) + '%</b>' + (i ? '<br>' + pc(s[1], prev) + '% of prev' : '') + '</span></div>'; }).join('') + '</div>';
+  }
+  function heat(m) {
+    var mx = 0; m.forEach(function (r) { r.forEach(function (v) { if (v > mx) mx = v; }); });
+    var days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], h = '<div class="a4-hm"><span></span>';
+    for (var i = 0; i < 24; i++) h += '<span>' + (i % 3 === 0 ? i : '') + '</span>';
+    m.forEach(function (r, d) { h += '<span class="d">' + days[d] + '</span>'; r.forEach(function (v, i) { h += v ? '<i style="--o:' + (.18 + .82 * v / (mx || 1)).toFixed(2) + '" title="' + days[d] + ' ' + i + ':00 · ' + v + ' visits"></i>' : '<i class="z" title="' + days[d] + ' ' + i + ':00 · none"></i>'; }); });
+    return h + '</div>';
+  }
+  function bindCharts() {
+    if (!A) return;
+    A.querySelectorAll('.a4-chw').forEach(function (w) {
+      var cfg = CH[w.getAttribute('data-ch')], tp = w.querySelector('.a4-tp'), cx = w.querySelector('.a4-cx'); if (!cfg) return;
+      function mv(e) {
+        var r = w.getBoundingClientRect(), fx = (e.clientX - r.left) / r.width * cfg.W, best = 0, bd = 1e9;
+        for (var i = 0; i < cfg.n; i++) { var d = Math.abs(cfg.X(i) - fx); if (d < bd) { bd = d; best = i; } }
+        var px = cfg.X(best) / cfg.W * r.width;
+        tp.innerHTML = '<b>' + esc(cfg.labels[best]) + '</b>' + cfg.series.map(function (s) { return '<span><i style="background:' + s.c + '"></i>' + esc(s.n) + '<em>' + fmt(s.v[best]) + '</em></span>'; }).join('');
+        tp.hidden = false; cx.style.display = 'block'; cx.style.left = px + 'px'; var tw = tp.offsetWidth; tp.style.left = Math.max(0, Math.min(r.width - tw, px + 12 + tw > r.width ? px - tw - 12 : px + 12)) + 'px';
+      }
+      w.addEventListener('pointermove', mv); w.addEventListener('pointerdown', mv);
+      w.addEventListener('pointerleave', function () { tp.hidden = true; cx.style.display = 'none'; });
+    });
+  }
+
+  /* ---------- data ---------- */
+  var ST = function () { return D.stats || {}; }, AN = function () { return D.ana || null; };
+  function devColor(i) { return COL[i % 8]; }
+  function loadAll(quiet) {
+    if (busy) return Promise.resolve(); busy = true; var b = A && A.querySelector('[data-a=ref]'); if (b) b.classList.add('sp');
+    var calls = [['stats', 'adm_stats'], ['ana', 'adm_ana'], ['accts', 'adm_accts'], ['promos', 'adm_promos']];
+    return Promise.all(calls.map(function (c) {
+      return H.adm(c[1]).then(function (j) { D[c[0]] = j; delete D.errs[c[0]]; }, function (e) { D.errs[c[0]] = errMsg(e); });
+    })).then(function () {
+      busy = false; if (b) b.classList.remove('sp'); var u = A && A.querySelector('#a4-upd'); if (u) u.innerHTML = '<i></i>Updated ' + new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+      var lv = A && A.querySelector('.a4-live'); if (lv) lv.classList.toggle('off', !D.stats && !D.ana);
+      try { LSS('lr_a4_cache', JSON.stringify({ t: Date.now(), s: D.stats, a: D.ana, p: D.promos })); } catch (e) { }
+      if (!quiet || !S.dr) paint(true);
+    });
+  }
+  function loadVis() { if (D.vis) return; H.adm('adm_users', { limit: 500 }).then(function (j) { D.vis = j; if (tab === 'users') paint(true); }, function (e) { D.vis = { users: [], err: errMsg(e) }; if (tab === 'users') paint(true); }); }
+
+  /* ---------- shared bits ---------- */
+  function needV17() { return (D.errs.ana || D.errs.promos) ? '<div class="a4-warn"><b>Server update needed.</b> Devices, countries and promo history come from the new LunaRise server file (v17). Paste <b>push_server_v17.gs</b> into Apps Script, then Deploy → Manage deployments → ✏️ → New version. Everything else works already.</div>' : ''; }
+  function head(t, p, r) { return '<div class="a4-hi"><div><h2>' + t + '</h2><p>' + p + '</p></div><div class="r">' + (r || '') + '</div></div>'; }
+  function kpi(t, ico, col, val, d, sp) { return '<div class="a4-k" style="--kc:' + col + '"><div class="t"><i>' + ic(ico) + '</i>' + t + '</div><div class="v">' + val + '</div><div class="d">' + (d || '') + '</div>' + (sp ? spark(sp, col) : '') + '</div>'; }
+  function delta(cur, prev, unit) {
+    if (!prev && !cur) return '<span>no change</span>'; if (!prev) return '<span class="a4-up">▲ new</span>';
+    var p = Math.round((cur - prev) / prev * 100); return '<span class="' + (p >= 0 ? 'a4-up' : 'a4-dn') + '">' + (p >= 0 ? '▲ ' : '▼ ') + Math.abs(p) + '%</span><span>vs previous 7 ' + (unit || 'days') + '</span>';
+  }
+  function dvIcon(r) { return r === 'phone' ? 'phone' : r === 'tablet' ? 'tablet' : 'laptop'; }
+  function devType(dv) { return /iphone|android phone|samsung|xiaomi|pixel|huawei|oppo|vivo|realme|honor|motorola|oneplus|infinix|tecno|nokia|sony|lenovo/i.test(dv) ? 'phone' : /ipad|tablet/i.test(dv) ? 'tablet' : 'laptop'; }
+  function rowsFrom(list, cap, sx) { return (list || []).slice(0, cap).map(function (r, i) { return { k: sx ? sx(r[0]) : r[0], v: r[1], s: r[2] != null ? (r[2] ? r[2] + ' G' : '') : null, c: COL[i % 8], pre: badge(r[0], i) }; }); }
+  function sumDays(arr, from, to, idx) { var s = 0; for (var i = from; i < to; i++) s += +((arr[i] || [])[idx]) || 0; return s; }
+
+  /* ---------- overview ---------- */
+  function insights() {
+    var out = [], s = ST(), a = AN(), n;
+    if (a) {
+      var dv = a.dev || []; if (dv.length && a.visitors) out.push('<b>' + esc(dv[0][0]) + '</b> is the most used device (' + pc(dv[0][1], a.visitors) + '% of visitors).');
+      var cc = (a.cc || []).filter(function (x) { return x[0] !== '??'; }); if (cc.length && a.geoKnown) out.push('Most visitors come from <b>' + esc(cname(cc[0][0])) + '</b> (' + pc(cc[0][1], a.geoKnown) + '% of those located).');
+      if (cc.length > 1) out.push('<b>' + cc.length + '</b> countries have visited so far.');
+      var hm = a.heat || [], best = 0, bi = -1, tot = []; for (var h = 0; h < 24; h++) { var t = 0; hm.forEach(function (r) { t += r[h] || 0; }); tot.push(t); if (t > best) { best = t; bi = h; } }
+      if (bi >= 0) out.push('Busiest hour is <b>' + ('0' + bi).slice(-2) + ':00</b> (Tashkent time).');
+      if (a.ret && a.ret.d7 && a.ret.d7[0] >= 5) out.push('<b>' + pc(a.ret.d7[1], a.ret.d7[0]) + '%</b> of people come back after a week.');
+      var days = a.days || []; var w1 = sumDays(days, 23, 30, 3), w0 = sumDays(days, 16, 23, 3); if (w1 || w0) out.push('<b>' + w1 + '</b> Google sign-ups in the last 7 days' + (w0 ? ' (' + (w1 >= w0 ? '+' : '') + (w1 - w0) + ' vs the week before)' : '') + '.');
+    }
+    var ac = s.acct; if (ac && ac.flagged) out.push('<b>' + ac.flagged + '</b> account' + (ac.flagged > 1 ? 's need' : ' needs') + ' a look (see Users → Needs a look).');
+    var pr = D.promos && D.promos.sum; if (pr && pr.ready) out.push('<b>' + pr.ready + '</b> promo code' + (pr.ready > 1 ? 's are' : ' is') + ' ready and not used yet.');
+    if (!out.length) out.push('Insights appear as people use LunaRise.');
+    return out.slice(0, 6).map(function (x) { return '<div><i></i><span>' + x + '</span></div>'; }).join('');
+  }
+  function ovw() {
+    var s = ST(), a = AN(), days = s.days || [], dayP = days.map(function (x) { return x[1]; }), ad = a ? a.days : [], hr = new Date().getHours();
+    var nm = ''; try { var u = (window.state && state.user) || {}; nm = String((u.google && u.google.name) || u.first || '').split(/\s+/)[0]; } catch (e) { }
+    var vis = a ? a.visitors : (s.all || 0), acc = a ? a.accounts : (s.acct ? s.acct.n : s.reg || 0), gg = a ? a.google : 0;
+    var gAcc = a && a.funnel ? a.funnel[4][1] : (s.acct ? s.acct.google : 0);
+    var newv = ad.map(function (x) { return x[1]; }), sg = ad.map(function (x) { return x[2]; }), gs = ad.map(function (x) { return x[3]; });
+    var ks = '<div class="a4-kg">' +
+      kpi('Visitors', 'eye', 'var(--c1)', fmt(vis), a ? delta(sumDays(ad, 23, 30, 1), sumDays(ad, 16, 23, 1)) + '' : '<span>all devices</span>', newv.slice(-14)) +
+      kpi('Online now', 'bolt', 'var(--c2)', fmt(s.online || (a && a.online) || 0), '<span>' + fmt(s.onlineApp || 0) + ' in the app · ' + fmt(Math.max(0, (s.online || 0) - (s.onlineApp || 0))) + ' on the web</span>') +
+      kpi('Active today', 'clock', 'var(--c5)', fmt(s.today || 0), '<span>' + fmt(s.visitsToday || 0) + ' visits · ' + fmt(s.newToday || 0) + ' new</span>', dayP.slice(-14)) +
+      kpi('Signed up', 'users', 'var(--c3)', fmt(acc), a ? delta(sumDays(ad, 23, 30, 2), sumDays(ad, 16, 23, 2)) : '', sg.slice(-14)) +
+      kpi('Google sign-ups', 'shield', 'var(--c4)', fmt(gAcc), a ? '<span>' + pc(gAcc, acc) + '% of accounts</span>' : '', gs.slice(-14)) +
+      kpi('PRO members', 'crown', 'var(--c6)', fmt(s.pro || (a && a.pro) || 0), '<span>' + fmt(s.proPromo || 0) + ' promo · ' + fmt(s.proPlan || 0) + ' paid · ' + fmt(s.proGift || 0) + ' gift</span>') +
+      kpi('Avg time / day', 'clock', 'var(--c7)', (days.length && days[days.length - 1][4] ? days[days.length - 1][4] : 0) + ' min', '<span>per active person today</span>', days.map(function (x) { return x[4]; }).slice(-14)) +
+      kpi('Conversion', 'trend', 'var(--c2)', pc(acc, vis) + '%', '<span>visitor → account</span>') + '</div>';
+    var rng = S.rng, lab = ad.slice(-rng).map(function (x) { return dk(x[0]); });
+    var chart = '<div class="a4-c s8"><div class="a4-h"><div><h3>People per day</h3><p>New visitors, sign-ups and active people · Tashkent time</p></div><div class="a4-seg">' + [7, 14, 30].map(function (r) { return '<button type="button" data-a="rng" data-v="' + r + '" class="' + (S.rng === r ? 'on' : '') + '">' + r + 'd</button>'; }).join('') + '</div></div>' +
+      (ad.length ? lineC('main', lab, [{ n: 'Active', c: 'var(--c1)', v: ad.slice(-rng).map(function (x) { return x[4]; }) }, { n: 'New visitors', c: 'var(--c2)', v: ad.slice(-rng).map(function (x) { return x[1]; }) }, { n: 'Sign-ups', c: 'var(--c3)', v: ad.slice(-rng).map(function (x) { return x[2]; }) }], { label: 'People per day' }) :
+        (days.length ? lineC('main', days.slice(-rng).map(function (x) { return dk(x[0]); }), [{ n: 'Active', c: 'var(--c1)', v: days.slice(-rng).map(function (x) { return x[1]; }) }, { n: 'New', c: 'var(--c2)', v: days.slice(-rng).map(function (x) { return x[3]; }) }], { label: 'People per day' }) : '<div class="a4-em">Loading…</div>')) + '</div>';
+    var ins = '<div class="a4-c s4"><div class="a4-h"><div><h3>Insights</h3><p>What the numbers say right now</p></div></div><div class="a4-dn2" style="justify-content:center">' + ring(pc(acc, vis), 'signed up', 'var(--c1)') + '</div><div class="a4-ins">' + insights() + '</div></div>';
+    var dev = a ? '<div class="a4-c s4 h"><div class="a4-h"><div><h3>Devices</h3><p>What people open LunaRise on</p></div><button type="button" class="a4-btn sm" data-a="tab" data-v="audience">All</button></div>' + donut((a.dev || []).slice(0, 6).map(function (r, i) { return { k: r[0], v: r[1], c: COL[i] }; }), 'Devices', 'visitors') + '</div>' : '<div class="a4-c s4 h"><h3>Devices</h3><div class="a4-em">' + esc(D.errs.ana || 'Loading…') + '</div></div>';
+    var geo = a ? '<div class="a4-c s4 h"><div class="a4-h"><div><h3>Countries</h3><p>Where people open it from</p></div><button type="button" class="a4-btn sm" data-a="tab" data-v="audience">All</button></div>' + barList((a.cc || []).slice(0, 6).map(function (r, i) { return { k: cname(r[0]), v: r[1], s: pc(r[1], a.visitors) + '%', c: COL[i], pre: '<span class="a4-fl">' + flag(r[0]) + '</span>' }; })) + '</div>' : '<div class="a4-c s4 h"><h3>Countries</h3><div class="a4-em">' + esc(D.errs.ana || 'Loading…') + '</div></div>';
+    var fun = '<div class="a4-c s4"><div class="a4-h"><div><h3>Journey</h3><p>From first visit to PRO</p></div></div>' + (a && a.funnel ? funnel(a.funnel) : '<div class="a4-em">' + esc(D.errs.ana || 'Loading…') + '</div>') + '</div>';
+    var hm = '<div class="a4-c s8"><div class="a4-h"><div><h3>When people come</h3><p>Visits by weekday and hour · last 14 days · Tashkent time</p></div></div>' + (a && a.heat ? heat(a.heat) : '<div class="a4-em">' + esc(D.errs.ana || 'Loading…') + '</div>') + '</div>';
+    var on = '<div class="a4-c s4"><div class="a4-h"><div><h3>Live now</h3><p>People active in the last 4 minutes</p></div></div>' + (a ? onlineList(a) : '<div class="a4-em">…</div>') + '</div>';
+    var last = lastG();
+    var feat = '<div class="a4-c s6"><div class="a4-h"><div><h3>Most opened sections</h3><p>Last 7 days</p></div></div>' + barList((s.feat || []).slice(0, 8).map(function (r, i) { return { k: r[0].replace(/-/g, ' '), v: r[1], c: 'var(--c' + (i % 2 ? 5 : 1) + ')' }; })) + '</div>';
+    return head((hr < 5 ? 'Good night' : hr < 12 ? 'Good morning' : hr < 18 ? 'Good afternoon' : 'Good evening') + (nm ? ', ' + esc(nm) : ''), 'Here is how LunaRise is doing · numbers update by themselves', '<button type="button" class="a4-btn" data-a="snap">' + ic('copy') + 'Copy snapshot</button>') + needV17() + ks + '<div class="a4-g">' + chart + ins + dev + geo + fun + hm + on + last + feat + '</div>';
+  }
+  function onlineList(a) {
+    var m = a.onlineCc || {}, rows = Object.keys(m).map(function (k) { return { k: cname(k), v: m[k], c: 'var(--c2)', pre: '<span class="a4-fl">' + flag(k) + '</span>' }; }).sort(function (x, y) { return y.v - x.v; }).slice(0, 6);
+    return '<div style="display:flex;align-items:baseline;gap:8px;margin-bottom:10px"><b style="font:700 32px \'Outfit\',sans-serif">' + fmt(a.online) + '</b><span style="color:var(--mu2)">online</span></div>' + (rows.length ? barList(rows) : '<div class="a4-em">Nobody right now</div>');
+  }
+  function lastG() {
+    var U = (D.accts && D.accts.users || []).filter(function (u) { return u.g; }).sort(function (x, y) { return y.f - x.f; }).slice(0, 6);
+    return '<div class="a4-c s6"><div class="a4-h"><div><h3>Newest Google sign-ups</h3><p>People who joined with Google</p></div><button type="button" class="a4-btn sm" data-a="tab" data-v="users">All users</button></div>' +
+      (U.length ? '<div class="a4-tl">' + U.map(function (u) { return '<div data-a="user" data-id="' + esc(u.uid) + '" style="cursor:pointer">' + avatar(u) + '<div style="flex:1;min-width:0"><b>' + esc(u.n || (u.g && u.g.n) || 'Learner') + '</b><small>' + esc(u.dev ? u.dev.dv + (u.dev.cc ? ' · ' + flag(u.dev.cc) + ' ' + cname(u.dev.cc) : '') : u.g.e) + '</small></div><small>' + ago(u.f) + '</small></div>'; }).join('') + '</div>' : '<div class="a4-em">' + esc(D.errs.accts || 'No Google sign-ups yet') + '</div>') + '</div>';
+  }
+  function avatar(u) { var nm = u.n || (u.g && u.g.n) || 'L'; return '<span class="a4-av" style="--h:' + hue(u.uid || nm) + '">' + (u.g && u.g.p ? '<img src="' + esc(u.g.p) + '" alt="" referrerpolicy="no-referrer" loading="lazy">' : esc(nm.charAt(0).toUpperCase())) + '</span>'; }
+
+  /* ---------- audience ---------- */
+  function table(cols, rows) { return '<div class="a4-tw"><table class="a4-t"><thead><tr>' + cols.map(function (c) { return '<th class="' + (c[1] || '') + '">' + c[0] + '</th>'; }).join('') + '</tr></thead><tbody>' + rows.join('') + '</tbody></table></div>'; }
+  function aud() {
+    var a = AN(); if (!a) return head('Audience', 'Devices, countries and languages') + needV17() + (D.errs.ana ? '' : '<div class="a4-sk"></div>');
+    var tot = a.visitors || 1, dvr = (a.dev || []).map(function (r, i) { return '<tr><td><span class="a4-dv">' + badge(r[0], i) + '<b>' + esc(r[0]) + '</b></span></td><td class="r">' + fmt(r[1]) + '</td><td class="r">' + pc(r[1], tot) + '%</td><td class="r">' + fmt(r[2]) + '</td><td class="r">' + fmt(r[3]) + '</td></tr>'; });
+    var ccr = (a.cc || []).filter(function (r) { return r[0] !== '??'; }).map(function (r, i) { return '<tr><td><span class="a4-dv"><span class="a4-fl">' + flag(r[0]) + '</span><b>' + esc(cname(r[0])) + '</b> <span style="color:var(--mu2)">' + esc(r[0]) + '</span></span></td><td class="r">' + fmt(r[1]) + '</td><td class="r">' + pc(r[1], a.geoKnown || tot) + '%</td><td class="r">' + fmt(r[2]) + '</td><td class="r">' + fmt(r[3]) + '</td></tr>'; });
+    var unk = (a.cc || []).filter(function (r) { return r[0] === '??'; })[0];
+    return head('Audience', 'Which devices and countries people use LunaRise from · ' + fmt(a.visitors) + ' visitors', '<button type="button" class="a4-btn" data-a="csvaud">' + ic('dl') + 'Export CSV</button>') + needV17() +
+      '<div class="a4-g">' +
+      '<div class="a4-c s5"><div class="a4-h"><div><h3>Devices</h3><p>iPhone, Samsung, Windows, Mac and more</p></div></div>' + donut((a.dev || []).slice(0, 8).map(function (r, i) { return { k: r[0], v: r[1], c: COL[i] }; }), 'Devices', 'visitors') + '</div>' +
+      '<div class="a4-c s7"><div class="a4-h"><div><h3>Device breakdown</h3><p>Visitors, Google sign-ups and PRO per device</p></div></div>' + table([['Device'], ['Visitors', 'r'], ['Share', 'r'], ['Google', 'r'], ['PRO', 'r']], dvr) + '<p class="a4-sub" style="margin:10px 0 0">Mac shows as one group: a browser cannot tell a MacBook from an iMac. ' + fmt(tot - a.devKnown) + ' older visits have no device info yet.</p></div>' +
+      '<div class="a4-c s4 h"><h3>Operating system</h3><p class="a4-sub">&nbsp;</p>' + barList(rowsFrom(a.os, 8)) + '</div>' +
+      '<div class="a4-c s4 h"><h3>Browser</h3><p class="a4-sub">&nbsp;</p>' + barList(rowsFrom(a.br, 8)) + '</div>' +
+      '<div class="a4-c s4"><h3>Type</h3><p class="a4-sub">&nbsp;</p>' + donut((a.ty || []).map(function (r, i) { return { k: r[0].charAt(0).toUpperCase() + r[0].slice(1), v: r[1], c: COL[i] }; }), 'Device type', 'visitors') + '</div>' +
+      '<div class="a4-c s7"><div class="a4-h"><div><h3>Countries</h3><p>' + fmt(a.geoKnown) + ' of ' + fmt(a.visitors) + ' visitors located' + (unk ? ' · ' + fmt(unk[1]) + ' not yet' : '') + '</p></div></div>' + (ccr.length ? table([['Country'], ['Visitors', 'r'], ['Share', 'r'], ['Google', 'r'], ['PRO', 'r']], ccr.slice(0, 25)) : '<div class="a4-em">Countries appear after people open the updated site.</div>') + '</div>' +
+      '<div class="a4-c s5"><div class="a4-h"><div><h3>Top cities</h3><p>From the visitor\'s network location</p></div></div>' + barList((a.city || []).slice(0, 10).map(function (r, i) { var p = String(r[0]).split('|'); return { k: p[0], v: r[1], pre: '<span class="a4-fl">' + flag(p[1]) + '</span>', c: COL[i % 8] }; })) + '</div>' +
+      '<div class="a4-c s3 h"><h3>Phone models</h3><p class="a4-sub">Android model codes</p>' + barList(rowsFrom(a.model, 8)) + '</div>' +
+      '<div class="a4-c s3 h"><h3>System versions</h3><p class="a4-sub">&nbsp;</p>' + barList(rowsFrom(a.osv, 8)) + '</div>' +
+      '<div class="a4-c s3 h"><h3>Screen sizes</h3><p class="a4-sub">&nbsp;</p>' + barList(rowsFrom(a.sc, 8)) + '</div>' +
+      '<div class="a4-c s3 h"><h3>Languages</h3><p class="a4-sub">Browser language</p>' + barList(rowsFrom(a.lg, 8)) + '</div></div>';
+  }
+
+  /* ---------- users ---------- */
+  var UF = { all: ['All', function () { return true; }], google: ['Google', function (u) { return !!u.g; }], pro: ['PRO', function (u) { return u.pro; }], act: ['Active 7d', function (u) { return Date.now() - u.t < 7 * 864e5; }], teach: ['Teachers', function (u) { return u.tch; }], flag: ['Needs a look', function (u) { return u.fl && u.fl.length; }], ban: ['Banned', function (u) { return u.ban; }] };
+  function uList() {
+    var L = (D.accts && D.accts.users) || [], q = S.uq.trim().toLowerCase(), f = UF[S.uf] || UF.all;
+    L = L.filter(f[1]).filter(function (u) {
+      if (S.ud && (!u.dev || u.dev.dv !== S.ud)) return false; if (S.uc && (!u.dev || u.dev.cc !== S.uc)) return false;
+      return !q || ((u.n || '') + ' ' + (u.g ? u.g.e + ' ' + u.g.n : '') + ' ' + u.uid + ' ' + (u.dev ? u.dev.dv + ' ' + u.dev.md + ' ' + cname(u.dev.cc) + ' ' + u.dev.ct : '')).toLowerCase().indexOf(q) > -1;
+    });
+    var k = S.us; return L.slice().sort(function (x, y) { return k === 'xp' ? y.xp - x.xp : k === 'joined' ? y.f - x.f : k === 'name' ? String(x.n || (x.g && x.g.n) || '').localeCompare(String(y.n || (y.g && y.g.n) || '')) : y.t - x.t; });
+  }
+  function urow(u) {
+    var d = u.dev, on = Date.now() - u.t < 240000;
+    return '<tr class="cl" data-a="user" data-id="' + esc(u.uid) + '"><td><div class="nm">' + avatar(u) + '<div><b>' + esc(u.n || (u.g && u.g.n) || 'Learner') + (on ? ' <span class="a4-tag g">online</span>' : '') + '</b><small>' + esc(u.g ? u.g.e : 'no Google') + '</small></div></div></td>' +
+      '<td>' + (d ? '<span class="a4-dv">' + ic(dvIcon(d.ty || devType(d.dv)), '') + '<span><b style="font-weight:600">' + esc(d.dv) + '</b>' + (d.md ? '<small style="display:block;color:var(--mu2);font-size:11px">' + esc(d.md) + '</small>' : '') + '</span></span>' : '<span style="color:var(--mu2)">–</span>') + '</td>' +
+      '<td>' + (d && d.cc ? '<span class="a4-dv"><span class="a4-fl">' + flag(d.cc) + '</span>' + esc(cname(d.cc)) + (d.ct ? '<small style="color:var(--mu2)"> · ' + esc(d.ct) + '</small>' : '') + '</span>' : '<span style="color:var(--mu2)">–</span>') + '</td>' +
+      '<td>' + (u.lv ? '<span class="a4-tag v">' + esc(u.lv) + '</span>' : '<span style="color:var(--mu2)">–</span>') + '</td><td class="r">' + fmt(u.xp) + '</td><td class="r">' + fmt(u.w) + '</td><td>' + ago(u.t) + '</td>' +
+      '<td>' + (u.pro ? '<span class="a4-tag y">PRO</span> ' : '') + (u.tch ? '<span class="a4-tag b">Teacher</span> ' : '') + (u.ban ? '<span class="a4-tag r">Banned</span> ' : '') + (u.fl && u.fl.length ? '<span class="a4-tag r">⚠ ' + u.fl.length + '</span>' : '') + '</td></tr>';
+  }
+  function users() {
+    var accts = D.accts, ac = ST().acct || {};
+    var seg = '<div class="a4-seg"><button type="button" data-a="uw" data-v="accounts" class="' + (S.uw === 'accounts' ? 'on' : '') + '">Accounts</button><button type="button" data-a="uw" data-v="visitors" class="' + (S.uw === 'visitors' ? 'on' : '') + '">All visitors</button></div>';
+    if (S.uw === 'visitors') return visitors(seg);
+    if (!accts) return head('Users', 'Everyone who signed up', seg) + (D.errs.accts ? '<div class="a4-warn">' + esc(D.errs.accts) + '</div>' : '<div class="a4-sk"></div>');
+    var L = (accts.users || []), all = uList(), devs = {}, ccs = {};
+    L.forEach(function (u) { if (u.dev) { devs[u.dev.dv] = (devs[u.dev.dv] || 0) + 1; if (u.dev.cc) ccs[u.dev.cc] = (ccs[u.dev.cc] || 0) + 1; } });
+    var chips = Object.keys(UF).map(function (k) { return '<button type="button" class="a4-chip' + (S.uf === k ? ' on' : '') + '" data-a="uf" data-v="' + k + '">' + UF[k][0] + '<b>' + L.filter(UF[k][1]).length + '</b></button>'; }).join('');
+    var dOpts = '<option value="">All devices</option>' + Object.keys(devs).sort().map(function (k) { return '<option' + (S.ud === k ? ' selected' : '') + ' value="' + esc(k) + '">' + esc(k) + ' (' + devs[k] + ')</option>'; }).join('');
+    var cOpts = '<option value="">All countries</option>' + Object.keys(ccs).sort(function (x, y) { return ccs[y] - ccs[x]; }).map(function (k) { return '<option' + (S.uc === k ? ' selected' : '') + ' value="' + k + '">' + flag(k) + ' ' + esc(cname(k)) + ' (' + ccs[k] + ')</option>'; }).join('');
+    var gmix = L.filter(UF.google[1]);
+    var kp = '<div class="a4-kg">' + kpi('Accounts', 'users', 'var(--c1)', fmt(L.length), '<span>' + fmt(gmix.length) + ' with Google</span>') + kpi('Active 7 days', 'bolt', 'var(--c2)', fmt(ac.active7 || L.filter(UF.act[1]).length), '<span>' + fmt(ac.active1 || 0) + ' today</span>') + kpi('PRO', 'crown', 'var(--c3)', fmt(L.filter(UF.pro[1]).length), '<span>' + pc(L.filter(UF.pro[1]).length, L.length) + '% of accounts</span>') + kpi('Teachers', 'star', 'var(--c4)', fmt(ac.teachers || L.filter(UF.teach[1]).length), '<span>' + fmt(ac.cls || 0) + ' classes · ' + fmt(ac.students || 0) + ' students</span>') + '</div>';
+    var tb = all.slice(0, S.pn).map(urow);
+    return head('Users', 'Everyone who signed up · tap a person for full details', seg + '<button type="button" class="a4-btn" data-a="csvu">' + ic('dl') + 'Export CSV</button>') + needV17() + kp +
+      '<div class="a4-c"><div class="a4-row" style="margin-bottom:12px"><label class="a4-sr">' + ic('search') + '<input class="a4-in" id="a4-uq" type="search" placeholder="Search name, e-mail, device, country…" value="' + esc(S.uq) + '" autocomplete="off"></label><select class="a4-sel" data-a="ud" style="width:auto">' + dOpts + '</select><select class="a4-sel" data-a="uc" style="width:auto">' + cOpts + '</select><select class="a4-sel" data-a="us" style="width:auto"><option value="seen"' + (S.us === 'seen' ? ' selected' : '') + '>Last seen</option><option value="joined"' + (S.us === 'joined' ? ' selected' : '') + '>Newest</option><option value="xp"' + (S.us === 'xp' ? ' selected' : '') + '>Most XP</option><option value="name"' + (S.us === 'name' ? ' selected' : '') + '>Name</option></select></div><div class="a4-chips" style="margin-bottom:12px">' + chips + '</div>' +
+      (tb.length ? table([['Person'], ['Device'], ['Country'], ['Level'], ['XP', 'r'], ['Words', 'r'], ['Last seen'], ['Status']], tb) + (all.length > S.pn ? '<div style="text-align:center;margin-top:12px"><button type="button" class="a4-btn" data-a="more">Show more (' + (all.length - S.pn) + ' left)</button></div>' : '') : '<div class="a4-em">Nobody matches.</div>') + '</div>';
+  }
+  function visitors(seg) {
+    var V = D.vis; if (!V) { loadVis(); return head('All visitors', 'Every device that opened LunaRise', seg) + '<div class="a4-sk"></div>'; }
+    if (V.err) return head('All visitors', '', seg) + '<div class="a4-warn">' + esc(V.err) + '</div>';
+    var q = S.uq.trim().toLowerCase(), L = (V.users || []).filter(function (u) { return !q || (u.id + ' ' + (u.dv || '') + ' ' + cname(u.cc) + ' ' + (u.ct || '') + ' ' + (u.n || '')).toLowerCase().indexOf(q) > -1; });
+    var rows = L.slice(0, S.pn).map(function (u) {
+      return '<tr><td><b>' + esc(u.n || 'Guest') + '</b> <span style="color:var(--mu2)">' + esc(String(u.id).slice(0, 6)) + '</span></td><td>' + esc(u.dv || '–') + (u.md ? '<small style="display:block;color:var(--mu2);font-size:11px">' + esc(u.md) + '</small>' : '') + '</td><td>' + esc(u.os || '–') + (u.osv ? ' <small style="color:var(--mu2)">' + esc(u.osv.replace(/^\D+/, '')) + '</small>' : '') + '</td><td>' + esc(u.br || '–') + '</td><td>' + (u.cc ? flag(u.cc) + ' ' + esc(cname(u.cc)) + (u.ct ? '<small style="color:var(--mu2)"> · ' + esc(u.ct) + '</small>' : '') : '–') + '</td><td>' + (u.a ? 'App' : 'Web') + '</td><td>' + dS(u.f) + '</td><td>' + ago(u.t) + '</td><td>' + (u.r ? '<span class="a4-tag g">signed up</span> ' : '') + (u.p ? '<span class="a4-tag y">PRO</span>' : '') + '</td></tr>';
+    });
+    return head('All visitors', fmt(V.total) + ' devices · most recent ' + fmt((V.users || []).length) + ' shown', seg) +
+      '<div class="a4-c"><div class="a4-row" style="margin-bottom:12px"><label class="a4-sr">' + ic('search') + '<input class="a4-in" id="a4-uq" type="search" placeholder="Search device, country, name…" value="' + esc(S.uq) + '" autocomplete="off"></label></div>' +
+      (rows.length ? table([['Visitor'], ['Device'], ['System'], ['Browser'], ['Country'], ['Via'], ['First seen'], ['Last seen'], ['Status']], rows) : '<div class="a4-em">Nobody matches.</div>') + '</div>';
+  }
+  function openUser(id) {
+    var u = ((D.accts && D.accts.users) || []).filter(function (x) { return x.uid === id; })[0]; if (!u) return;
+    S.dr = id; S.drA = null; drawer(); H.adm('adm_acct', { uid: id }).then(function (j) { if (S.dr === id) { S.drA = j; drawer(); } }, function () { });
+  }
+  function drawer() {
+    var el = A.querySelector('.a4-dr'); if (!S.dr) { el.classList.remove('in'); return; }
+    var u = ((D.accts && D.accts.users) || []).filter(function (x) { return x.uid === S.dr; })[0]; if (!u) return;
+    var d = u.dev || {}, x = S.drA && S.drA.a || {}, hist = x.h ? Object.keys(x.h).sort().slice(-30) : [];
+    var kv = function (k, v) { return '<div><small>' + k + '</small><b>' + (v || '–') + '</b></div>'; };
+    var nm = u.n || (u.g && u.g.n) || 'Learner';
+    el.innerHTML = '<div class="a4-dp" role="dialog" aria-label="Person details"><div class="a4-dh">' + avatar(u) + '<div style="flex:1;min-width:0"><h3>' + esc(nm) + '</h3><p>' + esc(u.g ? u.g.e : 'No Google account') + '</p><div class="a4-row" style="margin-top:6px">' + (Date.now() - u.t < 240000 ? '<span class="a4-tag g">online</span>' : '') + (u.pro ? '<span class="a4-tag y">PRO</span>' : '') + (u.tch ? '<span class="a4-tag b">Teacher</span>' : '') + (u.ban ? '<span class="a4-tag r">Banned</span>' : '') + (u.g ? '<span class="a4-tag v">Google</span>' : '') + '</div></div><button type="button" class="a4-ib" data-a="dclose" aria-label="Close">' + ic('x') + '</button></div><div class="a4-db">' +
+      '<div class="a4-sec">Device & location</div><div class="a4-kv">' + kv('Device', esc(d.dv) + (d.md ? ' · ' + esc(d.md) : '')) + kv('System', esc((d.os || '') + (d.osv ? ' ' + d.osv.replace(/^\D+/, '') : ''))) + kv('Browser', esc(d.br)) + kv('Screen', esc(d.sc) + (d.ty ? ' · ' + esc(d.ty) : '')) + kv('Country', d.cc ? flag(d.cc) + ' ' + esc(cname(d.cc)) : '') + kv('City', esc(d.ct)) + kv('Language', esc(d.lg)) + kv('Time zone', esc(d.z)) + kv('Opened via', d.a ? 'Installed app' : d.dv ? 'Website' : '') + kv('Site version', esc(d.v)) + '</div>' +
+      '<div class="a4-sec">Learning</div><div class="a4-kv">' + kv('Joined', dS(u.f)) + kv('Last seen', ago(u.t)) + kv('Level test', esc(u.lv || 'not taken')) + kv('XP', fmt(u.xp)) + kv('Words', fmt(u.w)) + kv('Game points', fmt(u.gp)) + (x.ai ? kv('AI requests today', fmt(x.ai)) : '') + (x.fm && x.fm.n ? kv('Full mocks', x.fm.n + (x.fm.b ? ' · best band ' + x.fm.b : '')) : '') + '</div>' +
+      (hist.length > 1 ? '<div class="a4-c" style="padding:14px"><div class="a4-h" style="margin:0 0 6px"><div><h3 style="font-size:13px">XP over time</h3></div></div>' + lineC('xp', hist.map(function (k) { return k.slice(6, 8) + '.' + k.slice(4, 6); }), [{ n: 'XP', c: 'var(--c1)', v: hist.map(function (k) { return +x.h[k] || 0; }) }], { h: 130, label: 'XP' }) + '</div>' : (S.drA ? '' : '<div class="a4-sk" style="height:60px"></div>')) +
+      (u.fl && u.fl.length ? '<div class="a4-warn"><b>Needs a look</b><ul style="margin:6px 0 0 18px;padding:0">' + u.fl.map(function (f) { return '<li>' + esc(f) + '</li>'; }).join('') + '</ul></div>' : '') +
+      (S.drA && S.drA.joined && S.drA.joined.length ? '<div class="a4-sec">Classes joined</div><div class="a4-kv">' + S.drA.joined.map(function (c) { return kv(esc(c.n || c.code), (c.sub ? c.sub.done + '/' + c.hw + ' homework' + (c.sub.avg != null ? ' · avg ' + c.sub.avg + '%' : '') : '')); }).join('') + '</div>' : '') +
+      '<div class="a4-sec">Actions</div><div class="a4-row">' + [[30, '30 days'], [365, '1 year']].map(function (p) { return '<button type="button" class="a4-btn" data-a="gift" data-v="' + p[0] + '">' + ic('crown') + 'Give ' + p[1] + ' PRO</button>'; }).join('') + (u.pro ? '<button type="button" class="a4-btn' + (armed === 'unpro' ? ' armed' : '') + '" data-a="unpro">' + (armed === 'unpro' ? 'Tap again' : 'Remove PRO') + '</button>' : '') + '<button type="button" class="a4-btn bad' + (armed === 'ban' ? ' armed' : '') + '" data-a="' + (u.ban ? 'unban' : 'ban') + '">' + (armed === 'ban' ? 'Tap again to confirm' : u.ban ? 'Unban' : 'Ban') + '</button></div>' +
+      '<div class="a4-row" style="flex-wrap:nowrap"><input class="a4-in" id="a4-msg" maxlength="300" placeholder="Send a message to this learner"><button type="button" class="a4-btn pri" data-a="msg">' + ic('send') + 'Send</button></div></div></div>';
+    el.classList.add('in'); bindCharts();
+  }
+
+  /* ---------- growth ---------- */
+  function gro() {
+    var a = AN(), s = ST(); if (!a) return head('Growth', 'Retention, journey and activity') + needV17() + (D.errs.ana ? '' : '<div class="a4-sk"></div>');
+    var r = a.ret || {}, ad = a.days || [], lab = ad.map(function (x) { return dk(x[0]); });
+    var rg = function (k, t) { var v = r[k] || [0, 0]; return '<div style="text-align:center">' + ring(pc(v[1], v[0]), t, 'var(--c' + (k === 'd1' ? 1 : k === 'd7' ? 2 : 3) + ')') + '<p class="a4-sub" style="margin-top:8px">' + fmt(v[1]) + ' of ' + fmt(v[0]) + ' people</p></div>'; };
+    var hours = s.hours7 || [], lv = s.levels || {}, lvK = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
+    return head('Growth', 'How people find, join and stay · last 30 days', '<button type="button" class="a4-btn" data-a="snap">' + ic('copy') + 'Copy snapshot</button>') + needV17() + '<div class="a4-g">' +
+      '<div class="a4-c s12"><div class="a4-h"><div><h3>Retention</h3><p>People who were seen again at least N days after their first visit</p></div></div><div class="a4-f2" style="grid-template-columns:repeat(3,minmax(0,1fr))">' + rg('d1', 'came back after 1 day') + rg('d7', 'after 7 days') + rg('d30', 'after 30 days') + '</div></div>' +
+      '<div class="a4-c s8"><div class="a4-h"><div><h3>Growth per day</h3><p>New visitors, sign-ups and Google sign-ups</p></div></div>' + lineC('gr', lab, [{ n: 'New visitors', c: 'var(--c1)', v: ad.map(function (x) { return x[1]; }) }, { n: 'Sign-ups', c: 'var(--c3)', v: ad.map(function (x) { return x[2]; }) }, { n: 'Google', c: 'var(--c4)', v: ad.map(function (x) { return x[3]; }) }], { label: 'Growth per day' }) + '</div>' +
+      '<div class="a4-c s4"><div class="a4-h"><div><h3>Journey</h3><p>Visit to PRO</p></div></div>' + funnel(a.funnel || []) + '</div>' +
+      '<div class="a4-c s6"><div class="a4-h"><div><h3>Active people per day</h3><p>Seen at least once that day</p></div></div>' + barsC('act', lab, ad.map(function (x) { return x[4]; }), 'var(--c5)', { name: 'Active', lab: 7, label: 'Active people per day' }) + '</div>' +
+      '<div class="a4-c s6"><div class="a4-h"><div><h3>Time of day</h3><p>People active per hour · last 7 days · Tashkent time</p></div></div>' + barsC('hrs', hours.map(function (_, i) { return i + ':00'; }), hours, 'var(--c2)', { name: 'Visits', lab: 8, label: 'Time of day' }) + '</div>' +
+      '<div class="a4-c s8"><div class="a4-h"><div><h3>When people come</h3><p>Weekday and hour · last 14 days</p></div></div>' + heat(a.heat || []) + '</div>' +
+      '<div class="a4-c s4"><div class="a4-h"><div><h3>Level test results</h3><p>People who took the placement test</p></div></div>' + barList(lvK.filter(function (k) { return lv[k]; }).map(function (k, i) { return { k: k, v: lv[k], c: COL[i] }; })) + '</div>' +
+      '<div class="a4-c s6"><div class="a4-h"><div><h3>Site versions</h3><p>What people are running</p></div></div>' + barList(rowsFrom(a.ver, 6)) + '</div>' +
+      '<div class="a4-c s6"><div class="a4-h"><div><h3>Reach</h3><p>People you can notify</p></div></div><div class="a4-kv"><div><small>Allowed notifications</small><b>' + fmt(s.reach || 0) + '</b></div><div><small>Speaking Club members</small><b>' + fmt((s.club || {}).members || 0) + '</b></div><div><small>Club online now</small><b>' + fmt((s.club || {}).online || 0) + '</b></div><div><small>Total XP earned</small><b>' + fmt((s.acct || {}).xp || 0) + '</b></div></div></div></div>';
+  }
+
+  /* ---------- promo ---------- */
+  var PLANS = [[7, '7 days', ''], [30, '1 month', '30 days'], [90, '3 months', '90 days'], [180, '6 months', '180 days'], [365, '1 year', '365 days'], [730, '2 years', '730 days'], [-1, 'Custom', 'days']];
+  function pLabel(d) { return d >= 720 ? Math.round(d / 365) + ' years' : d >= 360 ? '1 year' : (d >= 28 && d <= 31) ? '1 month' : (d >= 88 && d <= 93) ? '3 months' : (d >= 175 && d <= 190) ? '6 months' : d === 1 ? '1 day' : d + ' days'; }
+  function inviteLink(code) { return location.origin + location.pathname.replace(/[^/]*$/, '') + '?promo=' + encodeURIComponent(code); }
+  function promo() {
+    var P = D.promos, sm = (P && P.sum) || { made: 0, ready: 0, used: 0, expired: 0, ended: 0, days: 0 }, list = (P && P.codes) || [];
+    var f = S.pf, q = S.pq.trim().toLowerCase();
+    var L = list.filter(function (c) { return (f === 'all' || (f === 'used' ? (c.st === 'used' || c.st === 'ended') : c.st === f)) && (!q || (c.code + ' ' + c.n + ' ' + (c.who ? c.who.n + ' ' + c.who.e : '')).toLowerCase().indexOf(q) > -1); });
+    var plan = '<div class="a4-pl">' + PLANS.map(function (p) { return '<button type="button" data-a="plan" data-v="' + p[0] + '" class="' + (S.plan === p[0] ? 'on' : '') + '">' + p[1] + '<small>' + p[2] + '</small></button>'; }).join('') + '</div>';
+    var cust = S.plan === -1 ? '<div style="margin-top:10px"><label class="a4-lbl" for="a4-cd">Length in days (1–3650)</label><input class="a4-in" id="a4-cd" type="number" inputmode="numeric" min="1" max="3650" value="' + (S.cd || 14) + '"></div>' : '';
+    var made = S.made.length ? '<div class="a4-codes">' + S.made.map(function (c) { return '<div><span class="a4-code">' + esc(c) + '</span><button type="button" class="a4-btn sm" data-a="cp" data-v="' + esc(c) + '">' + ic('copy') + 'Copy</button><button type="button" class="a4-btn sm" data-a="cl" data-v="' + esc(c) + '">' + ic('link') + 'Link</button></div>'; }).join('') + '<div class="a4-row" style="margin-top:6px"><button type="button" class="a4-btn" data-a="cpall">' + ic('copy') + 'Copy all</button>' + (navigator.share ? '<button type="button" class="a4-btn" data-a="shr">' + ic('send') + 'Share</button>' : '') + '</div><p class="a4-sub" style="margin:6px 0 0">Each code gives <b>' + pLabel(S.madeDays) + '</b> of PRO to the first person who enters it. The link opens LunaRise with the code filled in.</p></div>' : '';
+    var create = '<div class="a4-c s5"><div class="a4-h"><div><h3>Create promo codes</h3><p>Give a code to someone — when they enter it, PRO starts</p></div></div><label class="a4-lbl">PRO length</label>' + plan + cust +
+      '<div class="a4-f2" style="margin-top:14px"><div><label class="a4-lbl" for="a4-n">How many codes</label><div class="a4-n"><button type="button" class="a4-btn sm" data-a="nm">−</button><input class="a4-in" id="a4-n" type="number" inputmode="numeric" min="1" max="100" value="' + (S.n || 1) + '"><button type="button" class="a4-btn sm" data-a="np">+</button></div></div><div><label class="a4-lbl" for="a4-vu">Code can be used for</label><select class="a4-sel" id="a4-vu"><option value="0">No time limit</option><option value="7">7 days</option><option value="30">30 days</option><option value="90">90 days</option><option value="365">1 year</option></select></div></div>' +
+      '<div class="a4-f2" style="margin-top:12px"><div><label class="a4-lbl" for="a4-note">Who is it for? (only you see this)</label><input class="a4-in" id="a4-note" maxlength="40" placeholder="e.g. Aziza, Instagram giveaway" value="' + esc(S.note || '') + '"></div><div><label class="a4-lbl" for="a4-cu">Your own code name (optional)</label><input class="a4-in" id="a4-cu" maxlength="24" placeholder="e.g. WELCOME-2026" value="' + esc(S.cu || '') + '" style="text-transform:uppercase"></div></div>' +
+      '<div style="margin-top:14px"><button type="button" class="a4-btn pri" data-a="make" style="width:100%;justify-content:center;padding:12px">' + ic('plus') + 'Create code' + '</button></div>' + made + '</div>';
+    var kp = '<div class="a4-c s7"><div class="a4-h"><div><h3>Promo overview</h3><p>' + fmt(sm.made) + ' codes made · ' + fmt(sm.days) + ' PRO days given away</p></div></div><div class="a4-dn2">' + donut([{ k: 'Ready', v: sm.ready, c: 'var(--c2)' }, { k: 'Redeemed', v: sm.used + sm.ended, c: 'var(--c1)' }, { k: 'Expired', v: sm.expired, c: 'var(--c8)' }], 'Promo codes', 'codes') + '</div></div>';
+    var chips = [['all', 'All', list.length], ['ready', 'Ready', sm.ready], ['used', 'Redeemed', sm.used + sm.ended], ['expired', 'Expired', sm.expired]].map(function (c) { return '<button type="button" class="a4-chip' + (f === c[0] ? ' on' : '') + '" data-a="pf" data-v="' + c[0] + '">' + c[1] + '<b>' + c[2] + '</b></button>'; }).join('');
+    var rows = L.slice(0, 200).map(function (c) {
+      var stt = c.st === 'ready' ? '<span class="a4-tag g">Ready</span>' : c.st === 'used' ? '<span class="a4-tag v">Redeemed</span>' : c.st === 'ended' ? '<span class="a4-tag">PRO ended</span>' : '<span class="a4-tag">Expired</span>';
+      return '<tr><td><span class="a4-code">' + esc(c.code) + '</span>' + (c.n ? '<small style="display:block;color:var(--mu2);font-size:11.5px">' + esc(c.n) + '</small>' : '') + '</td><td>' + pLabel(c.d) + '</td><td>' + stt + '</td><td>' + (c.who ? '<b style="font-weight:600">' + esc(c.who.n || c.who.e || 'Learner') + '</b>' + (c.who.e ? '<small style="display:block;color:var(--mu2);font-size:11.5px">' + esc(c.who.e) + '</small>' : '') : c.dev ? '<span style="color:var(--mu2)">device ' + esc(c.dev) + '</span>' : '<span style="color:var(--mu2)">–</span>') + '</td><td>' + (c.at ? dT(c.at) : c.vu ? 'valid until ' + dS(c.vu) : '–') + '</td><td class="r"><button type="button" class="a4-btn sm" data-a="cp" data-v="' + esc(c.code) + '" aria-label="Copy">' + ic('copy') + '</button> <button type="button" class="a4-btn sm" data-a="cl" data-v="' + esc(c.code) + '" aria-label="Copy link">' + ic('link') + '</button>' + (c.st === 'ready' ? ' <button type="button" class="a4-btn sm bad' + (armed === 'del:' + c.code ? ' armed' : '') + '" data-a="del" data-v="' + esc(c.code) + '" aria-label="Delete">' + (armed === 'del:' + c.code ? 'Sure?' : ic('trash')) + '</button>' : '') + '</td></tr>';
+    });
+    var tb = '<div class="a4-c s12"><div class="a4-h"><div><h3>All codes</h3><p>Newest first</p></div><button type="button" class="a4-btn sm" data-a="csvp">' + ic('dl') + 'CSV</button></div><div class="a4-row" style="margin-bottom:12px"><label class="a4-sr">' + ic('search') + '<input class="a4-in" id="a4-pq" type="search" placeholder="Search code, note or person" value="' + esc(S.pq) + '" autocomplete="off"></label><div class="a4-chips">' + chips + '</div></div>' + (rows.length ? table([['Code'], ['PRO'], ['Status'], ['Redeemed by'], ['When'], ['', 'r']], rows) : '<div class="a4-em">' + (D.errs.promos ? esc(D.errs.promos) : 'No codes here yet.') + '</div>') + '</div>';
+    return head('Promo codes', 'Create a code, send it to someone, and PRO starts when they enter it') + needV17() + '<div class="a4-g">' + create + kp + tb + '</div>';
+  }
+
+  /* ---------- csv ---------- */
+  function csv(name, head, rows) {
+    var q = function (v) { v = String(v == null ? '' : v); return /[",\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; };
+    var txt = [head].concat(rows).map(function (r) { return r.map(q).join(','); }).join('\n');
+    try { var b = new Blob(['﻿' + txt], { type: 'text/csv;charset=utf-8' }), a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = name; document.body.appendChild(a); a.click(); setTimeout(function () { a.remove(); URL.revokeObjectURL(a.href); }, 1500); say('Saved ' + name); }
+    catch (e) { cp(txt, 'Copied as text'); }
+  }
+  function cp(t, m) { try { H.copy ? H.copy(t, m) : navigator.clipboard.writeText(t).then(function () { say(m || 'Copied'); }); } catch (e) { try { navigator.clipboard.writeText(t); say(m || 'Copied'); } catch (x) { } } }
+
+  /* ---------- paint ---------- */
+  var TABS = [['overview', 'Overview', 'grid'], ['audience', 'Audience', 'globe'], ['users', 'Users', 'users'], ['growth', 'Growth', 'trend'], ['promo', 'Promo codes', 'ticket']];
+  function paint(keep) {
+    if (!A) return; var b = A.querySelector('#a4-body'), top = keep ? b.scrollTop : 0; CH = {};
+    var html = tab === 'overview' ? ovw() : tab === 'audience' ? aud() : tab === 'users' ? users() : tab === 'growth' ? gro() : promo();
+    var act = document.activeElement, aid = act && act.id, pos = act && act.selectionStart;
+    b.innerHTML = '<div class="a4-wrap">' + html + '</div>'; b.scrollTop = top; bindCharts();
+    A.querySelectorAll('.a4-nb').forEach(function (n) { n.classList.toggle('on', n.getAttribute('data-v') === tab); });
+    var n1 = A.querySelector('[data-v=users] .n'); if (n1) n1.textContent = D.accts ? fmt((D.accts.users || []).length) : '';
+    var n2 = A.querySelector('[data-v=promo] .n'); if (n2) n2.textContent = D.promos && D.promos.sum ? fmt(D.promos.sum.ready) : '';
+    if (aid) { var e = A.querySelector('#' + aid); if (e && e.focus) { e.focus(); try { e.setSelectionRange(pos, pos); } catch (x) { } } }
+    if (S.dr) drawer();
+  }
+  function open(h) {
+    if (A) return; H = h || window.LRADM3_H; if (!H || !H.adm) return;
+    S.theme = LSG('lr_a4_th') === 'light' ? 'light' : 'dark'; tab = LSG('lr_a4_tab') || 'overview'; if (!TABS.some(function (t) { return t[0] === tab; })) tab = 'overview';
+    A = document.createElement('div'); A.id = 'adm4'; A.setAttribute('data-th', S.theme); A.setAttribute('role', 'dialog'); A.setAttribute('aria-modal', 'true'); A.setAttribute('aria-label', 'LunaRise admin');
+    A.innerHTML = '<aside class="a4-side"><div class="a4-brand"><span class="a4-logo">' + ic('crown') + '</span><div><b>LunaRise</b><small>Admin console</small></div></div><nav class="a4-nav" aria-label="Sections">' + TABS.map(function (t) { return '<button type="button" class="a4-nb" data-a="tab" data-v="' + t[0] + '">' + ic(t[2]) + '<span class="tx">' + t[1].replace(' codes', '') + '</span><span class="n"></span></button>'; }).join('') + '</nav><div class="a4-sp"></div><div class="a4-sep"></div>' +
+      '<button type="button" class="a4-nb x" data-a="tools">' + ic('inbox') + '<span class="tx">Inbox & tools</span></button><button type="button" class="a4-nb x" data-a="theme">' + ic(S.theme === 'dark' ? 'sun' : 'moon') + '<span class="tx">' + (S.theme === 'dark' ? 'Light mode' : 'Dark mode') + '</span></button><button type="button" class="a4-nb x" data-a="close">' + ic('x') + '<span class="tx">Close</span></button></aside>' +
+      '<div class="a4-main"><header class="a4-top"><h1>Admin</h1><span class="a4-live"><i></i><span id="a4-upd">Loading…</span></span><span style="flex:1"></span><button type="button" class="a4-ib tl" data-a="tools" aria-label="Inbox and tools">' + ic('inbox') + '</button><button type="button" class="a4-ib tl" data-a="theme" aria-label="Switch theme">' + ic('sun') + '</button><button type="button" class="a4-ib" data-a="ref" aria-label="Refresh">' + ic('ref') + '</button><button type="button" class="a4-ib tl" data-a="close" aria-label="Close">' + ic('x') + '</button></header><div class="a4-body" id="a4-body"><div class="a4-wrap"><div class="a4-kg"><div class="a4-sk"></div><div class="a4-sk"></div><div class="a4-sk"></div><div class="a4-sk"></div></div></div></div></div><div class="a4-dr"></div>';
+    document.body.appendChild(A); document.documentElement.classList.add('a4-open'); requestAnimationFrame(function () { A.classList.add('in'); });
+    A.addEventListener('click', onClick); A.addEventListener('input', onInput); A.addEventListener('change', onInput); document.addEventListener('keydown', onKey);
+    try { H.markOwner && H.markOwner(); } catch (e) { }
+    try { var c = JSON.parse(LSG('lr_a4_cache') || 'null'); if (c && Date.now() - c.t < 7 * 864e5) { D.stats = c.s; D.ana = c.a; D.promos = c.p; paint(); } } catch (e) { }
+    loadAll(); timer = setInterval(function () { if (!document.hidden && !S.dr && /overview|audience|growth/.test(tab)) loadAll(true); }, 45000);
+    try { history.pushState({ adm4: 1 }, ''); } catch (e) { }
+  }
+  function close() { if (!A) return; clearInterval(timer); document.removeEventListener('keydown', onKey); var a = A; A = null; S.dr = null; a.classList.remove('in'); document.documentElement.classList.remove('a4-open'); setTimeout(function () { a.remove(); }, 250); }
+  function onKey(e) { if (e.key === 'Escape') { if (S.dr) { S.dr = null; drawer(); } else close(); } }
+  addEventListener('popstate', function () { if (A) close(); });
+  function arm(k) { if (armed === k) { armed = ''; clearTimeout(armT); return true; } armed = k; clearTimeout(armT); armT = setTimeout(function () { armed = ''; paint(true); }, 3500); paint(true); return false; }
+  function onInput(e) {
+    var t = e.target, id = t.id;
+    if (id === 'a4-uq') { S.uq = t.value; S.pn = 50; paint(true); } else if (id === 'a4-pq') { S.pq = t.value; paint(true); }
+    else if (t.getAttribute('data-a') === 'ud') { S.ud = t.value; S.pn = 50; paint(true); } else if (t.getAttribute('data-a') === 'uc') { S.uc = t.value; S.pn = 50; paint(true); } else if (t.getAttribute('data-a') === 'us') { S.us = t.value; paint(true); }
+    else if (id === 'a4-cd') S.cd = t.value; else if (id === 'a4-note') S.note = t.value; else if (id === 'a4-cu') S.cu = t.value.toUpperCase(); else if (id === 'a4-n') S.n = t.value;
+  }
+  function curUser() { return S.dr; }
+  async function onClick(e) {
+    var b = e.target.closest('[data-a]'); if (!b || b.tagName === 'SELECT' || b.tagName === 'INPUT') { if (e.target.classList && e.target.classList.contains('a4-dr')) { S.dr = null; drawer(); } return; }
+    var a = b.getAttribute('data-a'), v = b.getAttribute('data-v'), id = b.getAttribute('data-id');
+    try {
+      switch (a) {
+        case 'close': return close();
+        case 'tab': tab = v; LSS('lr_a4_tab', v); S.dr = null; armed = ''; paint(); A.querySelector('#a4-body').scrollTop = 0; return;
+        case 'ref': D.vis = null; return loadAll();
+        case 'theme': S.theme = S.theme === 'dark' ? 'light' : 'dark'; LSS('lr_a4_th', S.theme); A.setAttribute('data-th', S.theme); A.querySelectorAll('[data-a=theme]').forEach(function (n) { var tx = n.querySelector('.tx'); if (tx) tx.textContent = S.theme === 'dark' ? 'Light mode' : 'Dark mode'; var s = n.querySelector('svg'); if (s) s.innerHTML = S.theme === 'dark' ? IC.sun : IC.moon; }); return;
+        case 'tools': if (window.LRADM3) { LRADM3.bind(H); LRADM3.open(); } return;
+        case 'rng': S.rng = +v; return paint(true);
+        case 'snap': return cp(JSON.stringify({ stats: D.stats, ana: D.ana, promos: D.promos && D.promos.sum }, null, 1), 'Snapshot copied');
+        case 'uw': S.uw = v; S.pn = 50; return paint();
+        case 'uf': S.uf = v; S.pn = 50; return paint(true);
+        case 'more': S.pn += 100; return paint(true);
+        case 'user': return openUser(id);
+        case 'dclose': S.dr = null; armed = ''; return drawer();
+        case 'gift': { var uid0 = curUser(); await H.adm('adm_ctl', { uid: uid0, what: 'pro', days: +v }); say('🎁 ' + (+v >= 365 ? '1 year' : v + ' days') + ' of PRO sent'); var j = await H.adm('adm_accts'); D.accts = j; return paint(true); }
+        case 'unpro': if (!arm('unpro')) return; await H.adm('adm_ctl', { uid: curUser(), what: 'unpro' }); say('PRO removed'); D.accts = await H.adm('adm_accts'); return paint(true);
+        case 'ban': if (!arm('ban')) return; await H.adm('adm_ctl', { uid: curUser(), what: 'ban', reason: '' }); say('Banned'); D.accts = await H.adm('adm_accts'); return paint(true);
+        case 'unban': await H.adm('adm_ctl', { uid: curUser(), what: 'unban' }); say('Unbanned'); D.accts = await H.adm('adm_accts'); return paint(true);
+        case 'msg': { var m = A.querySelector('#a4-msg'); if (!m || m.value.trim().length < 2) return say('Write a message first'); await H.adm('adm_ctl', { uid: curUser(), what: 'msg', text: m.value }); m.value = ''; return say('Message sent'); }
+        case 'csvu': { var L = uList(); return csv('lunarise-users.csv', ['Name', 'E-mail', 'Google', 'Device', 'Model', 'System', 'Browser', 'Country', 'City', 'Language', 'Level', 'XP', 'Words', 'Game points', 'Joined', 'Last seen', 'PRO', 'Teacher', 'Banned'], L.map(function (u) { var d = u.dev || {}; return [u.n || (u.g && u.g.n) || '', u.g ? u.g.e : '', u.g ? 'yes' : 'no', d.dv || '', d.md || '', ((d.os || '') + ' ' + (d.osv || '')).trim(), d.br || '', d.cc ? cname(d.cc) : '', d.ct || '', d.lg || '', u.lv || '', u.xp, u.w, u.gp, u.f ? new Date(u.f).toISOString().slice(0, 10) : '', u.t ? new Date(u.t).toISOString().slice(0, 16).replace('T', ' ') : '', u.pro ? 'yes' : '', u.tch ? 'yes' : '', u.ban ? 'yes' : '']; })); }
+        case 'csvaud': { var an = AN(); if (!an) return; var rows = []; (an.dev || []).forEach(function (r) { rows.push(['Device', r[0], r[1], r[2], r[3]]); }); (an.cc || []).forEach(function (r) { rows.push(['Country', cname(r[0]), r[1], r[2], r[3]]); }); (an.os || []).forEach(function (r) { rows.push(['System', r[0], r[1], r[2], r[3]]); }); (an.br || []).forEach(function (r) { rows.push(['Browser', r[0], r[1], r[2], r[3]]); }); return csv('lunarise-audience.csv', ['Group', 'Name', 'Visitors', 'Google', 'PRO'], rows); }
+        case 'csvp': return csv('lunarise-promo-codes.csv', ['Code', 'Note', 'PRO days', 'Status', 'Created', 'Valid until', 'Redeemed', 'Redeemed by', 'E-mail'], ((D.promos && D.promos.codes) || []).map(function (c) { return [c.code, c.n, c.d, c.st, c.c ? new Date(c.c).toISOString().slice(0, 10) : '', c.vu ? new Date(c.vu).toISOString().slice(0, 10) : '', c.at ? new Date(c.at).toISOString().slice(0, 16).replace('T', ' ') : '', c.who ? c.who.n : '', c.who ? c.who.e : '']; }));
+        case 'plan': S.plan = +v; return paint(true);
+        case 'pf': S.pf = v; return paint(true);
+        case 'nm': case 'np': { var i = A.querySelector('#a4-n'); S.n = Math.max(1, Math.min(100, (+i.value || 1) + (a === 'np' ? 1 : -1))); i.value = S.n; return; }
+        case 'cp': return cp(v, v + ' copied');
+        case 'cl': return cp(inviteLink(v), 'Invite link copied');
+        case 'cpall': return cp(S.made.join('\n'), S.made.length + ' codes copied');
+        case 'shr': try { await navigator.share({ title: 'LunaRise PRO', text: 'Your LunaRise PRO code (' + pLabel(S.madeDays) + '): ' + S.made.join(', ') + '\nTap to open: ' + inviteLink(S.made[0]) }); } catch (x) { } return;
+        case 'del': if (!arm('del:' + v)) return; await H.adm('adm_code_del', { code: v }); say(v + ' deleted'); D.promos = await H.adm('adm_promos'); return paint(true);
+        case 'make': {
+          var days = S.plan === -1 ? Math.max(1, Math.min(3650, Math.floor(+((A.querySelector('#a4-cd') || {}).value) || 0))) : S.plan; if (!days) return say('Enter the number of days');
+          var cu = (A.querySelector('#a4-cu') || {}).value || '', n = Math.max(1, Math.min(100, Math.floor(+((A.querySelector('#a4-n') || {}).value) || 1))), vu = +((A.querySelector('#a4-vu') || {}).value) || 0, note = (A.querySelector('#a4-note') || {}).value || '';
+          cu = cu.trim().toUpperCase().replace(/\s+/g, ''); if (cu && !/^[A-Z0-9][A-Z0-9_-]{3,23}$/.test(cu)) return say('Code name: 4–24 letters or digits');
+          b.disabled = true; var j2; try { j2 = await H.adm('adm_codes', { n: cu ? 1 : n, days: days, valid: vu, note: note, custom: cu }); } catch (x) { b.disabled = false; return say(String(x.message) === 'exists' ? 'That code name already exists' : '⚠ ' + errMsg(x)); }
+          b.disabled = false; S.made = j2.codes || []; S.madeDays = days; S.cu = ''; say(S.made.length + ' code' + (S.made.length > 1 ? 's' : '') + ' created'); try { D.promos = await H.adm('adm_promos'); } catch (x) { } return paint(true);
+        }
+      }
+    } catch (x) { say('⚠ ' + errMsg(x)); }
+  }
+  window.LRADM4 = { open: open, close: close, _set: function (d) { D = Object.assign(D, d); if (A) paint(); }, _tab: function (t) { tab = t; if (A) paint(); }, _state: function () { return { D: D, S: S, tab: tab }; } };
+})();
+</script><script id="adm4-promo">(function(){try{var m=/[?&]promo=([A-Za-z0-9_-]{4,24})/.exec(location.search);if(!m)return;var code=m[1].toUpperCase(),n=0;
+var t=setInterval(function(){n++;if(n>120){clearInterval(t);return}
+ var i=document.getElementById('promo-input');if(typeof window.openSubscriptionModal!=='function'||!i||document.querySelector('.onb-open,#onboarding:not(.hidden)'))return;
+ clearInterval(t);try{window.openSubscriptionModal()}catch(e){}i.value=code;try{window.promoSay&&promoSay('Code '+code+' is ready. Tap Redeem.')}catch(e){}
+ try{history.replaceState(null,'',location.pathname+location.search.replace(/([?&])promo=[^&]*&?/,'$1').replace(/[?&]$/,'')+location.hash)}catch(e){}
+},500)}catch(e){}})();</script><script id="lr-tg">/* Telegram Mini App: when the site is opened inside Telegram it fills the screen, matches the theme and remembers the invite code */
 (function(){'use strict';var h=location.hash||'',q=location.search||'';
 if(!/tgWebApp/i.test(h+q)&&!(window.Telegram&&Telegram.WebApp&&Telegram.WebApp.initData))return;
 document.documentElement.classList.add('tg-app');
