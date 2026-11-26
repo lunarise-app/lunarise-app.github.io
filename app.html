@@ -39588,7 +39588,7 @@ ${p.p}`;
     addEventListener('pagehide', srvFlush);
     function startStats() {
         if (/[?&]introT=/.test(location.search)) return;
-        setTimeout(beat, 3500); setTimeout(visit, 5000); setTimeout(cfgCheck, 4500); setTimeout(giftCheck, 6000); setTimeout(geoLoad, 2500);
+        setTimeout(ownerWatch, 2800); setTimeout(beat, 3500); setTimeout(visit, 5000); setTimeout(cfgCheck, 4500); setTimeout(giftCheck, 6000); setTimeout(geoLoad, 2500);
         document.addEventListener('visibilitychange', () => { if (document.hidden) { hiddenAt = Date.now(); LS.set('lr_vlast', String(Date.now())); } else if (hiddenAt && Date.now() - hiddenAt > 30 * 60000) { LS.set('lr_vlast', '0'); setTimeout(visit, 1500); } });
         setInterval(beat, 90000);
         document.addEventListener('visibilitychange', () => { if (!document.hidden) { firstDone = firstDone && dayKey(Date.now()) === LS.get('lr_sd'); beat(); } });
@@ -39686,12 +39686,30 @@ ${p.p}`;
         }
         entry();
     }
+    const ownerHint = () => LS.get('lr_adm_hint') === '1' || LS.get('lr_owner') === '1' || String(((U().google || {}).email) || '').toLowerCase() === ADMIN;
+    function verify() {
+        if (adminOk || checking) return; checking = true;
+        authUser().then(u => { checking = false; if (isAdminUser(u)) { adminOk = true; LS.set('lr_adm_hint', '1'); try { markOwner(); } catch (e) { } entry(); } }).catch(() => { checking = false; });
+    }
+    function hdrBtn(on) {
+        let b = $('adm-hdr');
+        if (!on) { if (b) b.remove(); return; }
+        if (b) return; const host = $('user-header-profile'); if (!host || !host.parentNode) return;
+        if (!$('adm5-css')) document.head.insertAdjacentHTML('beforeend', '<style id="adm5-css">.adm-hdr{display:inline-flex;align-items:center;gap:7px;min-height:40px;padding:0 13px;border-radius:12px;border:1px solid rgba(251,191,36,.4);background:linear-gradient(135deg,rgba(251,191,36,.18),rgba(124,92,255,.22));color:#fde68a;font:700 12px Inter,system-ui,sans-serif;cursor:pointer;flex:none}.adm-hdr svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}@media (max-width:640px){.adm-hdr span{display:none}.adm-hdr{padding:0 11px}}</style>');
+        b = document.createElement('button'); b.type = 'button'; b.id = 'adm-hdr'; b.className = 'adm-hdr'; b.setAttribute('aria-label', 'Open the admin panel'); b.innerHTML = ICON.crown + '<span>Admin</span>'; b.onclick = () => openGuard(); host.parentNode.insertBefore(b, host);
+    }
+    function ownerWatch() {
+        if (!ownerHint()) return;
+        fbAuth().then(a => { a.onAuthStateChanged(u => { if (isAdminUser(u)) { adminOk = true; LS.set('lr_adm_hint', '1'); try { markOwner(); } catch (e) { } } try { entry(); } catch (e) { } }); }).catch(() => { });
+        try { entry(); } catch (e) { }
+    }
     function entry() {
         const hero = document.querySelector('#view-profile .pf-hero'); let e = $('adm-entry');
-        if (!adminOk) { if (e) e.remove(); const g = U().google; if (g && String(g.email || '').toLowerCase() === ADMIN && !checking) { checking = true; authUser().then(u => { checking = false; adminOk = isAdminUser(u); if (adminOk) entry(); }).catch(() => { checking = false; }); } return; }
+        if (!ownerHint()) { if (e) e.remove(); hdrBtn(false); return; }
+        verify(); hdrBtn(true);
         if (!hero || e) return;
         hero.insertAdjacentHTML('afterend', `<button type="button" id="adm-entry" class="adm-entry" aria-label="Open the admin panel"><span class="adm-entry-ic">${ICON.crown}</span><span class="adm-entry-tx"><b>Admin panel</b><small>Statistics, people, promo codes, announcements</small></span><span class="adm-entry-go">${ICON.arrow}</span></button>`);
-        $('adm-entry').onclick = openNew;
+        $('adm-entry').onclick = () => openGuard();
     }
     if (typeof window.renderProfile === 'function') { const rp = window.renderProfile; window.renderProfile = function () { const r = rp.apply(this, arguments); try { paint(); } catch (e) { } return r; }; }
 
@@ -39764,9 +39782,25 @@ ${p.p}`;
         adm('adm_own', { id, on: 1 }).then(() => { LS.set('lr_own_ok', id); }).catch(() => { });
     }
     async function copy(t, msg) { try { await navigator.clipboard.writeText(t); toast(msg || 'Copied'); } catch (e) { const ta = document.createElement('textarea'); ta.value = t; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); toast(msg || 'Copied'); } catch (x) { } ta.remove(); } }
-    window.LRADM_H = { adm, toast, copy, applyFlags, markOwner };
+    window.LRADM_H = { adm, toast, copy, applyFlags, markOwner, relog: () => signInOwner().catch(() => { toast('Could not sign in. Try again.'); }) };
+    async function signInOwner() {
+        const a = await fbAuth(), pv = new firebase.auth.GoogleAuthProvider(); pv.setCustomParameters({ prompt: 'select_account', login_hint: ADMIN });
+        const cu = a.currentUser;
+        const res = cu && cu.isAnonymous ? await cu.linkWithPopup(pv).catch(e => { if (e && /already-in-use/.test(e.code || '') && e.credential) return a.signInWithCredential(e.credential); throw e; }) : await a.signInWithPopup(pv);
+        const u = (res && res.user) || a.currentUser;
+        if (isAdminUser(u)) { adminOk = true; const me = U(); me.google = { uid: u.uid, email: u.email || '', at: Date.now() }; try { pfSave(); } catch (e) { } LS.set('lr_adm_hint', '1'); try { markOwner(true); } catch (e) { } try { entry(); } catch (e) { } }
+        return adminOk;
+    }
+    async function openGuard(t) {
+        if (typeof t !== 'string') t = undefined;
+        if (!adminOk) { try { adminOk = isAdminUser(await authUser()); } catch (e) { } }
+        if (!adminOk) {
+            try { await signInOwner(); } catch (e) { const c = (e && e.code) || ''; if (!/popup-closed|cancelled/.test(c)) toast(/popup-blocked/.test(c) ? 'The browser blocked the Google window. Tap again.' : 'Could not sign in. Check your internet and try again.'); return; }
+        }
+        if (adminOk) { LS.set('lr_adm_hint', '1'); openNew(t); } else toast('Sign in with ' + ADMIN + ' to open the admin panel.');
+    }
     function openNew(t) { if (window.LRADM4) LRADM4.open(window.LRADM_H, typeof t === 'string' ? t : undefined); }
-    window.LRAdmin = { open: (t) => (adminOk ? openNew(t) : authUser().then(u => { adminOk = isAdminUser(u); if (adminOk) openNew(t); else toast('This panel is only for the site owner.'); })), _beat: () => { lastBeat = 0; beat(); }, _cfg: cfgCheck, _gift: giftCheck };
+    window.LRAdmin = { open: (t) => openGuard(t), _beat: () => { lastBeat = 0; beat(); }, _cfg: cfgCheck, _gift: giftCheck };
 
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', startStats); else startStats();
 })();
@@ -54689,6 +54723,16 @@ svg.a4-sp{width:100%;height:34px}
 @media (max-width:820px){.a4-nb[data-v=inbox] .n:not(:empty){display:block;position:absolute;top:2px;right:8px;padding:1px 5px;font-size:9.5px;background:var(--bad);color:#fff}}
 
 .a4-nb .n:empty{display:none}
+
+.a4-hcs{display:flex;flex-wrap:wrap;gap:8px}.a4-hc{display:inline-flex;align-items:center;gap:5px;padding:5px 10px;border-radius:99px;background:var(--pn2);border:1px solid var(--ln);font-size:12.5px;color:var(--mu);white-space:nowrap}.a4-hc b{color:var(--tx);font-weight:700}.a4-hc.g b{color:var(--good)}.a4-hc.y b{color:var(--warn)}
+.a4-aw{border-color:var(--ac)}.a4-hst{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;color:var(--mu);padding:5px 10px;border-radius:99px;background:var(--pn2);border:1px solid var(--ln)}.a4-hst i{width:8px;height:8px;border-radius:50%;background:var(--warn)}.a4-hst.on i{background:var(--good);box-shadow:0 0 0 4px rgba(52,211,153,.18)}
+.a4-hrs{display:grid;gap:8px;margin-top:12px}.a4-hr{border:1px solid var(--ln);border-radius:14px;background:var(--pn2);overflow:hidden}.a4-hr.open{border-color:var(--ln2)}
+.a4-hr-h{display:grid;grid-template-columns:110px 1fr auto;gap:12px;align-items:center;width:100%;text-align:left;padding:11px 14px;min-height:54px}.a4-hr-t b{display:block;color:var(--tx);font-size:14px}.a4-hr-t small{color:var(--mu2);font-size:12px}
+.a4-hr-c{display:flex;flex-wrap:wrap;gap:6px}.a4-hr-x{color:var(--mu2);font-size:12px;white-space:nowrap}
+.a4-hr-b{padding:4px 14px 12px;display:grid;gap:7px}.a4-hr-f{color:var(--mu);font-size:12.5px}.a4-hr-f b{color:var(--tx)}
+.a4-hr-e{display:flex;gap:10px;align-items:flex-start;font-size:13.5px;color:var(--tx)}.a4-hr-e i{flex:none;width:8px;height:8px;margin-top:6px;border-radius:50%;background:var(--c5)}.a4-hr-e.k-join i{background:var(--good)}.a4-hr-e.k-pro i{background:var(--warn)}.a4-hr-e.k-new i{background:var(--c1)}
+.a4-hr-e small{display:block;color:var(--mu2);font-size:12px;margin-top:1px}
+@media (max-width:720px){.a4-hr-h{grid-template-columns:1fr;gap:6px}.a4-hr-x{justify-self:start}}
 </style><script id="adm4-js">/* LunaRise Admin 4 — analytics console (devices, countries, people, growth, promo codes) */
 (function () {
   'use strict';
@@ -54818,9 +54862,9 @@ svg.a4-sp{width:100%;height:34px}
 
   function loadAll(quiet) {
     if (busy) return Promise.resolve(); busy = true; var t0 = Date.now(); var b = A && A.querySelector('[data-a=ref]'); if (b) b.classList.add('sp');
-    var calls = [['stats', 'adm_stats'], ['ana', 'adm_ana'], ['accts', 'adm_accts'], ['promos', 'adm_promos']];
+    var calls = [['stats', 'adm_stats'], ['ana', 'adm_ana'], ['accts', 'adm_accts'], ['promos', 'adm_promos'], ['log', 'adm_log', { n: 96 }]];
     return Promise.all(calls.map(function (c) {
-      return H.adm(c[1]).then(function (j) { D[c[0]] = j; delete D.errs[c[0]]; }, function (e) { D.errs[c[0]] = errMsg(e); });
+      return H.adm(c[1], c[2]).then(function (j) { D[c[0]] = j; delete D.errs[c[0]]; }, function (e) { D.errs[c[0]] = errMsg(e); });
     })).then(function () {
       busy = false; S.lat = Date.now() - t0; S.lastLoad = Date.now(); if (b) b.classList.remove('sp'); var u = A && A.querySelector('#a4-upd'); if (u) u.innerHTML = '<i></i>Updated ' + new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
       var lv = A && A.querySelector('.a4-live'); if (lv) lv.classList.toggle('off', !D.stats && !D.ana);
@@ -54901,7 +54945,7 @@ svg.a4-sp{width:100%;height:34px}
   function avatar(u) { var nm = u.n || (u.g && u.g.n) || 'L'; return '<span class="a4-av" style="--h:' + hue(u.uid || nm) + '">' + (u.g && u.g.p ? '<img src="' + esc(u.g.p) + '" alt="" referrerpolicy="no-referrer" loading="lazy">' : esc(nm.charAt(0).toUpperCase())) + '</span>'; }
 
   /* ---------- v5: notes, stars, audit log, engagement ---------- */
-  var SRV = 18, LOGK = 'lr_a4_log', NOTEK = 'lr_a4_notes', STARK = 'lr_a4_star', NS = { star: {}, note: {} };
+  var SRV = 19, LOGK = 'lr_a4_log', NOTEK = 'lr_a4_notes', STARK = 'lr_a4_star', NS = { star: {}, note: {} };
   function jget(k, d) { try { return JSON.parse(LSG(k) || 'null') || d; } catch (e) { return d; } }
   function reloadNS() { NS.star = jget(STARK, {}); NS.note = jget(NOTEK, {}); }
   function logA(kind, text, uid) { var l = jget(LOGK, []); l.unshift({ t: Date.now(), k: kind, x: text, u: uid || '' }); LSS(LOGK, JSON.stringify(l.slice(0, 300))); }
@@ -54948,13 +54992,56 @@ svg.a4-sp{width:100%;height:34px}
     return ev.sort(function (a, b) { return b.t - a.t; });
   }
   var EVI = { join: ['users', 'var(--c2)'], promo: ['ticket', 'var(--c3)'], code: ['plus', 'var(--c5)'], admin: ['shield', 'var(--c1)'], alert: ['bolt', 'var(--bad)'] };
+
+  /* ---------- v6: the hourly report (written by the server every hour, even while you are away) ---------- */
+  var FNAME = { dashboard: 'Hub', certificates: 'Exams', dictionary: 'Dictionary', grammar: 'Grammar', games: 'Games', chess: 'Chess', reading: 'Reading Lab', 'ai-chat': 'AI Tutor', profile: 'Profile', movies: 'Movies', club: 'Speaking Club', listening: 'Listening', mentors: 'Mentors', books: 'Moon Library', premium: 'PRO' };
+  function fname(f) { return FNAME[f] || (String(f).charAt(0).toUpperCase() + String(f).slice(1).replace(/[-_]/g, ' ')); }
+  function LG() { return (D.log && D.log.log) || []; }
+  function sumLog(from) { var o = { n: 0, nw: 0, bk: 0, su: 0, pr: 0, lt: 0, mn: 0 }; LG().forEach(function (r) { if (r.first || !(r.t > from)) return; o.n++; o.nw += r.nw || 0; o.bk += r.bk || 0; o.su += r.su || 0; o.pr += r.pr || 0; o.lt += r.lt || 0; o.mn += r.mn || 0; }); return o; }
+  function plural(n, a, b) { return fmt(n) + ' ' + (n === 1 ? a : (b || a + 's')); }
+  function evText(e) {
+    var who = e.n ? '<b>' + esc(e.n) + '</b>' : 'Someone', where = [e.ct, cname(e.c)].filter(function (x) { return x && x !== 'Unknown'; }).join(', ');
+    var tx = e.k === 'join' ? who + ' signed up' : e.k === 'pro' ? who + ' got PRO' + (e.p === 2 ? ' with a promo code' : e.p === 3 ? ' as a gift' : '') : e.k === 'test' ? who + ' finished the level test' : 'New visitor';
+    return tx + '<small>' + esc(e.d || 'Unknown device') + (e.a ? ' · app' : ' · website') + (where ? ' · ' + esc(where) : '') + (e.h ? ' · real person ✓' : ' · still being checked') + '</small>';
+  }
+  function hrChips(r) {
+    var c = []; c.push('<span class="a4-hc"><b>' + fmt(r.act || 0) + '</b> active</span>');
+    if (r.nw) c.push('<span class="a4-hc g"><b>' + fmt(r.nw) + '</b> new</span>'); if (r.bk) c.push('<span class="a4-hc"><b>' + fmt(r.bk) + '</b> came back</span>');
+    if (r.su) c.push('<span class="a4-hc g"><b>' + fmt(r.su) + '</b> signed up</span>'); if (r.pr) c.push('<span class="a4-hc y"><b>' + fmt(r.pr) + '</b> got PRO</span>'); if (r.lt) c.push('<span class="a4-hc"><b>' + fmt(r.lt) + '</b> level test</span>');
+    if (r.mn) c.push('<span class="a4-hc">~<b>' + fmt(r.mn) + '</b> min learning</span>'); return c.join('');
+  }
+  function hrStrip() {
+    var L = LG(); if (!L.length) return D.errs.log ? needV19() : '';
+    var o = sumLog(Date.now() - 864e5), last = L[0];
+    return '<div class="a4-c a4-hs"><div class="a4-h"><div><h3>Last 24 hours</h3><p>Updated by the server every hour · last run ' + ago(last.t) + '</p></div><button type="button" class="a4-btn sm" data-a="tab" data-v="activity">Hourly report</button></div><div class="a4-hcs">' +
+      '<span class="a4-hc g"><b>' + fmt(o.nw) + '</b> new visitors</span><span class="a4-hc"><b>' + fmt(o.bk) + '</b> returns</span><span class="a4-hc g"><b>' + fmt(o.su) + '</b> sign-ups</span><span class="a4-hc y"><b>' + fmt(o.pr) + '</b> PRO</span><span class="a4-hc"><b>' + fmt(last.on || 0) + '</b> online now</span></div></div>';
+  }
+  function authWarn() { var bad = Object.keys(D.errs).some(function (k) { return /Not allowed/.test(D.errs[k]); }); return bad ? '<div class="a4-warn"><b>Your sign-in needs refreshing.</b> Tap the button and choose the owner Google account. <button type="button" class="a4-btn sm" data-a="relog">Sign in again</button></div>' : ''; }
+  function needV19() { return '<div class="a4-warn"><b>Hourly report needs the new server file (v19).</b> Paste <b>push_server_v19.gs</b> into Apps Script, then Deploy → Manage deployments → Edit → New version → Deploy. After that it updates itself every hour.</div>'; }
+  function hourly() {
+    if (D.errs.log) return needV19(); var L = LG(); if (!L.length) return '<div class="a4-c"><div class="a4-em">The first hourly report is being prepared. Check back in a moment.</div></div>';
+    var last = L[0], since = S.since || 0, away = since ? sumLog(since) : null, h = '';
+    if (away && away.n) h += '<div class="a4-c a4-aw"><div class="a4-h"><div><h3>Since your last visit</h3><p>You were away for ' + ago(since).replace(' ago', '') + ' · here is what changed</p></div></div><div class="a4-hcs">' +
+      '<span class="a4-hc g"><b>' + fmt(away.nw) + '</b> new visitors</span><span class="a4-hc"><b>' + fmt(away.bk) + '</b> returns</span><span class="a4-hc g"><b>' + fmt(away.su) + '</b> sign-ups</span><span class="a4-hc y"><b>' + fmt(away.pr) + '</b> got PRO</span><span class="a4-hc"><b>' + fmt(away.lt) + '</b> level tests</span><span class="a4-hc">~<b>' + fmt(away.mn) + '</b> min learning</span></div></div>';
+    var st = D.log.trig ? '<span class="a4-hst on"><i></i>Updates itself every hour · last run ' + ago(last.t) + '</span>' : '<span class="a4-hst"><i></i>Hourly trigger is not on yet. Opening this tab switches it on.</span>';
+    var rows = L.slice(0, 48).map(function (r) {
+      var k = String(r.k), open = S.hx && S.hx[k], dl = dayLab(r.t), ev = (r.ev || []);
+      var fe = (r.fe || []).map(function (f) { return esc(fname(f[0])) + ' <b>' + fmt(f[1]) + '</b>'; }).join(' · ');
+      return '<div class="a4-hr' + (open ? ' open' : '') + '"><button type="button" class="a4-hr-h" data-a="hrx" data-v="' + esc(k) + '"><span class="a4-hr-t"><b>' + hm(r.since || (r.t - 36e5)) + ' – ' + hm(r.t) + '</b><small>' + esc(dl) + '</small></span>' +
+        '<span class="a4-hr-c">' + (r.first ? '<span class="a4-hc">First snapshot: counting starts here</span>' : hrChips(r)) + '</span><span class="a4-hr-x">' + (ev.length ? fmt(ev.length) + (ev.length === 1 ? ' event' : ' events') : '') + '</span></button>' +
+        (open ? '<div class="a4-hr-b">' + (fe ? '<div class="a4-hr-f">Most used: ' + fe + '</div>' : '') + (ev.length ? ev.map(function (e) { return '<div class="a4-hr-e k-' + esc(e.k) + '"><i></i><span>' + evText(e) + '</span></div>'; }).join('') : '<div class="a4-hr-f">Nothing notable this hour.</div>') + '<div class="a4-hr-f">' + fmt(r.all || 0) + ' people in total · ' + fmt(r.hu || 0) + ' active confirmed as real · ' + fmt(r.app || 0) + ' on the app, ' + fmt(r.web || 0) + ' on the website</div></div>' : '') + '</div>';
+    }).join('');
+    var sp = L.slice(0, 24).reverse().map(function (r) { return r.act || 0; });
+    return '<div class="a4-kg">' + kpi('Online now', 'users', 'var(--c2)', fmt(last.on || 0), '<span>' + fmt(last.act || 0) + ' active last hour</span>', sp) + kpi('People in total', 'globe', 'var(--c1)', fmt(last.all || 0), '<span>' + fmt(last.reg || 0) + ' signed up</span>') + kpi('PRO', 'crown', 'var(--c3)', fmt(last.pro || 0), '<span>' + fmt(last.pr || 0) + ' new last hour</span>') + kpi('Real people', 'shield', 'var(--c5)', fmt(last.hu || 0), '<span>confirmed active last hour</span>') + '</div>' + h +
+      '<div class="a4-c"><div class="a4-h"><div><h3>Hourly report</h3><p>What changed each hour: who came, who signed up, what they used</p></div></div><div style="margin-top:10px">' + st + '</div><div class="a4-hrs">' + rows + '</div></div>';
+  }
   function act() {
     var ev = events(), f = S.ua, F = { all: ['All', function () { return true; }], join: ['Sign-ups', function (e) { return e.k === 'join'; }], promo: ['Promo', function (e) { return e.k === 'promo' || e.k === 'code'; }], admin: ['My actions', function (e) { return e.k === 'admin'; }], alert: ['Alerts', function (e) { return e.k === 'alert'; }] };
     var chips = Object.keys(F).map(function (k) { return '<button type="button" class="a4-chip' + (f === k ? ' on' : '') + '" data-a="ua" data-v="' + k + '">' + F[k][0] + '<b>' + ev.filter(F[k][1]).length + '</b></button>'; }).join('');
     var L = ev.filter((F[f] || F.all)[1]).slice(0, 150), last = '', h = '';
     L.forEach(function (e) { var dl = dayLab(e.t); if (dl !== last) { h += '<div class="a4-day">' + esc(dl) + '</div>'; last = dl; } var m = EVI[e.k] || EVI.join; h += '<div class="a4-ev' + (e.u ? ' cl' : '') + '"' + (e.u ? ' data-a="user" data-id="' + esc(e.u) + '"' : '') + ' style="--ec:' + m[1] + '"><i>' + ic(m[0]) + '</i><div class="tx">' + e.x + '</div><small>' + hm(e.t) + ' · ' + ago(e.t) + '</small></div>'; });
     var s = ST(), ac = s.acct || {};
-    return head('Activity', 'Sign-ups, promo codes and everything you did · newest first', '<button type="button" class="a4-btn" data-a="clrlog">' + ic('trash') + 'Clear my log</button>') + needV17() +
+    return head('Activity', 'Sign-ups, promo codes and everything you did · newest first', '<button type="button" class="a4-btn" data-a="clrlog">' + ic('trash') + 'Clear my log</button>') + needV17() + hourly() +
       '<div class="a4-kg">' + kpi('Joined today', 'users', 'var(--c2)', fmt(((D.accts && D.accts.users) || []).filter(function (u) { return Date.now() - u.f < 864e5; }).length), '<span>' + fmt(s.new7 || 0) + ' in 7 days</span>') + kpi('Promo redeemed', 'ticket', 'var(--c3)', fmt(((D.promos && D.promos.codes) || []).filter(function (c) { return c.at && Date.now() - c.at < 7 * 864e5; }).length), '<span>last 7 days</span>') + kpi('Need a look', 'bolt', 'var(--bad)', fmt(ac.flagged || ev.filter(function (e) { return e.k === 'alert'; }).length), '<span>unusual activity</span>') + kpi('My actions', 'shield', 'var(--c1)', fmt(jget(LOGK, []).length), '<span>saved on this device</span>') + '</div>' +
       '<div class="a4-c"><div class="a4-row" style="margin-bottom:12px"><div class="a4-chips">' + chips + '</div></div>' + (h ? '<div class="a4-feed">' + h + '</div>' : '<div class="a4-em">Nothing here yet.</div>') + '</div>';
   }
@@ -54965,7 +55052,7 @@ svg.a4-sp{width:100%;height:34px}
     var row = function (k, val, cls) { return '<div class="a4-sr2"><span>' + k + '</span><b' + (cls ? ' class="' + cls + '"' : '') + '>' + val + '</b></div>'; };
     var srv = '<div class="a4-c s6"><div class="a4-h"><div><h3>Server</h3><p>The Apps Script that powers sign-ups, codes and stats</p></div></div>' +
       row('Version', v ? 'v' + v : 'unknown') + row('Latest version', 'v' + SRV) + row('Status', v ? (ok ? '✓ Up to date' : '⚠ Update available') : '–', ok ? 'g' : 'y') + row('Response time', S.lat ? S.lat + ' ms' : '–') + row('Last refreshed', S.lastLoad ? ago(S.lastLoad) : '–') +
-      (v && !ok ? '<div class="a4-warn" style="margin-top:12px"><b>How to update:</b> open the Apps Script project, replace all code with <b>push_server_v18.gs</b>, then Deploy → Manage deployments → Edit → New version → Deploy.</div>' : '') + '</div>';
+      (v && !ok ? '<div class="a4-warn" style="margin-top:12px"><b>How to update:</b> open the Apps Script project, replace all code with <b>push_server_v19.gs</b>, then Deploy → Manage deployments → Edit → New version → Deploy.</div>' : '') + '</div>';
     var data = '<div class="a4-c s6"><div class="a4-h"><div><h3>Data</h3><p>What this console is looking at</p></div></div>' +
       row('Accounts', fmt(D.accts ? (D.accts.users || []).length : 0)) + row('Visitors', fmt(a ? a.visitors : s.all || 0)) + row('Promo codes', fmt(D.promos && D.promos.codes ? D.promos.codes.length : 0)) + row('Activity events', fmt(events().length)) +
       row('Private notes', fmt(Object.keys(NS.note).length)) + row('Starred people', fmt(Object.keys(NS.star).length)) + row('Cached data', Math.round(cache / 1024) + ' KB') +
@@ -55331,9 +55418,9 @@ svg.a4-sp{width:100%;height:34px}
   var TABS = [['overview', 'Overview', 'grid'], ['audience', 'Audience', 'globe'], ['users', 'Users', 'users'], ['growth', 'Growth', 'trend'], ['activity', 'Activity', 'clock'], ['inbox', 'Inbox', 'chat'], ['teachers', 'Teachers', 'cap'], ['announce', 'Announce', 'mega'], ['promo', 'Promo codes', 'ticket'], ['system', 'System', 'shield']];
   function paint(keep) {
     if (!A) return; var b = A.querySelector('#a4-body'), top = keep ? b.scrollTop : 0; CH = {};
-    reloadNS(); var html = tab === 'overview' ? ovw() : tab === 'audience' ? aud() : tab === 'users' ? users() : tab === 'growth' ? gro() : tab === 'activity' ? act() : tab === 'inbox' ? inbox() : tab === 'teachers' ? teachers() : tab === 'announce' ? announce() : tab === 'system' ? sys() : promo();
+    reloadNS(); var html = tab === 'overview' ? hrStrip() + ovw() : tab === 'audience' ? aud() : tab === 'users' ? users() : tab === 'growth' ? gro() : tab === 'activity' ? act() : tab === 'inbox' ? inbox() : tab === 'teachers' ? teachers() : tab === 'announce' ? announce() : tab === 'system' ? sys() : promo();
     var ae = document.activeElement, aid = ae && ae.id, pos = ae && ae.selectionStart;
-    b.innerHTML = '<div class="a4-wrap">' + html + '</div>'; b.scrollTop = top; bindCharts();
+    b.innerHTML = '<div class="a4-wrap">' + authWarn() + html + '</div>'; b.scrollTop = top; bindCharts();
     A.querySelectorAll('.a4-nb').forEach(function (n) { n.classList.toggle('on', n.getAttribute('data-v') === tab); });
     var n1 = A.querySelector('[data-v=users] .n'); if (n1) n1.textContent = D.accts ? fmt((D.accts.users || []).length) : '';
     navBadge(); var n2 = A.querySelector('[data-v=promo] .n'); if (n2) n2.textContent = D.promos && D.promos.sum ? fmt(D.promos.sum.ready) : '';
@@ -55351,6 +55438,7 @@ svg.a4-sp{width:100%;height:34px}
     A.addEventListener('click', onClick); A.addEventListener('input', onInput); A.addEventListener('change', onInput); document.addEventListener('keydown', onKey);
     try { H.markOwner && H.markOwner(); } catch (e) { }
     try { var c = JSON.parse(LSG('lr_a4_cache') || 'null'); if (c && Date.now() - c.t < 7 * 864e5) { D.stats = c.s; D.ana = c.a; D.promos = c.p; paint(); } } catch (e) { }
+    try { S.since = +LSG('lr_a4_last') || 0; if (!S.since || Date.now() - S.since > 20 * 60000) LSS('lr_a4_last', String(Date.now())); } catch (e) { }
     loadAll(); ibLoad(true, true); timer = setInterval(function () { if (document.hidden) return; if (!S.dr && /overview|audience|growth|activity/.test(tab)) loadAll(true); if (tab === 'inbox') ibLoad(true); else ibLoad(true, true); }, 45000);
     try { history.pushState({ adm4: 1 }, ''); } catch (e) { }
   }
@@ -55450,6 +55538,8 @@ svg.a4-sp{width:100%;height:34px}
         case 'bstar': { var sm2 = jget(STARK, {}); selUsers().forEach(function (u) { sm2[u.uid] = 1; }); LSS(STARK, JSON.stringify(sm2)); reloadNS(); say('Starred ' + selCount() + ' people'); return paint(true); }
         case 'copyv': return cp(v, 'Copied');
         case 'ua': S.ua = v; return paint(true);
+        case 'relog': if (H.relog) H.relog().then(function () { loadAll(); }); return;
+        case 'hrx': S.hx = S.hx || {}; S.hx[v] = !S.hx[v]; return paint(true);
         case 'bcsv': return csvUsers(selUsers(), 'lunarise-selected-users.csv');
         case 'bgift': { if (!arm('bg' + v)) return; var nG = selCount(); var okG = await bulk('Giving PRO', function (u) { return H.adm('adm_ctl', { uid: u.uid, what: 'pro', days: +v }); }); logA('pro', 'Gave ' + pLabel(+v) + ' PRO to ' + okG + ' people (bulk)'); D.accts = await H.adm('adm_accts'); S.sel = {}; return paint(true); }
         case 'bmsg': { var bm = A.querySelector('#a4-bm'); if (!bm || bm.value.trim().length < 2) return say('Write a message first'); if (!arm('bm')) return; var txt = bm.value; var okM = await bulk('Sending', function (u) { return H.adm('adm_ctl', { uid: u.uid, what: 'msg', text: txt }); }); logA('msg', 'Messaged ' + okM + ' people: “' + txt.slice(0, 60) + '”'); S.sel = {}; return paint(true); }
