@@ -4433,6 +4433,11 @@ body.spk-lock{overflow:hidden}
 .cx-limit .cx-cta{width:100%}
 .sc-call-tip.warn{background:linear-gradient(135deg,rgba(244,63,94,.92),rgba(251,146,60,.92))!important;color:#fff!important}
 .cx-tipb{margin-left:8px;padding:6px 12px;border:0;border-radius:999px;background:#fff;color:#be123c;font:800 12.5px 'Plus Jakarta Sans',sans-serif;cursor:pointer}
+/* back buttons */
+.lr-back{display:inline-flex;align-items:center;gap:6px;margin:0 0 12px;padding:8px 16px 8px 11px;border-radius:999px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.08);color:#e7ebff;font:800 13.5px 'Plus Jakarta Sans',system-ui,sans-serif;cursor:pointer;-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);transition:transform .3s cubic-bezier(.32,1.45,.5,1)}
+.lr-back:active{transform:scale(.94)}
+.cx-top{gap:10px}.cx-bk{display:grid;place-items:center;flex:none;width:44px;height:44px;border-radius:50%;border:1px solid var(--cx-bd);background:rgba(255,255,255,.08);color:#fff;cursor:pointer}
+.cx-bk:active{transform:scale(.92)}.cx-ttl{flex:1;min-width:0}
 
 </style><style id="club-call-css" data-th-skip>
 /* ===== Speaking Club: call screens (voice and video). Cinematic and dark in every theme, like a phone's own call screen ===== */
@@ -18305,7 +18310,7 @@ Respond ONLY with minified JSON: {"title":string,"topic":string (1-2 English wor
             { id: 'grammar', icon: 'fa-spell-check', g: 'linear-gradient(135deg,#10b981,#0d9488)', c: 'rgba(16,185,129,.28)', title: 'Grammar', desc: '120+ topics with quizzes.', go: "navigateTo('grammar')" },
             { id: 'mentors', icon: 'fa-graduation-cap', g: 'linear-gradient(135deg,#6366f1,#4338ca)', c: 'rgba(99,102,241,.28)', title: 'Top Mentors', desc: 'English teachers on YouTube & Telegram.', go: "navigateTo('mentors')" },
             { id: 'ai', icon: 'fa-robot', g: 'linear-gradient(135deg,#22d3ee,#6366f1)', c: 'rgba(34,211,238,.28)', title: 'AI Tutor', desc: 'Chat, speaking practice and homework help in 12 languages.', w2: 1, live: () => 'Ask anything', go: "navigateTo('ai-chat')" },
-            { id: 'games', icon: 'fa-gamepad', g: 'linear-gradient(135deg,#7c3aed,#ec4899)', c: 'rgba(167,139,250,.3)', title: 'Game Zone', desc: 'Galaxy Rush class quiz + Chess Arena.', isNew: 1, live: () => ((state.user.gamePts || 0) + ' pts'), go: "navigateTo('games')" },
+            { id: 'games', icon: 'fa-gamepad', g: 'linear-gradient(135deg,#7c3aed,#ec4899)', c: 'rgba(167,139,250,.3)', title: 'Game Zone', desc: 'Galaxy Rush class quiz + Chess Arena.', isNew: 1, live: () => ((state.user.gamePts || 0) + ' XP'), go: "navigateTo('games')" },
             { id: 'wordforge', icon: 'fa-hammer', g: 'linear-gradient(135deg,#6d4aff,#19c3b1)', c: 'rgba(109,74,255,.32)', title: 'Word Forge', desc: 'Paste your own words. Learn them with your AI teacher, then say them on camera.', isNew: 1, live: () => 'Your words', go: "WF.open()" },
             { id: 'library', icon: 'fa-moon', g: 'linear-gradient(135deg,#f2c46d,#ff6b8a)', c: 'rgba(242,196,109,.3)', title: 'Moon Library', desc: 'Real books with covers and ratings. Page-turning reader, read-aloud, tap any word in 14 languages.', isNew: 1, live: () => { try { return JSON.parse(localStorage.getItem('ml_done') || '[]').length + ' finished'; } catch (e) { return 'Open'; } }, go: "ML.open()" },
             { id: 'movies', icon: 'fa-film', g: 'linear-gradient(135deg,#ec4899,#7c3aed)', c: 'rgba(236,72,153,.28)', title: 'Movies', desc: 'Movies, drama, series, cartoons, anime and sport. HD trailers with subtitles and where to watch the full film.', w2: 1, isNew: 1, live: () => { const n = (state.user.mvList || []).length; return n ? n + ' in my list' : 'Trending now'; }, go: "navigateTo('movies')" }, { id: 'lab', icon: 'fa-flask', g: 'linear-gradient(135deg,#6366f1,#22d3ee)', c: 'rgba(99,102,241,.3)', title: 'English Lab', desc: 'Think in English, Error Bank, stories, 90-day path, lessons and scanner. All in one place.', isNew: 1, live: () => { try { const n = LAB.err.active().length; const p = LAB.pathDay(); return (p ? 'Day ' + p.day + ' · ' : '') + n + ' to fix'; } catch (e) { return 'Open the Lab'; } }, go: "LAB.apps.home()" }, /*club*/{ id: 'club', icon: 'fa-earth-asia', g: 'linear-gradient(135deg,#2c5cc5,#d9465a)', c: 'rgba(96,165,250,.3)', title: 'Speaking Club', desc: 'Make friends worldwide: chat, voice and video calls, AI help with your English.', w2: 1, isNew: 1, live: () => (window.CLUB && CLUB.liveText ? CLUB.liveText() : 'Chats, friends and calls'), go: "navigateTo('club')" },/*/club*/
@@ -24120,7 +24125,7 @@ nextGrammarQuestion=function(){ _oldNextGrammar(); setTimeout(updateGrammarAnaly
     const OPT = [['A', '#38bdf8', '#2563eb'], ['B', '#f472b6', '#be185d'], ['C', '#facc15', '#d97706'], ['D', '#34d399', '#059669']];
     const PTS = [20, 14, 7], QTIME = 25, MAXP = 30;
     /* power-ups: each player can use each one once per game */
-    const PU = [['x2', '⚡', 'Double', 'Double points if you are right'], ['sh', '🛡️', 'Shield', 'If you are wrong you still get 250 points and keep your streak'], ['ff', '✂️', '50/50', 'Removes wrong answers']];
+    const PU = [['x2', '⚡', 'Double', 'Double XP if you are right'], ['sh', '🛡️', 'Shield', 'If you are wrong you still get 250 XP and keep your streak'], ['ff', '✂️', '50/50', 'Removes wrong answers']];
     const BOTS = ['Nova', 'Orion', 'Lyra', 'Atlas', 'Vega', 'Luna', 'Kai', 'Zara', 'Leo', 'Mira'];
     /* ---------- ready-made question sets ---------- */
     const SETS = {
@@ -24283,7 +24288,7 @@ nextGrammarQuestion=function(){ _oldNextGrammar(); setTimeout(updateGrammarAnaly
     function myRow() { const id = myId(); return (GR.end && GR.end.rows.find(r => r[0] === id)) || null; }
     function awardMe() {
         if (savedAward) return; savedAward = true; const r = myRow(); if (!r) return; const u = state.user; u.gr = u.gr || { played: 0, pts: 0, best: 99 }; u.gr.played++; u.gr.pts += r[7]; u.gr.best = Math.min(u.gr.best, r[6]); u.gamePts = (u.gamePts || 0) + r[7];
-        try { pfFeed('game', 'Galaxy Rush · place ' + r[6] + (r[7] ? ' · +' + r[7] + ' pts' : '')); } catch (e) { } try { pfSave(); } catch (e) { }
+        try { pfFeed('game', 'Galaxy Rush · place ' + r[6] + (r[7] ? ' · +' + r[7] + ' XP' : '')); } catch (e) { } try { pfSave(); } catch (e) { }
         if (r[6] <= 3) { try { triggerConfetti && triggerConfetti(); } catch (e) { } beep(880, .25, 'triangle'); }
     }
     /* ---------- 3D space scene (canvas) ---------- */
@@ -24383,7 +24388,7 @@ nextGrammarQuestion=function(){ _oldNextGrammar(); setTimeout(updateGrammarAnaly
             <div class="grx-btns"><button class="grx-big host" onclick="GRX.setup(false)"><i>🛰️</i><span><b>Host a game</b><small>Create a room · show it on the big screen</small></span></button>
             <button class="grx-big join" onclick="GRX.joinOpen()"><i>🎟️</i><span><b>Join a game</b><small>Enter the code from your teacher or friend</small></span></button>
             <button class="grx-big solo" onclick="GRX.setup(true)"><i>🧑‍🚀</i><span><b>Solo practice</b><small>Race against bots on this device</small></span></button></div>
-            <div class="grx-rules"><span>⏱ 25 s per question</span><span>🏆 Top 3 earn 20 · 14 · 7 pts</span><span>👥 Teams up to 10</span><span>⚡🛡️✂️ Power-ups</span><span>☀️ Every 5th question: double points</span></div>`);
+            <div class="grx-rules"><span>⏱ 25 s per question</span><span>🏆 Top 3 earn 20 · 14 · 7 XP</span><span>👥 Teams up to 10</span><span>⚡🛡️✂️ Power-ups</span><span>☀️ Every 5th question: double XP</span></div>`);
         if (u === 'setup') {
             const n = qsReady().length, src = c.src;
             return wrapUI('col', `<button class="grx-back" onclick="GRX.home()">← Back</button><h2 class="grx-h2">${GR.solo ? 'Solo practice' : 'Set up your game'}</h2>
@@ -24418,11 +24423,11 @@ nextGrammarQuestion=function(){ _oldNextGrammar(); setTimeout(updateGrammarAnaly
               <button class="grx-btn big" onclick="GRX.join()">🚀 Join game</button><p class="grx-hint">${E(GR.msg)}</p>`);
         }
         if (u === 'plobby') { const m = GR.players.length; return wrapUI('center', `<div class="grx-lab">You're in!</div><h2 class="grx-h2" style="margin:4px 0">Waiting for the host…</h2><p class="grx-sub">${m} player${m === 1 ? '' : 's'} in the room${GR.mode === 'team' ? ' · team ' + E(TEAMS[GR.me.team % 10][0]) : ''}. The game starts when the host presses Start.</p><button class="grx-back" style="position:static;margin-top:16px" onclick="GRX.leave()">Leave</button>`); }
-        if (u === 'hcount' || u === 'pcount') return wrapUI('center', `<div class="grx-lab">Get ready</div><div id="gr-cd" class="grx-cd">${Math.max(GR.cd, 1)}</div><p class="grx-sub">Fly toward the Sun — fast answers earn more points!</p>`);
+        if (u === 'hcount' || u === 'pcount') return wrapUI('center', `<div class="grx-lab">Get ready</div><div id="gr-cd" class="grx-cd">${Math.max(GR.cd, 1)}</div><p class="grx-sub">Fly toward the Sun — fast answers earn more XP!</p>`);
         if (u === 'hq' || u === 'pq') {
             const q = GR.q, host = u === 'hq', rk = GR.lb.findIndex(r => r[0] === myId());
             return wrapUI('q ' + (host ? 'host' : 'play'), `<div class="grx-top"><span class="grx-chip">Q ${q.i + 1}/${q.n}</span><div class="grx-time"><i id="gr-bar"></i></div><b id="gr-sec" class="grx-sec">${QTIME}</b>${host ? '<span class="grx-chip" id="gr-acount"></span>' : (rk >= 0 ? `<span class="grx-chip">#${rk + 1}</span>` : '')}</div>
-              ${q.x === 2 ? '<div class="grx-nova">☀️ Supernova question · double points</div>' : ''}<h2 class="grx-qtext">${E(q.q)}</h2><div class="grx-spacer"></div>${!host && !GR.locked ? puBar() : ''}${GR.locked && !host ? `<div class="grx-lock">${GR.ans >= 0 ? '🔒 Answer locked — waiting for the others…' : '⏱ Time is up!'}</div>` : ''}${optsHtml(!host)}${host ? `<aside class="grx-side">${lbHtml(GR.lb.length ? GR.lb : hostList().map(rowOf), 8, '')}</aside>` : ''}`);
+              ${q.x === 2 ? '<div class="grx-nova">☀️ Supernova question · double XP</div>' : ''}<h2 class="grx-qtext">${E(q.q)}</h2><div class="grx-spacer"></div>${!host && !GR.locked ? puBar() : ''}${GR.locked && !host ? `<div class="grx-lock">${GR.ans >= 0 ? '🔒 Answer locked — waiting for the others…' : '⏱ Time is up!'}</div>` : ''}${optsHtml(!host)}${host ? `<aside class="grx-side">${lbHtml(GR.lb.length ? GR.lb : hostList().map(rowOf), 8, '')}</aside>` : ''}`);
         }
         if (u === 'hrev' || u === 'prev') {
             const o = GR.rev, host = u === 'hrev', r = o.res[myId()], me = myId();
@@ -24435,13 +24440,13 @@ nextGrammarQuestion=function(){ _oldNextGrammar(); setTimeout(updateGrammarAnaly
     function endScreen(host) {
         const e = GR.end, me = myId(), team = e.mode === 'team'; const ent = team ? e.teams.map(t => ({ k: t[2], n: TEAMS[t[0]][0], s: t[1], i: '👥', pts: t[4], c: TEAMS[t[0]][1] })) : e.rows.map(r => ({ k: r[6], n: r[1], s: r[5], i: ico(r[2]), pts: r[7], c: RC[r[3] % 8] }));
         const top = [2, 1, 3].map(k => ent.find(x => x.k === k)).filter(Boolean);
-        if (host) return wrapUI('col wide', `<h2 class="grx-h2" style="text-align:center">🏆 ${team ? 'Winning teams' : 'Final podium'}</h2><div class="grx-podium">${top.map(x => `<div class="grx-pd p${x.k}"><div class="av" style="--pc:${x.c}">${x.i}</div><b>${E(x.n)}</b><small>${x.s.toLocaleString('en-US')} pts</small><div class="st"><span>${medal(x.k)}</span><em>+${x.pts}</em></div></div>`).join('')}</div>
+        if (host) return wrapUI('col wide', `<h2 class="grx-h2" style="text-align:center">🏆 ${team ? 'Winning teams' : 'Final podium'}</h2><div class="grx-podium">${top.map(x => `<div class="grx-pd p${x.k}"><div class="av" style="--pc:${x.c}">${x.i}</div><b>${E(x.n)}</b><small>${x.s.toLocaleString('en-US')} XP</small><div class="st"><span>${medal(x.k)}</span><em>+${x.pts}</em></div></div>`).join('')}</div>
             <div class="grx-card" style="margin-top:14px"><div class="grx-lab">All players</div>${e.rows.map(r => `<div class="grx-lr"><b class="k">${r[6]}</b><span class="i">${ico(r[2])}</span><span class="n">${E(r[1])}${team ? ` <em style="color:${TEAMS[r[4] % 10][1]}">● ${TEAMS[r[4] % 10][0]}</em>` : ''}</span><span class="s">${r[5].toLocaleString('en-US')}</span></div>`).join('')}</div>
             <div class="grx-row" style="margin-top:12px"><button class="grx-btn" onclick="GRX.again()">🔁 New game</button><button class="grx-btn ghost" onclick="GRX.close()">Exit</button></div>`);
         const r = e.rows.find(x => x[0] === me); if (!r) return wrapUI('center', `<h2 class="grx-h2">Game over</h2><button class="grx-btn" onclick="GRX.close()">Exit</button>`);
         const pl = r[6], tot = team ? e.teams.length : e.n, win = pl <= 3;
         return wrapUI('center', `<div class="grx-lab">${team ? 'Team ' + E(TEAMS[r[4] % 10][0]) + ' finished' : 'You finished'}</div><div class="grx-place ${win ? 'win' : ''}">${win ? medal(pl) : ''}<b>${ord(pl)}</b></div><p class="grx-sub">out of ${tot} ${team ? 'teams' : 'players'} · you scored <b>${r[5].toLocaleString('en-US')}</b></p>
-          ${win ? `<div class="grx-pts">+${r[7]} points added to your profile</div>` : `<p class="grx-hint">Only the top 3 earn points. Keep racing — you will get there!</p>`}
+          ${win ? `<div class="grx-pts">+${r[7]} XP added to your profile</div>` : `<p class="grx-hint">Only the top 3 earn points. Keep racing — you will get there!</p>`}
           <div class="grx-row" style="margin-top:16px;justify-content:center"><button class="grx-btn" onclick="GRX.${GR.solo ? 'soloAgain' : 'joinOpen'}()">${GR.solo ? '🔁 Play again' : '🎟️ Join another'}</button><button class="grx-btn ghost" onclick="GRX.close()">Exit</button></div>`);
     }
     window.hostStartX = hostStart;
@@ -24555,8 +24560,8 @@ Rules: exactly one correct answer; the wrong answers are plausible but clearly w
     /* Game Zone page */
     window.gmRender = function () {
         const u = state.user, g = u.gr || { played: 0, pts: 0 }, c = u.chess || { w: 0, l: 0, d: 0 }, ch = $('gm-chips');
-        if (ch) ch.innerHTML = `<span class="gm-chip">🧩 ${(u.wv && u.wv.words) || 0} words found</span><span class="gm-chip">🚀 ${g.played} rushes</span><span class="gm-chip">🎈 ${(((u.kg || {}).balloon || {}).stickers || []).length} stickers</span><span class="gm-chip">🧮 ${((u.mg || {}).solved) || 0} sums</span><span class="gm-chip">🏆 ${u.gamePts || 0} game points</span><span class="gm-chip">♟️ ${c.w}W · ${c.l}L · ${c.d}D</span>`;
-        try { const wv = u.wv, wl = $('gm-wv-live'); if (wl) wl.textContent = wv && wv.lv ? 'Level ' + (wv.lv + 1) + ' · ' + (wv.words || 0) + ' words' : 'New'; } catch (e) { } const a = $('gm-gr-live'); if (a) a.textContent = g.played ? g.played + ' played · ' + (u.gamePts || 0) + ' pts' : 'New'; const b = $('gm-ch-live'); if (b) b.textContent = (c.w + c.l + c.d) ? c.w + 'W · ' + c.l + 'L · ' + c.d + 'D' : '';
+        if (ch) ch.innerHTML = `<span class="gm-chip">🧩 ${(u.wv && u.wv.words) || 0} words found</span><span class="gm-chip">🚀 ${g.played} rushes</span><span class="gm-chip">🎈 ${(((u.kg || {}).balloon || {}).stickers || []).length} stickers</span><span class="gm-chip">🧮 ${((u.mg || {}).solved) || 0} sums</span><span class="gm-chip">🏆 ${u.gamePts || 0} XP</span><span class="gm-chip">♟️ ${c.w}W · ${c.l}L · ${c.d}D</span>`;
+        try { const wv = u.wv, wl = $('gm-wv-live'); if (wl) wl.textContent = wv && wv.lv ? 'Level ' + (wv.lv + 1) + ' · ' + (wv.words || 0) + ' words' : 'New'; } catch (e) { } const a = $('gm-gr-live'); if (a) a.textContent = g.played ? g.played + ' played · ' + (u.gamePts || 0) + ' XP' : 'New'; const b = $('gm-ch-live'); if (b) b.textContent = (c.w + c.l + c.d) ? c.w + 'W · ' + c.l + 'L · ' + c.d + 'D' : '';
         try { window.kgLive && window.kgLive(); } catch (e) { }
     };
     /* join links: ?gr=CODE */
@@ -28039,7 +28044,7 @@ const CHAR = (() => {
         const d = D(), dist = Math.floor(S.dist), score = Math.floor(S.score);
         mev('score', score); mev('dist', dist); if (S.roofAcc > 0) mev('roof', S.roofAcc); S.roofAcc = 0;
         const best = score > d.best; if (best) d.best = score; S.won = best; d.bank += S.coins; d.runs++; if (S.tut || d.runs > 0) d.tut = 1; streakHit(d);
-        kgPoints(Math.round(score / 40) + S.spelled * 5, `Word Dash · ${score} points · ${S.spelled} word${S.spelled === 1 ? '' : 's'} spelled`); kgSave();
+        kgPoints(Math.round(score / 40) + S.spelled * 5, `Word Dash · ${score} XP · ${S.spelled} word${S.spelled === 1 ? '' : 's'} spelled`); kgSave();
         const stars = m => m === 0 ? 3 : m === 1 ? 2 : 1;
         KGX.screen(`<div class="kg-panel wr wr-res"><div class="wr-tk"><div class="wr-tk-h"><span class="bul">W</span><b>Run over</b>${best ? '<em>New best</em>' : ''}</div>
             <div class="wr-big">${score.toLocaleString('en-US')}</div><div class="wr-sub">Best ${d.best.toLocaleString('en-US')} · multiplier ×${S.mult}</div><div class="wr-cut"></div>
@@ -28539,7 +28544,7 @@ const CHAR = (() => {
         if (S.mode !== 'play') return; S.mode = 'over'; KGX.showPause(false); SND.musicStop(); SND.play('lose'); setKb(false);
         const d = D(), mins = Math.max(1 / 60, (performance.now() - S.t0) / 60000), wpm = Math.round(S.chars / 5 / mins), acc = S.ok + S.bad ? Math.round(S.ok / (S.ok + S.bad) * 100) : 0;
         const isBest = S.score > (d.best[S.modeK] || 0); if (isBest) d.best[S.modeK] = S.score; if (S.score > d.top) d.top = S.score; d.games++; streakHit(d);
-        kgPoints(Math.round(S.score / 40), `Neon Typer · ${MODES[S.modeK].n} · ${S.score} pts · wave ${S.wave} · ${wpm} WPM`); kgSave(); S.res = { wpm, acc };
+        kgPoints(Math.round(S.score / 40), `Neon Typer · ${MODES[S.modeK].n} · ${S.score} XP · wave ${S.wave} · ${wpm} WPM`); kgSave(); S.res = { wpm, acc };
         KGX.hud('<div class="nt-rain"></div>');
         const uniq = (a, f) => { const s = new Set(); return a.filter(x => { if (s.has(x.en)) return false; s.add(x.en); return f ? f(x) : true; }); };
         const miss = uniq(S.missed), got = uniq(S.words);
@@ -28956,7 +28961,7 @@ const CHAR = (() => {
         const isBest = S.kind !== 'practice' && S.score > (d.best[key] || 0); if (isBest) d.best[key] = S.score; d.games++; d.seen += S.n;
         if (S.kind === 'daily' && !d.daily[dayKey()]) { d.daily[dayKey()] = { score: S.score, acc }; const ks = Object.keys(d.daily); if (ks.length > 40) delete d.daily[ks[0]]; streakHit(d); d.gems += 10; S.gems += 10; }
         if (isBest && S.score > 0) { d.gems += 5; S.gems += 5; }
-        kgPoints(Math.round(S.score / 30), `Real or Wrong · ${S.score} pts · ${acc}% accuracy`); kgSave();
+        kgPoints(Math.round(S.score / 30), `Real or Wrong · ${S.score} XP · ${acc}% accuracy`); kgSave();
         const stars = !done ? (acc >= 60 ? 1 : 0) : acc >= 90 ? 3 : acc >= 70 ? 2 : 1, wrong = S.review.filter(r => !r.good); if (done) fx.rain(110); ST.cheer = done ? 2.5 : 0;
         KGX.screen(`<div class="kg-panel rw-pan rw-res"><div class="rw-rh"><small>${done ? "That's the show!" : 'Three strikes'}</small><b>${S.score.toLocaleString('en-US')}</b>${isBest ? '<em>New best</em>' : ''}</div>${KGX.stars(stars)}<p class="rw-rk">Rank: <b>${rank(S.score)}</b>${S.fin ? ` · finale bonus +${S.fin}` : ''}</p>
             <div class="rw-st"><div><b>${S.ok}/${S.n}</b><small>Correct</small></div><div><b>${acc}%</b><small>Accuracy</small></div><div><b>🔥 ${S.best}</b><small>Best streak</small></div></div>
@@ -31635,14 +31640,14 @@ var LR_TURN = null;    // optional TURN servers for voice on strict networks, e.
         if (s === 'shell') afterShell();
         if (s === 'room' || s === 'pair' || s === 'thread') { fit(); const box = $('sc-msgs'); if (box) { (C.buf || []).forEach(n => box.appendChild(n)); box.scrollTop = box.scrollHeight; } }
         if (s === 'thread' && C.th) paintThread();
-        paintOnline(); paintConn(); paintCallPill();
+        paintOnline(); paintConn(); paintCallPill(); histSync(s);
     }
     function vNote(h, p, extra) { return `<div class="sc-wrap"><div class="sc-note"><h2 class="sc-h">${h}</h2><p>${p}</p>${extra || ''}</div></div>`; }
     function vShell() {
         const ti = TABS.findIndex(t => t[0] === C.tab);
         const body = C.tab === 'chats' ? tChats() : C.tab === 'rooms' ? tRooms() : C.tab === 'practice' ? tPractice() : C.tab === 'me' ? tMe() : tDiscover();
         return `<div class="sc-wrap sc-shell cx" data-tab="${C.tab}">
-            <header class="cx-top"><div class="cx-ttl"><h2>Speaking Club</h2><p><i class="sc-live"></i><b id="sc-total">0</b> <span id="sc-total-l">learners online</span><span class="sc-offl" id="sc-conn" hidden>· reconnecting…</span></p></div>
+            <header class="cx-top"><button class="cx-bk" onclick="CLUB.exit()" aria-label="Back to the app">${I('back')}</button><div class="cx-ttl"><h2>Speaking Club</h2><p><i class="sc-live"></i><b id="sc-total">0</b> <span id="sc-total-l">learners online</span><span class="sc-offl" id="sc-conn" hidden>· reconnecting…</span></p></div>
                 <button class="sc-mebtn" onclick="CLUB.tab('me')" aria-label="My club profile">${av(C.uid, 44, { dot: false })}</button></header>
             <nav class="cx-tabs" role="tablist" style="--i:${ti}">${TABS.map(t => `<button role="tab" aria-selected="${t[0] === C.tab}" class="${t[0] === C.tab ? 'on' : ''}" onclick="CLUB.tab('${t[0]}')"><span class="cx-ti">${I(t[1])}${t[0] === 'chats' ? '<em id="sc-badge" hidden></em>' : ''}</span><span class="cx-tl">${t[2]}</span></button>`).join('')}</nav>
             <div class="sc-body cx-body" id="sc-body">${body}</div>
@@ -31854,6 +31859,22 @@ var LR_TURN = null;    // optional TURN servers for voice on strict networks, e.
         return `<section class="cx-meter${l <= 60 ? ' low' : ''}" id="cx-meter"><span class="cx-qi ${l ? 'b' : 'c'}">${I('clock')}</span><div class="cx-mb"><h4>${l ? dur(Math.ceil(l)) + ' free speaking left today' : 'Free time is over for today'}</h4><div class="cx-bar"><i style="width:${Math.round(f * 100)}%"></i></div><p>Calls and solo practice share 12 free minutes a day. Pro is unlimited.</p></div><button class="cx-cta sm" onclick="CLUB.upgrade()"><span>Go Pro</span></button></section>`;
     }
     function paintMeter() { const m = $('cx-meter'); if (m) m.outerHTML = meterCard(); }
+    /* ---------- going back ---------- */
+    const SUBV = ['room', 'pair', 'thread', 'search'];
+    function exit() { try { if (C.v === 'room' || C.v === 'thread') { return home(); } } catch (e) { } if (typeof navBack === 'function') navBack(); else navigateTo('dashboard'); }
+    function histSync(s) {
+        try {
+            const was = SUBV.includes(C.hv), now = SUBV.includes(s); C.hv = s; if (!isClubVisible()) return;
+            const st = history.state || {};
+            if (now && !was && !st.sub) history.pushState({ v: 'club', sub: s, i: (st.i || 0) + 1 }, '');
+            else if (!now && was && st.sub) { C.popSkip = 1; history.back(); }
+        } catch (e) { }
+    }
+    addEventListener('popstate', (e) => {
+        if (C.popSkip) { C.popSkip = 0; return; }
+        if (!isClubVisible() || (e.state && e.state.sub)) return;
+        try { if (C.v === 'room') home(); else if (C.v === 'thread') back(); else if (C.v === 'pair') leave(); else if (C.v === 'search') cancel(); } catch (x) { }
+    });
     function onlineList() {
         return Object.keys(C.pres).filter(u => u !== C.uid && isOn(u) && !isBlocked(u))
             .sort((a, b) => (C.fr[b] ? 1 : 0) - (C.fr[a] ? 1 : 0) || (busy(a) ? 1 : 0) - (busy(b) ? 1 : 0) || (C.pres[b].t || 0) - (C.pres[a].t || 0));
@@ -33653,7 +33674,7 @@ var LR_TURN = null;    // optional TURN servers for voice on strict networks, e.
     /* start the background service a moment after the app opens, so friends can reach you anywhere in the app */
     setTimeout(() => { const m = lsGet(LSK, null); if (m && m.ok && cfg()) service().then(() => { paintBadge(); }); }, (C.want || C.wantChat) ? 60 : 3500);
 
-    window.CLUB = { upgrade, _tm: { add: tmAdd, left: tmLeft, start: meterStart }, cs, prSay, prGo, prLv, prSkip, prStop, prCancel, prAgain, prType, enter, away, tab, home, back, join, cancelEdit, pickLv, edit, setW, setOn, open, fill, key, send, typing, find, cancel, leave, next, ice, ask, addFriend, acceptReq, declineReq, unfriend, dm, filter, who, menu, block, unblock, report, blockedList, rules, closeSheet, photo, photoHub, photoFile, cropSave, photoSet, rec, recCancel, playV, callU, vcall, callPair, accept, decline, hang, mute, cam, flip, react, rxMenu, fix, hideFix, useFix, useIdea, tr, minCall, maxCall, callChat, speaker, attach, pick, unpick, closeMediaSheet, sendPicked, cancelUp, viewMedia, closeViewer, vidFail, imgFail, liveText, alerts, alertsHide, popHelp, popHide, alertsAuto: () => autoAlerts(), _C: C, _push: PUSH, _scrub: scrub, _tuneOpus: tuneOpus, _media: MEDIA };
+    window.CLUB = { exit, upgrade, _tm: { add: tmAdd, left: tmLeft, start: meterStart }, cs, prSay, prGo, prLv, prSkip, prStop, prCancel, prAgain, prType, enter, away, tab, home, back, join, cancelEdit, pickLv, edit, setW, setOn, open, fill, key, send, typing, find, cancel, leave, next, ice, ask, addFriend, acceptReq, declineReq, unfriend, dm, filter, who, menu, block, unblock, report, blockedList, rules, closeSheet, photo, photoHub, photoFile, cropSave, photoSet, rec, recCancel, playV, callU, vcall, callPair, accept, decline, hang, mute, cam, flip, react, rxMenu, fix, hideFix, useFix, useIdea, tr, minCall, maxCall, callChat, speaker, attach, pick, unpick, closeMediaSheet, sendPicked, cancelUp, viewMedia, closeViewer, vidFail, imgFail, liveText, alerts, alertsHide, popHelp, popHide, alertsAuto: () => autoAlerts(), _C: C, _push: PUSH, _scrub: scrub, _tuneOpus: tuneOpus, _media: MEDIA };
 })();
 </script><!--/club:js--><!--rm:js--><style id="rm-css">
 /* ===== daily reminders: Settings card and the one-time question on the Hub ===== */
@@ -51817,7 +51838,7 @@ html.mg-lite-lock #mg { visibility: visible !important; }
     const STICKERS = ['🦁', '🐯', '🐼', '🐨', '🦊', '🐸', '🐵', '🦄', '🐙', '🦋', '🐢', '🐬', '🦒', '🐘', '🦉', '🐧', '🦖', '🐳', '🦩', '🐝', '🐞', '🦔', '🐰', '🐶', '🐱', '🐹', '🦦', '🦜', '🐠', '🐲', '🦓', '🦘', '🐿️', '🦥', '🐊', '🦚', '🐌', '🦀', '🐡', '🦭'];
     const BADGES = [
         ['first', '🎈', 'First pop', 'Solve your first puzzle', s => s.solved >= 1], ['s100', '💯', '100 puzzles', 'Solve 100 puzzles', s => s.solved >= 100], ['s500', '🏅', '500 puzzles', 'Solve 500 puzzles', s => s.solved >= 500],
-        ['fire', '🔥', 'On fire', '10 right in a row', s => s.combo >= 10], ['speed', '⚡', 'Speed star', '200 points in a race', s => Object.values(s.ta).some(v => v >= 200)], ['surv', '❤️', 'Survivor', '20 right in Survival', s => Object.values(s.sv).some(v => v >= 20)],
+        ['fire', '🔥', 'On fire', '10 right in a row', s => s.combo >= 10], ['speed', '⚡', 'Speed star', '200 XP in a race', s => Object.values(s.ta).some(v => v >= 200)], ['surv', '❤️', 'Survivor', '20 right in Survival', s => Object.values(s.sv).some(v => v >= 20)],
         ['team', '🤝', 'Team player', 'Play Boys vs Girls', s => s.team >= 1], ['daily', '📅', 'Daily hero', 'Finish 3 daily challenges', s => (s.daily.n || 0) >= 3], ['tables', '✖️', 'Times master', '3 stars on 5 times tables', s => Object.values(s.tb).filter(v => v >= 3).length >= 5],
         ['stick', '📒', 'Collector', 'Collect 10 stickers', s => s.stk.length >= 10]
     ];
@@ -51842,9 +51863,9 @@ html.mg-lite-lock #mg { visibility: visible !important; }
     const L = {
         start: ['Let\'s make some math magic!', 'Ready, set, pop!', 'Hello, superstar! Let\'s have fun with numbers!', 'Put on your thinking cap. Here we go!', 'Your brain is warming up. Let\'s go!', 'Math time! Let\'s make the numbers dance!', 'Big smiles, sharp minds. Let\'s start!', 'Balloons are ready. Are you ready? Let\'s go!', 'Today you are the number boss!', 'Let\'s pop, let\'s count, let\'s win!'],
         ok: ['Awesome!', 'You nailed it!', 'Super smart!', 'Boom! Correct!', 'High five!', 'You\'re a math wizard!', 'Brilliant thinking!', 'That\'s right! Amazing!', 'Fantastic!', 'You did it!', 'Perfect pop!', 'Your brain is super strong!', 'Great job, champion!', 'Woohoo! Correct!', 'Yes! You\'re a number ninja!', 'Splendid!', 'Nice one!', 'Smart cookie!', 'Excellent!', 'Bravo!', 'That was quick!', 'You make math look easy!', 'Wow, look at you go!', 'Right on target!', 'Superb!', 'You\'re a shining star!', 'Clever you!', 'Ka-pow! Correct!', 'Math magic!', 'Yes, yes, yes!', 'Ding ding ding! Winner!', 'Your teacher would be so proud!', 'Pop goes the right answer!', 'Super duper!', 'Nailed it like a pro!', 'Genius alert!', 'I\'m doing a happy dance for you!', 'That\'s the one!', 'Absolutely right!', 'Hip hip hooray!'],
-        combo3: ['Three in a row! You\'re on fire!', 'Combo! Keep it going!', 'Hat trick! Three correct!', 'Three! Double points are on!'],
+        combo3: ['Three in a row! You\'re on fire!', 'Combo! Keep it going!', 'Hat trick! Three correct!', 'Three! Double XP is on!'],
         combo5: ['Five in a row! Super star!', 'Five! Your brain is blazing!', 'Wow, five in a row! Let\'s dance!'],
-        combo8: ['Unstoppable! What a streak!', 'Incredible! You\'re a math rocket!', 'Legendary streak! Triple points!'],
+        combo8: ['Unstoppable! What a streak!', 'Incredible! You\'re a math rocket!', 'Legendary streak! Triple XP!'],
         no: ['Oops! Try another balloon.', 'Almost! You can do it.', 'Not this one. Think again!', 'Mistakes help your brain grow!', 'Good try! Look again.', 'Hmm, count once more.', 'No worries, try again!', 'Close! Have another go.', 'Every champion makes mistakes. Try again!', 'Take a deep breath and try again.', 'Use your fingers if you need to!', 'Keep going, you\'re learning!', 'Whoopsie daisy! One more try!', 'That balloon was sneaky! Try again.', 'Nope, but I believe in you!'],
         wise: ['Practice makes progress!', 'When something is hard, your brain is getting stronger.', 'Big things start with small steps.', 'Believe in yourself. You can do amazing things!', 'Never give up. Every try counts!', 'Be brave, be curious, be kind.', 'Smart is something you grow, like a tree.', 'A mistake is just a lesson in disguise.', 'Slow and steady wins the race.', 'Your effort is your superpower!', 'Champions keep trying.', 'Today\'s practice is tomorrow\'s magic.', 'You don\'t have to be perfect. Just keep going!', 'Every expert was once a beginner.', 'Your brain is like a muscle. Math makes it strong!'],
         joke: ['Why was six afraid of seven? Because seven ate nine!', 'Why did the math book look sad? It had too many problems!', 'Why is eight never hungry? Because it just ate!', 'Which snake is good at math? An adder!', 'What did zero say to eight? Nice belt!', 'What is a balloon\'s favorite music? Pop music!', 'Why do plants hate math? It gives them square roots!', 'Why did the cookie go to the doctor? It was feeling crummy!', 'What do you call a number that can\'t keep still? A roamin\' numeral!', 'Why was the equal sign so humble? It knew it wasn\'t less than or greater than anyone!', 'What did the triangle say to the circle? You\'re pointless!', 'Why did the teddy bear say no to dessert? It was already stuffed!', 'What do you call a sleeping dinosaur? A dino-snore!'],
@@ -52564,7 +52585,7 @@ void main(){
         $('mg-tt').textContent = 'Math Sky Pop'; const md = SET.mode, d = s.daily;
         const lvT = (k) => {
             const st = md === 'daily' ? (d[k] === today() ? 3 : 0) : (s.best['s' + k] || 0);
-            const sub2 = md === 'time' ? (s.ta[k] ? 'Best race: ' + s.ta[k] + ' pts' : 'No race yet') : md === 'surv' ? (s.sv[k] ? 'Best: ' + s.sv[k] + ' right' : 'Not played yet') : md === 'daily' ? (d[k] === today() ? 'Done today 👑' : 'Today\'s challenge is ready') : (s.best[k] ? 'Best: ' + s.best[k] + ' pts' : 'Not played yet');
+            const sub2 = md === 'time' ? (s.ta[k] ? 'Best race: ' + s.ta[k] + ' XP' : 'No race yet') : md === 'surv' ? (s.sv[k] ? 'Best: ' + s.sv[k] + ' right' : 'Not played yet') : md === 'daily' ? (d[k] === today() ? 'Done today 👑' : 'Today\'s challenge is ready') : (s.best[k] ? 'Best: ' + s.best[k] + ' XP' : 'Not played yet');
             return '<button type="button" class="mg-lv" data-a="go" data-lv="' + k + '" style="--lc:' + ({ 10: '#3ddc84', 20: '#ff9f1c', 100: '#9b5de5' })[k] + '"><span class="mg-lvn">' + k + '</span><span class="mg-lvt"><b>' + LV[k].name + '</b><em>' + LV[k].nick + '</em>' + (md === 'daily' ? '' : starRow(st)) + '<small>' + sub2 + '</small></span></button>';
         };
         const tables = '<div class="mg-blk"><div class="mg-lab">Choose a times table</div><div class="mg-tbs">' + [2, 3, 4, 5, 6, 7, 8, 9, 10].map(t => '<button type="button" class="mg-tbb" data-a="table" data-t="' + t + '"><b>×' + t + '</b>' + starRow(s.tb[t] || 0, 'mg-lvs sm') + '</button>').join('') + '<button type="button" class="mg-tbb mix" data-a="table" data-t="0"><b>Mix</b><small>2 to 10</small></button></div></div>';
@@ -52720,7 +52741,7 @@ void main(){
         if (g.mode === 'team') {
             const [A, B] = g.teams, win = A.pts === B.pts ? -1 : A.pts > B.pts ? 0 : 1; s.team++;
             html = '<div class="mg-end"><div class="mg-cup">🏆</div><h2 class="mg-h2">' + (win < 0 ? 'It\'s a tie!' : esc(g.teams[win].name) + ' win!') + '</h2>' +
-                '<div class="mg-pod">' + g.teams.map((t, i) => '<div class="mg-pc ' + (i ? 'b' : 'a') + (i === win ? ' win' : '') + '"><span>' + t.e + '</span><b>' + esc(t.name) + '</b><em>' + t.pts + ' pts</em><small>' + t.ok + ' / ' + (g.total / 2) + ' right</small>' + (i === win ? '<i>👑</i>' : '') + '</div>').join('') + '</div>';
+                '<div class="mg-pod">' + g.teams.map((t, i) => '<div class="mg-pc ' + (i ? 'b' : 'a') + (i === win ? ' win' : '') + '"><span>' + t.e + '</span><b>' + esc(t.name) + '</b><em>' + t.pts + ' XP</em><small>' + t.ok + ' / ' + (g.total / 2) + ' right</small>' + (i === win ? '<i>👑</i>' : '') + '</div>').join('') + '</div>';
             speech = win < 0 ? 'It\'s a tie! Everyone is a winner! Great teamwork!' : 'The ' + g.teams[win].name + ' win! What a team! ' + g.teams[1 - win].name + ', you were super too. Let\'s play again!';
         } else {
             const p = g.teams[0], acc = g.asked ? g.right / (g.mode === 'time' || g.mode === 'surv' ? g.asked : g.total) : 0;
@@ -52735,7 +52756,7 @@ void main(){
             const sv = g.mode === 'surv';
             html = '<div class="mg-end"><div class="mg-bigst">' + [1, 2, 3].map(i => '<i class="' + (i <= stars ? 'on' : '') + '" style="--i:' + i + '">' + icon('star') + '</i>').join('') + '</div>' +
                 '<h2 class="mg-h2">' + (g.mode === 'daily' ? 'Challenge done! 👑' : stars === 3 ? 'Superstar!' : stars === 2 ? 'Great job!' : stars === 1 ? 'Good try!' : 'Keep going!') + '</h2>' +
-                '<div class="mg-res"><span><b>' + p.pts + '</b>points</span><span><b>' + g.right + (g.mode === 'time' || sv ? '' : '/' + g.total) + '</b>' + (g.mode === 'time' ? 'popped' : 'right') + '</span><span><b>' + g.best + '</b>best streak</span></div>' +
+                '<div class="mg-res"><span><b>' + p.pts + '</b>XP</span><span><b>' + g.right + (g.mode === 'time' || sv ? '' : '/' + g.total) + '</b>' + (g.mode === 'time' ? 'popped' : 'right') + '</span><span><b>' + g.best + '</b>best streak</span></div>' +
                 (isBest ? '<div class="mg-new">New best!</div>' : '') + (stk ? '<div class="mg-gotstk"><span>' + stk + '</span>New sticker for your book!</div>' : '');
             speech = (g.mode === 'daily' ? 'Daily challenge complete! You earned a golden crown! ' : '') + line('e' + stars) + (isBest ? ' ' + line('best') : '') + (stk ? ' ' + line('sticker') : '');
         }
@@ -54909,7 +54930,7 @@ svg.a4-sp{width:100%;height:34px}
       '<button type="button" class="a4-btn sm" data-a="bstar">★ Star</button><button type="button" class="a4-btn sm" data-a="bcsv">' + ic('dl') + 'Export</button><button type="button" class="a4-btn sm" data-a="bclr">Clear</button></div>';
   }
   function csvUsers(L, name) {
-    return csv(name, ['Name', 'E-mail', 'Google', 'Device', 'Model', 'System', 'Browser', 'Country', 'City', 'Language', 'Level', 'XP', 'Words', 'Game points', 'Engagement', 'Segment', 'Joined', 'Last seen', 'PRO', 'Teacher', 'Banned', 'Note'], L.map(function (u) { var d = u.dev || {}, e = engInfo(u); return [uname(u), u.g ? u.g.e : '', u.g ? 'yes' : 'no', d.dv || '', d.md || '', ((d.os || '') + ' ' + (d.osv || '')).trim(), d.br || '', d.cc ? cname(d.cc) : '', d.ct || '', d.lg || '', u.lv || '', u.xp, u.w, u.gp, e.s, e.lab, u.f ? new Date(u.f).toISOString().slice(0, 10) : '', u.t ? new Date(u.t).toISOString().slice(0, 16).replace('T', ' ') : '', u.pro ? 'yes' : '', u.tch ? 'yes' : '', u.ban ? 'yes' : '', NS.note[u.uid] || '']; }));
+    return csv(name, ['Name', 'E-mail', 'Google', 'Device', 'Model', 'System', 'Browser', 'Country', 'City', 'Language', 'Level', 'XP', 'Words', 'Game XP', 'Engagement', 'Segment', 'Joined', 'Last seen', 'PRO', 'Teacher', 'Banned', 'Note'], L.map(function (u) { var d = u.dev || {}, e = engInfo(u); return [uname(u), u.g ? u.g.e : '', u.g ? 'yes' : 'no', d.dv || '', d.md || '', ((d.os || '') + ' ' + (d.osv || '')).trim(), d.br || '', d.cc ? cname(d.cc) : '', d.ct || '', d.lg || '', u.lv || '', u.xp, u.w, u.gp, e.s, e.lab, u.f ? new Date(u.f).toISOString().slice(0, 10) : '', u.t ? new Date(u.t).toISOString().slice(0, 16).replace('T', ' ') : '', u.pro ? 'yes' : '', u.tch ? 'yes' : '', u.ban ? 'yes' : '', NS.note[u.uid] || '']; }));
   }
 
   /* ---------- v5: activity feed ---------- */
@@ -55245,12 +55266,12 @@ svg.a4-sp{width:100%;height:34px}
     var nm = u.n || (u.g && u.g.n) || 'Learner';
     el.innerHTML = '<div class="a4-dp" role="dialog" aria-label="Person details"><div class="a4-dh">' + avatar(u) + '<div style="flex:1;min-width:0"><h3>' + esc(nm) + '</h3><p>' + esc(u.g ? u.g.e : 'No Google account') + '</p><div class="a4-row" style="margin-top:6px">' + (Date.now() - u.t < 240000 ? '<span class="a4-tag g">online</span>' : '') + (u.pro ? '<span class="a4-tag y">PRO</span>' : '') + (u.tch ? '<span class="a4-tag b">Teacher</span>' : '') + (u.ban ? '<span class="a4-tag r">Banned</span>' : '') + (u.g ? '<span class="a4-tag v">Google</span>' : '') + '</div></div><button type="button" class="a4-ib" data-a="dclose" aria-label="Close">' + ic('x') + '</button></div><div class="a4-db">' +
       engBlock(u) + '<div class="a4-sec">Device & location</div><div class="a4-kv">' + kv('Device', esc(d.dv) + (d.md ? ' · ' + esc(d.md) : '')) + kv('System', esc((d.os || '') + (d.osv ? ' ' + d.osv.replace(/^\D+/, '') : ''))) + kv('Browser', esc(d.br)) + kv('Screen', esc(d.sc) + (d.ty ? ' · ' + esc(d.ty) : '')) + kv('Country', d.cc ? flag(d.cc) + ' ' + esc(cname(d.cc)) : '') + kv('City', esc(d.ct)) + kv('Language', esc(d.lg)) + kv('Time zone', esc(d.z)) + kv('Opened via', d.a ? 'Installed app' : d.dv ? 'Website' : '') + kv('Site version', esc(d.v)) + '</div>' +
-      '<div class="a4-sec">Learning</div><div class="a4-kv">' + kv('Joined', dS(u.f)) + kv('Last seen', ago(u.t)) + kv('Level test', esc(u.lv || 'not taken')) + kv('XP', fmt(u.xp)) + kv('Words', fmt(u.w)) + kv('Game points', fmt(u.gp)) + (x.ai ? kv('AI requests today', fmt(x.ai)) : '') + (x.fm && x.fm.n ? kv('Full mocks', x.fm.n + (x.fm.b ? ' · best band ' + x.fm.b : '')) : '') + '</div>' +
+      '<div class="a4-sec">Learning</div><div class="a4-kv">' + kv('Joined', dS(u.f)) + kv('Last seen', ago(u.t)) + kv('Level test', esc(u.lv || 'not taken')) + kv('XP', fmt(u.xp)) + kv('Words', fmt(u.w)) + kv('Game XP', fmt(u.gp)) + (x.ai ? kv('AI requests today', fmt(x.ai)) : '') + (x.fm && x.fm.n ? kv('Full mocks', x.fm.n + (x.fm.b ? ' · best band ' + x.fm.b : '')) : '') + '</div>' +
       (hist.length > 1 ? '<div class="a4-c" style="padding:14px"><div class="a4-h" style="margin:0 0 6px"><div><h3 style="font-size:13px">XP over time</h3></div></div>' + lineC('xp', hist.map(function (k) { return k.slice(6, 8) + '.' + k.slice(4, 6); }), [{ n: 'XP', c: 'var(--c1)', v: hist.map(function (k) { return +x.h[k] || 0; }) }], { h: 130, label: 'XP' }) + '</div>' : (S.drA ? '' : '<div class="a4-sk" style="height:60px"></div>')) +
       (u.fl && u.fl.length ? '<div class="a4-warn"><b>Needs a look</b><ul style="margin:6px 0 0 18px;padding:0">' + u.fl.map(function (f) { return '<li>' + esc(f) + '</li>'; }).join('') + '</ul></div>' : '') +
       (S.drA && S.drA.joined && S.drA.joined.length ? '<div class="a4-sec">Classes joined</div><div class="a4-kv">' + S.drA.joined.map(function (c) { return kv(esc(c.n || c.code), (c.sub ? c.sub.done + '/' + c.hw + ' homework' + (c.sub.avg != null ? ' · avg ' + c.sub.avg + '%' : '') : '')); }).join('') + '</div>' : '') +
       notesBlock(u) + '<div class="a4-sec">Actions</div><div class="a4-row">' + [[7, '7 days'], [30, '30 days'], [90, '3 months'], [365, '1 year']].map(function (p) { return '<button type="button" class="a4-btn" data-a="gift" data-v="' + p[0] + '">' + ic('crown') + 'Give ' + p[1] + ' PRO</button>'; }).join('') + (u.pro ? '<button type="button" class="a4-btn' + (armed === 'unpro' ? ' armed' : '') + '" data-a="unpro">' + (armed === 'unpro' ? 'Tap again' : 'Remove PRO') + '</button>' : '') + '<button type="button" class="a4-btn bad' + (armed === 'ban' ? ' armed' : '') + '" data-a="' + (u.ban ? 'unban' : 'ban') + '">' + (armed === 'ban' ? 'Tap again to confirm' : u.ban ? 'Unban' : 'Ban') + '</button></div>' +
-      '<div class="a4-sec">Advanced</div><div class="a4-row" style="flex-wrap:nowrap"><input class="a4-in" id="a4-gp" type="number" min="0" placeholder="Set game points to…" value="' + esc(S.gp) + '"><button type="button" class="a4-btn" data-a="setxp">Set</button></div>' + (u.ban ? '' : '<div class="a4-row" style="flex-wrap:nowrap"><input class="a4-in" id="a4-why" maxlength="200" placeholder="Reason shown to the learner if you ban" value="' + esc(S.why) + '"></div>') + '<div class="a4-row"><button type="button" class="a4-btn bad' + (armed === 'reset' ? ' armed' : '') + '" data-a="reset">' + (armed === 'reset' ? 'Tap again: all progress is erased' : 'Reset progress') + '</button></div><div class="a4-sec">Message</div><div class="a4-row" style="flex-wrap:nowrap"><input class="a4-in" id="a4-msg" maxlength="300" placeholder="Send a message to this learner"><button type="button" class="a4-btn pri" data-a="msg">' + ic('send') + 'Send</button></div>' + trail(u) + '</div></div>';
+      '<div class="a4-sec">Advanced</div><div class="a4-row" style="flex-wrap:nowrap"><input class="a4-in" id="a4-gp" type="number" min="0" placeholder="Set game XP to…" value="' + esc(S.gp) + '"><button type="button" class="a4-btn" data-a="setxp">Set</button></div>' + (u.ban ? '' : '<div class="a4-row" style="flex-wrap:nowrap"><input class="a4-in" id="a4-why" maxlength="200" placeholder="Reason shown to the learner if you ban" value="' + esc(S.why) + '"></div>') + '<div class="a4-row"><button type="button" class="a4-btn bad' + (armed === 'reset' ? ' armed' : '') + '" data-a="reset">' + (armed === 'reset' ? 'Tap again: all progress is erased' : 'Reset progress') + '</button></div><div class="a4-sec">Message</div><div class="a4-row" style="flex-wrap:nowrap"><input class="a4-in" id="a4-msg" maxlength="300" placeholder="Send a message to this learner"><button type="button" class="a4-btn pri" data-a="msg">' + ic('send') + 'Send</button></div>' + trail(u) + '</div></div>';
     el.classList.add('in'); bindCharts();
   }
 
@@ -55406,7 +55427,7 @@ svg.a4-sp{width:100%;height:34px}
           try { var jf = await H.adm('adm_flags', { flags: o0 }); D.stats.flags = jf.flags; H.applyFlags && H.applyFlags(jf.flags); logA('flag', (on0 ? 'Switched on ' : 'Switched off ') + v); say(on0 ? 'Switched on' : 'Switched off'); } catch (x5) { b.setAttribute('aria-checked', String(!on0)); say(errMsg(x5)); }
           return;
         }
-        case 'setxp': { var gv = A.querySelector('#a4-gp'); if (!gv || gv.value === '' || !(+gv.value >= 0)) return say('Write a number'); await H.adm('adm_ctl', { uid: curUser(), what: 'xp', set: Math.round(+gv.value) }); logA('xp', 'Set game points of ' + nameOf(curUser()) + ' to ' + Math.round(+gv.value), curUser()); say('Game points set'); D.accts = await H.adm('adm_accts'); return paint(true); }
+        case 'setxp': { var gv = A.querySelector('#a4-gp'); if (!gv || gv.value === '' || !(+gv.value >= 0)) return say('Write a number'); await H.adm('adm_ctl', { uid: curUser(), what: 'xp', set: Math.round(+gv.value) }); logA('xp', 'Set game XP of ' + nameOf(curUser()) + ' to ' + Math.round(+gv.value), curUser()); say('Game XP set'); D.accts = await H.adm('adm_accts'); return paint(true); }
         case 'reset': { if (!arm('reset')) return; await H.adm('adm_ctl', { uid: curUser(), what: 'reset' }); logA('reset', 'Reset progress of ' + nameOf(curUser()), curUser()); say('Progress reset'); D.accts = await H.adm('adm_accts'); return paint(true); }
 
         case 'tab': tab = v; LSS('lr_a4_tab', v); S.dr = null; armed = ''; paint(); A.querySelector('#a4-body').scrollTop = 0; return;
@@ -55648,13 +55669,14 @@ html.dq-lock,html.dq-lock body{overflow:hidden}
 #dqy small[dir="rtl"],.dqy-card small[dir="rtl"]{text-align:left;direction:rtl;unicode-bidi:isolate}
 #hb-dqy:not(:empty){margin:0}
 @media(min-width:900px){.dqy-card{flex-direction:row;align-items:center;gap:22px;padding:18px 22px}.dqy-top{flex:0 0 auto;min-width:330px}.dqy-list{flex:1;flex-direction:row}.dqy-list .dq-mini{flex:1;min-width:0;flex-direction:column;align-items:flex-start;gap:4px}.dqy-go{flex:0 0 240px}.dqy-all{flex:1}}
+#dqy .dq-tt{min-width:0}#dqy .dq-h1{white-space:nowrap}#dqy .dq-h1 small,#dqy .dq-tt small{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 </style><script id="dqy-js">/* Daily Challenge: content banks + UI strings in 14 languages */
 var LRD_DATA = (function () {
     var LC = ['uz', 'ru', 'tr', 'kk', 'ky', 'tg', 'ar', 'zh-CN', 'ja', 'ko', 'hi', 'es', 'fr', 'de'];
     /* [uz,ru,tr,kk,ky,tg,ar,zh-CN,ja,ko,hi,es,fr,de] */
     var T = {
-        title: ["Kunlik chellenj", "Ежедневный вызов", "Günlük Meydan Okuma", "Күнделікті сынақ", "Күнүмдүк сынак", "Чолиши рӯзона", "تحدي اليوم", "每日挑战", "デイリーチャレンジ", "오늘의 챌린지", "दैनिक चुनौती", "Reto diario", "Défi du jour", "Tägliche Challenge"],
-        score: ["Bugungi ball", "Счёт за сегодня", "Bugünkü puan", "Бүгінгі ұпай", "Бүгүнкү упай", "Холи имрӯза", "نتيجة اليوم", "今日得分", "今日のスコア", "오늘의 점수", "आज का स्कोर", "Puntos de hoy", "Score du jour", "Heutige Punkte"],
+        title: ["Qo'shimcha vazifalar", "Ещё задания", "Daha fazla görev", "Қосымша тапсырмалар", "Кошумча тапшырмалар", "Вазифаҳои иловагӣ", "مهام إضافية", "更多任务", "その他のタスク", "추가 과제", "और कार्य", "Más tareas", "Plus de tâches", "Weitere Aufgaben"],
+        score: ["Bugungi XP", "XP за сегодня", "Bugünkü XP", "Бүгінгі XP", "Бүгүнкү XP", "XP-и имрӯза", "XP اليوم", "今日XP", "今日のXP", "오늘의 XP", "आज का XP", "XP de hoy", "XP du jour", "Heutige XP"],
         streak: ["Kunlik seriya", "Серия дней", "Gün serisi", "Күн сериясы", "Күн сериясы", "Силсилаи рӯзҳо", "أيام متتالية", "连续天数", "連続日数", "연속 일수", "लगातार दिन", "Racha de días", "Jours d'affilée", "Tage in Folge"],
         best: ["Rekord", "Рекорд", "Rekor", "Рекорд", "Рекорд", "Рекорд", "الأفضل", "最高分", "ベスト", "최고 기록", "सर्वश्रेष्ठ", "Mejor", "Record", "Rekord"],
         start: ["Boshlash", "Начать", "Başla", "Бастау", "Баштоо", "Оғоз", "ابدأ", "开始", "スタート", "시작", "शुरू करें", "Empezar", "Commencer", "Start"],
@@ -55677,7 +55699,7 @@ var LRD_DATA = (function () {
         write: ["Bitta gap yoz", "Напиши предложение", "Bir cümle yaz", "Бір сөйлем жаз", "Бир сүйлөм жаз", "Як ҷумла нависед", "اكتب جملة", "写一句话", "1文を書こう", "한 문장 쓰기", "एक वाक्य लिखें", "Escribe una frase", "Écris une phrase", "Einen Satz schreiben"],
         speed: ["Tezlik raundi", "Скоростной раунд", "Hız turu", "Жылдамдық раунды", "Ылдамдык раунду", "Даври суръат", "جولة السرعة", "极速挑战", "スピードラウンド", "스피드 라운드", "स्पीड राउंड", "Ronda rápida", "Manche express", "Schnelle Runde"],
         real: ["To'g'rimi yoki xato?", "Верно или ошибка?", "Doğru mu, yanlış mı?", "Дұрыс па, қате ме?", "Туурабы же ката?", "Дуруст аст ё хато?", "صحيحة أم خاطئة؟", "对还是错？", "正しい？間違い？", "맞을까 틀릴까?", "सही या गलत?", "¿Correcta o incorrecta?", "Juste ou faux ?", "Richtig oder falsch?"],
-        points: ["ball", "очков", "puan", "ұпай", "упай", "холҳо", "نقطة", "分", "点", "점", "अंक", "puntos", "points", "Punkte"],
+        points: ["XP", "XP", "XP", "XP", "XP", "XP", "XP", "XP", "XP", "XP", "XP", "XP", "XP", "XP"],
         level: ["Daraja", "Уровень", "Seviye", "Деңгей", "Деңгээл", "Сатҳ", "المستوى", "等级", "レベル", "레벨", "स्तर", "Nivel", "Niveau", "Stufe"],
         explore: ["Sarguzasht", "Исследуй", "Keşif görevi", "Зерттеу", "Изилдөө", "Кашф кун", "استكشف", "探索任务", "探検クエスト", "탐험 퀘스트", "खोज मिशन", "Explora", "Exploration", "Entdecken"],
         alldone: ["Hammasi tayyor!", "Всё готово!", "Hepsi tamam!", "Бәрі дайын!", "Баары бүттү!", "Ҳамааш тайёр!", "اكتمل كل شيء!", "全部完成！", "全部完了！", "모두 완료!", "सब पूरा!", "¡Todo listo!", "Tout est fait !", "Alles geschafft!"],
@@ -55787,7 +55809,7 @@ var LRD_DATA = (function () {
     return { LC: LC, T: T, tr: tr, W: W, G: G, S: S, SAY: SAY, R: R, P: P };
 })();
 
-/* Daily Challenge: score, 14 tasks, 9 mini-games, skills, streak, chest, 14-language helper */
+/* More tasks (inside Daily Luna): score, 14 tasks, 9 mini-games, skills, streak, chest, 14-language helper */
 window.LRDAILY = (function () {
     var D = LRD_DATA;
     function $(id) { return document.getElementById(id); }
@@ -55865,14 +55887,15 @@ window.LRDAILY = (function () {
     }
     function skillLv(p) { return Math.floor(Math.sqrt((p || 0) / 40)) + 1; }
     function skillBase(l) { return 40 * (l - 1) * (l - 1); }
+    function xpDL(n) { try { if (window.DL && DL.addXP) DL.addXP(n); } catch (e) { } }
     function award(id, pts, sk) {
         var r = day(), old = r.t[id] || 0, pts2 = Math.max(0, Math.round(pts));
         if (pts2 <= old) return 0;
         var delta = pts2 - old, s = store(), u = U();
         r.t[id] = pts2; r.pts += delta; s.total = (s.total || 0) + delta; s.sk[sk] = (s.sk[sk] || 0) + delta;
         s.best = Math.max(s.best || 0, r.pts);
-        u.gamePts = (u.gamePts || 0) + delta; r.own = (r.own || 0) + delta;
-        if (!old) { try { pfFeed('daily', 'Daily Challenge: ' + tById(id).en + ' (+' + pts2 + ')'); } catch (e) { } }
+        u.gamePts = (u.gamePts || 0) + delta; r.own = (r.own || 0) + delta; xpDL(delta);
+        if (!old) { try { pfFeed('daily', 'More tasks: ' + tById(id).en + ' (+' + pts2 + ')'); } catch (e) { } }
         try { pfSave(); } catch (e) { }
         return delta;
     }
@@ -55945,6 +55968,7 @@ window.LRDAILY = (function () {
         clearTimers(); if (!OV) return;
         OV.classList.remove('in'); document.documentElement.classList.remove('dq-lock');
         setTimeout(function () { if (OV) OV.classList.remove('on'); }, 220);
+        try { if (window.DL && DL.refresh) DL.refresh(); } catch (e) { }
         try { if (typeof renderHub === 'function' && document.getElementById('view-dashboard') && document.getElementById('view-dashboard').classList.contains('active')) renderHub(); else home(); } catch (e) { }
     }
     function setTitle(html) { $('dq-tt').innerHTML = html; }
@@ -55958,32 +55982,32 @@ window.LRDAILY = (function () {
         return '<button class="dq-tk' + (isDone ? ' done' : '') + (up ? ' up' : '') + '" data-id="' + t.id + '" style="--c:' + S.c + ';--c2:' + S.c2 + '">' +
             '<span class="dq-tk-ic">' + t.ic + '</span>' +
             '<span class="dq-tk-tx">' + bi(t.key, t.en) + (sub ? '<em>' + esc(sub) + '</em>' : '') + '<span class="dq-chips"><i class="dq-chip" style="--c:' + S.c + '">' + S.en + '</i>' + (weak ? '<i class="dq-chip boost">🔥 Boost</i>' : '') + (up ? '<i class="dq-chip upn">Up next</i>' : '') + '</span></span>' +
-            '<span class="dq-tk-r"><b>' + (isDone ? '+' + sc : '+' + t.p) + '</b><small>' + esc(tr('points') || 'pts') + '</small>' + st + '</span></button>';
+            '<span class="dq-tk-r"><b>' + (isDone ? '+' + sc : '+' + t.p) + '</b><small>' + 'XP' + '</small>' + st + '</span></button>';
     }
     function hub() {
         VIEW = 'hub'; CUR = null; clearTimers(); sync(); langBtn();
         var T = totals(), r = day(), u = U(), body = $('dq-body'), nxt = T.next, pct = T.pts / MAXP;
         var firstUndone = TASKS.filter(function (t) { return r.t[t.id] == null; })[0];
         var lvl = 1; try { lvl = pfStats().lvl; } catch (e) { }
-        setTitle('<div class="dq-h1">' + bi('title', 'Daily Challenge') + '</div>');
+        setTitle('<div class="dq-h1">' + bi('title', 'More tasks') + '</div>');
         var days = sevenDays(), mx = Math.max(60, Math.max.apply(null, days.map(function (d) { return d.p; })));
-        var bars = days.map(function (d) { return '<div class="dq-bar' + (d.t ? ' t' : '') + '" title="' + d.k + ': ' + d.p + ' pts"><i style="height:' + Math.max(4, Math.round(d.p / mx * 100)) + '%"></i><b>' + d.w + '</b></div>'; }).join('');
+        var bars = days.map(function (d) { return '<div class="dq-bar' + (d.t ? ' t' : '') + '" title="' + d.k + ': ' + d.p + ' XP"><i style="height:' + Math.max(4, Math.round(d.p / mx * 100)) + '%"></i><b>' + d.w + '</b></div>'; }).join('');
         var s = store(), skills = SKO.map(function (k) {
             var v = s.sk[k] || 0, lv = skillLv(v), b = skillBase(lv), nx = skillBase(lv + 1), pc = Math.round((v - b) / (nx - b) * 100), S = SK[k];
-            return '<div class="dq-sk" style="--c:' + S.c + ';--c2:' + S.c2 + '"><div class="dq-sk-h"><span>' + bi('s_' + k, S.en) + '</span><em>Lv ' + lv + '</em></div><div class="dq-sk-b"><i style="width:' + pc + '%"></i></div><small>' + v + ' pts · ' + (nx - v) + ' to Lv ' + (lv + 1) + '</small></div>';
+            return '<div class="dq-sk" style="--c:' + S.c + ';--c2:' + S.c2 + '"><div class="dq-sk-h"><span>' + bi('s_' + k, S.en) + '</span><em>Lv ' + lv + '</em></div><div class="dq-sk-b"><i style="width:' + pc + '%"></i></div><small>' + v + ' XP · ' + (nx - v) + ' to Lv ' + (lv + 1) + '</small></div>';
         }).join('');
         var chestReady = T.done >= CHEST_AT && !r.chest;
-        var chest = '<div class="dq-chest' + (r.chest ? ' open' : chestReady ? ' ready' : '') + '"><div class="dq-chest-ic">' + (r.chest ? '🎁' : '🧰') + '</div><div class="dq-chest-tx">' + bi('chest', 'Bonus chest') + '<small class="dq-chest-s">' + (r.chest ? 'Opened today · +' + CHEST_PTS + ' pts' : T.done >= CHEST_AT ? 'Ready! +' + CHEST_PTS + ' bonus points inside' : 'Finish ' + CHEST_AT + ' tasks to unlock (' + T.done + '/' + CHEST_AT + ')') + '</small><div class="dq-chest-b"><i style="width:' + Math.min(100, T.done / CHEST_AT * 100) + '%"></i></div></div>' + (chestReady ? '<button class="dq-btn" id="dq-chest">' + esc(tr('open') || 'Open') + '</button>' : '') + '</div>';
+        var chest = '<div class="dq-chest' + (r.chest ? ' open' : chestReady ? ' ready' : '') + '"><div class="dq-chest-ic">' + (r.chest ? '🎁' : '🧰') + '</div><div class="dq-chest-tx">' + bi('chest', 'Bonus chest') + '<small class="dq-chest-s">' + (r.chest ? 'Opened today · +' + CHEST_PTS + ' XP' : T.done >= CHEST_AT ? 'Ready! +' + CHEST_PTS + ' bonus XP inside' : 'Finish ' + CHEST_AT + ' tasks to unlock (' + T.done + '/' + CHEST_AT + ')') + '</small><div class="dq-chest-b"><i style="width:' + Math.min(100, T.done / CHEST_AT * 100) + '%"></i></div></div>' + (chestReady ? '<button class="dq-btn" id="dq-chest">' + esc(tr('open') || 'Open') + '</button>' : '') + '</div>';
         var q = quest(), qR = r.q && !r.t.quest;
         var groups = [['Quick wins', TASKS.filter(function (t) { return t.k === 'auto'; })], ['Mini-games', TASKS.filter(function (t) { return t.k === 'game'; })], ['Explore quest', TASKS.filter(function (t) { return t.k === 'quest'; })]];
         var sec = groups.map(function (g) { return '<div class="dq-sec"><div class="dq-sec-h"><b>' + g[0] + '</b></div><div class="dq-grid">' + g[1].map(function (t) { return taskCard(t, firstUndone && firstUndone.id === t.id); }).join('') + '</div></div>'; }).join('');
         body.innerHTML =
             '<div class="dq-wrap">' +
-            '<div class="dq-hero"><div class="dq-hero-l"><div class="dq-ringw">' + ring(pct, T.tier.c, '#8b5cf6', 168, 14, 'dqrg') + '<div class="dq-ringc"><small>' + esc(tr('score') || "Today's score") + '</small><b id="dq-sc">0</b><span>of ' + MAXP + '</span></div></div></div>' +
-            '<div class="dq-hero-r"><div class="dq-tier" style="--c:' + T.tier.c + '"><span>' + T.tier.e + '</span><div><b>' + T.tier.n + '</b><small>' + (nxt ? (nxt.at - T.pts) + ' pts to ' + nxt.n + ' ' + nxt.e : 'Top tier reached') + '</small></div></div>' +
-            '<div class="dq-stats"><div><span>🔥</span><b>' + T.streak + '</b><small>' + esc(tr('streak') || 'Day streak') + '</small></div><div><span>🏆</span><b>' + T.best + '</b><small>' + esc(tr('best') || 'Best') + '</small></div><div><span>⚡</span><b>' + T.total + '</b><small>Total ' + esc(tr('points') || 'pts') + '</small></div><div><span>🎖️</span><b>' + lvl + '</b><small>' + esc(tr('level') || 'Level') + '</small></div></div>' +
+            '<div class="dq-hero"><div class="dq-hero-l"><div class="dq-ringw">' + ring(pct, T.tier.c, '#8b5cf6', 168, 14, 'dqrg') + '<div class="dq-ringc"><small>' + esc(tr('score') || "Today's XP") + '</small><b id="dq-sc">0</b><span>of ' + MAXP + '</span></div></div></div>' +
+            '<div class="dq-hero-r"><div class="dq-tier" style="--c:' + T.tier.c + '"><span>' + T.tier.e + '</span><div><b>' + T.tier.n + '</b><small>' + (nxt ? (nxt.at - T.pts) + ' XP to ' + nxt.n + ' ' + nxt.e : 'Top tier reached') + '</small></div></div>' +
+            '<div class="dq-stats"><div><span>🔥</span><b>' + T.streak + '</b><small>' + esc(tr('streak') || 'Day streak') + '</small></div><div><span>🏆</span><b>' + T.best + '</b><small>' + esc(tr('best') || 'Best') + '</small></div><div><span>⚡</span><b>' + T.total + '</b><small>Total ' + 'XP' + '</small></div><div><span>🎖️</span><b>' + lvl + '</b><small>' + esc(tr('level') || 'Level') + '</small></div></div>' +
             '<div class="dq-days">' + bars + '</div>' +
-            '<div class="dq-note">Daily points are added to your XP, so every task also raises your level.</div></div></div>' +
+            '<div class="dq-note">Every task you finish adds XP and raises your level.</div></div></div>' +
             chest +
             '<div class="dq-cols"><div class="dq-main">' + '<div class="dq-sec-t">' + bi('tasks', "Today's tasks") + '<em>' + T.done + '/' + T.n + '</em></div>' + sec + '</div>' +
             '<aside class="dq-side"><div class="dq-sec-t">' + bi('skills', 'Your skills') + '</div><div class="dq-sks">' + skills + '</div><div class="dq-tip">Tip: the 🔥 Boost tag marks your lowest skill. Training it first gives the fastest growth.</div></aside></div></div>';
@@ -55996,8 +56020,8 @@ window.LRDAILY = (function () {
     }
     function openChest() {
         var r = day(); if (r.chest || doneCount(r) < CHEST_AT) return;
-        r.chest = 1; var s = store(); s.total += CHEST_PTS; r.pts += CHEST_PTS; s.best = Math.max(s.best || 0, r.pts); U().gamePts = (U().gamePts || 0) + CHEST_PTS; r.own = (r.own || 0) + CHEST_PTS;
-        try { pfFeed('daily', 'Opened the Daily bonus chest (+' + CHEST_PTS + ')'); pfSave(); showToast('Bonus chest: +' + CHEST_PTS + ' points! 🎁'); triggerConfetti(); } catch (e) { }
+        r.chest = 1; var s = store(); s.total += CHEST_PTS; r.pts += CHEST_PTS; s.best = Math.max(s.best || 0, r.pts); U().gamePts = (U().gamePts || 0) + CHEST_PTS; r.own = (r.own || 0) + CHEST_PTS; xpDL(CHEST_PTS);
+        try { pfFeed('daily', 'Opened the Daily bonus chest (+' + CHEST_PTS + ')'); pfSave(); showToast('Bonus chest: +' + CHEST_PTS + ' XP! 🎁'); triggerConfetti(); } catch (e) { }
         hub();
     }
 
@@ -56038,9 +56062,9 @@ window.LRDAILY = (function () {
         var stars = ratio >= .9 ? 3 : ratio >= .6 ? 2 : ratio > 0 ? 1 : 0, T = totals();
         if (ratio >= .8) { try { triggerConfetti(); } catch (e) { } }
         var el = $('dq-body');
-        el.innerHTML = '<div class="dq-wrap dq-res"><div class="dq-res-c" style="--c:' + S.c + ';--c2:' + S.c2 + '"><div class="dq-res-e">' + t.ic + '</div><h2>' + esc(tr('well') || 'Well done!') + '</h2><div class="dq-stars">' + [1, 2, 3].map(function (i) { return '<i class="' + (i <= stars ? 'on' : '') + '">★</i>'; }).join('') + '</div><div class="dq-res-p"><b>+' + pts + '</b> ' + esc(tr('points') || 'points') + '</div><p>' + esc(note || '') + '</p>' +
-            (d > 0 ? '' : '<p class="dq-dim">Your best score for this task today is ' + (day().t[t.id] || 0) + ' points. Play again to beat it.</p>') +
-            '<div class="dq-res-s"><div><b>' + T.pts + '</b><small>' + esc(tr('score') || "Today's score") + '</small></div><div><b>' + T.tier.e + ' ' + T.tier.n + '</b><small>Tier</small></div><div><b>' + T.done + '/' + T.n + '</b><small>Tasks</small></div></div>' +
+        el.innerHTML = '<div class="dq-wrap dq-res"><div class="dq-res-c" style="--c:' + S.c + ';--c2:' + S.c2 + '"><div class="dq-res-e">' + t.ic + '</div><h2>' + esc(tr('well') || 'Well done!') + '</h2><div class="dq-stars">' + [1, 2, 3].map(function (i) { return '<i class="' + (i <= stars ? 'on' : '') + '">★</i>'; }).join('') + '</div><div class="dq-res-p"><b>+' + pts + '</b> ' + 'XP' + '</div><p>' + esc(note || '') + '</p>' +
+            (d > 0 ? '' : '<p class="dq-dim">Your best score for this task today is ' + (day().t[t.id] || 0) + ' XP. Play again to beat it.</p>') +
+            '<div class="dq-res-s"><div><b>' + T.pts + '</b><small>' + esc(tr('score') || "Today's XP") + '</small></div><div><b>' + T.tier.e + ' ' + T.tier.n + '</b><small>Tier</small></div><div><b>' + T.done + '/' + T.n + '</b><small>Tasks</small></div></div>' +
             '<div class="dq-res-b"><button class="dq-btn" id="dq-rb">' + esc(tr('next') || 'Next') + ' <i class="fa-solid fa-arrow-right"></i></button><button class="dq-btn ghost" id="dq-rp"><i class="fa-solid fa-rotate"></i> ' + esc(tr('replay') || 'Play again') + '</button></div></div></div>';
         $('dq-rb').onclick = function () { var nx = TASKS.filter(function (x) { return day().t[x.id] == null && x.k === 'game'; })[0]; if (nx) startTask(nx.id); else hub(); };
         $('dq-rp').onclick = function () { startTask(t.id); };
@@ -56148,7 +56172,7 @@ window.LRDAILY = (function () {
             function res(a, heard, selfc) {
                 tot += a; var tw = norm(s).split(' '), hw = norm(heard || '').split(' ');
                 var colored = tw.map(function (w) { return '<span class="' + (hw.indexOf(w) >= 0 ? 'g' : 'r') + '">' + esc(w) + '</span>'; }).join(' ');
-                fb($('fb'), a >= .75, selfc ? 'Self-check counts for 60% of the points.' : 'You said: <i>' + esc(heard || '…') + '</i><br>' + colored + ' · ' + Math.round(a * 100) + '%'); $('nx').hidden = false;
+                fb($('fb'), a >= .75, selfc ? 'Self-check counts for 60% of the XP.' : 'You said: <i>' + esc(heard || '…') + '</i><br>' + colored + ' · ' + Math.round(a * 100) + '%'); $('nx').hidden = false;
                 var m = $('mic'); if (m) { m.disabled = true; m.classList.remove('rec'); }
             }
             c.el.onclick = function (e) {
@@ -56223,7 +56247,7 @@ window.LRDAILY = (function () {
             $('sp').innerHTML = '<div class="dq-q">' + esc(it.d) + '<small>' + (n >= pool.length ? '' : '') + '</small></div><div class="dq-opts two">' + opts.map(function (o) { return '<button class="dq-o" data-w="' + esc(o.w) + '">' + esc(o.w) + '</button>'; }).join('') + '</div><div class="dq-tr" id="trh"></div>';
             $('sp').dataset.a = it.w;
         }
-        function end() { run = false; clearTimers(); var ratio = Math.min(1, ok / 12); c.done(ratio, ok + ' correct answers, best combo handled. 12+ gives full points.'); }
+        function end() { run = false; clearTimers(); var ratio = Math.min(1, ok / 12); c.done(ratio, ok + ' correct answers, best combo handled. 12+ gives full XP.'); }
         c.el.onclick = function (e) {
             if (e.target.closest('#go')) {
                 run = true; q();
@@ -56262,7 +56286,7 @@ window.LRDAILY = (function () {
             var rr = day(); if (!rr.q || rr.t.quest) return hidePill();
             var left = QSEC - Math.floor((Date.now() - rr.q) / 1000);
             if (left > 0) p.innerHTML = '<span>' + q.ic + '</span><div><b>' + esc(q.t) + '</b><small>Explore for ' + left + 's to finish the quest</small></div><button class="dq-pc" id="dqy-pc">Back</button>';
-            else p.innerHTML = '<span>' + q.ic + '</span><div><b>Quest complete!</b><small>Claim your points</small></div><button class="dq-pc go" id="dqy-pc">Claim +30</button>';
+            else p.innerHTML = '<span>' + q.ic + '</span><div><b>Quest complete!</b><small>Claim your XP</small></div><button class="dq-pc go" id="dqy-pc">Claim +30</button>';
             p.dataset.ready = left <= 0 ? 1 : '';
         }
         p.onclick = function (e) {
@@ -56275,22 +56299,17 @@ window.LRDAILY = (function () {
     function hidePill() { clearInterval(pillT); var p = $('dqy-pill'); if (p) p.classList.remove('on'); }
 
     /* ---------- Home card ---------- */
-    function place() { var el = $('hb-dqy'), lc = $('lc-card'); if (el && lc && lc.parentNode && lc.nextElementSibling !== el) { lc.parentNode.insertBefore(el, lc.nextSibling); el.style.display = 'block'; } }
     function home() {
-        var el = $('hb-dqy'); if (!el) return;
-        place(); setTimeout(place, 1200); setTimeout(place, 3500);
+        var el = $('hb-dqy'); if (el) { el.innerHTML = ''; el.style.display = 'none'; }
         try { sync(); } catch (e) { }
-        var T = totals(), r = day(), pct = T.pts / MAXP, undone = TASKS.filter(function (t) { return r.t[t.id] == null; }), nx = T.next;
-        var mix = undone.filter(function (t) { return t.k === 'auto'; }).slice(0, 1).concat(undone.filter(function (t) { return t.k === 'game'; }).slice(0, 2)); if (mix.length < 3) mix = mix.concat(undone.filter(function (t) { return mix.indexOf(t) < 0; })).slice(0, 3); var top = mix.map(function (t) { var S = SK[t.sk]; return '<button class="dq-mini" data-id="' + t.id + '" style="--c:' + S.c + ';--c2:' + S.c2 + '"><span>' + t.ic + '</span><b>' + esc(t.en) + '</b><em>+' + t.p + '</em></button>'; }).join('');
-        el.innerHTML = '<div class="dqy-card"><div class="dqy-glow"></div><div class="dqy-top"><div class="dqy-rg">' + ring(pct, T.tier.c, '#8b5cf6', 84, 9, 'dqrh') + '<div class="dqy-rc"><b>' + T.pts + '</b><small>/' + MAXP + '</small></div></div>' +
-            '<div class="dqy-in"><div class="dqy-t">' + bi('title', 'Daily Challenge') + '</div><div class="dqy-m"><span style="--c:' + T.tier.c + '">' + T.tier.e + ' ' + T.tier.n + '</span><span>🔥 ' + T.streak + '</span><span>✅ ' + T.done + '/' + T.n + '</span></div><div class="dqy-s">' + (nx ? (nx.at - T.pts) + ' pts to ' + nx.n + ' ' + nx.e : 'Top tier reached 🎉') + '</div></div></div>' +
-            (undone.length ? '<div class="dqy-list">' + top + '</div>' : '<div class="dqy-all">🏆 ' + esc(tr('alldone') || 'All done!') + '</div>') +
-            '<button class="dqy-go" id="dqy-open">' + esc(T.done ? 'Continue challenge' : 'Start challenge') + ' <i class="fa-solid fa-arrow-right"></i></button></div>';
-        el.onclick = function (e) { var m = e.target.closest('.dq-mini'); if (m) return open(m.dataset.id); if (e.target.closest('#dqy-open') || e.target.closest('.dqy-card')) open(); };
+    }
+    function list() {
+        var r = day(), w = { game: 0, auto: 1, quest: 2 };
+        return TASKS.map(function (t, i) { return { id: t.id, en: t.en, ic: t.ic, p: t.p, k: t.k, sk: SK[t.sk].en, done: r.t[t.id] != null, got: r.t[t.id] || 0, i: i }; }).sort(function (a, b) { return (w[a.k] - w[b.k]) || (a.i - b.i); });
     }
 
     try { setTimeout(function () { try { if (day().q && !day().t.quest) pill(); } catch (e) { } }, 1500); } catch (e) { }
-    return { mark: function (id) { var t = tById(id); if (t) { award(id, t.p, t.sk); } }, open: open, close: close, home: home, sync: sync, back: function () { clearTimers(); hub(); }, _state: function () { return { store: store(), totals: totals(), max: MAXP }; }, _award: award, _TASKS: TASKS };
+    return { list: list, mark: function (id) { var t = tById(id); if (t) { award(id, t.p, t.sk); } }, open: open, close: close, home: home, sync: sync, back: function () { clearTimers(); hub(); }, _state: function () { return { store: store(), totals: totals(), max: MAXP }; }, _award: award, _TASKS: TASKS };
 })();
 </script><script id="lr-tg">/* Telegram Mini App: when the site is opened inside Telegram it fills the screen, matches the theme and remembers the invite code */
 (function(){'use strict';var h=location.hash||'',q=location.search||'';
@@ -56733,7 +56752,7 @@ L.tabs.home=function(){L.open('home','English Lab','Everything you need to think
  '<button type="button" class="lbh-c lbh-b" data-g="errors"><small>Mistakes</small><b>'+errN+' to fix</b><span>'+(errN>=4?'Boss Fight is ready':'Collected from every activity')+'</span></button>'+
  '<button type="button" class="lbh-c lbh-d" data-g="daily"><small>Daily Luna</small><b>'+(dl&&dl.last===L.today()?'Done today ✓':'Today\'s session')+'</b><span>'+(window.DL?'Adaptive practice for all 6 skills':'')+'</span></button></div>'+
  '<h4 class="lab-h">Tools</h4><div class="lbh-grid">'+
- [['think','Think in English','Natural English from your own words','💭'],['reels','Micro Lessons','30-second swipe lessons','⚡'],['errors','Error Bank & Boss Fight','Turn mistakes into points','🛡'],['story','Detective Story','Solve cases in English','🕵'],['scan','Reality Scanner','Photo to vocabulary','📷'],['path','90-Day Path','A clear daily plan','🧭']].map(function(t){return '<button type="button" class="lbh-t" data-g="'+t[0]+'"><i>'+t[3]+'</i><span><b>'+t[1]+'</b><small>'+t[2]+'</small></span></button>'}).join('')+'</div>';
+ [['think','Think in English','Natural English from your own words','💭'],['reels','Micro Lessons','30-second swipe lessons','⚡'],['errors','Error Bank & Boss Fight','Turn mistakes into XP','🛡'],['story','Detective Story','Solve cases in English','🕵'],['scan','Reality Scanner','Photo to vocabulary','📷'],['path','90-Day Path','A clear daily plan','🧭']].map(function(t){return '<button type="button" class="lbh-t" data-g="'+t[0]+'"><i>'+t[3]+'</i><span><b>'+t[1]+'</b><small>'+t[2]+'</small></span></button>'}).join('')+'</div>';
  b.querySelectorAll('[data-g]').forEach(function(x){x.onclick=function(){var g=x.dataset.g;L.buzz(6);if(g==='daily'){L.close();setTimeout(function(){try{DL.start()}catch(e){}},300)}else L.go(g)}});
  $('#lbh-go',b).onclick=function(){var v=$('#lbh-t',b).value.trim();if(v)L.go('think',{think:v});else $('#lbh-t',b).focus()};
  $('#lbh-lg',b).onclick=function(){L.langSheet()};
@@ -56971,6 +56990,15 @@ textarea#dl-t{font-size:18px}
 .dl4-fw{display:grid;grid-template-columns:minmax(90px,.7fr) 1fr auto;gap:10px;align-items:baseline;padding:10px 14px;margin-top:6px;border-radius:14px;background:rgba(255,255,255,.055)}
 .dl4-fw b{font-size:16.5px;color:var(--mn,#f4efdc)}.dl4-fw span{color:#9ef3e1;font-size:15px}.dl4-fw em{font-style:normal;font-size:12.5px;color:rgba(222,226,255,.62)}.dl4-fw.wk{border:1px solid rgba(251,113,133,.4)}
 @media(max-width:560px){.dl4-fw{grid-template-columns:1fr auto}.dl4-fw em{grid-column:1/-1}}
+</style><style id="dl5-css">.dl5-more{margin-top:14px;border:1px solid rgba(190,196,255,.16);background:rgba(255,255,255,.045);border-radius:18px;padding:12px}
+.dl5-more.lock,.dl5-more.all{display:flex;align-items:center;gap:12px}.dl5-more.lock{opacity:.78}
+.dl5-more b{color:#f4efdc;font:700 14.5px Inter,system-ui,sans-serif}.dl5-more small{display:block;color:#cfc9ee;font:500 12.5px Inter,system-ui,sans-serif;margin-top:2px}
+.dl5-ic{font-style:normal;font-size:22px;width:40px;height:40px;border-radius:12px;background:rgba(255,255,255,.07);display:grid;place-items:center;flex:none}
+.dl5-mh{display:flex;align-items:baseline;justify-content:space-between;gap:10px;padding:2px 4px 8px}
+.dl5-t{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:rgba(255,255,255,.05);border:1px solid rgba(190,196,255,.12);border-radius:14px;padding:9px 10px;margin-top:8px;cursor:pointer;color:inherit;min-height:56px}
+.dl5-t:hover,.dl5-t:active{background:rgba(255,255,255,.1)}.dl5-tx{flex:1;min-width:0}
+.dl5-t em{font-style:normal;font:700 13px Inter,system-ui,sans-serif;color:#f5c26b;white-space:nowrap}
+.dl5-all{width:100%;margin-top:6px;text-align:center}
 </style><script id="lr-dl">/* ================= Daily Luna: an adaptive daily English trainer ================= */
 (function(){'use strict';
 var D=document,L=window.LAB,esc=L.esc,$=function(s,r){return (r||D).querySelector(s)};
@@ -57152,10 +57180,7 @@ var BON={
  path:{t:'Open your 90-Day Path',s:'Today\'s plan from the roadmap',run:function(){L.apps.path()}},
  cam:{t:'Talk to the camera',s:'30 seconds of speaking, face to face',run:function(){start('speaking')}},
  movies:{t:'Watch with smart subtitles',s:'Tap words in a film and save them',run:function(){try{navigateTo('movies')}catch(e){}}}};
-function pickBonus(d){var r=rngf(hash(L.today()+'b')),keys=[],er=0,due=0;try{er=L.err.active().length;due=window.SRS?SRS.list().length:0}catch(e){}
- var pool=['grammar','reading','shadow','game','music','story','reels','think','scan','movies','mock','tutor','words'].concat(camOn()?['cam']:[]);if(due>=3)keys.push('cards');if(er>=3)keys.push('errors');
- var sk=SKILLS.slice().sort(function(a,b){return d.sk[a]-d.sk[b]})[0];var pref={grammar:'grammar',reading:'reading',pronunciation:'shadow',speaking:'cam',listening:'movies',writing:'think',vocab:'scan'}[sk];if(pref&&keys.indexOf(pref)<0)keys.push(pref);
- pool=bpool(pool,keys,d,r);while(keys.length<3)keys.push(pool.shift());return keys.slice(0,3)}
+
 
 /* ---------- exercise renderers: each returns {check()} and calls api.ready(bool) ---------- */
 var IC=L.IC,COL=['#7c8cff','#22d3ee','#fbbf24','#fb7185','#34d399'];
@@ -57224,8 +57249,8 @@ function fb(st,res,b){var ft=$('#dl-ft',b),ok=res.ok,last=CUR.ses.i>=CUR.ses.ste
  try{ft.scrollIntoView({block:'end',behavior:'smooth'})}catch(e){}}
 /* ---------- results ---------- */
 /* ---------- bonus quests ---------- */
-function bonusList(d){var t=L.today();d.bonus[t]=d.bonus[t]||{};if(!d.bonus[t].list){d.bonus[t].list=pickBonus(d);d.bonus[t].done={}}return d.bonus[t]}
-function bonusHTML(d){var B=bonusList(d);return '<div class="dl-bq">'+B.list.map(function(k){var q=BON[k],on=B.done[k];return '<div class="dl-bqi'+(on?' ok':'')+'"><button type="button" class="dl-bt" data-bt="'+k+'" aria-label="Mark done">'+(on?IC.check:'')+'</button><div class="dl-bm"><b>'+esc(q.t)+'</b><small>'+esc(q.s)+'</small></div><button type="button" class="lab-go sm" data-b="'+k+'">Open</button></div>'}).join('')+'</div>'}
+function bonusList(d){return{list:[],done:{}}}
+
 function tick(k,auto){var d=S(),B=bonusList(d);if(B.done[k])return;B.done[k]=1;d.xp+=15;try{U().gamePts=(U().gamePts||0)+15}catch(e){}save();L.toast('Bonus quest done · +15 XP ✓');try{refresh()}catch(e){}}
 function bindBonus(root){root.querySelectorAll('[data-b]').forEach(function(x){x.onclick=function(){var k=x.dataset.b;try{var dd=S();dd.clicks=dd.clicks||{};dd.clicks[k]=(dd.clicks[k]||0)+1;save()}catch(e){}L.close();setTimeout(function(){try{BON[k].run()}catch(e){}},300)}});
  root.querySelectorAll('[data-bt]').forEach(function(x){x.onclick=function(){tick(x.dataset.bt);x.parentNode.classList.add('ok');x.innerHTML=IC.check}})}
@@ -57454,11 +57479,11 @@ var _fe=finishExtras;finishExtras=function(b,C,ses,d,pct,avg){_fe(b,C,ses,d,pct,
 function greetTime(){var h=new Date().getHours();return h<5?'Good night':h<12?'Good morning':h<18?'Good afternoon':'Good evening'}
 function status(d){var t=L.today(),n=stepsFor(d);if(todayDone(d))return{k:'done',done:n,n:n};var s=d.ses&&d.ses.day===t?d.ses:null;if(s)return{k:'prog',done:s.i,n:s.steps.length};return{k:'new',done:0,n:n}}
 function refresh(){var el=D.getElementById('lc-card');if(el&&el.querySelector('.dl')||el&&!el.querySelector('.lc-in'))el.innerHTML=card()}
-function bonusOpen(){L.open('daily-bonus','Bonus quests','The rest of LunaRise, picked for your weak spots.',function(b){var d=S();b.innerHTML='<section class="lab-card"><p class="lab-mut">Each one trains a different skill. Finish it, then tick it. Some tick by themselves.</p>'+bonusHTML(d)+'</section>';bindBonus(b)})}
+
 D.addEventListener('click',function(e){var x=e.target.closest&&e.target.closest('[data-dl]');if(!x)return;var k=x.dataset.dl;
- if(k==='start')start();else if(k==='skills')skills();else if(k==='bonus')bonusOpen();else if(k==='prefs')prefs(function(){});else if(k==='lang'){langPick()}else if(k==='extra'){var d1=S(),wk1=SKILLS.slice().sort(function(a,b){return d1.sk[a]-d1.sk[b]})[0];start(wk1)}else if(k==='film'){try{BON.movies.run()}catch(e){}}
+ if(k==='start')start();else if(k==='skills')skills();else if(k==='bonus'||k==='dcall'){if(moreOK())try{LRDAILY.open()}catch(e){}}else if(k==='dc'){if(moreOK())try{LRDAILY.open(x.dataset.id)}catch(e){}}else if(k==='prefs')prefs(function(){});else if(k==='lang'){langPick()}else if(k==='extra'){var d1=S(),wk1=SKILLS.slice().sort(function(a,b){return d1.sk[a]-d1.sk[b]})[0];start(wk1)}else if(k==='film'){try{BON.movies.run()}catch(e){}}
  else if(k==='hello'){var d=S(),pk=d.pack&&d.pack.day===L.today()?d.pack:null,t=pk&&pk.hello?pk.hello:'Hello! Ready to grow your English today? Let\'s start.';try{if(window.LC&&LC.say)LC.say(t);else L.say(t,'en-US')}catch(e){L.say(t,'en-US')}}});
-window.DL={on:function(){return true},card:card,start:function(q){start(q)},open:function(){start()},skills:skills,refresh:refresh,feed:feed,state:function(){return S()},levels:function(){var d=S();return SKILLS.reduce(function(o,k){o[k]=cefr(d.sk[k]);return o},{})}};
+window.DL={addXP:addXP,coreDone:function(){return status(S()).k==='done'},on:function(){return true},card:card,start:function(q){start(q)},open:function(){start()},skills:skills,refresh:refresh,feed:feed,state:function(){return S()},levels:function(){var d=S();return SKILLS.reduce(function(o,k){o[k]=cefr(d.sk[k]);return o},{})}};
 function wrapFeed(){var _pf=window.pfFeed;if(typeof _pf==='function'&&!_pf.__dl){var w=function(k,x){try{feed(k,x)}catch(e){}return _pf.apply(this,arguments)};w.__dl=1;window.pfFeed=w}}
 function boot(){wrapFeed();try{if(!document.__dlvis){document.__dlvis=1;document.addEventListener('visibilitychange',function(){if(document.hidden)stopCam()})}}catch(e){}try{if(window.LC){LC.next=function(){start()};LC.open=function(){start()};LC.nag=function(){}}}catch(e){}try{refresh()}catch(e){}}
 setTimeout(boot,900);setTimeout(boot,3500);
@@ -57536,9 +57561,8 @@ function interests(d){try{var sc={},txt=((U().savedWords||[]).slice(-80).join(' 
  var c=d.clicks||{};function add(k,w){if(w)sc[k]=(sc[k]||0)+w}add('movies',(c.movies||0)*2);add('music',(c.music||0)*2);add('games',(c.game||0)*2);add('science',(c.scan||0));add('tech',(c.tutor||0));
  var fs=0,as=0;Object.keys(d.act||{}).forEach(function(k){fs+=d.act[k].film||0;as+=d.act[k].aud||0});add('movies',Math.floor(fs/600));add('music',Math.floor(as/300));
  return Object.keys(sc).filter(function(k){return sc[k]>=2}).sort(function(a,b){return sc[b]-sc[a]}).slice(0,3)}catch(e){return []}}
-function recentB(d){var out=[];dayKeys(3).forEach(function(k){if(k!==L.today()&&d.bonus&&d.bonus[k]&&d.bonus[k].list)out=out.concat(d.bonus[k].list)});return out}
-function bpool(pool,keys,d,r){var rec=recentB(d),a=pool.filter(function(k){return keys.indexOf(k)<0&&rec.indexOf(k)<0});if(a.length<3-keys.length)a=pool.filter(function(k){return keys.indexOf(k)<0});
- var it=interests(d),w=a.filter(function(k){return (k==='movies'&&it.indexOf('movies')>=0)||(k==='music'&&it.indexOf('music')>=0)||(k==='game'&&it.indexOf('games')>=0)});var sh=shuffle(a,r);return sh.filter(function(k){return w.indexOf(k)>=0}).concat(sh.filter(function(k){return w.indexOf(k)<0}))}
+
+
 function camMix(d,out,r){if(!camOn())return out;if(r()>(minutes(d)<=10?.5:.85))return out;var k=((d.tot||0)%2===0)?'camsay':'camshow';out=out.slice();var i=out.indexOf('say');if(i>=0)out[i]=k;else out.push(k);out.sort(function(a,b){return T[a].ord-T[b].ord||0});return out}
 
 /* ---------- level check: twelve short questions for people who skipped the first test ---------- */
@@ -57715,10 +57739,19 @@ function finish(){var C=CUR;if(!C)return;if(C.ses.kind==='check')return checkFin
  var line=pct>=85?'That was excellent. Your brain is building real habits.':pct>=65?'Solid work. Every correct answer makes the next one easier.':'Good effort. The mistakes are saved, we will fix them together tomorrow.';
  b.innerHTML='<div class="dl-res"><div class="lber-ring big" style="--p:'+(avg).toFixed(3)+'"><b>'+pct+'%</b></div><h2>'+(ses.quick?'Quick practice done':'Today\'s session is done')+'</h2><p class="lab-mut">'+esc(line)+'</p><div class="dl-stats"><div><b>+'+ses.xp+'</b><small>XP earned</small></div><div><b>'+(ses.quick?d.streak:d.streak)+'</b><small>day streak</small></div><div><b>'+n+'</b><small>exercises</small></div><div><b>'+fmtM(ses.sec||0)+'</b><small>time</small></div></div>'+
   '<h4 class="lab-h">Skill changes</h4><div class="dl-sk">'+SKILLS.map(function(k){var a=ses.before[k]==null?d.sk[k]:ses.before[k],z=d.sk[k],df=z-a;return '<div class="dl-skr"><span>'+SKN[k]+'</span><div class="dl-bar2"><i style="width:'+z.toFixed(1)+'%;background:'+SKC[k]+'"></i></div><em class="'+(df>.05?'up':df<-.05?'dn':'')+'">'+cefr(z)+' '+(df>.05?'▲ +':df<-.05?'▼ ':'· ')+df.toFixed(1)+'</em></div>'}).join('')+'</div>'+
-  (ses.quick?'':'<h4 class="lab-h">Your activity today</h4>'+actHTML(d)+'<h4 class="lab-h">Luna\'s side missions</h4>'+bonusHTML(d))+'<div class="dl-ra"><button type="button" class="lab-go ghost" id="dl-sks">My skills</button><button type="button" class="lab-go" id="dl-dn">Done</button></div></div>';
+  (ses.quick?'':'<h4 class="lab-h">Your activity today</h4>'+actHTML(d))+'<div class="dl-ra"><button type="button" class="lab-go ghost" id="dl-sks">My skills</button><button type="button" class="lab-go" id="dl-dn">Done</button></div></div>';
  $('#dl-dn',b).onclick=function(){L.close()};$('#dl-sks',b).onclick=function(){setTimeout(skills,50)};bindBonus(b);bindAct(b);try{finishExtras(b,C,ses,d,pct,avg)}catch(e){}}
 var PHD={'Warm-up':'Bring back what you learned before','Learn':'Meet 4 new words inside real sentences','Practise':'Listen, fill the gaps, build sentences','Use it':'Type what you hear, then say and write it','Lock in':'Recall the words from memory','Mission':'One small real-life task'};
 function phDesc(g,d){if(g.ph==='Warm-up')return g.types.indexOf('recall')>=0?'Bring back words from earlier days':'Fix a mistake from your Error Bank';return PHD[g.ph]||''}
+
+function dcInfo(){var r={n:0,done:0,list:[]};try{var q=window.LRDAILY;if(q&&q.list){r.list=q.list();r.n=r.list.length;r.done=r.list.filter(function(x){return x.done}).length}}catch(e){}return r}
+function moreOK(){if(status(S()).k==='done')return true;L.toast('Finish today\'s path first. Then more tasks unlock.');return false}
+function moreHTML(d,st){var I=dcInfo();if(!I.n)return '';
+ if(st.k!=='done')return '<div class="dl5-more lock"><i class="dl5-ic">🔒</i><div><b>More tasks</b><small>Unlock after today\'s path · '+I.n+' optional tasks</small></div></div>';
+ var nx=I.list.filter(function(x){return !x.done}).slice(0,3);
+ if(!nx.length)return '<div class="dl5-more all"><i class="dl5-ic">🏆</i><div><b>Every task is done</b><small>You finished all '+I.n+' extra tasks today</small></div></div>';
+ return '<div class="dl5-more"><div class="dl5-mh"><b>More tasks</b><small>'+I.done+'/'+I.n+' done · optional</small></div>'+nx.map(function(x){return '<button type="button" class="dl5-t" data-dl="dc" data-id="'+x.id+'"><span class="dl5-ic">'+x.ic+'</span><span class="dl5-tx"><b>'+esc(x.en)+'</b><small>'+esc(x.sk)+'</small></span><em>+'+x.p+' XP</em></button>'}).join('')+'<button type="button" class="dl-lk dl5-all" data-dl="dcall">See all '+I.n+' tasks</button></div>'}
+function addXP(n){try{var d=S();d.xp=(d.xp||0)+n;save();refresh()}catch(e){}}
 function card(){var d=S(),st=status(d),u=U(),nm=String(u.name||'').split(' ')[0],t=L.today(),ls=liveStreak(d),lo=lgO(),mn=minOf(d,t),goal=minutes(d),gp=Math.min(1,mn/goal),weak=SKILLS.slice().sort(function(a,b){return d.sk[a]-d.sk[b]})[0],due=srsDue(d).length;
  var ses=d.ses&&d.ses.day===t&&d.ses.steps&&!d.ses.quick&&d.ses.kind!=='check'?d.ses:null,first=(!d.placed&&st.k==='new');
  var steps=st.k==='done'?[]:(ses?ses.steps:planSteps(d)),groups=[];
@@ -57740,9 +57773,9 @@ function card(){var d=S(),st=status(d),u=U(),nm=String(u.name||'').split(' ')[0]
  '<button type="button" class="dl4-lang" data-dl="lang" aria-label="Change translation language"><i class="dl4-lgi">'+lo.f+'</i><span>Translations in <b class="dl4-lgn">'+esc(lo.n)+'</b></span><u>Change</u></button>'+
  '<div class="dl3-kpi"><div class="k1"><b>'+ls+'</b><small>day streak'+((d.shield||0)>0?' · <u title="Moon shield: saves your streak if you miss a day">🛡 '+d.shield+'</u>':'')+'</small></div><div><b>'+cefr(overall(d))+'</b><small>level</small></div><div><b>'+d.xp+'</b><small>XP</small></div>'+
  '<div class="g"><svg viewBox="0 0 36 36" aria-hidden="true"><circle cx="18" cy="18" r="15.9" class="g0"/><circle cx="18" cy="18" r="15.9" class="g1" stroke-dasharray="'+(gp*100).toFixed(1)+' 100" transform="rotate(-90 18 18)"/></svg><b>'+mn+'<em>/'+goal+'</em></b><small>min today</small></div></div>'+
- path+words+main+
+ path+words+main+moreHTML(d,st)+
  '<div class="dl3-wk" aria-label="This week">'+wk+'</div>'+
- '<div class="dl-ft"><button type="button" class="dl-lk" data-dl="skills">Progress</button><button type="button" class="dl-lk" data-dl="bonus">Luna\'s side missions '+done+'/'+bt+'</button><button type="button" class="dl-lk" data-dl="prefs">Plan</button></div></div>'}
+ '<div class="dl-ft"><button type="button" class="dl-lk" data-dl="skills">Progress</button><button type="button" class="dl-lk" data-dl="dcall">More tasks '+dcInfo().done+'/'+dcInfo().n+'</button><button type="button" class="dl-lk" data-dl="prefs">Plan</button></div></div>'}
 
 })();
 </script><style id="lrb-css">/* ===== LunaRise Boost (v143) ===== */
@@ -58755,5 +58788,49 @@ B.mwEnrich=function(){
 };
 })();
 
-</script></body>
+</script><script id="nav-js">
+/* ============ LunaRise navigation: Back button, Android back key, history for every page ============ */
+(function () {
+    'use strict';
+    if (window.__lrNav || typeof window.navigateTo !== 'function') return; window.__lrNav = 1;
+    const base = window.navigateTo, NAV = { cur: null, pop: false };
+    const curView = () => { const v = document.querySelector('.view-panel:not(.hidden)'); return v ? v.id.replace(/^view-/, '') : 'dashboard'; };
+    NAV.cur = curView();
+    try { history.replaceState(Object.assign({}, history.state || {}, { v: NAV.cur, i: (history.state && history.state.i) || 0 }), ''); } catch (e) { }
+    window.navigateTo = function (v) {
+        const r = base.apply(this, arguments);
+        try {
+            if (v !== NAV.cur) {
+                NAV.cur = v;
+                if (!NAV.pop) { const st = history.state || {}; history.pushState({ v, i: (st.i || 0) + 1 }, ''); }
+            }
+        } catch (e) { }
+        NAV.pop = false; mark();
+        return r;
+    };
+    addEventListener('popstate', (e) => {
+        const st = e.state; if (!st || !st.v || st.v === NAV.cur) return;
+        if (document.querySelector('.ch-modal.show, #sc-lb, #sc-sheet.in')) { /* an overlay is closing: its own handler runs */ }
+        NAV.pop = true; window.navigateTo(st.v);
+    });
+    window.navBack = function () {
+        const st = history.state || {};
+        if (st.i > 0) { try { history.back(); return; } catch (e) { } }
+        window.navigateTo('dashboard');
+    };
+    function mark() { document.body.dataset.lrView = NAV.cur; }
+    function inject() {
+        document.querySelectorAll('.view-panel').forEach(p => {
+            const id = p.id.replace(/^view-/, ''); if (id === 'dashboard' || id === 'club' || p.querySelector(':scope > .lr-back')) return;
+            if (id === 'ai-chat') { const t = p.querySelector('.ai-top'); if (t && !t.querySelector('.ai-bk')) { const k = document.createElement('button'); k.type = 'button'; k.className = 'ai-tb ai-bk'; k.setAttribute('aria-label', 'Go back'); k.innerHTML = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>'; k.onclick = () => window.navBack(); t.insertBefore(k, t.firstChild); } return; }
+            const b = document.createElement('button'); b.type = 'button'; b.className = 'lr-back'; b.setAttribute('aria-label', 'Go back');
+            b.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg><span>Back</span>';
+            b.onclick = () => window.navBack(); p.insertBefore(b, p.firstChild);
+        });
+    }
+    inject(); mark();
+})();
+
+</script>
+</body>
 </html>
