@@ -55057,8 +55057,8 @@ async function subsIA(id){var r=await ft('https://archive.org/metadata/'+encodeU
 function subsYT(id){
  function direct(){return ft('https://www.youtube.com/api/timedtext?v='+encodeURIComponent(id)+'&lang=en&fmt=json3',6000).then(function(r){return r.ok?r.text():''}).then(function(t){if(!t)return null;var c=fromJson3(JSON.parse(t));return c.length?c:null}).catch(function(){return null})}
  function viaServer(){if(!window.LRCALL)return Promise.resolve(null);return LRCALL({op:'yt_caps',v:id},18000).then(function(j){return j&&j.ok&&j.cues&&j.cues.length?j.cues.map(function(x){return{s:x[0],e:x[1],t:clean(x[2])}}):null}).catch(function(){return null})}
- function viaPage(){var P='https://api.allorigins.win/raw?url=';return ft(P+encodeURIComponent('https://www.youtube.com/watch?v='+id+'&hl=en'),12000).then(function(r){return r.text()}).then(function(h){var m=/"captionTracks":(\[.*?\])/.exec(h);if(!m)return null;var tr=JSON.parse(m[1]),en0=tr.filter(function(x){return /^en/.test(x.languageCode)}),en=en0.filter(function(x){return x.kind!=='asr'})[0]||en0[0]||tr[0];if(!en)return null;var u=en.baseUrl.replace(/\\u0026/g,'&')+'&fmt=json3'+(/^en/.test(en.languageCode)?'':'&tlang=en');return ft(P+encodeURIComponent(u),12000).then(function(r){return r.text()}).then(function(t2){var c=fromJson3(JSON.parse(t2));return c.length?c:null})}).catch(function(){return null})}
- return anyOk([direct(),viaServer(),viaPage()].concat(PIPED.map(function(h){return viaPiped(id,h)}),INV.map(function(h){return viaInv(id,h)})))}
+ function viaPage(P){return ft(P+encodeURIComponent('https://www.youtube.com/watch?v='+id+'&hl=en'),12000).then(function(r){return r.text()}).then(function(h){var m=/"captionTracks":(\[.*?\])/.exec(h);if(!m)return null;var tr=JSON.parse(m[1]),en0=tr.filter(function(x){return /^en/.test(x.languageCode)}),en=en0.filter(function(x){return x.kind!=='asr'})[0]||en0[0]||tr[0];if(!en)return null;var u=en.baseUrl.replace(/\\u0026/g,'&')+'&fmt=json3'+(/^en/.test(en.languageCode)?'':'&tlang=en');return ft(P+encodeURIComponent(u),12000).then(function(r){return r.text()}).then(function(t2){var c=fromJson3(JSON.parse(t2));return c.length?c:null})}).catch(function(){return null})}
+ return anyOk([direct(),viaServer(),viaPage('https://api.allorigins.win/raw?url='),viaPage('https://corsproxy.io/?url='),viaPage('https://api.codetabs.com/v1/proxy?quest=')].concat(PIPED.map(function(h){return viaPiped(id,h)}),INV.map(function(h){return viaInv(id,h)})))}
 /* ---------- word meaning in this scene ---------- */
 var MC={};
 async function meaning(w,line,title){var k=w+'|'+line;if(MC[k])return MC[k];var out={};
@@ -55135,7 +55135,7 @@ function hudSync(C){var LV=['','All new words','Balanced','Hard words'],q=C.p.qu
 function emptyState(C,k){if(C.cues&&C.cues.length)return;var h={listen:'<div class="cn-wave"><i></i><i></i><i></i><i></i><i></i></div><b>Getting the dialogue ready…</b><span>Every word will be tappable.</span>',whisper:'<div class="cn-wave"><i></i><i></i><i></i><i></i><i></i></div><b>Listening to the film…</b><span>Lines appear here a few seconds after they are spoken. Tap any word.</span>',native:'<b>This player keeps its own controls.</b><span>Smart subtitles work with YouTube videos and film files. You can still load your own subtitle file.</span><button type="button" class="cn-b cn-pill" data-a="file">Load .srt / .vtt</button>',ytstt:'<div class="cn-wave"><i></i><i></i><i></i><i></i><i></i></div><b>Writing the dialogue for you…</b><span>Lines appear here as the film plays, every word tappable. YouTube\'s own subtitles are on in the meantime.</span><div class="cn-dbg"></div>',ytcc:'<b>Tappable subtitles could not be loaded.</b><span>YouTube English subtitles stay on inside the video. For tappable words, try again, let Luna write the lines from the sound, or load a subtitle file.</span><div class="cn-acts"><button type="button" class="cn-b cn-pill" data-a="retry">Try again</button><button type="button" class="cn-b cn-pill" data-a="mic">Caption from sound</button><button type="button" class="cn-b cn-pill" data-a="file">Load .srt / .vtt</button></div><div class="cn-dbg"></div>',none:'<div class="cn-wave off"><i></i><i></i><i></i><i></i><i></i></div><b>Dialogue appears while the film plays.</b><span>Have a subtitle file? Add it and every line shows up here.</span><button type="button" class="cn-b cn-pill" data-a="file">Load .srt / .vtt</button>'}[k]||'';C.list.innerHTML='<div class="cn-empty">'+h+'</div>';C.lines=[];if(k==='ytcc'||k==='ytstt')dbgInfo(C)}
 function dbgInfo(C){if(!/[?&]dbg=1/.test(location.search))return;setTimeout(function(){var el=C.list&&C.list.querySelector('.cn-dbg');if(!el)return;el.textContent='Checking server…';var id=C.src&&C.src.id,out=[];
  var L=window.LRCALL;if(!L){el.textContent='DEBUG: no server connection in this build';return}
- L({op:'hello'},12000).then(function(j){out.push('server v'+(j&&j.v))},function(e){out.push('hello: '+(e&&e.message))}).then(function(){return L({op:'yt_caps',v:id},25000)}).then(function(j){out.push('captions: '+(j&&j.cues?j.cues.length+' lines':'none'))},function(e){out.push('captions: '+(e&&e.message))}).then(function(){out.push('sound: '+(C.sttErr||(C.stt&&C.stt.ok?'ok':'pending')));el.textContent='DEBUG · '+out.join(' · ')})},400)}
+ L({op:'hello'},12000).then(function(j){out.push('server v'+(j&&j.v))},function(e){out.push('hello: '+(e&&e.message))}).then(function(){return L({op:'yt_caps',v:id},25000)}).then(function(j){out.push('captions: '+(j&&j.cues?j.cues.length+' lines':'none ('+((j&&(j.why||j.error))||'?')+')'))},function(e){out.push('captions: '+(e&&e.message))}).then(function(){out.push('sound: '+(C.sttErr||(C.stt&&C.stt.ok?'ok':'pending')));el.textContent='DEBUG · '+out.join(' · ')})},400)}
 function micCaps(C){if(C.mic){try{C.mic.stop()}catch(e){}C.mic=null;emptyState(C,'ytcc');return}
  var SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){toast('This browser cannot write captions from sound. Try Chrome on Android.');return}
  var r=new SR();r.lang='en-US';r.continuous=true;r.interimResults=false;var live=true,first=true;C.mic={stop:function(){live=false;try{r.stop()}catch(e){}}};
@@ -55167,7 +55167,7 @@ function sttStart(C){return false;var id=C.src&&C.src.id;if(!id||C.stt||typeof w
 /* YouTube's own captions: shown inside the video whenever the video has any */
 function ytCC(C,on){var pl=C.ad&&C.ad.raw;if(!pl)return;try{if(on){pl.loadModule('captions');pl.setOption('captions','track',{languageCode:'en'})}else pl.unloadModule('captions')}catch(e){}C.ccOn=!!on;C.p.classList.toggle('cn-cc',!!on);var b=C.p.querySelector('[data-a=cc]');if(b)b.classList.toggle('on',!!on)}
 function noCaps(C){if(C.cues.length)return;var v=C.video;
- if(C.yt){ytCC(C,true);emptyState(C,sttStart(C)?'ytstt':'ytcc');if(!C.retried){C.retried=1;C.timers.push(setTimeout(function(){if(!C.dead&&!C.cues.length&&!(C.stt&&C.stt.live))findCues(C)},25000))}return}
+ if(C.yt){ytCC(C,true);emptyState(C,sttStart(C)?'ytstt':'ytcc');C.retried=(C.retried||0)+1;if(C.retried<=14)C.timers.push(setTimeout(function(){if(!C.dead&&!C.cues.length)findCues(C)},C.retried<3?10000:22000));return}
  if(false&&v&&!C.noCors){var w=whisperStart(v,function(add){addLive(C,add)},function(){return SET.auto!==false&&!C.dead});if(w){C.wh=w;emptyState(C,'whisper');C.timers.push(setTimeout(function(){if(!C.dead&&!C.cues.length)emptyState(C,'none')},70000));return}}
  emptyState(C,'none')}
 function setCues(C,c){if(C.yt)ytCC(C,false);C.cues=c.slice().sort(function(a,b){return a.s-b.s});C.cur=-1;buildList(C);C.p.classList.add('cn-has')}
@@ -55384,7 +55384,7 @@ if(document.body)start();else document.addEventListener('DOMContentLoaded',start
  .cn2.mv2-so .mv2-sub{left:50%;transform:translateX(-50%);width:92%;bottom:10px}
 }
 @media (prefers-reduced-motion:reduce){.mv2-sheet,.mv2-sub,.mv2-en{transition:none}.sk,.mv2-pk{animation:none}}
-</style><script id="mv2-js">/* ===== Movies 2: tappable subtitles, the word card (14 languages, picture, 4 examples), swipe volume and brightness ===== */
+.cn2 .cn-tr{display:none!important}</style><script id="mv2-js">/* ===== Movies 2: tappable subtitles, the word card (14 languages, picture, 4 examples), swipe volume and brightness ===== */
 (function () {
     'use strict';
     var D = document;
@@ -55587,6 +55587,7 @@ if(document.body)start();else document.addEventListener('DOMContentLoaded',start
         if (i < 0) return; M.apDone = -2; a.seek(Math.max(0, C.cues[i].s - .05)); a.play(); if (M.sheet) closeCard(C, false);
     }
     function pillText(C) {
+        return '';   /* no message bar: the film's subtitles just become tappable when they are ready */
         if (C.cues.length) return '';
         if (C.p.classList.contains('cn-native')) return '';
         var t = Date.now() - (C.mv2.born || (C.mv2.born = Date.now()));
