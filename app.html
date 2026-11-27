@@ -53811,7 +53811,7 @@ async function subsIA(id){var r=await ft('https://archive.org/metadata/'+encodeU
  var t=await (await ft('https://archive.org/download/'+encodeURIComponent(id)+'/'+fl[0].name.split('/').map(encodeURIComponent).join('/'),15000)).text();var c=parseSub(t);return c.length?c:null}
 function subsYT(id){
  function direct(){return ft('https://www.youtube.com/api/timedtext?v='+encodeURIComponent(id)+'&lang=en&fmt=json3',6000).then(function(r){return r.ok?r.text():''}).then(function(t){if(!t)return null;var c=fromJson3(JSON.parse(t));return c.length?c:null}).catch(function(){return null})}
- function viaServer(){if(!window.LRCALL)return Promise.resolve(null);return LRCALL({op:'yt_caps',v:id},18000).then(function(j){return j&&j.ok&&j.cues&&j.cues.length?j.cues.map(function(x){return{s:x[0],e:x[1],t:clean(x[2])}}):null}).catch(function(){return null})}
+ function viaServer(){if(!window.LRCALL)return Promise.resolve(null);return LRCALL({op:'yt_caps',v:id},18000).then(function(j){window.__capWhy=(j&&j.ok)?'':(String((j&&j.error)||'')+' '+String((j&&j.why)||'')).trim()||'no answer from server';return j&&j.ok&&j.cues&&j.cues.length?j.cues.map(function(x){return{s:x[0],e:x[1],t:clean(x[2])}}):null}).catch(function(e){window.__capWhy='server unreachable: '+String(e&&e.message||e).slice(0,50);return null})}
  function viaPage(P){return ft(P+encodeURIComponent('https://www.youtube.com/watch?v='+id+'&hl=en'),12000).then(function(r){return r.text()}).then(function(h){var m=/"captionTracks":(\[.*?\])/.exec(h);if(!m)return null;var tr=JSON.parse(m[1]),en0=tr.filter(function(x){return /^en/.test(x.languageCode)}),en=en0.filter(function(x){return x.kind!=='asr'})[0]||en0[0]||tr[0];if(!en)return null;var u=en.baseUrl.replace(/\\u0026/g,'&')+'&fmt=json3'+(/^en/.test(en.languageCode)?'':'&tlang=en');return ft(P+encodeURIComponent(u),12000).then(function(r){return r.text()}).then(function(t2){var c=fromJson3(JSON.parse(t2));return c.length?c:null})}).catch(function(){return null})}
  return anyOk([direct(),viaServer(),viaPage('https://api.allorigins.win/raw?url='),viaPage('https://corsproxy.io/?url='),viaPage('https://api.codetabs.com/v1/proxy?quest=')].concat(PIPED.map(function(h){return viaPiped(id,h)}),INV.map(function(h){return viaInv(id,h)})))}
 /* ---------- word meaning in this scene ---------- */
@@ -54152,6 +54152,13 @@ if(document.body)start();else document.addEventListener('DOMContentLoaded',start
 .cn2.mv2-lock .mv2-lk{display:inline-flex}
 .mv2-lk:active{transform:translateY(-50%) scale(.95)}
 .cn2.cn-native .mv2-lk,.cn2.cn-native .mv2-b[data-m=lock]{display:none!important}
+
+.cn2.mv2-lock .cn-bar,.cn2.mv2-lock .cn-top,.cn2.mv2-lock .cn-x{display:none!important}
+.cn2 .cn-row .mv2-lb{width:44px;height:44px;border-radius:50%}
+.cn2 .cn-row .mv2-lb svg{width:22px;height:22px;fill:currentColor}
+.cn2.cn-native .cn-row .mv2-lb{display:none}
+.cn2 .mv2-lk{display:none}
+.cn2.mv2-lock .mv2-lk{display:inline-flex}
 .cn2 .cn-tr{display:none!important}</style><script id="mv2-js">/* ===== Movies 2: tappable subtitles, the word card (14 languages, picture, 4 examples), swipe volume and brightness ===== */
 (function () {
     'use strict';
@@ -54278,8 +54285,9 @@ if(document.body)start();else document.addEventListener('DOMContentLoaded',start
             '<button type="button" class="cn-b cn-bt mv2-b" data-m="rep" aria-label="Repeat this line" title="Repeat this line">' + ICON.rep + '</button>' +
             '<button type="button" class="cn-b cn-bt mv2-b' + (CFG.ap ? ' on' : '') + '" data-m="ap" aria-label="Pause after every line" title="Pause after every line">' + ICON.ap + '</button>' +
             '<button type="button" class="cn-b cn-bt mv2-b' + (CFG.tr ? ' on' : '') + '" data-m="tr" aria-label="Show translation under subtitles" title="Translate subtitles">' + ICON.tr + '</button>' +
-            '<button type="button" class="cn-b cn-bt mv2-b" data-m="size" aria-label="Subtitle size" title="Subtitle size">' + ICON.size + '</button>' +
-            '<button type="button" class="cn-b cn-bt mv2-b" data-m="lock" aria-label="Lock screen" title="Lock screen">' + ICON.lock + '</button>');
+            '<button type="button" class="cn-b cn-bt mv2-b" data-m="size" aria-label="Subtitle size" title="Subtitle size">' + ICON.size + '</button>');
+        var fsb = stage.querySelector('.cn-row [data-a=fs]');
+        if (fsb) fsb.insertAdjacentHTML('beforebegin', '<button type="button" class="cn-b mv2-lb" data-m="lock" aria-label="Lock screen" title="Lock screen">' + ICON.lock + '</button>');
         stage.insertAdjacentHTML('beforeend', '<button type="button" class="cn-b mv2-lk" data-m="unlock" aria-label="Unlock screen" title="Unlock screen">' + ICON.lock + '<span>Tap to unlock</span></button>');
         p.classList.add('mv2-ui');
         stage.addEventListener('click', function (e) {
@@ -54366,13 +54374,12 @@ if(document.body)start();else document.addEventListener('DOMContentLoaded',start
         if (i < 0) return; M.apDone = -2; a.seek(Math.max(0, C.cues[i].s - .05)); a.play(); if (M.sheet) closeCard(C, false);
     }
     function pillText(C) {
-        return '';   /* no message bar: the film's subtitles just become tappable when they are ready */
         if (C.cues.length) return '';
         if (C.p.classList.contains('cn-native')) return '';
         var t = Date.now() - (C.mv2.born || (C.mv2.born = Date.now()));
-        if (C.ccOn) return t < 40000 ? 'Showing the film’s own subtitles · loading tappable text…' : 'These subtitles can’t be read for tapping on this film';
-        if (t < 2500) return '';
-        return t < 30000 ? 'Loading the film’s subtitles…' : 'This film has no readable subtitles yet';
+        if (t < 3000) return '';
+        if (t < 45000) return 'Preparing tappable subtitles…';
+        return 'Tappable subtitles couldn’t be loaded' + (window.__capWhy ? ' · ' + String(window.__capWhy).slice(0, 90) : '');
     }
     function tick(C) {
         var M = C.mv2; if (C.dead || !D.body.contains(C.p)) { clearInterval(M.tm); closeCard(C, false, true); return; }
@@ -54392,7 +54399,7 @@ if(document.body)start();else document.addEventListener('DOMContentLoaded',start
         var i = idxAt(C.cues, t);
         if (i !== M.idx || C.cues.length !== M.n) { if (!(M.sheet && paused && M.idx >= 0 && i !== M.idx && !M.replay)) render(C, i); }
         /* subtitles move up when the controls are showing */
-        var pill = pillText(C); if (M.pillT !== pill) { M.pillT = pill; if (pill) { M.pill.hidden = false; M.pill.innerHTML = '<span>' + esc(pill) + '</span>' + (/no readable|can’t be read/.test(pill) ? '<button type="button" data-k="retry">Try again</button><button type="button" data-k="file">Load .srt</button>' : ''); } else M.pill.hidden = true; }
+        var pill = pillText(C); if (M.pillT !== pill) { M.pillT = pill; if (pill) { M.pill.hidden = false; M.pill.innerHTML = '<span>' + esc(pill) + '</span>' + (/couldn’t be loaded/.test(pill) ? '<button type="button" data-k="retry">Try again</button><button type="button" data-k="file">Load .srt</button>' : ''); } else M.pill.hidden = true; }
         /* a word card closes by itself when the viewer starts the film */
         if (M.sheet) { if (!paused && !M.replay) { M.noPlay++; if (Date.now() - M.openedAt < 2600) { try { C.ad.pause(); } catch (x) { } } else if (M.noPlay > 6) closeCard(C, false); } else M.noPlay = 0; }
     }
