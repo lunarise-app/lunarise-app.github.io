@@ -53811,7 +53811,7 @@ async function subsIA(id){var r=await ft('https://archive.org/metadata/'+encodeU
  var t=await (await ft('https://archive.org/download/'+encodeURIComponent(id)+'/'+fl[0].name.split('/').map(encodeURIComponent).join('/'),15000)).text();var c=parseSub(t);return c.length?c:null}
 function subsYT(id){
  function direct(){return ft('https://www.youtube.com/api/timedtext?v='+encodeURIComponent(id)+'&lang=en&fmt=json3',6000).then(function(r){return r.ok?r.text():''}).then(function(t){if(!t)return null;var c=fromJson3(JSON.parse(t));return c.length?c:null}).catch(function(){return null})}
- function viaServer(){if(!window.LRCALL)return Promise.resolve(null);return LRCALL({op:'yt_caps',v:id},18000).then(function(j){window.__capWhy=(j&&j.ok)?'':(String((j&&j.error)||'')+' '+String((j&&j.why)||'')).trim()||'no answer from server';return j&&j.ok&&j.cues&&j.cues.length?j.cues.map(function(x){return{s:x[0],e:x[1],t:clean(x[2])}}):null}).catch(function(e){window.__capWhy='server unreachable: '+String(e&&e.message||e).slice(0,50);return null})}
+ function viaServer(){if(!window.LRCALL)return Promise.resolve(null);return LRCALL({op:'yt_caps',v:id},58000).then(function(j){window.__capWhy=(j&&j.ok&&j.cues&&j.cues.length)?'':(String((j&&j.error)||'')+' '+String((j&&j.why)||'')).trim()||'no answer from server';return j&&j.ok&&j.cues&&j.cues.length?j.cues.map(function(x){return{s:x[0],e:x[1],t:clean(x[2])}}):null}).catch(function(e){window.__capWhy='server unreachable: '+String(e&&e.message||e).slice(0,50);return null})}
  function viaPage(P){return ft(P+encodeURIComponent('https://www.youtube.com/watch?v='+id+'&hl=en'),12000).then(function(r){return r.text()}).then(function(h){var m=/"captionTracks":(\[.*?\])/.exec(h);if(!m)return null;var tr=JSON.parse(m[1]),en0=tr.filter(function(x){return /^en/.test(x.languageCode)}),en=en0.filter(function(x){return x.kind!=='asr'})[0]||en0[0]||tr[0];if(!en)return null;var u=en.baseUrl.replace(/\\u0026/g,'&')+'&fmt=json3'+(/^en/.test(en.languageCode)?'':'&tlang=en');return ft(P+encodeURIComponent(u),12000).then(function(r){return r.text()}).then(function(t2){var c=fromJson3(JSON.parse(t2));return c.length?c:null})}).catch(function(){return null})}
  return anyOk([direct(),viaServer(),viaPage('https://api.allorigins.win/raw?url='),viaPage('https://corsproxy.io/?url='),viaPage('https://api.codetabs.com/v1/proxy?quest=')].concat(PIPED.map(function(h){return viaPiped(id,h)}),INV.map(function(h){return viaInv(id,h)})))}
 /* ---------- word meaning in this scene ---------- */
@@ -54374,6 +54374,7 @@ if(document.body)start();else document.addEventListener('DOMContentLoaded',start
         if (i < 0) return; M.apDone = -2; a.seek(Math.max(0, C.cues[i].s - .05)); a.play(); if (M.sheet) closeCard(C, false);
     }
     function pillText(C) {
+        if (!/[?&]dbg=1/.test(location.search)) return '';   /* the loading message is hidden from viewers; it is only for debugging */
         if (C.cues.length) return '';
         if (C.p.classList.contains('cn-native')) return '';
         var t = Date.now() - (C.mv2.born || (C.mv2.born = Date.now()));
