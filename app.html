@@ -32869,7 +32869,7 @@ var LR_TURN = null;    // optional TURN servers for voice on strict networks, e.
     async function swReg() { if (PUSH.reg) return PUSH.reg; PUSH.reg = await navigator.serviceWorker.register('sw.js', { scope: './' }); return PUSH.reg; }
     async function fcmToken(cfg) {
         if (!firebase.messaging) await window.lrFbMsg();
-        await swReg(); const reg = await navigator.serviceWorker.ready;
+        await swReg(); const reg = await Promise.race([navigator.serviceWorker.ready, new Promise((_, rj) => setTimeout(() => rj(new Error('the app worker is not ready, reload the page')), 12000))]);
         return firebase.messaging().getToken({ vapidKey: cfg.vapid, serviceWorkerRegistration: reg });
     }
     async function pushSave(tok) {
@@ -32903,12 +32903,11 @@ var LR_TURN = null;    // optional TURN servers for voice on strict networks, e.
         finally { PUSH.busy = false; paintAlerts(); }
     }
     /* turned on with a tap (browsers ask for permission only after a tap) */
-    async function alertsOn() {
+    async function alertsOn0() {
         lsSet(LSOFF, 0);
-        if (PUSH.busy) return;
         if (nat()) {
-            if (!C.db) { await enter(); if (!C.db) return; }
-            try { await natSave(nat()); toast('🔔 Call alerts are on'); } catch (e) { toast(denied(e) ? '⚠ Call alerts need the new database rules' : '⚠ Could not turn on call alerts. Try again.'); }
+            if (!C.db) { await enter(); if (!C.db) return toast('⚠ No connection to LunaRise. Check your internet and try again.'); }
+            try { await natSave(nat()); toast('🔔 Call alerts are on'); } catch (e) { toast(denied(e) ? '⚠ Call alerts need the new database rules' : '⚠ Could not turn on call alerts (' + String((e && (e.code || e.message)) || e).replace(/^.*?:\s*/, '').slice(0, 70) + ')'); }
             return paintAlerts();
         }
         if (!pushSupported()) { paintAlerts(); return help() || toast(isIOS() && !standalone() ? 'On iPhone: open LunaRise in Safari, tap Share → Add to Home Screen, open it from there, then turn this on' : inApp() ? 'Open LunaRise in Chrome to turn on call alerts' : '⚠ This browser cannot show call alerts. Try Chrome.'); }
@@ -32916,14 +32915,22 @@ var LR_TURN = null;    // optional TURN servers for voice on strict networks, e.
         let perm = Notification.permission;
         if (perm === 'default') perm = await Notification.requestPermission();   // first thing, while the tap still counts
         if (perm !== 'granted') { paintAlerts(); if (perm === 'denied') { if (!help()) toast('⚠ Notifications are blocked for this site — allow them in the browser settings'); } else toast('Call alerts stay off'); return; }
-        if (!C.db) { await enter(); if (!C.db) return; }
+        if (!C.db) { await enter(); if (!C.db) return toast('⚠ No connection to LunaRise. Check your internet and try again.'); }
         const cfg = await pushCfg(); if (!cfg || !cfg.vapid) return toast('Call alerts are not set up on the server yet');
         PUSH.busy = true; paintAlerts();
         try {
             const tok = await fcmToken(cfg); if (!tok) throw new Error('no token');
             await pushSave(tok); toast('🔔 Call alerts are on');
-        } catch (e) { console.warn('[club push]', e); toast(denied(e) ? '⚠ Call alerts need the new database rules' : '⚠ Could not turn on call alerts. Try again.'); }
+        } catch (e) { console.warn('[club push]', e); toast(denied(e) ? '⚠ Call alerts need the new database rules' : '⚠ Could not turn on call alerts (' + String((e && (e.code || e.message)) || e).replace(/^.*?:\s*/, '').slice(0, 70) + ')'); }
         finally { PUSH.busy = false; paintAlerts(); }
+    }
+    async function alertsOn() {
+        if (PUSH.busy && Date.now() - (PUSH.t0 || 0) < 26000) return toast('Turning on… one moment');
+        PUSH.busy = false; PUSH.t0 = Date.now();
+        const wd = setTimeout(() => { if (PUSH.busy) { PUSH.busy = false; paintAlerts(); toast('⚠ This is taking too long. Check your internet and try again.'); } }, 25000);
+        try { await alertsOn0(); }
+        catch (e) { console.warn('[club push] on', e); PUSH.busy = false; paintAlerts(); toast('⚠ Could not turn on call alerts (' + String((e && (e.code || e.message)) || e).slice(0, 70) + ')'); }
+        finally { clearTimeout(wd); }
     }
     async function alertsOff() {
         lsSet(LSOFF, 1);
