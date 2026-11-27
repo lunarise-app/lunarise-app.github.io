@@ -41,6 +41,43 @@ put();window.LRDEV={kind:kind};
 if(kind==='phone'){var t=0;var re=function(){clearTimeout(t);t=setTimeout(put,250)};addEventListener('orientationchange',re);try{matchMedia('(orientation:portrait)').addEventListener('change',re)}catch(e){}}
 }catch(e){}})();
 </script>
+    <script id="lr-acct-boot">/* runs first: a browser with no saved account but a saved account code restores it from the cloud before the sign-up window can appear */
+(function () {
+    try {
+        var ID_RE = /^[a-z0-9]{16,48}$/, DBURL = 'https://lunarise-15899-default-rtdb.europe-west1.firebasedatabase.app';
+        var ls = function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } };
+        var tok = '', m = /[?&]lrt=([a-z0-9]{16,48})/.exec(location.search);
+        var clean = function () { try { var u = new URL(location.href); if (u.searchParams.has('lrt')) { u.searchParams.delete('lrt'); history.replaceState(history.state, '', u.pathname + u.search + u.hash); } } catch (e) { } };
+        if (ls('lunarise_user')) { clean(); return; }
+        if (m) tok = m[1];
+        if (!tok) { m = /(?:^|;\s*)lr_acct=([a-z0-9]{16,48})/.exec(document.cookie); if (m) tok = m[1]; }
+        if (!tok) tok = ls('lr_acct') || '';
+        if (!ID_RE.test(tok)) { clean(); return; }
+        var st = document.createElement('style'); st.id = 'lr-rst-css';
+        st.textContent = '#lr-rst{position:fixed;inset:0;z-index:2147483000;display:grid;place-items:center;background:#070b16;color:#c7d2fe;font:600 15px/1.4 system-ui,sans-serif;text-align:center}#lr-rst i{display:block;width:34px;height:34px;margin:0 auto 14px;border-radius:50%;border:3px solid rgba(165,180,252,.25);border-top-color:#a5b4fc;animation:lrrs .8s linear infinite}@keyframes lrrs{to{transform:rotate(360deg)}}';
+        document.documentElement.appendChild(st);
+        var ov = document.createElement('div'); ov.id = 'lr-rst'; ov.innerHTML = '<div><i></i>Restoring your progress…</div>'; document.documentElement.appendChild(ov);
+        var lock = true, osi = Storage.prototype.setItem;
+        Storage.prototype.setItem = function (k, v) { if (lock && this === window.localStorage && k === 'lunarise_user') return; return osi.apply(this, arguments); };
+        var drop = function () { lock = false; try { ov.remove(); st.remove(); } catch (e) { } };
+        var fin = false, t = setTimeout(function () { if (!fin) { fin = true; drop(); } }, 9000);
+        fetch(DBURL + '/club/cfg/push/server.json').then(function (r) { return r.json(); }).then(function (url) {
+            if (typeof url !== 'string' || !/^https:\/\//.test(url)) throw 0;
+            return fetch(url, { method: 'POST', body: JSON.stringify({ op: 'acct_get', id: tok }) });
+        }).then(function (r) { return r.json(); }).then(function (j) {
+            if (!j || !j.ok || !j.snap) throw 0;
+            var o = JSON.parse(j.snap); if (!o || !o.k || !o.k.lunarise_user) throw 0;
+            lock = false;
+            Object.keys(o.k).forEach(function (k) { if (typeof o.k[k] === 'string') try { osi.call(localStorage, k, o.k[k]); } catch (e) { } });
+            try { var u = JSON.parse(o.k.lunarise_user); u.registered = true; osi.call(localStorage, 'lunarise_user', JSON.stringify(u)); } catch (e) { }
+            lock = true;
+            try { localStorage.setItem('lr_acct', tok); sessionStorage.setItem('lr_reg_asked', '1'); } catch (e) { }
+            if (fin) return; fin = true; clearTimeout(t);
+            var u2 = new URL(location.href); u2.searchParams.delete('lrt'); location.replace(u2.pathname + u2.search + u2.hash);
+        }).catch(function () { if (!fin) { fin = true; clearTimeout(t); drop(); clean(); } });
+    } catch (e) { }
+})();
+</script>
     <style id="lr-dev-css">html[data-dev=desktop]{font-size:16px}@media (min-width:1500px){html[data-dev=desktop]{font-size:17px}}@media (min-width:1900px){html[data-dev=desktop]{font-size:18px}}html[data-dev=phone]{-webkit-text-size-adjust:100%;text-size-adjust:100%}</style>
     <!--intro:head--><style id="intro-css" data-th-skip>
 /* ===== LunaRise opening film ===== */
@@ -8410,7 +8447,144 @@ document.addEventListener('dblclick',function(e){if(!e.target.closest('input,tex
 /* the page itself never scrolls sideways: if anything pushes it, snap back */
 var fix=function(){if(window.scrollX||document.documentElement.scrollLeft||document.body.scrollLeft){window.scrollTo(0,window.scrollY);document.documentElement.scrollLeft=0;document.body.scrollLeft=0}};
 addEventListener('scroll',fix,{passive:true});
-}catch(e){}})();</script></head>
+}catch(e){}})();</script><style id="lr-acct-css">
+#lr-rs{position:fixed;inset:0;z-index:99990;display:grid;place-items:center;padding:16px;opacity:0;transition:opacity .22s}#lr-rs.on{opacity:1}
+#lr-rs .rs-bd{position:absolute;inset:0;background:rgba(4,6,22,.72);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+#lr-rs .rs-card{position:relative;width:min(400px,100%);padding:22px 20px 18px;border-radius:26px;background:radial-gradient(120% 70% at 0 0,rgba(129,140,248,.25),transparent 60%),#0f1330;border:1px solid rgba(165,180,252,.25);box-shadow:0 30px 80px -20px #000;color:#e0e7ff;display:flex;flex-direction:column;gap:12px;transform:translateY(14px) scale(.98);transition:transform .28s cubic-bezier(.2,.9,.25,1)}
+#lr-rs.on .rs-card{transform:none}
+#lr-rs h3{margin:0;font:800 21px/1.2 'Plus Jakarta Sans',system-ui,sans-serif;color:#fff}
+#lr-rs p{margin:0;font-size:14px;line-height:1.55;color:rgba(199,210,254,.8)}
+#lr-rs .rs-x{position:absolute;top:12px;right:12px;width:34px;height:34px;border-radius:50%;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);color:#fff}
+#lr-rs input{width:100%;padding:14px;border-radius:16px;border:1px solid rgba(165,180,252,.3);background:rgba(255,255,255,.06);color:#fff;font:700 16px/1.2 ui-monospace,Menlo,monospace;letter-spacing:.06em;text-align:center;outline:0}
+#lr-rs input:focus{border-color:#a5b4fc;box-shadow:0 0 0 3px rgba(129,140,248,.25)}
+#lr-rs .rs-err{min-height:18px;color:#fda4af!important;font-size:13px!important}
+#lr-rs .rs-go{display:block!important;width:100%!important;min-height:50px;height:auto!important;aspect-ratio:auto!important;padding:14px!important;border-radius:16px!important;border:0;font:800 16px/1 inherit;color:#fff;background:linear-gradient(135deg,#6366f1,#8b5cf6);box-shadow:0 12px 26px -10px rgba(99,102,241,.9)}
+#lr-rs .rs-go:disabled{opacity:.6}
+html.o3-open #lr-ib{display:none!important}
+#lr-rs .rs-alt{display:block;width:100%;background:none;border:0;color:#a5b4fc;font-weight:700;font-size:13px;padding:6px}
+#lr-acct-card .ac-row{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;padding:12px 14px;border-radius:16px;background:rgba(129,140,248,.1);border:1px solid rgba(165,180,252,.22)}
+#lr-acct-card .ac-tx{flex:1 1 220px;min-width:0;display:flex;flex-direction:column;gap:4px}
+#lr-acct-card .ac-tx small{font-size:12px;opacity:.75;line-height:1.45}
+#lr-acct-card code{display:block;margin-top:4px;font:800 15px/1.3 ui-monospace,Menlo,monospace;letter-spacing:.05em;color:#c7d2fe;user-select:all;-webkit-user-select:all;overflow-wrap:anywhere}
+#lr-acct-card .ac-bt{display:flex;gap:8px;flex-wrap:wrap}
+</style><script id="lr-acct-js">/* LunaRise account backup: progress is kept safe in the cloud under a private code, so a new browser, a reinstall or the installed app never asks you to sign up again */
+(function () {
+    'use strict';
+    if (window.LRACCT) return;
+    var DBURL = 'https://lunarise-15899-default-rtdb.europe-west1.firebasedatabase.app', ID_RE = /^[a-z0-9]{16,48}$/, D = document, VER = 1;
+    var KEYS = ['lunarise_user', 'lunarise_grammar_scores', 'lunarise_grammar_progress', 'lunarise_grammar_streak', 'lunarise_grammar_last_day', 'lunarise_grammar_view', 'lunarise_grammar_density', 'lunarise_grammar_favorites', 'lunarise_chess', 'lunarise_gr_myq', 'lr_theme', 'lr_mode', 'lr_layout', 'lr_layout_asked', 'lr_fc_tr', 'lr_bk_prefs', 'lr_dl_mute', 'lr_cinema_cards', 'lr_ch_say', 'lr_rc', 'lr_ref', 'lr_did'];
+    function ls(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+    function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) { } }
+    function cookie() { var m = /(?:^|;\s*)lr_acct=([a-z0-9]{16,48})/.exec(D.cookie); return m ? m[1] : ''; }
+    function setCookie(id) { try { D.cookie = 'lr_acct=' + id + ';max-age=63072000;path=/;SameSite=Lax;Secure'; } catch (e) { } }
+    var srvP = null;
+    function server() { return srvP || (srvP = fetch(DBURL + '/club/cfg/push/server.json').then(function (r) { return r.ok ? r.json() : null; }).then(function (s) { return typeof s === 'string' && /^https:\/\//.test(s) ? s : null; }).catch(function () { return null; }).then(function (s) { if (!s) srvP = null; return s; })); }
+    function call(body, ms, keep) {
+        return server().then(function (url) {
+            if (!url) throw new Error('nosrv');
+            var ctl = new AbortController(), to = setTimeout(function () { ctl.abort(); }, ms || 25000);
+            return fetch(url, { method: 'POST', body: JSON.stringify(body), signal: ctl.signal, keepalive: !!keep }).then(function (r) { clearTimeout(to); return r.json(); }).then(function (j) { if (!j || !j.ok) throw new Error((j && j.error) || 'fail'); return j; }, function () { clearTimeout(to); throw new Error('net'); });
+        });
+    }
+    function user() { try { return JSON.parse(ls('lunarise_user') || 'null'); } catch (e) { return null; } }
+    function registered(u) { if (!u) return false; if (u.registered) return true; var n = String(u.name || '').trim(); return !!n && !/^guest( learner)?$/i.test(n); }
+    function myId() {
+        var u = user(), id = u && u.devId;
+        if (!ID_RE.test(id || '')) { try { if (typeof promoDevice === 'function') id = promoDevice(); } catch (e) { } }
+        if (!ID_RE.test(id || '')) id = ls('lr_acct') || cookie();
+        return ID_RE.test(id || '') ? id : '';
+    }
+    function keep(id) { lsSet('lr_acct', id); setCookie(id); }
+    function snapshot() {
+        var u = user(); if (!registered(u)) return null;
+        var o = {}; KEYS.forEach(function (k) { var v = ls(k); if (v !== null) o[k] = v; });
+        var s = JSON.stringify({ v: VER, k: o });
+        if (s.length > 250000) { try { u.avatar = ''; o.lunarise_user = JSON.stringify(u); s = JSON.stringify({ v: VER, k: o }); } catch (e) { } }
+        return s.length <= 250000 ? s : null;
+    }
+    var last = '', busy = false, timer = 0;
+    function push(force, keepalive) {
+        var id = myId(); if (!id || busy) return Promise.resolve(false);
+        var s = snapshot(); if (!s) return Promise.resolve(false);
+        keep(id); if (!force && s === last) return Promise.resolve(true);
+        busy = true; var u = user() || {};
+        return call({ op: 'acct_put', id: id, snap: s, name: String(u.name || '').slice(0, 60) }, 30000, keepalive).then(function () { last = s; return true; }, function () { return false; }).then(function (ok) { busy = false; return ok; });
+    }
+    function soon(ms) { clearTimeout(timer); timer = setTimeout(function () { push(false); }, ms || 15000); }
+    function applySnap(str) {
+        var o = JSON.parse(str); if (!o || !o.k || !o.k.lunarise_user) throw new Error('empty');
+        Object.keys(o.k).forEach(function (k) { if (KEYS.indexOf(k) >= 0 && typeof o.k[k] === 'string') lsSet(k, o.k[k]); });
+        try { var u = JSON.parse(o.k.lunarise_user); u.registered = true; lsSet('lunarise_user', JSON.stringify(u)); if (ID_RE.test(u.devId || '')) keep(u.devId); } catch (e) { }
+        try { sessionStorage.setItem('lr_reg_asked', '1'); } catch (e) { }
+    }
+    function fromCode(code, wipe) {
+        var id = String(code || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+        if (!ID_RE.test(id)) return Promise.reject(new Error('bad'));
+        return call({ op: 'acct_get', id: id }, 25000).then(function (j) { applySnap(j.snap); keep(id); return true; });
+    }
+    /* once an account is restored, nothing may write the old in-memory profile over it before the page reloads */
+    function freeze() { try { window.lrBlockSave = true; var o = Storage.prototype.setItem; Storage.prototype.setItem = function (k) { if (k === 'lunarise_user' && this === window.localStorage) return; return o.apply(this, arguments); }; } catch (e) { } }
+    function pretty(id) { return String(id || '').toUpperCase().replace(/(.{5})(?=.)/g, '$1-'); }
+    function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+    function toast(m) { try { if (typeof showToast === 'function') return showToast(m); } catch (e) { } }
+
+    /* the iPhone install guide: the page address carries the code while the guide is open, so the app added from here opens already signed in */
+    var tagged = false;
+    function tag() {
+        var id = myId(); if (!id || tagged) return; push(true);
+        try { var u = new URL(location.href); u.searchParams.set('lrt', id); history.replaceState(history.state, '', u.pathname + u.search + u.hash); tagged = true; } catch (e) { }
+    }
+    function untag() { if (!tagged) return; tagged = false; try { var u = new URL(location.href); u.searchParams.delete('lrt'); history.replaceState(history.state, '', u.pathname + u.search + u.hash); } catch (e) { } }
+
+    /* restore dialog */
+    var dlg = null;
+    function ui() {
+        if (dlg) return; var el = D.createElement('div'); dlg = el; el.id = 'lr-rs';
+        el.innerHTML = '<div class="rs-bd" data-r="x"></div><form class="rs-card" role="dialog" aria-modal="true" aria-labelledby="rs-h" autocomplete="off"><button type="button" class="rs-x" data-r="x" aria-label="Close">✕</button><h3 id="rs-h">Restore your account</h3><p>Paste the <b>Account code</b> from Profile on your other device. Your name, XP, level and progress come back.</p><input id="rs-in" class="lq-raw" placeholder="XXXXX-XXXXX-XXXXX-XXXXX" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-label="Account code"><p class="rs-err" id="rs-err" role="alert"></p><button type="submit" class="rs-go">Restore</button><button type="button" class="rs-alt" data-r="file">Use a backup file instead</button></form>';
+        D.body.appendChild(el);
+        var inp = el.querySelector('#rs-in'), err = el.querySelector('#rs-err'), go = el.querySelector('.rs-go');
+        el.addEventListener('click', function (e) { var b = e.target.closest('[data-r]'); if (!b) return; if (b.dataset.r === 'x') close(); else if (b.dataset.r === 'file') { close(); var f = D.getElementById('pf-import'); if (f) f.click(); } });
+        el.querySelector('form').addEventListener('submit', function (e) {
+            e.preventDefault(); err.textContent = ''; go.disabled = true; go.textContent = 'Restoring…';
+            fromCode(inp.value).then(function () { go.textContent = 'Done ✓'; freeze(); setTimeout(function () { location.replace(location.pathname); }, 500); }, function (er) {
+                go.disabled = false; go.textContent = 'Restore';
+                err.textContent = er.message === 'bad' ? 'That code does not look right. Check it and try again.' : er.message === 'none' ? 'No saved account found for this code.' : er.message === 'net' || er.message === 'nosrv' ? 'No connection. Check your internet and try again.' : 'Could not restore. Try again in a minute.';
+            });
+        });
+        D.addEventListener('keydown', onKey);
+        requestAnimationFrame(function () { el.classList.add('on'); try { inp.focus(); } catch (e) { } });
+    }
+    function onKey(e) { if (e.key === 'Escape') close(); }
+    function close() { if (!dlg) return; var el = dlg; dlg = null; D.removeEventListener('keydown', onKey); el.classList.remove('on'); setTimeout(function () { el.remove(); }, 250); }
+
+    /* Profile: the account code card */
+    function paintCard() {
+        var box = D.getElementById('lr-acct-card'); if (!box) return;
+        var id = myId(); if (!id || !registered(user())) { box.innerHTML = ''; return; }
+        box.innerHTML = '<div class="ac-row"><div class="ac-tx"><b>Account code</b><small>Keeps your progress safe. Use it to sign in on a new phone or after installing the app. Keep it private.</small><code id="ac-code" aria-label="Your account code">' + esc(pretty(id)) + '</code></div><div class="ac-bt"><button type="button" class="pf-btn" data-ac="copy"><i class="fa-solid fa-copy"></i> Copy</button><button type="button" class="pf-btn" data-ac="restore"><i class="fa-solid fa-arrow-right-to-bracket"></i> Use a code</button></div></div>';
+    }
+    D.addEventListener('click', function (e) {
+        var b = e.target.closest && e.target.closest('[data-ac]'); if (!b) return;
+        if (b.dataset.ac === 'restore') return ui();
+        var c = pretty(myId()); var ok = function () { toast('Account code copied ✓'); };
+        try { navigator.clipboard.writeText(c).then(ok, function () { sel(); }); } catch (er) { sel(); }
+        function sel() { try { var r = D.createRange(); r.selectNodeContents(D.getElementById('ac-code')); var s = getSelection(); s.removeAllRanges(); s.addRange(r); toast('Press and hold the code, then tap Copy'); } catch (x) { } }
+    });
+    /* keep a fresh copy in the cloud: after saves, when leaving the page, and a few seconds after opening */
+    function wire() {
+        try { var o = window.pfSave; if (typeof o === 'function' && !o.__acct) { var w = function () { var r = o.apply(this, arguments); soon(); return r; }; w.__acct = 1; window.pfSave = w; } } catch (e) { }
+        D.addEventListener('visibilitychange', function () { if (D.hidden) push(false, true); });
+        addEventListener('pagehide', function () { push(false, true); });
+        setTimeout(function () { push(false); paintCard(); }, 6000);
+        setInterval(function () { if (!D.hidden) { push(false); paintCard(); } }, 120000);
+        var mo = new MutationObserver(function () { if (D.getElementById('lr-acct-card') && !D.getElementById('ac-code')) paintCard(); });
+        mo.observe(D.body, { childList: true, subtree: true });
+        paintCard();
+    }
+    window.LRACCT = { push: push, ui: ui, tag: tag, untag: untag, code: function () { return pretty(myId()); }, restore: fromCode };
+    if (D.readyState === 'complete') setTimeout(wire, 500); else addEventListener('load', function () { setTimeout(wire, 500); });
+})();
+</script></head>
 <body class="min-h-screen text-slate-100 flex flex-col justify-between selection:bg-indigo-500 selection:text-white" data-view="dashboard">
 <!--intro:body--><div id="lr-intro" aria-label="LunaRise"><div class="li-icon" aria-hidden="true"><span class="li-halo"></span><svg viewBox="0 0 64 64"><rect class="li-sq" width="64" height="64" rx="16" fill="#4f46e5"/><path class="li-cr" d="M40 14a20 20 0 1 0 10 34A16 16 0 1 1 40 14z" fill="#fde68a"/></svg></div><div class="li-word" aria-hidden="true"><b>Luna<span>Rise</span></b><i></i><small>Master English &amp; IELTS</small></div></div><!--/intro:body-->
 <script id="lr-tw-pos">(function () { try { var st = document.getElementById('lr-tw'), p = localStorage.getItem('lr_tw_pos'); if (!st || !p) return; var h = document.head, kids = h.children;
@@ -10097,7 +10271,7 @@ void main(){
                 </div>
 
                 <p id="ob-msg" class="text-xs text-center min-h-[16px] text-rose-400 mt-2"></p>
-                <div id="ob-restore" class="text-center mt-3 mb-1"><button type="button" onclick="document.getElementById('pf-import').click()" class="text-xs font-bold text-indigo-300 hover:text-white"><i class="fa-solid fa-upload"></i> Already have a backup? Restore it</button></div>
+                <div id="ob-restore" class="text-center mt-3 mb-1"><button type="button" onclick="window.LRACCT?LRACCT.ui():document.getElementById('pf-import').click()" class="text-xs font-bold text-indigo-300 hover:text-white"><i class="fa-solid fa-upload"></i> Already have an account? Restore it</button></div>
                 <button type="button" id="ob-submit" onclick="obNext()" class="ob-btn mt-1"><span class="ob-bt"><span id="ob-bt-text">Continue</span> <i class="fa-solid fa-arrow-right ml-1"></i></span><i class="fa-solid fa-spinner fa-spin ob-sp2" style="display:none"></i></button>
                 <div id="ob-extras" class="hidden space-y-3 mt-4">
                     <div class="flex items-center gap-3 text-[11px] text-slate-500"><span class="flex-1 h-px bg-slate-800"></span>Or sign up with<span class="flex-1 h-px bg-slate-800"></span></div>
@@ -24144,6 +24318,7 @@ nextGrammarQuestion=function(){ _oldNextGrammar(); setTimeout(updateGrammarAnaly
                 </div>
                 <div class="pf-card space-y-3">
                     <div class="pf-sec">Your data</div>
+                    <div id="lr-acct-card"></div>
                     <div class="flex flex-wrap gap-2">
                         <button class="pf-btn" onclick="pfExportCSV()"><i class="fa-solid fa-file-csv"></i> Export words</button>
                         <button class="pf-btn" onclick="pfExportJSON()"><i class="fa-solid fa-download"></i> Backup (JSON)</button>
@@ -39217,7 +39392,7 @@ ${p.p}`;
             <p class="o3-err" id="o3-err" role="alert"></p>
             ${btn('acc', 'Continue', 'pri wide')}
             ${g ? '' : `<div class="o3-or"><i></i>or<i></i></div><button type="button" class="o3-btn o3-glass wide o3-google" data-a="google" id="o3-google"><svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34.1 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34.1 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-7.9l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg><span>Continue with Google</span></button>`}
-            <button type="button" class="o3-link" data-a="restore">Already have a backup? Restore it</button>`, 'acc');
+            <button type="button" class="o3-link" data-a="restore">Already have an account? Restore it</button>`, 'acc');
         body.addEventListener('keydown', accKey);
         if (!g) setTimeout(() => { if (S.st === 'acc' && navigator.onLine && window.LR_FB) fbAuth().catch(() => { }); }, 900);   // ready before the tap, so the Google window may open
     }
@@ -39487,7 +39662,7 @@ ${p.p}`;
         switch (a) {
             case 'acc': return accNext();
             case 'google': return google();
-            case 'restore': { const f = document.getElementById('pf-import'); if (f) f.click(); return; }
+            case 'restore': { if (window.LRACCT) return LRACCT.ui(); const f = document.getElementById('pf-import'); if (f) f.click(); return; }
             case 'exam': {
                 if (S.exam === el.dataset.v) return; S.exam = el.dataset.v; S.target = S.exam === 'ielts' ? 'IELTS 7.0 Target' : 'CEFR B2 Upper-Intermediate'; save();
                 el.parentNode.querySelectorAll('.o3-ex').forEach(b => { const on = b === el; b.classList.toggle('on', on); b.setAttribute('aria-checked', on); }); lensFor(el.parentNode); vib(8);
@@ -44580,7 +44755,7 @@ void main(){
             };
             case 'ios': return {
                 h: 'Install LunaRise', p: 'Add the app to your iPhone in three taps.',
-                steps: ['Tap ' + K(SVG.hdots) + ' at the bottom right of Safari, then ' + K(SVG.share) + ' <b>Share</b>. (Older iPhones: ' + K(SVG.share) + ' in the middle at the bottom; iPad: at the top.)', 'Scroll down and tap <b>Add to Home Screen</b>.', 'Tap <b>Add</b>, then open LunaRise from your home screen.']
+                steps: ['Tap ' + K(SVG.hdots) + ' at the bottom right of Safari, then ' + K(SVG.share) + ' <b>Share</b>. (Older iPhones: ' + K(SVG.share) + ' in the middle at the bottom; iPad: at the top.)', 'Scroll down and tap <b>Add to Home Screen</b>.', 'Keep <b>Open as Web App</b> switched on, then tap <b>Add</b>. Open LunaRise from your home screen: you are already signed in.']
             };
             case 'ios-other': return {
                 h: 'Install LunaRise', p: 'Add the app to your iPhone in three taps.',
@@ -44670,6 +44845,7 @@ void main(){
         if (sheet) { if (one && arrow) { arrow.remove(); arrow = null; H.classList.remove('ib-arrow'); } else if (!one && !arrow) showArrow(kind); }
     }
     function openSheet(kind) {
+        try { if (IOS && window.LRACCT) LRACCT.tag(); } catch (e) { }
         if (!sheet) {
             lastFocus = D.activeElement;
             sheet = D.createElement('div'); sheet.id = 'lr-ibs';
@@ -44692,6 +44868,7 @@ void main(){
     function closeSheet() {
         if (!sheet) return;
         var s = sheet; sheet = null; sheetKind = ''; waitT = 0;
+        try { window.LRACCT && LRACCT.untag(); } catch (e) { }
         if (arrow) { arrow.remove(); arrow = null; } H.classList.remove('ib-arrow');
         D.removeEventListener('keydown', onKey);
         s.classList.remove('on');
