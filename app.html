@@ -8339,11 +8339,11 @@ html.p3 #view-profile .pf-mini small{text-transform:none;letter-spacing:0;font-s
 #lr-brand.hp-on .hp-hint{transform:rotate(180deg);color:#fbbf24}
 #lr-brand.hp-unread::after{content:"";position:absolute;top:0;right:0;width:10px;height:10px;border-radius:50%;background:#fb7185;box-shadow:0 0 0 3px rgba(15,18,45,.9),0 0 12px #fb7185;animation:hpPulse 1.6s ease-in-out infinite}
 @keyframes hpPulse{50%{transform:scale(1.25)}}
-.hp{position:fixed;left:0;right:0;bottom:0;top:var(--hp-top,64px);z-index:8900;display:flex;justify-content:center;align-items:flex-start;padding:10px 12px calc(14px + env(safe-area-inset-bottom));pointer-events:none}
-.hp-bd{position:fixed;inset:var(--hp-top,64px) 0 0 0;background:rgba(4,6,22,.62);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);opacity:0;transition:opacity .25s;pointer-events:auto}
+.hp{position:fixed;inset:0;z-index:8900;pointer-events:none}
+.hp-bd{position:fixed;inset:0;background:rgba(4,6,22,.62);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);opacity:0;transition:opacity .25s;pointer-events:auto}
 .hp.in .hp-bd{opacity:1}
-.hp-card{position:relative;width:min(980px,100%);max-height:100%;overflow:auto;overscroll-behavior:contain;pointer-events:auto;padding:22px 20px 20px;border-radius:30px;background:radial-gradient(120% 80% at 0% 0%,rgba(129,140,248,.28),transparent 60%),radial-gradient(80% 70% at 100% 100%,rgba(251,191,36,.14),transparent 60%),rgba(12,15,40,.96);border:1px solid rgba(165,180,252,.24);box-shadow:0 40px 90px -30px #000;transform-origin:70px 0;transform:translateY(-14px) scale(.96);opacity:0;transition:transform .32s cubic-bezier(.2,.9,.25,1.05),opacity .22s}
-.hp.in .hp-card{transform:none;opacity:1}
+.hp-card{position:absolute;top:0;left:0;bottom:0;width:min(480px,100%);overflow:auto;overscroll-behavior:contain;pointer-events:auto;padding:calc(22px + env(safe-area-inset-top)) 20px calc(22px + env(safe-area-inset-bottom));border-radius:0 30px 30px 0;background:radial-gradient(120% 60% at 0% 0%,rgba(129,140,248,.28),transparent 60%),radial-gradient(80% 50% at 100% 100%,rgba(251,191,36,.14),transparent 60%),#0c0f28;border-right:1px solid rgba(165,180,252,.24);box-shadow:30px 0 80px -20px #000;transform:translateX(-105%);transition:transform .34s cubic-bezier(.2,.9,.25,1)}
+.hp.in .hp-card{transform:none}
 .hp-top{display:flex;gap:14px;align-items:flex-start}
 .hp-badge{flex:none;display:grid;place-items:center;width:48px;height:48px;border-radius:16px;background:linear-gradient(135deg,#818cf8,#a78bfa 55%,#fbbf24);color:#fff;font-size:22px;box-shadow:0 12px 26px -8px rgba(129,140,248,.7)}
 .hp-top h2{margin:0;font:800 22px/1.2 'Plus Jakarta Sans',system-ui,sans-serif;color:#fff}
@@ -8352,12 +8352,50 @@ html.p3 #view-profile .pf-mini small{text-transform:none;letter-spacing:0;font-s
 .hp-x{margin-left:auto;flex:none;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;color:#c7d2fe;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12)}
 .hp-x svg{width:18px;height:18px}
 .hp-x:hover{background:rgba(255,255,255,.14)}
-.hp-facts{list-style:none;margin:16px 0 4px;padding:0;display:flex;flex-wrap:wrap;gap:8px}
-.hp-facts li{display:flex;gap:7px;align-items:center;font-size:12.5px;color:#dbe4ff;padding:7px 12px;border-radius:999px;background:rgba(129,140,248,.12);border:1px solid rgba(165,180,252,.2)}
-.hp-facts i{font-style:normal}
-.hp .hs{margin:0;padding:12px 0 0;background:none;border:0;box-shadow:none;border-radius:0}
-.hp .hs-head{display:none}
-@media (max-width:640px){.hp{padding:8px 8px calc(10px + env(safe-area-inset-bottom))}.hp-card{padding:18px 14px;border-radius:24px}.hp-top h2{font-size:19px}}
+.hp-card{display:flex!important;flex-direction:column;overflow:hidden!important;padding:0!important}
+.hp-top{align-items:center;padding:calc(18px + env(safe-area-inset-top)) 18px 14px;border-bottom:1px solid rgba(165,180,252,.14);background:linear-gradient(180deg,rgba(129,140,248,.16),transparent)}
+.hp-top p{display:flex;align-items:center;gap:7px;margin:3px 0 0;font-size:12.5px}
+.hp-dot{width:8px;height:8px;border-radius:50%;background:#22c55e;box-shadow:0 0 0 3px rgba(34,197,94,.2);flex:none}
+.hp-msgs{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:16px 16px 10px;display:flex;flex-direction:column;gap:8px}
+.hp-empty{margin:auto;text-align:center;padding:20px 14px;max-width:330px}
+.hp-moon{display:grid;place-items:center;width:78px;height:78px;margin:0 auto 14px;border-radius:50%;font-size:38px;background:radial-gradient(circle,rgba(129,140,248,.38),rgba(129,140,248,.06) 70%)}
+.hp-empty h3{margin:0 0 8px;font:800 21px/1.2 'Plus Jakarta Sans',system-ui,sans-serif;color:#fff}
+.hp-empty p{margin:0;font-size:14px;line-height:1.6;color:rgba(199,210,254,.78)}
+.hp-day{align-self:center;margin:6px 0 2px;padding:3px 10px;border-radius:999px;background:rgba(255,255,255,.06);font-size:11.5px;color:rgba(199,210,254,.6)}
+.hp-msg{display:flex;align-items:flex-end;gap:8px;max-width:88%}
+.hp-msg.mine{align-self:flex-end}
+.hp-ava{flex:none;display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#6366f1,#a78bfa);font-size:14px}
+.hp-bub{padding:9px 13px 6px;border-radius:18px;min-width:0}
+.hp-bub p{margin:0;font-size:15px;line-height:1.45;color:inherit;overflow-wrap:anywhere}
+.hp-bub small{display:block;margin-top:3px;font-size:10.5px;opacity:.65;text-align:right}
+.hp-msg.mine .hp-bub{background:linear-gradient(135deg,#6366f1,#7c3aed);color:#fff;border-bottom-right-radius:6px}
+.hp-msg.them .hp-bub{background:rgba(255,255,255,.08);color:#f1f5f9;border-bottom-left-radius:6px}
+.hp-msg.pending{opacity:.62}
+.hp-pic{display:block;max-width:100%;width:240px;max-height:260px;object-fit:cover;border-radius:12px;margin:0 0 6px;cursor:zoom-in;background:rgba(255,255,255,.08)}
+.hp-pic.wait{height:150px;cursor:default;animation:hpPulse2 1.2s ease-in-out infinite}
+.hp-pic.off{height:auto;padding:14px;font-size:12.5px;opacity:.7;cursor:default}
+@keyframes hpPulse2{50%{opacity:.5}}
+.hp-comp{flex:none;padding:10px 12px calc(12px + env(safe-area-inset-bottom));border-top:1px solid rgba(165,180,252,.14);background:rgba(8,10,30,.6)}
+.hp-prev[hidden]{display:none}
+.hp-prev{position:relative;display:inline-block;margin:0 0 8px 4px}
+.hp-prev img{display:block;height:84px;max-width:160px;object-fit:cover;border-radius:14px;border:1px solid rgba(165,180,252,.3)}
+.hp-prev button{position:absolute;top:-8px;right:-8px;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:#1e1b4b;color:#fff;border:1px solid rgba(255,255,255,.3)}
+.hp-prev button svg{width:13px;height:13px}
+.hp-row{display:flex;align-items:flex-end;gap:8px;padding:6px;border-radius:26px;background:rgba(255,255,255,.07);border:1px solid rgba(165,180,252,.22);transition:border-color .2s,box-shadow .2s}
+.hp-row:focus-within{border-color:rgba(165,180,252,.6);box-shadow:0 0 0 3px rgba(129,140,248,.18)}
+.hp-att,.hp-go{flex:none;width:42px;height:42px;border-radius:50%;display:grid;place-items:center;border:0;cursor:pointer}
+.hp-att{background:transparent;color:#a5b4fc}
+.hp-att:hover{background:rgba(255,255,255,.08)}
+.hp-att svg,.hp-go svg{width:22px;height:22px}
+.hp-go{background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;box-shadow:0 8px 20px -8px rgba(99,102,241,.9);transition:transform .15s,opacity .2s}
+.hp-go:disabled{opacity:.35;box-shadow:none;cursor:default}
+.hp-go:not(:disabled):active{transform:scale(.92)}
+.hp-in{flex:1;min-width:0;resize:none;border:0;outline:0;background:transparent;color:#fff;font:15px/1.4 inherit;padding:10px 4px;max-height:130px}
+.hp-in::placeholder{color:rgba(199,210,254,.5)}
+.hp-lb{position:fixed;inset:0;z-index:9300;display:grid;place-items:center;background:rgba(0,0,0,.88);cursor:zoom-out;padding:16px}
+.hp-lb img{max-width:100%;max-height:100%;border-radius:12px}
+.a4-pic{display:block;max-width:100%;width:260px;border-radius:12px;margin:0 0 6px;cursor:zoom-in}.a4-pic.big{width:100%;max-width:640px;cursor:zoom-out}
+@media (max-width:640px){.hp-card{width:100%;border-radius:0!important}.hp-top h2{font-size:19px}.hp-pic{width:200px}}
 @media (prefers-reduced-motion:reduce){.hp-card,.hp-bd,.hp-hint{transition:none}#lr-brand.hp-unread::after{animation:none}}
 </style></head>
 <body class="min-h-screen text-slate-100 flex flex-col justify-between selection:bg-indigo-500 selection:text-white" data-view="dashboard">
@@ -39988,9 +40026,9 @@ ${p.p}`;
         try {
             const j = await call({ op: 'sup_get', sk: supKey(), read: read ? 1 : 0 }, 20000);
             const pend = msgs.filter(m => m.p);
-            msgs = (j.msgs || []).concat(pend); LS.set('lr_sup_m', msgs.slice(-200));
+            msgs = (j.msgs || []).concat(pend); try { saveMsgs(); } catch (e) { }
             unread = read ? 0 : (j.unread || 0); LS.set('lr_sup_ur', unread);
-            paintChat(); paint();
+            paintChat(); paint(); try { popPaint(false); } catch (e) { }
         } catch (e) { }
         busy = false;
     }
@@ -40023,37 +40061,110 @@ ${p.p}`;
     if (typeof window.renderProfile === 'function') { const rp = window.renderProfile; window.renderProfile = function () { const r = rp.apply(this, arguments); try { paint(); check(); flush(); } catch (e) { } return r; }; }
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', paint); else paint();
 
-    /* ---------- the Support Center: opens from the LunaRise name in the header, tap it again to close ---------- */
-    let pop = null;
+    /* ---------- the Support Center: a side panel that opens from the LunaRise name. One chat: write anything, attach a photo. ---------- */
+    let pop = null, att = '', lb = null, popPoll = 0;
+    const imgs = {}, imgBusy = {};
+    const SEND_SVG = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.4 20.4l17.4-7.9a.6.6 0 000-1.1L3.4 3.6a.6.6 0 00-.8.7L4.9 11l8.6 1-8.6 1-2.3 6.7a.6.6 0 00.8.7z" fill="currentColor"/></svg>';
+    const IMG_SVG = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="4.5" width="17" height="15" rx="3.5" fill="none" stroke="currentColor" stroke-width="1.9"/><circle cx="9" cy="10" r="1.7" fill="currentColor"/><path d="M4.5 17.5l4.6-4.6a1.4 1.4 0 012 0l2.4 2.4 2-2a1.4 1.4 0 012 0l2.5 2.5" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>';
     function brandDot() { const b = $('lr-brand'); if (b) b.classList.toggle('hp-unread', !!unread); }
-    function popTop() { const h = document.querySelector('header'); return h ? Math.max(0, Math.round(h.getBoundingClientRect().bottom)) : 64; }
+    function saveMsgs() { LS.set('lr_sup_m', msgs.slice(-200).map(m => { const o = Object.assign({}, m); delete o.lid; return o; })); }
+    function compress(file) {
+        return new Promise((res, rej) => {
+            const fr = new FileReader(); fr.onerror = () => rej(new Error('read'));
+            fr.onload = () => {
+                const im = new Image(); im.onerror = () => rej(new Error('img'));
+                im.onload = () => {
+                    const tries = [[1100, .78], [1100, .62], [900, .55], [720, .5], [560, .45]];
+                    for (const [mx, q] of tries) {
+                        const sc = Math.min(1, mx / Math.max(im.naturalWidth, im.naturalHeight)), w = Math.max(1, Math.round(im.naturalWidth * sc)), h = Math.max(1, Math.round(im.naturalHeight * sc));
+                        const c = document.createElement('canvas'); c.width = w; c.height = h; const x = c.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0, 0, w, h); x.drawImage(im, 0, 0, w, h);
+                        const d = c.toDataURL('image/jpeg', q); if (d.length <= 300000) return res(d);
+                    }
+                    rej(new Error('big'));
+                };
+                im.src = fr.result;
+            };
+            fr.readAsDataURL(file);
+        });
+    }
+    function loadImg(m) {
+        if (!m.id || imgs[m.id] || imgBusy[m.id]) return; imgBusy[m.id] = 1;
+        call({ op: 'sup_img', sk: supKey(), id: m.id }, 30000).then(j => { imgs[m.id] = j.im; }).catch(() => { imgs[m.id] = ''; }).then(() => { delete imgBusy[m.id]; popPaint(false); });
+    }
+    function popBubbles() {
+        if (!msgs.length) return `<div class="hp-empty"><div class="hp-moon" aria-hidden="true">🌙</div><h3>Hi! How can we help?</h3><p>Write us anything: a question, a problem, an idea or just a hello. You can attach a photo too. We read every message.</p></div>`;
+        let last = '';
+        return msgs.map(m => {
+            const d = new Date(m.t).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' }), sep = d !== last ? `<p class="hp-day">${d}</p>` : ''; last = d;
+            const key = m.lid || m.id, src = key && imgs[key], pic = m.hi ? (src ? `<img class="hp-pic" src="${src}" alt="Photo" data-hp="zoom">` : (imgs[key] === '' ? '<div class="hp-pic off">Photo unavailable</div>' : '<div class="hp-pic wait"></div>')) : '';
+            if (m.hi && m.id && src == null) loadImg(m);
+            const tm = new Date(m.t).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+            return sep + `<div class="hp-msg ${m.f === 'a' ? 'them' : 'mine'}${m.p ? ' pending' : ''}">${m.f === 'a' ? '<span class="hp-ava" aria-hidden="true">🌙</span>' : ''}<div class="hp-bub">${pic}${m.x ? `<p>${esc(m.x).replace(/\n/g, '<br>')}</p>` : ''}<small>${tm}${m.f === 'u' ? (m.p ? ' · sending' : ' · ✓') : ''}</small></div></div>`;
+        }).join('');
+    }
+    function popPaint(stick) {
+        const box = pop && pop.querySelector('.hp-msgs'); if (!box) return;
+        const near = box.scrollHeight - box.scrollTop - box.clientHeight < 90;
+        box.innerHTML = popBubbles(); if (stick || near) box.scrollTop = box.scrollHeight;
+    }
     function popOpen() {
         if (pop) return;
         pop = document.createElement('div'); pop.id = 'hs-pop'; pop.className = 'hp'; pop.setAttribute('role', 'dialog'); pop.setAttribute('aria-label', 'Support Center');
         pop.innerHTML = `<div class="hp-bd" data-hp="close"></div>
             <section class="hp-card">
-                <header class="hp-top"><span class="hp-badge" aria-hidden="true">✦</span><div><h2>Support Center</h2><p>Report a bug, share an idea or chat with the LunaRise team. Tap <b>LunaRise</b> again to close.</p></div><button type="button" class="hp-x" data-hp="close" aria-label="Close Support Center"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button></header>
-                <ul class="hp-facts"><li><i aria-hidden="true">🔒</i>Private. Only the LunaRise team reads it</li><li><i aria-hidden="true">⚡</i>The team is alerted the moment you send</li><li><i aria-hidden="true">💬</i>Replies appear right here</li></ul>
-                <div id="hs-root"></div>
+                <header class="hp-top"><span class="hp-badge" aria-hidden="true">✦</span><div><h2>Support Center</h2><p><i class="hp-dot" aria-hidden="true"></i>We usually reply within a few hours</p></div><button type="button" class="hp-x" data-hp="close" aria-label="Close Support Center"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button></header>
+                <div class="hp-msgs" aria-live="polite"></div>
+                <form class="hp-comp" autocomplete="off">
+                    <div class="hp-prev" hidden><img alt="Photo to send"><button type="button" data-hp="rm" aria-label="Remove photo"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7l10 10M17 7L7 17" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></button></div>
+                    <div class="hp-row">
+                        <button type="button" class="hp-att" data-hp="att" aria-label="Attach a photo" title="Attach a photo">${IMG_SVG}</button>
+                        <textarea class="hp-in lq-raw" rows="1" maxlength="2000" placeholder="Write a message…" aria-label="Message"></textarea>
+                        <button type="submit" class="hp-go" aria-label="Send" disabled>${SEND_SVG}</button>
+                    </div>
+                    <input type="file" accept="image/*" hidden>
+                </form>
             </section>`;
-        pop.style.setProperty('--hp-top', popTop() + 'px');
-        document.body.appendChild(pop); paint();
+        document.body.appendChild(pop);
+        const f = pop.querySelector('.hp-comp'), inp = f.querySelector('.hp-in'), go = f.querySelector('.hp-go'), fi = f.querySelector('input[type=file]'), pv = f.querySelector('.hp-prev');
+        const fit = () => { inp.style.height = 'auto'; inp.style.height = Math.min(130, inp.scrollHeight) + 'px'; go.disabled = !(inp.value.trim() || att); };
+        const setAtt = (d) => { att = d || ''; pv.hidden = !att; if (att) pv.querySelector('img').src = att; fit(); };
+        inp.addEventListener('input', fit);
+        inp.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.shiftKey && matchMedia('(pointer:fine)').matches) { e.preventDefault(); f.requestSubmit(); } });
+        f.addEventListener('click', (e) => { const b = e.target.closest('[data-hp]'); if (!b) return; if (b.dataset.hp === 'att') fi.click(); else if (b.dataset.hp === 'rm') setAtt(''); });
+        fi.addEventListener('change', async () => {
+            const file = fi.files && fi.files[0]; fi.value = ''; if (!file) return;
+            if (!/^image\//.test(file.type)) return toast('Please choose a photo.');
+            go.disabled = true;
+            try { setAtt(await compress(file)); } catch (er) { toast('Could not use this photo. Try another one.'); fit(); }
+        });
+        f.addEventListener('submit', async (e) => {
+            e.preventDefault(); const text = inp.value.trim(), a = att; if (!text && !a) return;
+            const m = { f: 'u', x: text, t: Date.now(), p: 1, lid: 'l' + Date.now() }; if (a) { m.hi = 1; imgs[m.lid] = a; }
+            msgs.push(m); inp.value = ''; setAtt(''); popPaint(true);
+            try { const j = await call(Object.assign({ op: 'sup_send', sk: supKey(), text, img: a || undefined }, me()), 60000); m.p = 0; m.id = j.id; m.t = j.t || m.t; if (a) imgs[j.id] = a; saveMsgs(); }
+            catch (er) { msgs = msgs.filter(x => x !== m); inp.value = text; setAtt(a); toast(/too many/.test(er.message) ? 'Too many messages. Try again later.' : 'Could not send. Check your internet.'); }
+            popPaint(true);
+        });
+        pop.addEventListener('click', (e) => { const z = e.target.closest('[data-hp="zoom"]'); if (z) zoom(z.src); });
+        popPaint(true); fit();
         const b = $('lr-brand'); if (b) { b.setAttribute('aria-expanded', 'true'); b.classList.add('hp-on'); }
         requestAnimationFrame(() => requestAnimationFrame(() => pop && pop.classList.add('in')));
-        if (unread) pull(false);
+        pull(true); popPoll = setInterval(() => { if (!document.hidden) pull(true); }, 10000);
+        setTimeout(() => { try { if (matchMedia('(pointer:fine)').matches) inp.focus({ preventScroll: true }); } catch (e) { } }, 380);
     }
+    function zoom(src) { if (lb) return; lb = document.createElement('div'); lb.className = 'hp-lb'; lb.innerHTML = `<img src="${src}" alt="Photo">`; lb.addEventListener('click', unzoom); document.body.appendChild(lb); }
+    function unzoom() { if (lb) { lb.remove(); lb = null; } }
     function popClose() {
-        if (!pop) return; const p = pop; pop = null; p.classList.remove('in');
+        if (!pop) return; unzoom(); clearInterval(popPoll); att = ''; const p = pop; pop = null; p.classList.remove('in');
         const b = $('lr-brand'); if (b) { b.setAttribute('aria-expanded', 'false'); b.classList.remove('hp-on'); }
-        setTimeout(() => p.remove(), 260);
+        setTimeout(() => p.remove(), 300);
     }
     function popToggle() { pop ? popClose() : popOpen(); }
     document.addEventListener('click', (e) => { if (e.target.closest('[data-hp="close"]')) popClose(); });
-    addEventListener('keydown', (e) => { if (e.key === 'Escape' && pop && !sheet) popClose(); }, true);
-    addEventListener('resize', () => { if (pop) pop.style.setProperty('--hp-top', popTop() + 'px'); });
+    addEventListener('keydown', (e) => { if (e.key !== 'Escape') return; if (lb) { unzoom(); e.stopPropagation(); } else if (pop && !sheet) popClose(); }, true);
     setTimeout(() => { if (msgs.length) pull(false); }, 6000);
-    setInterval(() => { if (!document.hidden && msgs.length) pull(false); }, 180000);
-    window.LRHS = { open: openForm, chat: openChat, toggle: popToggle, close: popClose, _call: call };
+    setInterval(() => { if (!document.hidden && msgs.length && !pop) pull(false); }, 180000);
+    window.LRHS = { open: openForm, chat: popOpen, toggle: popToggle, close: popClose, _call: call };
 })();
 </script><script id="ib-js2">
 /* ===== The owner's live alert: when someone writes and LunaRise is open, a banner slides in from the top with a soft chime
@@ -55282,7 +55393,7 @@ svg.a4-sp{width:100%;height:34px}
     var t = ((IB.d || {}).sup || []).filter(function (x) { return x.id === IB.th; })[0] || { id: IB.th }, d = IB.thd || {};
     var hd = '<div class="a4-thh"><button type="button" class="a4-ib" data-a="ibback" aria-label="Back">' + ic('back') + '</button>' + ibAv(t) + '<div><b>' + esc(ibWho(t)) + '</b><small>Started ' + fullT(t.f || t.t) + '</small></div></div><div class="a4-ibm">' + ibMeta(t) + '</div>';
     if (d.loading) return hd + '<div class="a4-sk" style="height:120px"></div>'; if (d.err) return hd + '<div class="a4-warn">' + esc(d.err) + '</div>';
-    var last = '', ms = (d.msgs || []).map(function (m) { var dy = new Date(m.t).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' }), sp = dy !== last ? '<div class="a4-day">' + dy + '</div>' : ''; last = dy; return sp + '<div class="a4-bub' + (m.f === 'a' ? ' me' : '') + '"><p>' + esc(m.x).replace(/\n/g, '<br>') + '</p><small>' + hm(m.t) + '</small></div>'; }).join('');
+    var last = '', ms = (d.msgs || []).map(function (m) { var dy = new Date(m.t).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' }), sp = dy !== last ? '<div class="a4-day">' + dy + '</div>' : ''; last = dy; return sp + '<div class="a4-bub' + (m.f === 'a' ? ' me' : '') + '">' + (m.im ? '<img class="a4-pic" src="' + m.im + '" alt="Photo from the user" onclick="this.classList.toggle(\'big\')">' : '') + (m.x ? '<p>' + esc(m.x).replace(/\n/g, '<br>') + '</p>' : '') + '<small>' + hm(m.t) + '</small></div>'; }).join('');
     var ar = armed === 'thdel';
     return hd + '<div class="a4-thread">' + (ms || '<div class="a4-em">No messages.</div>') + '</div><div class="a4-rp"><textarea class="a4-in a4-ta" id="a4-ibr" rows="2" maxlength="2000" placeholder="Reply to ' + esc(ibWho(t)) + '… they see it in their Profile">' + esc(IB.draft) + '</textarea><button type="button" class="a4-btn pri" data-a="ibsend">' + ic('send') + 'Send</button></div><p><button type="button" class="a4-btn sm bad' + (ar ? ' armed' : '') + '" data-a="thdel">' + (ar ? 'Tap again to delete this chat' : ic('trash') + 'Delete chat') + '</button></p>';
   }
