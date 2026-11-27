@@ -23,25 +23,25 @@ html.lr-veil header,html.lr-veil main,html.lr-veil nav{visibility:hidden}
     
     <!--mv:head--><script id="mv-head">(function(){try{var h=location.hash;if(h.indexOf('#lrmove=')!==0)return;var clean=function(){try{history.replaceState(history.state,'',location.pathname+location.search)}catch(e){}};if(!/^https:\/\/lunariseapp\.github\.io\//.test(document.referrer)||localStorage.getItem('lr_move_done')){clean();return;}var d=JSON.parse(decodeURIComponent(escape(atob(h.slice(8).replace(/-/g,'+').replace(/_/g,'/')))));if(!d||typeof d!=='object'){clean();return;}var cur=null;try{cur=JSON.parse(localStorage.getItem('lunarise_user')||'null')}catch(e){}var fresh=!cur||!cur.registered;Object.keys(d).forEach(function(k){if(typeof d[k]==='string'&&k.length<80&&(fresh||localStorage.getItem(k)==null))try{localStorage.setItem(k,d[k])}catch(e){}});localStorage.setItem('lr_move_done','1');clean();}catch(e){}})();</script><!--/mv:head-->
     <meta name="theme-color" content="#070b16">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
     <script id="lr-dev">/* the site measures the device by itself: phones get a tighter UI, tablets stay as designed, computers get a little more room */
 (function(){try{
-var d=document.documentElement,sc=screen,lo=Math.min(sc.width,sc.height),hi=Math.max(sc.width,sc.height),PH=.86;
+var d=document.documentElement,sc=screen,lo=Math.min(sc.width,sc.height),hi=Math.max(sc.width,sc.height),UA=navigator.userAgent||'',IOS=/iPhone|iPod/.test(UA),PH=IOS?.8:.76;
 var coarse=false;try{coarse=matchMedia('(pointer:coarse)').matches||(navigator.maxTouchPoints>0&&!matchMedia('(pointer:fine)').matches)}catch(e){}
 var q=/[?&]dev=(phone|tablet|desktop)/.exec(location.search);
 var kind=q?q[1]:!coarse?'desktop':lo<600?'phone':'tablet';
 function put(){
- d.setAttribute('data-dev',kind);
+ d.setAttribute('data-dev',kind);d.setAttribute('data-dev2',kind==='phone'?(IOS?'iphone':'android'):kind==='tablet'?(/iPad|Macintosh/.test(UA)?'ipad':'tablet'):(Math.max(innerWidth,hi)<1500?'laptop':'computer'));
  var m=document.querySelector('meta[name=viewport]');if(!m)return;
  if(kind==='phone'){var port=true;try{port=matchMedia('(orientation:portrait)').matches}catch(e){}
   var w=port?lo:hi,L=Math.min(Math.round(w/PH),1000),f=w/L;
-  m.setAttribute('content','width='+L+', initial-scale='+f.toFixed(3)+', viewport-fit=cover')}
- else m.setAttribute('content','width=device-width, initial-scale=1.0')}
+  m.setAttribute('content','width='+L+', initial-scale='+f.toFixed(3)+', minimum-scale='+f.toFixed(3)+', maximum-scale='+f.toFixed(3)+', user-scalable=no, viewport-fit=cover')}
+ else m.setAttribute('content','width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover')}
 put();window.LRDEV={kind:kind};
 if(kind==='phone'){var t=0;var re=function(){clearTimeout(t);t=setTimeout(put,250)};addEventListener('orientationchange',re);try{matchMedia('(orientation:portrait)').addEventListener('change',re)}catch(e){}}
 }catch(e){}})();
 </script>
-    <style id="lr-dev-css">html[data-dev=desktop]{font-size:17px}@media (min-width:1900px){html[data-dev=desktop]{font-size:18px}}html[data-dev=phone]{-webkit-text-size-adjust:100%;text-size-adjust:100%}</style>
+    <style id="lr-dev-css">html[data-dev=desktop]{font-size:16px}@media (min-width:1500px){html[data-dev=desktop]{font-size:17px}}@media (min-width:1900px){html[data-dev=desktop]{font-size:18px}}html[data-dev=phone]{-webkit-text-size-adjust:100%;text-size-adjust:100%}</style>
     <!--intro:head--><style id="intro-css" data-th-skip>
 /* ===== LunaRise opening film ===== */
 #lr-intro{display:none}
@@ -8397,7 +8397,20 @@ html.p3 #view-profile .pf-mini small{text-transform:none;letter-spacing:0;font-s
 .a4-pic{display:block;max-width:100%;width:260px;border-radius:12px;margin:0 0 6px;cursor:zoom-in}.a4-pic.big{width:100%;max-width:640px;cursor:zoom-out}
 @media (max-width:640px){.hp-card{width:100%;border-radius:0!important}.hp-top h2{font-size:19px}.hp-pic{width:200px}}
 @media (prefers-reduced-motion:reduce){.hp-card,.hp-bd,.hp-hint{transition:none}#lr-brand.hp-unread::after{animation:none}}
-</style></head>
+</style><style id="lr-lock-css">html,body{touch-action:manipulation;overscroll-behavior:none;overflow-x:hidden;max-width:100%;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+*{-webkit-tap-highlight-color:transparent}
+button,a,[role=button],label,select,summary,input[type=checkbox],input[type=radio],input[type=range]{touch-action:manipulation}
+img{-webkit-user-drag:none}</style>
+<script id="lr-lock-js">(function(){try{
+/* iOS/Android pinch and double-tap zoom off, so the page never jumps or zooms by accident */
+var nz=function(e){e.preventDefault()};
+['gesturestart','gesturechange','gestureend'].forEach(function(n){document.addEventListener(n,nz,{passive:false})});
+document.addEventListener('touchmove',function(e){if(e.touches&&e.touches.length>1&&!e.target.closest('[data-pinch]'))e.preventDefault()},{passive:false});
+document.addEventListener('dblclick',function(e){if(!e.target.closest('input,textarea,[contenteditable]'))e.preventDefault()},{passive:false});
+/* the page itself never scrolls sideways: if anything pushes it, snap back */
+var fix=function(){if(window.scrollX||document.documentElement.scrollLeft||document.body.scrollLeft){window.scrollTo(0,window.scrollY);document.documentElement.scrollLeft=0;document.body.scrollLeft=0}};
+addEventListener('scroll',fix,{passive:true});
+}catch(e){}})();</script></head>
 <body class="min-h-screen text-slate-100 flex flex-col justify-between selection:bg-indigo-500 selection:text-white" data-view="dashboard">
 <!--intro:body--><div id="lr-intro" aria-label="LunaRise"><div class="li-icon" aria-hidden="true"><span class="li-halo"></span><svg viewBox="0 0 64 64"><rect class="li-sq" width="64" height="64" rx="16" fill="#4f46e5"/><path class="li-cr" d="M40 14a20 20 0 1 0 10 34A16 16 0 1 1 40 14z" fill="#fde68a"/></svg></div><div class="li-word" aria-hidden="true"><b>Luna<span>Rise</span></b><i></i><small>Master English &amp; IELTS</small></div></div><!--/intro:body-->
 <script id="lr-tw-pos">(function () { try { var st = document.getElementById('lr-tw'), p = localStorage.getItem('lr_tw_pos'); if (!st || !p) return; var h = document.head, kids = h.children;
