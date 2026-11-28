@@ -8961,7 +8961,7 @@ body.th-fade #lr-bg{opacity:0}
         }
         heroCtx.putImageData(heroImg.im, 0, 0);
     }
-    function heroPaused() { var v = (document.body.dataset.view || ''); return D.hidden || !themeOn() || H.classList.contains('paused') || document.body.classList.contains('lite') || document.body.classList.contains('fx-off') || /^(games|chess)$/.test(v); }
+    function heroPaused() { var v = (document.body.dataset.view || ''); return D.hidden || !themeOn() || H.classList.contains('paused') || document.body.classList.contains('lite') || document.body.classList.contains('fx-off') || /^(games|chess|dictionary)$/.test(v); }
     function hloop() {
         clearTimeout(ht); if (!heroOn || !hero._tx) return;
         if (heroPaused()) { lastT = 0; ht = setTimeout(hloop, 1200); return; }
@@ -9554,74 +9554,7 @@ void main(){
 
         <section id="view-listening" class="view-panel hidden space-y-6"><div id="lrb-au-root"></div></section>
 
-        <section id="view-dictionary" class="view-panel hidden">
-          <div class="lx dxv">
-            <!--ux:dx--><header class="dx-head">
-                <div class="dx-ttl"><h2>Dictionary</h2><p>Search a word, hear it, save it</p></div>
-                <button onclick="showSavedWords()" class="dx-mine" aria-label="Open my saved words"><span class="dx-star">★</span><span class="dx-mt"><b>My words</b><small><span id="saved-words-count">0</span> saved</small></span></button>
-            </header>
-            <div class="dt-tabs dx-tabs" role="tablist"><i id="dt-ind"></i><button id="dt-tab-dict" class="on" onclick="dtTab('dict')">Dictionary</button><button id="dt-tab-tr" onclick="dtTab('tr')">Translator</button></div>
-            <div id="dict-classic" class="dx">
-            <div class="dx-search">
-                <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.2-4.2"/></svg>
-                <input type="search" id="dict-search-input" onkeyup="handleDictSearchKey(event)" oninput="lxInput()" placeholder="Search a word" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search" aria-label="Look up a word">
-                <button id="lx-clear" class="dx-ib" onclick="lxClear()" aria-label="Clear" hidden><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
-                <button id="lx-mic" class="dx-ib" onclick="lxMic()" aria-label="Search by voice" hidden><svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0013 0M12 17.5V21"/></svg></button>
-                <button onclick="performDictSearch()" class="dx-go">Search</button>
-                <div id="dict-suggestions" class="hidden dx-sug" role="listbox"></div>
-            </div>
-            <div id="lx-home" class="dx-home"></div>
-            <div id="dict-result-container" class="dx-res"></div>
-            </div>
-<!--/ux:dx-->
-            <div id="tr-panel" class="hidden tr-wrap">
-                <div class="tr-bar">
-                    <button id="tr-src" class="tr-lang" onclick="trPick('src')"></button>
-                    <button class="tr-swap" onclick="trSwap()" aria-label="Swap languages"><i class="fa-solid fa-right-left"></i></button>
-                    <button id="tr-tgt" class="tr-lang" onclick="trPick('tgt')"></button>
-                </div>
-
-                <div class="tr-grid">
-                    <div class="tr-card tr-in">
-                        <div class="tr-cap"><span id="tr-in-cap">Type or paste text</span><span id="tr-det" class="tr-det hidden"></span></div>
-                        <textarea id="tr-input" rows="5" maxlength="5000" spellcheck="false" placeholder="Type any word, phrase or sentence…" oninput="trInput()"></textarea>
-                        <div class="tr-tools">
-                            <button onclick="trSpeak('in')" title="Listen"><i class="fa-solid fa-volume-high"></i></button>
-                            <button id="tr-mic" onclick="trMic()" title="Speak"><i class="fa-solid fa-microphone"></i></button>
-                            <button onclick="trPaste()" title="Paste"><i class="fa-solid fa-paste"></i></button>
-                            <span id="tr-count" class="tr-count">0 / 5000</span>
-                            <button onclick="trClear()" title="Clear" class="tr-x"><i class="fa-solid fa-xmark"></i></button>
-                        </div>
-                    </div>
-                    <div class="tr-card tr-out">
-                        <div class="tr-cap"><span id="tr-out-cap">Translation</span><span id="tr-state" class="tr-state"></span></div>
-                        <div id="tr-output" class="tr-output"><span class="tr-ph">Translation appears here instantly ✨</span></div>
-                        <div id="tr-translit" class="tr-translit hidden"></div>
-                        <div class="tr-tools">
-                            <button onclick="trSpeak('out')" title="Listen"><i class="fa-solid fa-volume-high"></i></button>
-                            <button onclick="trCopy()" title="Copy"><i class="fa-regular fa-copy"></i></button>
-                            <button onclick="trShare()" title="Share"><i class="fa-solid fa-share-nodes"></i></button>
-                            <button onclick="trUse()" title="Use as input"><i class="fa-solid fa-arrow-turn-down"></i></button>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="tr-alts" class="tr-card hidden"></div>
-                <div id="tr-ex" class="tr-card hidden"></div>
-
-                <div class="tr-card">
-                    <div class="tr-cap"><span>⚡ Quick phrases</span></div>
-                    <div id="tr-phrases" class="tr-chips"></div>
-                </div>
-                <div class="tr-card" id="tr-hist-card">
-                    <div class="tr-cap"><span>🕘 Recent translations</span><button class="tr-link" onclick="trHistClear()">Clear</button></div>
-                    <div id="tr-hist"></div>
-                </div>
-            </div>
-
-            <div id="lx-sheet" class="lx-sheet hidden" onclick="if(event.target===this)lxSavedClose()"><div class="lx-sheet-in" id="lx-sheet-in"></div></div>
-          </div>
-        </section>
+        <section id="view-dictionary" class="view-panel hidden"></section>
 
         
 <section id="view-grammar" class="view-panel hidden space-y-6">
@@ -59339,5 +59272,431 @@ B.mwEnrich=function(){
 })();
 
 </script>
-</body>
+<style id="dn-css">#view-dictionary .dn{max-width:860px;margin:0 auto;width:100%;display:flex;flex-direction:column;gap:14px;padding-bottom:40px;color:#d8e0f0;--dnb:rgba(15,21,46,.94);--dnl:rgba(148,163,184,.17);--dnm:#8a98b3;--dna:#818cf8}
+#view-dictionary .dn *{box-sizing:border-box;min-width:0}
+#view-dictionary .dn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;flex:none}
+#view-dictionary .dn button{appearance:none;-webkit-appearance:none;font:inherit;color:inherit;background:none;border:0;cursor:pointer;margin:0;text-align:left;min-height:0;width:auto;box-shadow:none;-webkit-tap-highlight-color:transparent}
+#view-dictionary .dn [hidden]{display:none!important}
+.dn-top{display:flex;align-items:flex-end;justify-content:space-between;gap:12px}
+.dn-t1 h2{font-size:30px;line-height:1.1;font-weight:800;color:#fff;margin:0;letter-spacing:-.02em}
+.dn-t1 p{margin:4px 0 0;font-size:13px;color:var(--dnm)}
+#view-dictionary .dn .dn-mine{display:flex;align-items:center;gap:10px;padding:8px 14px 8px 8px;border-radius:16px;background:var(--dnb);border:1px solid var(--dnl)}
+.dn-st{width:34px;height:34px;border-radius:11px;display:grid;place-items:center;background:linear-gradient(135deg,#fbbf24,#f97316);color:#1c1204;font-size:17px}
+.dn-mine b{display:block;font-size:13px;color:#fff}.dn-mine small{font-size:11px;color:var(--dnm)}
+.dn-bar{display:flex;gap:10px;align-items:stretch}
+.dn-seg{position:relative;flex:1;display:grid;grid-template-columns:1fr 1fr;padding:4px;border-radius:15px;background:var(--dnb);border:1px solid var(--dnl)}
+.dn-ind{position:absolute;top:4px;bottom:4px;left:4px;width:calc(50% - 4px);border-radius:11px;background:linear-gradient(135deg,#fbbf24,#fb923c);transition:transform .22s cubic-bezier(.3,.8,.3,1)}
+.dn-seg[data-m=tr] .dn-ind{transform:translateX(100%)}
+#view-dictionary .dn .dn-seg button{position:relative;z-index:1;text-align:center;padding:10px 6px;font-size:14px;font-weight:700;color:var(--dnm)}
+#view-dictionary .dn .dn-seg button.on{color:#1c1204}
+#view-dictionary .dn .dn-lang{display:flex;align-items:center;gap:8px;padding:0 12px;border-radius:15px;background:var(--dnb);border:1px solid var(--dnl);font-weight:700;font-size:14px;color:#fff;white-space:nowrap}
+.dn-fl{font-size:20px;line-height:1}
+.dn-search{position:relative;display:flex;align-items:center;gap:6px;height:56px;padding:0 6px 0 16px;border-radius:18px;background:var(--dnb);border:1px solid var(--dnl)}
+.dn-search:focus-within{border-color:rgba(129,140,248,.6)}
+.dn-mg{color:var(--dnm)}
+#view-dictionary .dn #dict-search-input{flex:1;height:100%;padding:0 4px;background:transparent!important;border:0!important;outline:0;box-shadow:none!important;color:#fff;font-size:17px;font-weight:600;-webkit-appearance:none;appearance:none}
+#view-dictionary .dn #dict-search-input::placeholder{color:#5f6d89;font-weight:500;font-size:15px}
+#view-dictionary .dn .dn-ib{width:38px;height:38px;display:grid;place-items:center;border-radius:12px;color:var(--dnm)}
+#view-dictionary .dn .dn-ib.on{color:#fb7185;background:rgba(251,113,133,.14)}
+#view-dictionary .dn .dn-go{height:42px;padding:0 20px;border-radius:14px;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;font-weight:800;font-size:15px;text-align:center}
+.dn-sug{position:absolute;left:0;right:0;top:calc(100% + 6px);z-index:30;border-radius:16px;background:#0c1130;border:1px solid var(--dnl);box-shadow:0 20px 40px -12px #000;overflow:hidden}
+#view-dictionary .dn .dn-sug button{display:block;width:100%;padding:12px 18px;font-size:15px;font-weight:600;color:#e5ebf7;border-bottom:1px solid var(--dnl)}
+.dn-sug button:last-child{border-bottom:0}
+.dn-pane{display:flex;flex-direction:column;gap:14px}
+.dn-card{padding:18px;border-radius:20px;background:var(--dnb);border:1px solid var(--dnl)}
+.dn-cap{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px;font-size:12px;font-weight:700;letter-spacing:.04em;color:var(--dnm);text-transform:uppercase}
+.dn-blk{padding:2px 0}.dn-bh{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-size:13px;color:var(--dnm)}.dn-bh b{color:#e5ebf7;font-size:14px}
+.dn-lk{font-size:12px;font-weight:700;color:var(--dna)!important;padding:4px 8px!important}
+.dn-chips{display:flex;flex-wrap:wrap;gap:8px}
+#view-dictionary .dn .dn-chip{padding:9px 15px;border-radius:999px;background:rgba(99,102,241,.1);border:1px solid rgba(129,140,248,.25);font-size:14px;font-weight:600;color:#dbe3ff}
+#view-dictionary .dn .dn-chip:active{background:rgba(99,102,241,.3)}
+#view-dictionary .dn .dn-chip.s{padding:6px 12px;font-size:13px}
+#view-dictionary .dn .dn-wod{display:flex;align-items:center;gap:12px;width:100%;padding:14px 18px;border-radius:18px;background:linear-gradient(120deg,rgba(251,191,36,.14),rgba(99,102,241,.14));border:1px solid rgba(251,191,36,.25)}
+.dn-wod b{font-size:20px;color:#fff;font-weight:800}.dn-wl{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:#fbbf24}.dn-wod i{font-style:normal;font-size:12px;font-weight:800;padding:3px 9px;border-radius:8px;color:var(--c);border:1px solid var(--c)}.dn-wod svg{margin-left:auto;color:#fbbf24}
+.dn-from{display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:12px 16px;border-radius:16px;background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.28);font-size:14px;color:#a7f3d0}.dn-from b{color:#fff}
+.dn-hd1{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.dn-hw{margin:0;font-size:40px;line-height:1.05;font-weight:800;color:#fff;letter-spacing:-.025em;word-break:break-word}
+.dn-hdb{display:flex;gap:8px;flex:none}
+#view-dictionary .dn .dn-ab{display:flex;align-items:center;gap:6px;height:40px;padding:0 13px;border-radius:13px;background:rgba(148,163,184,.1);border:1px solid var(--dnl);font-size:13px;font-weight:700;color:#cbd5e1}
+#view-dictionary .dn .dn-ab.on{background:rgba(251,191,36,.16);border-color:rgba(251,191,36,.5);color:#fbbf24}
+.dn-ab.on svg{fill:currentColor}
+.dn-ipa{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+#view-dictionary .dn .dn-pb{display:flex;align-items:center;gap:8px;height:42px;padding:0 14px;border-radius:13px;background:rgba(99,102,241,.12);border:1px solid rgba(129,140,248,.3);color:#c7d2fe;font-weight:700;font-size:13px}
+.dn-pb code{font:600 15px/1 ui-monospace,SFMono-Regular,Menlo,monospace;color:#fff;background:none}
+.dn-pr{font-size:11px;font-weight:800;padding:2px 6px;border-radius:6px;background:rgba(129,140,248,.25);color:#e0e7ff}
+.dn-pb:active{background:rgba(99,102,241,.35)}
+.dn-meta{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;margin-top:16px}
+.dn-pos{display:flex;flex-wrap:wrap;gap:6px}.dn-pos span{font-size:12px;font-weight:700;padding:4px 10px;border-radius:8px;background:rgba(148,163,184,.12);color:#cbd5e1;font-style:italic}
+.dn-lv{display:flex;align-items:center;gap:10px;font-size:12px;color:#cbd5e1}.dn-lv b{color:var(--c);font-size:15px;font-weight:800}
+.dn-lvb{display:flex;gap:3px}.dn-lvb i{width:16px;height:6px;border-radius:3px;background:rgba(148,163,184,.2)}.dn-lvb i.on{background:var(--c)}
+.dn-lv0{color:var(--dnm)}.dn-lv0 em{font-style:normal;margin-left:6px}
+.dn-tb{padding:18px;border-radius:20px;background:linear-gradient(135deg,rgba(99,102,241,.2),rgba(139,92,246,.1));border:1px solid rgba(129,140,248,.32)}
+.dn-tb0{background:var(--dnb);border-color:var(--dnl);color:var(--dnm)}
+.dn-tbh{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.dn-tf{font-size:12px;font-weight:800;color:#c7d2fe;letter-spacing:.03em}
+.dn-tm{font-size:30px;line-height:1.2;font-weight:800;color:#fff;word-break:break-word}
+.dn-trl{margin-top:6px;font-size:16px;color:#a5b4fc;font-style:italic}
+.dn-alts{margin-top:12px;display:flex;flex-direction:column;gap:8px}.dn-alts div{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.dn-alts em{font-size:12px;color:var(--dnm);width:44px;font-style:italic}.dn-alts span{font-size:14px;padding:4px 10px;border-radius:8px;background:rgba(255,255,255,.07);color:#e5ebf7}
+#view-dictionary .dn .dn-sp{width:38px;height:38px;display:grid;place-items:center;border-radius:12px;background:rgba(255,255,255,.08);color:#e0e7ff;flex:none}
+#view-dictionary .dn .dn-sp.s{width:30px;height:30px;border-radius:9px}.dn-sp.s svg{width:15px;height:15px}
+.dn-mn ol{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:14px;counter-reset:d}
+.dn-mn li{counter-increment:d;position:relative;padding-left:30px}
+.dn-mn li:before{content:counter(d);position:absolute;left:0;top:1px;width:22px;height:22px;border-radius:7px;background:rgba(129,140,248,.18);color:#c7d2fe;font-size:12px;font-weight:800;display:grid;place-items:center}
+.dn-ms+.dn-ms{margin-top:20px;padding-top:16px;border-top:1px solid var(--dnl)}
+.dn-mp{font-size:13px;font-weight:800;font-style:italic;color:#fbbf24;margin-bottom:10px}
+.dn-df{margin:0;font-size:16px;line-height:1.5;color:#f1f5fb}
+.dn-ex{margin:6px 0 0;display:flex;align-items:flex-start;gap:8px;font-size:14.5px;line-height:1.5;color:#a9b6d0;font-style:italic}.dn-ex span{flex:1}
+.dn-ext{margin:3px 0 0;font-size:14px;line-height:1.5;color:#86efac}.dn-ext:empty{display:none}
+.dn-eg+.dn-eg{margin-top:14px}.dn-mut{color:var(--dnm);font-size:14px;margin:0}
+#view-dictionary .dn .dn-allh{display:flex;align-items:center;justify-content:space-between;width:100%;font-size:15px;font-weight:700;color:#e5ebf7}
+.dn-allh svg{transition:transform .2s}.dn-allh[aria-expanded=true] svg{transform:rotate(180deg)}
+.dn-ag{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:14px}
+.dn-ar{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:14px;background:rgba(148,163,184,.07);border:1px solid var(--dnl)}
+.dn-af{font-size:20px}.dn-an{font-size:11px;color:var(--dnm);font-weight:700;width:62px;flex:none}.dn-at{flex:1;display:flex;flex-direction:column;gap:2px}.dn-at b{font-size:16px;color:#fff;word-break:break-word}.dn-at small{font-size:12px;color:#a5b4fc;font-style:italic}
+.dn-src{margin:0;text-align:center;font-size:11px;color:#5f6d89}
+.dn-nf b{font-size:17px;color:#fff}.dn-nf p{margin:6px 0 12px;color:var(--dnm);font-size:14px}
+.dn-skl{display:block;height:16px;margin:10px 0;border-radius:8px;background:linear-gradient(90deg,rgba(148,163,184,.1),rgba(148,163,184,.22),rgba(148,163,184,.1));background-size:200% 100%;animation:dnsk 1.2s linear infinite}
+@keyframes dnsk{to{background-position:-200% 0}}
+.dn-trbar{display:flex;align-items:center;gap:10px}
+#view-dictionary .dn .dn-tl{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;height:50px;border-radius:15px;background:var(--dnb);border:1px solid var(--dnl);font-size:15px;font-weight:700;color:#fff}
+.dn-tl.fix{opacity:.95}.dn-tl:not(.fix){border-color:rgba(129,140,248,.45)}
+#view-dictionary .dn .dn-sw{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;flex:none}
+.dn-trg{display:grid;grid-template-columns:1fr;gap:12px}
+@media(min-width:760px){.dn-trg{grid-template-columns:1fr 1fr}}
+#dn-input{width:100%;min-height:130px;resize:vertical;border:0;outline:0;background:transparent;color:#fff;font:600 19px/1.45 inherit;font-family:inherit;padding:0}
+#view-dictionary .dn #dn-input{background:transparent!important;border:0!important;box-shadow:none!important}
+.dn-output{min-height:130px;font-size:19px;line-height:1.45;font-weight:600;color:#fff;white-space:pre-wrap;word-break:break-word}
+.dn-ph{color:#5f6d89;font-weight:500}
+.dn-rm{margin-top:8px;font-size:15px;color:#a5b4fc;font-style:italic}
+.dn-out{background:linear-gradient(135deg,rgba(99,102,241,.16),rgba(15,21,46,.94))}
+.dn-tools{display:flex;align-items:center;gap:6px;margin-top:12px;padding-top:10px;border-top:1px solid var(--dnl)}
+#view-dictionary .dn .dn-tools button{width:40px;height:40px;display:grid;place-items:center;border-radius:12px;color:#cbd5e1}
+#view-dictionary .dn .dn-tools button.on{color:#fb7185;background:rgba(251,113,133,.14)}
+.dn-cnt{margin-left:auto;font-size:12px;color:var(--dnm)}.dn-state{font-size:12px;color:#a5b4fc;text-transform:none;letter-spacing:0}.dn-det{font-size:12px;color:#fbbf24;text-transform:none;letter-spacing:0}
+.dn-hi{display:flex;flex-direction:column;gap:2px;width:100%;padding:10px 0;border-bottom:1px solid var(--dnl)!important}
+.dn-hi span{font-size:14px;color:var(--dnm);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.dn-hi b{font-size:15px;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dn-lp{position:fixed;inset:0;z-index:99980;display:flex;align-items:flex-end;justify-content:center}
+.dn-lpb{position:absolute;inset:0;background:rgba(4,6,22,.72)}
+.dn-lpc{position:relative;width:min(560px,100%);max-height:86vh;overflow:auto;-webkit-overflow-scrolling:touch;padding:18px 16px 24px;border-radius:26px 26px 0 0;background:#0c1130;border:1px solid var(--dnl);box-shadow:0 -20px 60px -10px #000}
+@media(min-width:700px){.dn-lp{align-items:center}.dn-lpc{border-radius:26px}}
+.dn-lph{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;color:#fff;font-size:17px}
+.dn-lpg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+#view-dictionary .dn .dn-lo,.dn-lp .dn-lo{display:flex;align-items:center;gap:12px;padding:12px;border-radius:15px;background:rgba(148,163,184,.08);border:1px solid var(--dnl);color:#e5ebf7;appearance:none;font:inherit;cursor:pointer;text-align:left}
+.dn-lo.on{border-color:#fbbf24;background:rgba(251,191,36,.12)}
+.dn-lo b{display:block;font-size:14px}.dn-lo small{font-size:12px;color:var(--dnm)}
+.dn-lp button.dn-ib{width:38px;height:38px;display:grid;place-items:center;border:0;background:none;color:#8a98b3;border-radius:12px}
+.dn-lp svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round}
+@media(max-width:640px){.dn-hw{font-size:32px}.dn-tm{font-size:26px}.dn-t1 h2{font-size:26px}.dn-ag{grid-template-columns:1fr}.dn-go{padding:0 14px!important}.dn-hd1{flex-direction:column}.dn-top{align-items:center}.dn-mine small{display:none}}
+.dn-bar:has(.dn-seg[data-m=tr]) .dn-lang{display:none!important}
+.dn-hr{display:flex;align-items:center;gap:8px}
+#view-dictionary .dn .dn-hr .dn-lang{height:50px}
+.dn-sq{margin:0;font-size:20px;line-height:1.45;font-weight:600;color:#fff;word-break:break-word}
+.dn-ts{font-size:24px}
+@media(max-width:640px){.dn-top{flex-direction:column;align-items:stretch}.dn-hr{justify-content:space-between}.dn-hr .dn-mine small{display:inline}}
+#dn-res,#dn-home{display:flex;flex-direction:column;gap:14px}#dn-res:empty{display:none}
+body[data-view=dictionary] .sx-feat{opacity:0!important;visibility:hidden!important;animation:none!important}
+/* beautiful page panel: soft aurora + fine dot grid */
+#view-dictionary .dn{padding:22px;border-radius:34px;border:1px solid rgba(165,180,252,.2);box-shadow:0 30px 80px -30px rgba(10,12,40,.9),inset 0 1px 0 rgba(255,255,255,.07);
+background:radial-gradient(rgba(255,255,255,.07) 1px,transparent 1.4px) 0 0/22px 22px,
+radial-gradient(55% 38% at 8% 0%,rgba(251,191,36,.20),transparent 62%),
+radial-gradient(55% 45% at 100% 6%,rgba(139,92,246,.34),transparent 62%),
+radial-gradient(70% 40% at 60% 100%,rgba(56,189,248,.18),transparent 68%),
+linear-gradient(180deg,#171b4a 0%,#0e1336 50%,#0a0f2c 100%)}
+#view-dictionary .dn{--dnb:rgba(12,17,44,.72);--dnl:rgba(165,180,252,.2)}
+@media(max-width:640px){#view-dictionary .dn{padding:14px;border-radius:26px}}
+</style><script id="dn-js">(function(){'use strict';
+/* LunaRise Dictionary + Translator (English is the main language, 14 target languages) */
+var LANGS=[
+{c:'uz',n:'Uzbek',nn:"O'zbekcha",f:'🇺🇿',v:'uz-UZ',m:'uz'},
+{c:'ru',n:'Russian',nn:'Русский',f:'🇷🇺',v:'ru-RU',m:'ru'},
+{c:'tr',n:'Turkish',nn:'Türkçe',f:'🇹🇷',v:'tr-TR',m:'tr'},
+{c:'ar',n:'Arabic',nn:'العربية',f:'🇸🇦',v:'ar-SA',m:'ar',rtl:1},
+{c:'es',n:'Spanish',nn:'Español',f:'🇪🇸',v:'es-ES',m:'es'},
+{c:'fr',n:'French',nn:'Français',f:'🇫🇷',v:'fr-FR',m:'fr'},
+{c:'de',n:'German',nn:'Deutsch',f:'🇩🇪',v:'de-DE',m:'de'},
+{c:'zh-CN',n:'Chinese',nn:'中文',f:'🇨🇳',v:'zh-CN',m:'zh-CN'},
+{c:'ja',n:'Japanese',nn:'日本語',f:'🇯🇵',v:'ja-JP',m:'ja'},
+{c:'ko',n:'Korean',nn:'한국어',f:'🇰🇷',v:'ko-KR',m:'ko'},
+{c:'hi',n:'Hindi',nn:'हिन्दी',f:'🇮🇳',v:'hi-IN',m:'hi'},
+{c:'pt',n:'Portuguese',nn:'Português',f:'🇧🇷',v:'pt-BR',m:'pt'},
+{c:'it',n:'Italian',nn:'Italiano',f:'🇮🇹',v:'it-IT',m:'it'},
+{c:'kk',n:'Kazakh',nn:'Қазақша',f:'🇰🇿',v:'kk-KZ',m:'kk'}];
+var EN={c:'en',n:'English',nn:'English',f:'🇬🇧',v:'en-US',m:'en'};
+var LV=['A1','A2','B1','B2','C1','C2'],LVN={A1:'Beginner',A2:'Elementary',B1:'Intermediate',B2:'Upper-intermediate',C1:'Advanced',C2:'Proficient'},LVC=['#34d399','#4ade80','#60a5fa','#818cf8','#f472b6','#fb7185'];
+var POSN={noun:'noun',verb:'verb',adjective:'adj.',adverb:'adv.',pronoun:'pron.',preposition:'prep.',conjunction:'conj.',interjection:'interj.',exclamation:'excl.',determiner:'det.',numeral:'num.',article:'art.'};
+var SAMPLE=['meticulous','ephemeral','resilience','pragmatic','serendipity','eloquent'];
+
+function ls(k,d){try{var v=localStorage.getItem(k);return v==null?d:v}catch(e){return d}}
+function lsSet(k,v){try{localStorage.setItem(k,v)}catch(e){}}
+function lsJ(k,d){try{return JSON.parse(localStorage.getItem(k))||d}catch(e){return d}}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function $(s,r){return(r||document).querySelector(s)}
+function L(c){if(c==='en')return EN;for(var i=0;i<LANGS.length;i++)if(LANGS[i].c===c)return LANGS[i];return LANGS[0]}
+function toast(m){try{showToast(m)}catch(e){}}
+function U(){try{return state.user||{}}catch(e){return{}}}
+
+var S={mode:ls('lr_dn_mode','dict'),lang:ls('lr_dn_lang','uz'),dir:ls('lr_dn_dir','en>x'),word:'',tok:0,trTok:0,res:null,all:null,allOpen:false,trLast:null,sugT:0,sugTok:0,trT:0,histT:0};
+if(!L(S.lang)||L(S.lang).c!==S.lang)S.lang='uz';
+var cache={};
+
+/* ---------- network ---------- */
+function J(u,ms){return new Promise(function(res,rej){var c=window.AbortController?new AbortController():null,t=setTimeout(function(){try{c&&c.abort()}catch(e){}rej(new Error('timeout'))},ms||6000);
+fetch(u,c?{signal:c.signal}:{}).then(function(r){if(!r.ok)throw new Error('http '+r.status);return r.json()}).then(function(d){clearTimeout(t);res(d)},function(e){clearTimeout(t);rej(e)})})}
+function parseG(d){var ch=(d&&d[0])||[],main=ch.filter(function(x){return x&&x[0]!=null}).map(function(x){return x[0]}).join('').trim();if(!main)return null;
+var tr=ch.filter(function(x){return x&&x[0]==null&&x[2]}).map(function(x){return x[2]}).join(' ').trim();var alts=[];
+((d&&d[1])||[]).forEach(function(g){var ws=(g[1]||[]).filter(Boolean).slice(0,6);if(g[0]&&ws.length)alts.push({pos:g[0],w:ws})});
+return{main:main,rm:tr,alts:alts,det:typeof d[2]==='string'?d[2]:''}}
+function gt(q,sl,tl,ms){var k=sl+'|'+tl+'|'+q;if(cache[k])return Promise.resolve(cache[k]);
+return J('https://translate.googleapis.com/translate_a/single?client=gtx&sl='+encodeURIComponent(sl)+'&tl='+encodeURIComponent(tl)+'&dt=t&dt=bd&dt=rm&q='+encodeURIComponent(q),ms||7000).then(function(d){var r=parseG(d);if(!r)throw new Error('empty');cache[k]=r;return r}).catch(function(){
+var lp=(sl==='auto'?'Autodetect':sl)+'|'+tl;return J('https://api.mymemory.translated.net/get?langpair='+encodeURIComponent(lp)+'&q='+encodeURIComponent(q.slice(0,450)),7000).then(function(d){var t=d&&d.responseData&&d.responseData.translatedText;if(!t||/MYMEMORY WARNING|INVALID/i.test(t))throw new Error('fail');var r={main:t,rm:'',alts:[],det:''};cache[k]=r;return r})})}
+function dictApi(w){var k='d|'+w;if(cache[k]!==undefined)return Promise.resolve(cache[k]);
+return J('https://api.dictionaryapi.dev/api/v2/entries/en/'+encodeURIComponent(w),6000).then(function(d){var r=parseDict(d);cache[k]=r;return r}).catch(function(e){if(/http 404/.test(String(e&&e.message))){cache[k]=null}return null})}
+function parseDict(d){if(!Array.isArray(d)||!d[0])return null;var us=null,uk=null,any=null,ipa='';
+d.forEach(function(e){if(!ipa&&e.phonetic)ipa=e.phonetic;(e.phonetics||[]).forEach(function(p){var a=p.audio||'',t=p.text||'';if(!a&&!t)return;var o={t:t,a:a};
+if(/-us\b|-us\./i.test(a)){if(!us||(!us.a&&a)||(!us.t&&t))us={t:t||(us&&us.t)||'',a:a||(us&&us.a)||''}}
+else if(/-uk\b|-uk\.|-au\b/i.test(a)){if(!uk||(!uk.a&&a)||(!uk.t&&t))uk={t:t||(uk&&uk.t)||'',a:a||(uk&&uk.a)||''}}
+else if(!any||(!any.a&&a))any={t:t||(any&&any.t)||'',a:a}})});
+if(!us&&any)us=any;if(!ipa)ipa=(us&&us.t)||(uk&&uk.t)||(any&&any.t)||'';
+var order=[],map={};d.forEach(function(e){(e.meanings||[]).forEach(function(m){var p=m.partOfSpeech||'word';if(!map[p]){map[p]={pos:p,defs:[],syn:[],ant:[]};order.push(p)}var o=map[p];
+(m.synonyms||[]).forEach(function(x){if(o.syn.indexOf(x)<0)o.syn.push(x)});(m.antonyms||[]).forEach(function(x){if(o.ant.indexOf(x)<0)o.ant.push(x)});
+(m.definitions||[]).forEach(function(df){if(df.definition)o.defs.push({d:df.definition,e:df.example||''});(df.synonyms||[]).forEach(function(x){if(o.syn.indexOf(x)<0)o.syn.push(x)});(df.antonyms||[]).forEach(function(x){if(o.ant.indexOf(x)<0)o.ant.push(x)})})})});
+return{word:d[0].word,ipa:ipa,us:us,uk:uk,meanings:order.map(function(p){return map[p]})}}
+function levelOf(w){return new Promise(function(res){try{var l=(typeof lvlSync==='function'&&lvlSync(w));if(l)return res(l);if(typeof getLevel==='function'){getLevel(w).then(function(x){res(x||'')},function(){res('')});return}}catch(e){}res('')})}
+function suggest(q){return J('https://api.datamuse.com/sug?max=7&s='+encodeURIComponent(q),3000).then(function(a){return(a||[]).map(function(x){return x.word})}).catch(function(){return[]})}
+function tatoeba(w,lang){var m={uz:'uzb',ru:'rus',tr:'tur',ar:'ara',es:'spa',fr:'fra',de:'deu','zh-CN':'cmn',ja:'jpn',ko:'kor',hi:'hin',pt:'por',it:'ita',kk:'kaz'}[lang];
+return J('https://tatoeba.org/en/api_v0/search?from=eng&query='+encodeURIComponent('="'+w+'"')+'&orphans=no&unapproved=no&sort=relevance&trans_filter=limit&to='+(m||'rus')+'&trans_to='+(m||'rus'),3500).then(function(d){var o=[];((d&&d.results)||[]).forEach(function(r){if(o.length>=3||!r.text||r.text.length>140)return;var tr='';(r.translations||[]).forEach(function(g){(g||[]).forEach(function(t){if(!tr&&t.lang===m)tr=t.text})});o.push({e:r.text,t:tr})});return o}).catch(function(){return[]})}
+
+/* ---------- speech ---------- */
+var curAudio=null;
+function voiceFor(lang){var s=window.speechSynthesis;if(!s)return null;var vs=s.getVoices()||[],a=lang.replace('_','-'),p=a.slice(0,2).toLowerCase();
+for(var i=0;i<vs.length;i++)if(vs[i].lang.replace('_','-').toLowerCase()===a.toLowerCase())return vs[i];
+for(var j=0;j<vs.length;j++)if(vs[j].lang.slice(0,2).toLowerCase()===p)return vs[j];return null}
+function speak(text,lang,rate,name){try{var s=window.speechSynthesis;if(!s){toast('Speech is not supported on this device');return}
+var v=voiceFor(lang);if(!v&&lang.slice(0,2)!=='en'&&(s.getVoices()||[]).length){toast((name||'This')+' voice is not installed on this device');return}
+try{if(curAudio){curAudio.pause();curAudio=null}}catch(e){}s.cancel();var u=new SpeechSynthesisUtterance(text);u.lang=lang;u.rate=rate||1;if(v)u.voice=v;s.speak(u)}catch(e){}}
+function play(url,text,lang,rate){try{if(window.speechSynthesis)speechSynthesis.cancel()}catch(e){}
+if(!url){speak(text,lang,rate);return}
+try{if(curAudio)curAudio.pause();var a=new Audio(url);curAudio=a;a.playbackRate=rate||1;var fb=function(){if(curAudio===a){curAudio=null;speak(text,lang,rate)}};a.onerror=fb;var p=a.play();if(p&&p.catch)p.catch(fb)}catch(e){speak(text,lang,rate)}}
+
+/* ---------- saved / recent ---------- */
+function isSaved(w){var a=U().savedWords||[],l=String(w).toLowerCase();for(var i=0;i<a.length;i++)if(String(a[i]).toLowerCase()===l)return true;return false}
+function toggleSave(w){var u=U();if(!u)return;u.savedWords=u.savedWords||[];var l=w.toLowerCase(),i=-1;u.savedWords.forEach(function(x,k){if(String(x).toLowerCase()===l)i=k});
+if(i>=0){u.savedWords.splice(i,1);toast('Removed from My words')}else{u.savedWords.push(w);toast('Saved to My words ★')}
+try{pfSave()}catch(e){}try{updateHeaderUI()}catch(e){}cnt()}
+function cnt(){var e=document.getElementById('saved-words-count');if(e)e.textContent=(U().savedWords||[]).length}
+function recent(){return lsJ('lr_dn_recent',[])}
+function addRecent(w){var a=recent().filter(function(x){return x.toLowerCase()!==w.toLowerCase()});a.unshift(w);lsSet('lr_dn_recent',JSON.stringify(a.slice(0,12)))}
+
+/* ---------- skeleton ---------- */
+var root;
+function shell(){return'<div class="dn">'+
+'<header class="dn-top"><div class="dn-t1"><h2>Dictionary</h2><p>Look up any word or sentence in English</p></div>'+
+'<div class="dn-hr"><button class="dn-lang" data-a="lang" aria-label="Choose language"><span class="dn-fl"></span><span class="dn-ln"></span><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button><button class="dn-mine" data-a="mine" aria-label="Open my saved words"><span class="dn-st">★</span><span><b>My words</b><small><span id="saved-words-count">0</span> saved</small></span></button></div></header>'+
+'<section class="dn-pane" id="dn-dict"><div class="dn-search"><svg class="dn-mg" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.2-4.2"/></svg>'+
+'<input id="dict-search-input" type="search" placeholder="Search a word or type a sentence…" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="search" aria-label="Look up a word">'+
+'<button class="dn-ib" id="dn-x" data-a="clear" aria-label="Clear" hidden><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>'+
+'<button class="dn-ib" id="dn-mic" data-a="mic" aria-label="Search by voice" hidden><svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0013 0M12 17.5V21"/></svg></button>'+
+'<button class="dn-go" data-a="go">Search</button><div class="dn-sug" id="dn-sug" hidden></div></div>'+
+'<div id="dn-home"></div><div id="dn-res"></div></section>'+
+'<div class="dn-lp" id="dn-lp" hidden><div class="dn-lpb" data-a="lpclose"></div><div class="dn-lpc" role="dialog" aria-label="Choose language"><div class="dn-lph"><b>Translate into</b><button class="dn-ib" data-a="lpclose" aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div><div class="dn-lpg" id="dn-lpg"></div></div></div>'+
+'</div>'}
+
+/* ---------- home ---------- */
+function home(){var h=$('#dn-home');if(!h)return;var rc=recent(),wd=null;try{wd=typeof lxWod==='function'?lxWod():null}catch(e){}
+var o='';
+if(rc.length)o+='<div class="dn-blk"><div class="dn-bh"><b>Recent</b><button class="dn-lk" data-a="rclear">Clear</button></div><div class="dn-chips">'+rc.map(function(w){return'<button class="dn-chip" data-a="w" data-w="'+esc(w)+'">'+esc(w)+'</button>'}).join('')+'</div></div>';
+if(wd&&wd.w)o+='<button class="dn-wod" data-a="w" data-w="'+esc(wd.w)+'"><span class="dn-wl">Word of the day</span><b>'+esc(wd.w)+'</b>'+(wd.lv?'<i style="--c:'+LVC[Math.max(0,LV.indexOf(wd.lv))]+'">'+wd.lv+'</i>':'')+'<svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>';
+if(!rc.length){o+='<div class="dn-blk"><div class="dn-bh"><b>Try a word</b></div><div class="dn-chips">'+SAMPLE.map(function(w){return'<button class="dn-chip" data-a="w" data-w="'+w+'">'+w+'</button>'}).join('')+'</div></div>'}
+h.innerHTML=o;h.hidden=false}
+
+/* ---------- result ---------- */
+function loadingHtml(w){return'<div class="dn-card dn-sk"><div class="dn-skl" style="width:42%;height:34px"></div><div class="dn-skl" style="width:60%"></div><div class="dn-skl" style="width:90%"></div><div class="dn-skl" style="width:75%"></div></div>'}
+function notFound(w,sg){return'<div class="dn-card dn-nf"><b>No results for “'+esc(w)+'”</b><p>Check the spelling or try another word.</p>'+(sg&&sg.length?'<div class="dn-chips">'+sg.map(function(x){return'<button class="dn-chip" data-a="w" data-w="'+esc(x)+'">'+esc(x)+'</button>'}).join('')+'</div>':'')+'</div>'}
+function spk(){return'<svg viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16 9a4 4 0 010 6"/></svg>'}
+function lvBlock(l){if(!l)return'<div class="dn-lv dn-lv0"><span>Level</span><em>Not rated</em></div>';var k=LV.indexOf(l);return'<div class="dn-lv" style="--c:'+LVC[k]+'"><span class="dn-lvt"><b>'+l+'</b> '+LVN[l]+'</span><span class="dn-lvb">'+LV.map(function(x,i){return'<i class="'+(i<=k?'on':'')+'"></i>'}).join('')+'</span></div>'}
+function trBlock(L1,t){if(!t)return'<div class="dn-tb dn-tb0"><span class="dn-tf">'+L1.f+' '+L1.n+'</span><p>Translation unavailable right now. Check your connection.</p></div>';
+var alts='';if(t.alts&&t.alts.length)alts='<div class="dn-alts">'+t.alts.slice(0,3).map(function(a){return'<div><em>'+esc(POSN[a.pos]||a.pos)+'</em>'+a.w.map(function(x){return'<span>'+esc(x)+'</span>'}).join('')+'</div>'}).join('')+'</div>';
+return'<div class="dn-tb"><div class="dn-tbh"><span class="dn-tf">'+L1.f+' '+L1.n+' · '+esc(L1.nn)+'</span><button class="dn-sp" data-a="say" data-t="'+esc(t.main)+'" data-l="'+L1.v+'" data-n="'+L1.n+'" aria-label="Listen">'+spk()+'</button></div>'+
+'<div class="dn-tm"'+(L1.rtl?' dir="rtl"':'')+'>'+esc(t.main)+'</div>'+(t.rm?'<div class="dn-trl">'+esc(t.rm)+'</div>':'')+alts+'</div>'}
+function render(r){var out=$('#dn-res');if(!out)return;var d=r.d,L1=L(S.lang),w=r.w,shown=d?d.word:w;
+var banner=r.from?'<div class="dn-from"><span>'+esc(L(r.from.det).f||'🌐')+' <b>'+esc(r.from.w)+'</b> ('+esc(r.from.dn)+') means</span><b>'+esc(w)+'</b></div>':'';
+var ipa=d&&d.ipa?d.ipa:'';var us=d&&d.us,uk=d&&d.uk;
+var ipaRow='<div class="dn-ipa">';
+if(d&&(us||uk)){if(us&&(us.t||us.a||true))ipaRow+='<button class="dn-pb" data-a="say" data-u="'+esc(us.a||'')+'" data-t="'+esc(shown)+'" data-l="en-US" aria-label="Play US pronunciation"><span class="dn-pr">US</span>'+spk()+'<code>'+esc(us.t||ipa)+'</code></button>';
+if(uk&&(uk.t||uk.a))ipaRow+='<button class="dn-pb" data-a="say" data-u="'+esc(uk.a||'')+'" data-t="'+esc(shown)+'" data-l="en-GB" aria-label="Play UK pronunciation"><span class="dn-pr">UK</span>'+spk()+'<code>'+esc(uk.t||ipa)+'</code></button>';
+}else{ipaRow+='<button class="dn-pb" data-a="say" data-u="" data-t="'+esc(shown)+'" data-l="en-US"><span class="dn-pr">US</span>'+spk()+(ipa?'<code>'+esc(ipa)+'</code>':'')+'</button>'}
+ipaRow+='<button class="dn-pb dn-slow" data-a="say" data-u="" data-t="'+esc(shown)+'" data-l="en-US" data-r="0.55" aria-label="Slow"><svg viewBox="0 0 24 24"><path d="M3 15c0-3.5 3-6 7-6h5c3 0 6 2 6 5v2H3v-1z"/><circle cx="19" cy="8" r="2"/></svg>Slow</button></div>';
+var posChips='';if(d&&d.meanings.length)posChips='<div class="dn-pos">'+d.meanings.map(function(m){return'<span>'+esc(POSN[m.pos]||m.pos)+'</span>'}).join('')+'</div>';
+var saved=isSaved(shown);
+var o=banner+'<article class="dn-card dn-hd"><div class="dn-hd1"><h3 class="dn-hw">'+esc(shown)+'</h3><div class="dn-hdb"><button class="dn-ab'+(saved?' on':'')+'" data-a="save" data-w="'+esc(shown)+'" aria-pressed="'+saved+'"><svg viewBox="0 0 24 24"><path d="M12 3.5l2.7 5.5 6 .9-4.4 4.2 1 6-5.3-2.8-5.3 2.8 1-6L3.3 9.9l6-.9L12 3.5z"/></svg><span>'+(saved?'Saved':'Save')+'</span></button><button class="dn-ab" data-a="copy" data-t="'+esc(shown)+'" aria-label="Copy"><svg viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 00-2-2H6a2 2 0 00-2 2v8a2 2 0 002 2h2"/></svg></button></div></div>'+
+ipaRow+'<div class="dn-meta">'+posChips+lvBlock(r.lv)+'</div></article>'+
+trBlock(L1,r.t);
+if(d){var exI=0;o+='<article class="dn-card dn-mn"><div class="dn-cap"><span>Meanings &amp; examples</span></div>';
+d.meanings.forEach(function(m,mi){o+='<div class="dn-ms"><div class="dn-mp">'+esc(m.pos)+'</div><ol>';
+m.defs.slice(0,mi===0?4:3).forEach(function(df){o+='<li><p class="dn-df">'+esc(df.d)+'</p>'+(df.e?'<p class="dn-ex"><span>“'+esc(df.e)+'”</span><button class="dn-sp s" data-a="say" data-t="'+esc(df.e)+'" data-l="en-US" aria-label="Listen">'+spk()+'</button></p><p class="dn-ext" data-i="'+(exI++)+'" data-e="'+esc(df.e)+'"></p>':'')+'</li>'});
+o+='</ol></div>'});
+o+='<div id="dn-more"></div></article>';
+var syn=[],ant=[];d.meanings.forEach(function(m){m.syn.forEach(function(x){if(syn.indexOf(x)<0)syn.push(x)});m.ant.forEach(function(x){if(ant.indexOf(x)<0)ant.push(x)})});
+if(syn.length||ant.length)o+='<article class="dn-card">'+(syn.length?'<div class="dn-cap"><span>Synonyms</span></div><div class="dn-chips">'+syn.slice(0,12).map(function(x){return'<button class="dn-chip" data-a="w" data-w="'+esc(x)+'">'+esc(x)+'</button>'}).join('')+'</div>':'')+(ant.length?'<div class="dn-cap" style="margin-top:12px"><span>Antonyms</span></div><div class="dn-chips">'+ant.slice(0,10).map(function(x){return'<button class="dn-chip" data-a="w" data-w="'+esc(x)+'">'+esc(x)+'</button>'}).join('')+'</div>':'')+'</article>'}
+else{o+='<article class="dn-card dn-mn"><div class="dn-cap"><span>Examples</span></div><div id="dn-more"></div></article>'}
+o+='<article class="dn-card"><button class="dn-allh" data-a="all" aria-expanded="'+(S.allOpen?'true':'false')+'"><span>Translate into all 14 languages</span><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button><div id="dn-all"'+(S.allOpen?'':' hidden')+'></div></article>';
+o+='<p class="dn-src">Dictionary data: Free Dictionary API · Translations: Google Translate · Level is approximate (CEFR)</p>';
+out.innerHTML=o;
+if(S.allOpen)loadAll();
+fillExamples(r);}
+function fillExamples(r){var out=$('#dn-res');if(!out)return;var tok=S.tok,L1=L(S.lang);
+var nodes=out.querySelectorAll('.dn-ext');
+Array.prototype.slice.call(nodes,0,4).forEach(function(n){var e=n.getAttribute('data-e');gt(e,'en',S.lang,6000).then(function(t){if(tok!==S.tok)return;n.innerHTML='<span'+(L1.rtl?' dir="rtl"':'')+'>'+esc(t.main)+'</span>'}).catch(function(){})});
+var need=nodes.length<2;if(need){var more=$('#dn-more');if(!more)return;var w=r.d?r.d.word:r.w;
+tatoeba(w,S.lang).then(function(a){if(tok!==S.tok)return;if(a&&a.length){more.innerHTML=a.map(function(x){return'<div class="dn-eg"><p class="dn-ex"><span>“'+esc(x.e)+'”</span><button class="dn-sp s" data-a="say" data-t="'+esc(x.e)+'" data-l="en-US" aria-label="Listen">'+spk()+'</button></p>'+(x.t?'<p class="dn-ext"><span'+(L1.rtl?' dir="rtl"':'')+'>'+esc(x.t)+'</span></p>':'')+'</div>'}).join('');
+a.forEach(function(x,i){if(!x.t)gt(x.e,'en',S.lang,6000).then(function(t){if(tok!==S.tok)return;var p=more.querySelectorAll('.dn-eg')[i];if(p&&!p.querySelector('.dn-ext'))p.insertAdjacentHTML('beforeend','<p class="dn-ext"><span>'+esc(t.main)+'</span></p>')}).catch(function(){})});return}
+var fb=[];try{if(typeof lifeExamples==='function')fb=lifeExamples(w,(r.d&&r.d.meanings[0]&&r.d.meanings[0].pos)||'noun')||[]}catch(e){}
+fb=(fb||[]).slice(0,2).map(function(x){return typeof x==='string'?x:(x&&(x.en||x.e||x.text))||''}).filter(Boolean);
+if(fb.length){more.innerHTML=fb.map(function(x){return'<div class="dn-eg"><p class="dn-ex"><span>“'+esc(x)+'”</span><button class="dn-sp s" data-a="say" data-t="'+esc(x)+'" data-l="en-US" aria-label="Listen">'+spk()+'</button></p><p class="dn-ext" data-e="'+esc(x)+'"></p></div>'}).join('');
+more.querySelectorAll('.dn-ext').forEach(function(n){gt(n.getAttribute('data-e'),'en',S.lang,6000).then(function(t){if(tok===S.tok)n.innerHTML='<span>'+esc(t.main)+'</span>'}).catch(function(){})})}
+else if(!r.d)more.innerHTML='<p class="dn-mut">No example sentences found for this entry.</p>'})}}
+function loadAll(){var box=$('#dn-all');if(!box||!S.res)return;var w=S.res.d?S.res.d.word:S.res.w,tok=S.tok;
+box.innerHTML='<div class="dn-ag">'+LANGS.map(function(l){return'<div class="dn-ar" data-c="'+l.c+'"><span class="dn-af">'+l.f+'</span><span class="dn-an">'+l.n+'</span><span class="dn-at"><i class="dn-skl" style="width:60px;height:12px"></i></span></div>'}).join('')+'</div>';
+LANGS.forEach(function(l){gt(w,'en',l.c,7000).then(function(t){if(tok!==S.tok)return;var row=box.querySelector('[data-c="'+l.c+'"]');if(!row)return;
+row.querySelector('.dn-at').innerHTML='<b'+(l.rtl?' dir="rtl"':'')+'>'+esc(t.main)+'</b>'+(t.rm?'<small>'+esc(t.rm)+'</small>':'');
+row.insertAdjacentHTML('beforeend','<button class="dn-sp s" data-a="say" data-t="'+esc(t.main)+'" data-l="'+l.v+'" data-n="'+l.n+'" aria-label="Listen">'+spk()+'</button>')}).catch(function(){var row=box.querySelector('[data-c="'+l.c+'"]');if(row)row.querySelector('.dn-at').innerHTML='<small>unavailable</small>'})})}
+
+/* ---------- search ---------- */
+function clean(w){return String(w||'').replace(/\s+/g,' ').trim().slice(0,80)}
+function search(w,from){w=clean(w);if(!w)return;setMode('dict');var inp=$('#dict-search-input');if(inp){inp.value=w;try{if(document.activeElement===inp)inp.blur()}catch(e){}}
+hideSug();xs();var tok=++S.tok,out=$('#dn-res'),h=$('#dn-home');if(h)h.hidden=true;S.word=w;S.allOpen=false;
+if(out)out.innerHTML=loadingHtml(w);if(!from&&!isSent(w)){addRecent(w);try{logLookup(w)}catch(e){}}
+if(isSent(w)){sentence(w,tok);return}
+var lower=w.toLowerCase(),isEn=/^[a-z][a-z' .\-]*$/i.test(w)&&w.split(' ').length<=5;
+if(!isEn&&!from){foreign(w,lower,tok);return}
+search2(w,lower,tok,from)}
+function isSent(w){return w.split(' ').length>5||(/[.,!?;:\u3002\uff0c]/.test(w)&&w.split(' ').length>2)||w.length>45}
+function wordsOf(s){var a=s.match(/[A-Za-z][A-Za-z'\-]{2,}/g)||[],o=[];a.forEach(function(x){if(o.indexOf(x.toLowerCase())<0)o.push(x.toLowerCase())});return o.slice(0,14)}
+function sentence(w,tok){var out=$('#dn-res'),L1=L(S.lang);S.res=null;
+gt(w,'auto',S.lang,8000).then(function(r){var det=(r.det||'').split('-')[0];if(det===L1.c.split('-')[0]&&det!=='en')return gt(w,'auto','en',8000).then(function(x){return{r:x,to:EN,det:det}});return{r:r,to:L1,det:det||'en'}}).then(function(o){if(tok!==S.tok)return;
+var dl=o.det==='en'?EN:null;LANGS.forEach(function(l){if(l.c.split('-')[0]===o.det)dl=l});dl=dl||{n:o.det,f:'🌐',v:'en-US'};
+var ws=o.to.c==='en'?wordsOf(o.r.main):wordsOf(w);
+S.sent={s:w,t:o.r.main,sv:dl.v,tv:o.to.v,sn:dl.n,tn:o.to.n};
+out.innerHTML='<article class="dn-card dn-sn"><div class="dn-cap"><span>'+dl.f+' '+esc(dl.n)+'</span><button class="dn-sp s" data-a="sspeak" aria-label="Listen">'+spk()+'</button></div><p class="dn-sq">'+esc(w)+'</p></article>'+
+'<article class="dn-tb"><div class="dn-tbh"><span class="dn-tf">'+o.to.f+' '+o.to.n+' · '+esc(o.to.nn)+'</span><span class="dn-hdb"><button class="dn-sp" data-a="tspeak" aria-label="Listen">'+spk()+'</button><button class="dn-sp" data-a="tcopy" aria-label="Copy"><svg viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 00-2-2H6a2 2 0 00-2 2v8a2 2 0 002 2h2"/></svg></button><button class="dn-sp" data-a="tshare" aria-label="Share"><svg viewBox="0 0 24 24"><circle cx="6" cy="12" r="2.5"/><circle cx="17" cy="6" r="2.5"/><circle cx="17" cy="18" r="2.5"/><path d="M8.2 11l6.6-3.8M8.2 13l6.6 3.8"/></svg></button></span></div><div class="dn-tm dn-ts"'+(o.to.rtl?' dir="rtl"':'')+'>'+esc(o.r.main)+'</div>'+(o.r.rm?'<div class="dn-trl">'+esc(o.r.rm)+'</div>':'')+'</article>'+
+(ws.length?'<article class="dn-card"><div class="dn-cap"><span>Tap a word to look it up</span></div><div class="dn-chips">'+ws.map(function(x){return'<button class="dn-chip" data-a="w" data-w="'+esc(x)+'">'+esc(x)+'</button>'}).join('')+'</div></article>':'')}).catch(function(){if(tok===S.tok)out.innerHTML='<div class="dn-card dn-nf"><b>Could not translate</b><p>Check your connection and try again.</p></div>'})}
+function foreign(w,lower,tok){var out=$('#dn-res');gt(w,'auto','en',6000).then(function(t){if(tok!==S.tok)return;var det=(t.det||'').split('-')[0];var en=t.main.replace(/\.$/,'');
+if(det==='en'||!en||en.toLowerCase()===lower){return search2(w,lower,tok,null,true)}
+var dl=null;LANGS.forEach(function(l){if(l.c.split('-')[0]===det||l.c===t.det)dl=l});
+var nm=dl?dl.n:(t.det||'Detected language');var fr={w:w,det:dl?dl.c:'en',dn:nm};
+if(en.split(' ').length<=3&&/^[a-z' \-]+$/i.test(en)){search(en,fr)}else{S.res={w:en,d:null,t:t,lv:'',from:fr};render2(S.res,tok,w,t,fr)}}).catch(function(){if(tok===S.tok&&out)out.innerHTML=notFound(w)})}
+function render2(r,tok,w,t,fr){if(tok!==S.tok)return;var L1=L(S.lang);var out=$('#dn-res');
+out.innerHTML='<div class="dn-from"><span>'+esc(L(fr.det).f||'🌐')+' <b>'+esc(fr.w)+'</b> ('+esc(fr.dn)+') means</span><b>'+esc(r.w)+'</b></div><article class="dn-card dn-hd"><h3 class="dn-hw">'+esc(r.w)+'</h3><div class="dn-ipa"><button class="dn-pb" data-a="say" data-u="" data-t="'+esc(r.w)+'" data-l="en-US"><span class="dn-pr">US</span>'+spk()+'</button></div></article>';
+gt(r.w,'en',S.lang,6000).then(function(x){if(tok!==S.tok)return;out.insertAdjacentHTML('beforeend',trBlock(L1,x))}).catch(function(){})}
+function search2(w,lower,tok,from,skip){var out=$('#dn-res');
+var pd=dictApi(lower),pt=gt(w,'en',S.lang,7000).catch(function(){return null}),pl=levelOf(lower);
+Promise.all([pd,pt,pl]).then(function(a){if(tok!==S.tok)return;var d=a[0],t=a[1],lv=a[2];
+if(!d&&!from&&!skip&&w.indexOf(' ')<0){return foreign(w,lower,tok)}
+if(!d&&(!t||t.main.toLowerCase()===lower&&w.indexOf(' ')<0)){
+if(/^[a-z][a-z'\-]*$/i.test(w)){suggest(w).then(function(sg){if(tok===S.tok)out.innerHTML=notFound(w,sg.filter(function(x){return x.toLowerCase()!==lower}).slice(0,6))})}else out.innerHTML=notFound(w);return}
+S.res={w:w,d:d,t:t,lv:lv,from:from||null};render(S.res)}).catch(function(){if(tok===S.tok)out.innerHTML=notFound(w)})}
+
+/* ---------- suggestions ---------- */
+function hideSug(){var s=$('#dn-sug');if(s){s.hidden=true;s.innerHTML=''}}
+function onInput(){xs();var inp=$('#dict-search-input'),v=clean(inp.value);clearTimeout(S.sugT);if(v.length<2||!/^[a-z' \-]+$/i.test(v)){hideSug();return}
+var id=++S.sugTok;S.sugT=setTimeout(function(){suggest(v).then(function(a){if(id!==S.sugTok||clean(inp.value)!==v)return;var s=$('#dn-sug');if(!a.length){hideSug();return}
+s.innerHTML=a.map(function(x){return'<button data-a="w" data-w="'+esc(x)+'" role="option">'+esc(x)+'</button>'}).join('');s.hidden=false})},170)}
+function xs(){var inp=$('#dict-search-input'),x=$('#dn-x'),m=$('#dn-mic');if(x)x.hidden=!(inp&&inp.value);if(m)m.hidden=!!(inp&&inp.value)||!(window.SpeechRecognition||window.webkitSpeechRecognition)||!window.isSecureContext}
+
+/* ---------- voice input ---------- */
+var rec=null;
+function startRec(lang,onText,btn){var SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){toast('Voice input is not supported here');return}
+if(rec){try{rec.stop()}catch(e){}return}
+try{rec=new SR();rec.lang=lang;rec.interimResults=true;rec.maxAlternatives=1;if(btn)btn.classList.add('on');
+rec.onresult=function(e){var t=Array.prototype.map.call(e.results,function(r){return r[0].transcript}).join('');onText(t,e.results[e.results.length-1].isFinal)};
+rec.onerror=function(e){if(e&&e.error==='not-allowed')toast('Allow microphone access to use voice input')};
+rec.onend=function(){rec=null;if(btn)btn.classList.remove('on')};rec.start()}catch(e){rec=null;if(btn)btn.classList.remove('on')}}
+
+/* ---------- translator ---------- */
+function ends(){var o=L(S.lang);return S.dir==='en>x'?{s:EN,t:o}:{s:o,t:EN}}
+function trPaint(){var e=ends();var a=$('#dn-src'),b=$('#dn-tgt');if(!a)return;
+a.innerHTML='<span>'+e.s.f+'</span><b>'+e.s.n+'</b>'+(e.s.c!=='en'?'<svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>':'');b.innerHTML='<span>'+e.t.f+'</span><b>'+e.t.n+'</b>'+(e.t.c!=='en'?'<svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>':'');
+a.classList.toggle('fix',e.s.c==='en');b.classList.toggle('fix',e.t.c==='en');
+$('#dn-incap').textContent=e.s.n;$('#dn-outcap').textContent=e.t.n;var i=$('#dn-input');if(i)i.setAttribute('dir',e.s.rtl?'rtl':'ltr');var o=$('#dn-output');if(o)o.setAttribute('dir',e.t.rtl?'rtl':'ltr')}
+function trInput(){var i=$('#dn-input'),v=i.value;$('#dn-cnt').textContent=v.length+' / 5000';clearTimeout(S.trT);if(!v.trim()){trReset();return}
+$('#dn-state').textContent='Translating…';S.trT=setTimeout(trRun,420)}
+function trReset(){S.trTok++;S.trLast=null;$('#dn-output').innerHTML='<span class="dn-ph">Translation appears here</span>';var r=$('#dn-rm');r.hidden=true;$('#dn-state').textContent='';$('#dn-det').hidden=true;$('#dn-trd').hidden=true;var a=$('#dn-alts');a.hidden=true;a.innerHTML=''}
+function trRun(){var i=$('#dn-input'),txt=i.value.trim();if(!txt){trReset();return}var e=ends(),tok=++S.trTok;
+var sl=e.s.c==='en'?'en':'auto';$('#dn-state').textContent='Translating…';
+gt(txt,sl,e.t.c,8000).then(function(r){if(tok!==S.trTok)return;S.trLast={s:txt,t:r.main,sl:e.s.c,tl:e.t.c};
+var o=$('#dn-output');o.textContent=r.main;$('#dn-state').textContent='';var rm=$('#dn-rm');rm.textContent=r.rm||'';rm.hidden=!r.rm;
+var dt=$('#dn-det'),dd=(r.det||'').split('-')[0];if(sl==='auto'&&dd&&dd!==e.s.c.split('-')[0]){var dl=dd==='en'?EN:null;LANGS.forEach(function(l){if(l.c.split('-')[0]===dd)dl=l});dt.textContent='Detected: '+(dl?dl.n:dd);dt.hidden=false}else dt.hidden=true;
+var word=/^[A-Za-z][A-Za-z'\-]*$/.test(e.s.c==='en'?txt:r.main)&&(e.s.c==='en'?txt:r.main).length<30;var tb=$('#dn-trd');tb.hidden=!word;tb.setAttribute('data-w',e.s.c==='en'?txt:r.main);
+var al=$('#dn-alts');if(r.alts&&r.alts.length&&txt.split(' ').length<=2){al.innerHTML='<div class="dn-cap"><span>Other meanings</span></div><div class="dn-alts">'+r.alts.slice(0,4).map(function(a){return'<div><em>'+esc(POSN[a.pos]||a.pos)+'</em>'+a.w.map(function(x){return'<button class="dn-chip s" data-a="trset" data-w="'+esc(x)+'">'+esc(x)+'</button>'}).join('')+'</div>'}).join('')+'</div>';al.hidden=false}else{al.hidden=true;al.innerHTML=''}
+clearTimeout(S.histT);S.histT=setTimeout(function(){histAdd()},1600)}).catch(function(){if(tok!==S.trTok)return;$('#dn-state').textContent='';$('#dn-output').innerHTML='<span class="dn-ph">Could not translate. Check your connection and try again.</span>'})}
+function histAdd(){var t=S.trLast;if(!t||$('#dn-input').value.trim()!==t.s)return;var a=lsJ('lr_dn_hist',[]).filter(function(x){return!(x.s===t.s&&x.tl===t.tl)});a.unshift(t);lsSet('lr_dn_hist',JSON.stringify(a.slice(0,10)));histPaint()}
+function histPaint(){var a=lsJ('lr_dn_hist',[]),c=$('#dn-hist-c'),h=$('#dn-hist');if(!c)return;c.hidden=!a.length;h.innerHTML=a.map(function(x,i){return'<button class="dn-hi" data-a="histuse" data-i="'+i+'"><span>'+esc(x.s)+'</span><b>'+esc(x.t)+'</b></button>'}).join('')}
+
+/* ---------- language picker ---------- */
+function lpOpen(){var g=$('#dn-lpg');g.innerHTML=LANGS.map(function(l){return'<button class="dn-lo'+(l.c===S.lang?' on':'')+'" data-a="lpset" data-c="'+l.c+'"><span class="dn-fl">'+l.f+'</span><span><b>'+l.n+'</b><small>'+esc(l.nn)+'</small></span></button>'}).join('');$('#dn-lp').hidden=false;document.body.classList.add('dn-lock')}
+function lpClose(){var p=$('#dn-lp');if(p)p.hidden=true;document.body.classList.remove('dn-lock')}
+function setLang(c){S.lang=c;lsSet('lr_dn_lang',c);lpClose();paintLang();
+if(S.word&&$('#dn-home').hidden){if(S.res&&S.res.from)search(S.res.w,S.res.from);else search(S.word)}}
+function paintLang(){var l=L(S.lang);var b=$('.dn-lang');if(b){$('.dn-fl',b).textContent=l.f;$('.dn-ln',b).textContent=l.n}}
+
+/* ---------- mode ---------- */
+function setMode(){S.mode='dict'}
+
+/* ---------- events ---------- */
+function onClick(ev){var el=ev.target.closest('[data-a]');var inp=$('#dict-search-input');
+if(!el){if(!ev.target.closest('.dn-search'))hideSug();return}var a=el.getAttribute('data-a');
+switch(a){
+case'mode':setMode(el.getAttribute('data-m'));break;
+case'lang':lpOpen();break;case'lpclose':lpClose();break;case'lpset':setLang(el.getAttribute('data-c'));break;
+case'srcpick':if(ends().s.c!=='en')lpOpen();break;case'tgtpick':if(ends().t.c!=='en')lpOpen();break;
+case'swap':S.dir=S.dir==='en>x'?'x>en':'en>x';lsSet('lr_dn_dir',S.dir);var o=$('#dn-input'),cur=S.trLast;if(cur&&cur.t){o.value=cur.t}trPaint();trInput();break;
+case'go':search(inp.value);break;
+case'clear':inp.value='';xs();hideSug();inp.focus();S.tok++;$('#dn-res').innerHTML='';home();break;
+case'mic':startRec('en-US',function(t,fin){inp.value=t;xs();if(fin)search(t)},el);break;
+case'w':search(el.getAttribute('data-w'));break;
+case'say':play(el.getAttribute('data-u'),el.getAttribute('data-t'),el.getAttribute('data-l')||'en-US',parseFloat(el.getAttribute('data-r'))||1);if(el.getAttribute('data-n')&&!el.getAttribute('data-u')){}break;
+case'save':toggleSave(el.getAttribute('data-w'));if(S.res)render(S.res);break;
+case'copy':copy(el.getAttribute('data-t'));break;
+case'mine':try{showSavedWords()}catch(e){}break;
+case'all':S.allOpen=!S.allOpen;el.setAttribute('aria-expanded',S.allOpen);$('#dn-all').hidden=!S.allOpen;if(S.allOpen)loadAll();break;
+case'rclear':lsSet('lr_dn_recent','[]');home();break;
+case'trspeak-in':var e1=ends(),v1=$('#dn-input').value.trim();if(v1)speak(v1,e1.s.v,1,e1.s.n);break;
+case'trspeak-out':var e2=ends();if(S.trLast)speak(S.trLast.t,e2.t.v,1,e2.t.n);break;
+case'trmic':var e3=ends();startRec(e3.s.v,function(t){$('#dn-input').value=t;trInput()},el);break;
+case'paste':if(navigator.clipboard&&navigator.clipboard.readText)navigator.clipboard.readText().then(function(t){if(t){$('#dn-input').value=t.slice(0,5000);trInput()}}).catch(function(){toast('Long-press the box and choose Paste')});else toast('Long-press the box and choose Paste');break;
+case'trclear':$('#dn-input').value='';trInput();$('#dn-input').focus();break;
+case'trcopy':if(S.trLast)copy(S.trLast.t);break;
+case'trshare':if(S.trLast){var tx=S.trLast.s+' → '+S.trLast.t;if(navigator.share)navigator.share({text:tx}).catch(function(){});else copy(tx)}break;
+case'trdict':search(el.getAttribute('data-w'));break;
+case'trset':$('#dn-input').value=el.getAttribute('data-w');trInput();break;
+case'histuse':var h=lsJ('lr_dn_hist',[])[+el.getAttribute('data-i')];if(h){if(h.sl==='en'){S.dir='en>x';S.lang=h.tl}else{S.dir='x>en';S.lang=h.sl}lsSet('lr_dn_lang',S.lang);lsSet('lr_dn_dir',S.dir);paintLang();trPaint();$('#dn-input').value=h.s;trInput()}break;
+case'sspeak':if(S.sent)speak(S.sent.s,S.sent.sv,1,S.sent.sn);break;
+case'tspeak':if(S.sent)speak(S.sent.t,S.sent.tv,1,S.sent.tn);break;
+case'tcopy':if(S.sent)copy(S.sent.t);break;
+case'tshare':if(S.sent){var tx=S.sent.s+' → '+S.sent.t;if(navigator.share)navigator.share({text:tx}).catch(function(){});else copy(tx)}break;
+case'histclear':lsSet('lr_dn_hist','[]');histPaint();break}}
+function copy(t){try{if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(function(){toast('Copied')},function(){fb()});return}}catch(e){}fb();function fb(){var x=document.createElement('textarea');x.value=t;x.style.cssText='position:fixed;opacity:0';document.body.appendChild(x);x.select();try{document.execCommand('copy');toast('Copied')}catch(e){}x.remove()}}
+
+function build(){var sec=document.getElementById('view-dictionary');if(!sec)return;
+var keep=document.getElementById('lx-sheet');root=document.createElement('div');root.id='dn-root';root.innerHTML=shell();
+Array.prototype.slice.call(sec.children).forEach(function(c){if(c.id!=='dn-root')c.remove()});sec.appendChild(root);
+root.addEventListener('click',onClick);
+var inp=$('#dict-search-input');inp.addEventListener('input',onInput);inp.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();search(inp.value)}else if(e.key==='Escape')hideSug()});
+inp.addEventListener('focus',function(){if(inp.value.length>1)onInput()});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!$('#dn-lp').hidden){lpClose();e.stopPropagation()}},true);
+paintLang();cnt();home();xs();
+if(window.speechSynthesis&&speechSynthesis.getVoices)speechSynthesis.getVoices()}
+
+window.searchWord=function(w){try{navigateTo('dictionary')}catch(e){}search(w)};
+window.lxEnter=function(){cnt();if(!S.word){home()}xs()};
+window.lxHome=function(){S.tok++;S.word='';var r=$('#dn-res');if(r)r.innerHTML='';var i=$('#dict-search-input');if(i)i.value='';xs();home()};
+window.lxClear=window.lxHome;
+window.dtTab=function(t){setMode(t==='tr'?'tr':'dict')};
+window.trSet=function(t){search(t)};
+window.performDictSearch=function(){var i=$('#dict-search-input');if(i)search(i.value)};
+window.DN={search:search,mode:setMode};
+build();
+})();
+</script></body>
 </html>
