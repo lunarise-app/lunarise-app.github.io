@@ -8434,7 +8434,7 @@ html.p3 #view-profile .pf-mini small{text-transform:none;letter-spacing:0;font-s
 .a4-pic{display:block;max-width:100%;width:260px;border-radius:12px;margin:0 0 6px;cursor:zoom-in}.a4-pic.big{width:100%;max-width:640px;cursor:zoom-out}
 @media (max-width:640px){.hp-card{width:100%;border-radius:0!important}.hp-top h2{font-size:19px}.hp-pic{width:200px}}
 @media (prefers-reduced-motion:reduce){.hp-card,.hp-bd,.hp-hint{transition:none}#lr-brand.hp-unread::after{animation:none}}
-</style><style id="lr-lock-css">html,body{touch-action:manipulation;overscroll-behavior:none;overflow-x:hidden;max-width:100%;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+</style><style id="lr-lock-css">html,body{touch-action:manipulation;overscroll-behavior-x:none;overflow-x:clip;max-width:100%;-webkit-text-size-adjust:100%;text-size-adjust:100%}
 *{-webkit-tap-highlight-color:transparent}
 button,a,[role=button],label,select,summary,input[type=checkbox],input[type=radio],input[type=range]{touch-action:manipulation}
 img{-webkit-user-drag:none}</style>
@@ -8442,11 +8442,9 @@ img{-webkit-user-drag:none}</style>
 /* iOS/Android pinch and double-tap zoom off, so the page never jumps or zooms by accident */
 var nz=function(e){e.preventDefault()};
 ['gesturestart','gesturechange','gestureend'].forEach(function(n){document.addEventListener(n,nz,{passive:false})});
-document.addEventListener('touchmove',function(e){if(e.touches&&e.touches.length>1&&!e.target.closest('[data-pinch]'))e.preventDefault()},{passive:false});
 document.addEventListener('dblclick',function(e){if(!e.target.closest('input,textarea,[contenteditable]'))e.preventDefault()},{passive:false});
 /* the page itself never scrolls sideways: if anything pushes it, snap back */
-var fix=function(){if(window.scrollX||document.documentElement.scrollLeft||document.body.scrollLeft){window.scrollTo(0,window.scrollY);document.documentElement.scrollLeft=0;document.body.scrollLeft=0}};
-addEventListener('scroll',fix,{passive:true});
+
 }catch(e){}})();</script><style id="lr-acct-css">
 #lr-rs{position:fixed;inset:0;z-index:99990;display:grid;place-items:center;padding:16px;opacity:0;transition:opacity .22s}#lr-rs.on{opacity:1}
 #lr-rs .rs-bd{position:absolute;inset:0;background:rgba(4,6,22,.72);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
@@ -8584,7 +8582,24 @@ html.o3-open #lr-ib{display:none!important}
     window.LRACCT = { push: push, ui: ui, tag: tag, untag: untag, code: function () { return pretty(myId()); }, restore: fromCode };
     if (D.readyState === 'complete') setTimeout(wire, 500); else addEventListener('load', function () { setTimeout(wire, 500); });
 })();
-</script></head>
+</script><style id="lr-smooth-css">
+.cx-body,.sc-body{grid-template-columns:minmax(0,1fr)!important}
+.cx-body>*,.sc-body>*{min-width:0}
+.cx-hero>*,.cx-meter>*,.cx-quick>*{min-width:0}
+.cx-hero,.cx-meter,.cx-quick,.cx-card,.cx-goal,.cx-stats{max-width:100%;box-sizing:border-box}
+.cx-hero-in{max-width:100%}
+.sc-wrap{width:100%;box-sizing:border-box}
+.sc-onrow{overflow-x:auto;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch}
+@media (pointer:coarse){
+ html,body{scroll-behavior:auto}
+ .cx-body>*{animation:none!important}
+ html.lr-scr *,html.lr-scr *::before,html.lr-scr *::after{animation-play-state:paused!important}
+}
+</style>
+<script id="lr-smooth-js">(function(){try{var d=document.documentElement,t=0,on=false;
+/* while a finger is scrolling, decorative animations pause so every frame stays light */
+addEventListener('scroll',function(){if(!on){on=true;d.classList.add('lr-scr')}clearTimeout(t);t=setTimeout(function(){on=false;d.classList.remove('lr-scr')},140)},{passive:true,capture:true});
+}catch(e){}})();</script></head>
 <body class="min-h-screen text-slate-100 flex flex-col justify-between selection:bg-indigo-500 selection:text-white" data-view="dashboard">
 <!--intro:body--><div id="lr-intro" aria-label="LunaRise"><div class="li-icon" aria-hidden="true"><span class="li-halo"></span><svg viewBox="0 0 64 64"><rect class="li-sq" width="64" height="64" rx="16" fill="#4f46e5"/><path class="li-cr" d="M40 14a20 20 0 1 0 10 34A16 16 0 1 1 40 14z" fill="#fde68a"/></svg></div><div class="li-word" aria-hidden="true"><b>Luna<span>Rise</span></b><i></i><small>Master English &amp; IELTS</small></div></div><!--/intro:body-->
 <script id="lr-tw-pos">(function () { try { var st = document.getElementById('lr-tw'), p = localStorage.getItem('lr_tw_pos'); if (!st || !p) return; var h = document.head, kids = h.children;
