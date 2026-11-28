@@ -8506,7 +8506,7 @@ html.o3-open #lr-ib{display:none!important}
         var s = snapshot(); if (!s) return Promise.resolve(false);
         keep(id); if (!force && s === last) return Promise.resolve(true);
         busy = true; var u = user() || {};
-        return call({ op: 'acct_put', id: id, snap: s, name: String(u.name || '').slice(0, 60) }, 30000, keepalive).then(function () { last = s; return true; }, function () { return false; }).then(function (ok) { busy = false; return ok; });
+        return call({ op: 'acct_put', id: id, snap: s, name: String(u.name || '').slice(0, 60) }, 30000, keepalive).then(function () { last = s; lsSet('lr_acct_ts', String(Date.now())); return true; }, function () { return false; }).then(function (ok) { busy = false; return ok; });
     }
     function soon(ms) { clearTimeout(timer); timer = setTimeout(function () { push(false); }, ms || 15000); }
     function applySnap(str) {
@@ -8556,13 +8556,15 @@ html.o3-open #lr-ib{display:none!important}
     function close() { if (!dlg) return; var el = dlg; dlg = null; D.removeEventListener('keydown', onKey); el.classList.remove('on'); setTimeout(function () { el.remove(); }, 250); }
 
     /* Profile: the account code card */
+    function status() { var ts = +ls('lr_acct_ts') || 0; if (!ts) return '☁ Cloud backup: waiting for the first save…'; var m = Math.max(0, Math.round((Date.now() - ts) / 60000)); return '☁ Cloud backup saved ' + (m < 1 ? 'just now' : m < 60 ? m + ' min ago' : m < 1440 ? Math.round(m / 60) + ' h ago' : Math.round(m / 1440) + ' d ago') + ' · works even if you clear the browser'; }
     function paintCard() {
         var box = D.getElementById('lr-acct-card'); if (!box) return;
         var id = myId(); if (!id || !registered(user())) { box.innerHTML = ''; return; }
-        box.innerHTML = '<div class="ac-row"><div class="ac-tx"><b>Account code</b><small>Keeps your progress safe. Use it to sign in on a new phone or after installing the app. Keep it private.</small><code id="ac-code" aria-label="Your account code">' + esc(pretty(id)) + '</code></div><div class="ac-bt"><button type="button" class="pf-btn" data-ac="copy"><i class="fa-solid fa-copy"></i> Copy</button><button type="button" class="pf-btn" data-ac="restore"><i class="fa-solid fa-arrow-right-to-bracket"></i> Use a code</button></div></div>';
+        box.innerHTML = '<div class="ac-row"><div class="ac-tx"><b>Account code</b><small>Keeps your progress safe. Use it to sign in on a new phone or after installing the app. Keep it private.</small><code id="ac-code" aria-label="Your account code">' + esc(pretty(id)) + '</code><small class="ac-st">' + status() + '</small></div><div class="ac-bt"><button type="button" class="pf-btn" data-ac="copy"><i class="fa-solid fa-copy"></i> Copy</button><button type="button" class="pf-btn" data-ac="restore"><i class="fa-solid fa-arrow-right-to-bracket"></i> Use a code</button><button type="button" class="pf-btn" data-ac="save"><i class="fa-solid fa-download"></i> Download backup</button></div></div>';
     }
     D.addEventListener('click', function (e) {
         var b = e.target.closest && e.target.closest('[data-ac]'); if (!b) return;
+        if (b.dataset.ac === 'save') { try { if (typeof pfExportJSON === 'function') pfExportJSON(); } catch (er) { } return; }
         if (b.dataset.ac === 'restore') return ui();
         var c = pretty(myId()); var ok = function () { toast('Account code copied ✓'); };
         try { navigator.clipboard.writeText(c).then(ok, function () { sel(); }); } catch (er) { sel(); }
@@ -39895,11 +39897,14 @@ ${p.p}`;
         }
         entry();
     }
-    const ownerHint = () => adminOk || String(((U().google || {}).email) || '').toLowerCase() === ADMIN;
+    const profOwner = () => String(((U().google || {}).email) || '').toLowerCase() === ADMIN;
+    const ownerHint = () => adminOk && profOwner();
+    /* one-time clean-up: older versions stamped the owner's e-mail onto any profile opened on the owner's browser */
+    function ownerFix() { try { if (LS.get('lr_gadm_v2') === '1') return; const me = U(); if (me && me.google && String(me.google.email || '').toLowerCase() === ADMIN) { delete me.google; try { pfSave(); } catch (e) { } } LS.set('lr_gadm_v2', '1'); } catch (e) { } }
     const maybeOwner = () => LS.get('lr_adm_hint') === '1' || LS.get('lr_owner') === '1';
     function verify() {
         if (adminOk || checking) return; checking = true;
-        authUser().then(u => { checking = false; if (isAdminUser(u)) { adminOk = true; LS.set('lr_adm_hint', '1'); try { const me = U(); if (!me.google || String(me.google.email || '').toLowerCase() !== ADMIN) { me.google = { uid: u.uid, email: u.email || '', at: Date.now() }; pfSave(); } } catch (e) { } try { markOwner(); } catch (e) { } entry(); } else if (u && !u.isAnonymous) { LS.set('lr_adm_hint', ''); } }).catch(() => { checking = false; });
+        authUser().then(u => { checking = false; if (isAdminUser(u)) { adminOk = true; LS.set('lr_adm_hint', '1'); try { const me = U(); void me; } catch (e) { } try { markOwner(); } catch (e) { } entry(); } else if (u && !u.isAnonymous) { LS.set('lr_adm_hint', ''); } }).catch(() => { checking = false; });
     }
     function hdrBtn(on) {
         if (true) { const o = $('adm-hdr'); if (o) o.remove(); return; }
@@ -39910,13 +39915,14 @@ ${p.p}`;
         b = document.createElement('button'); b.type = 'button'; b.id = 'adm-hdr'; b.className = 'adm-hdr'; b.setAttribute('aria-label', 'Open the admin panel'); b.innerHTML = ICON.crown + '<span>Admin</span>'; b.onclick = () => openGuard(); host.parentNode.insertBefore(b, host);
     }
     function ownerWatch() {
-        if (!maybeOwner() && !ownerHint()) return;
+        ownerFix(); if (!maybeOwner() && !profOwner()) return;
         fbAuth().then(a => { a.onAuthStateChanged(u => { if (isAdminUser(u)) { adminOk = true; LS.set('lr_adm_hint', '1'); try { markOwner(); } catch (e) { } } try { entry(); } catch (e) { } }); }).catch(() => { });
         try { entry(); } catch (e) { }
     }
     function entry() {
         const hero = document.querySelector('#view-profile .pf-hero'); let e = $('adm-entry');
-        if (!ownerHint()) { if (e) e.remove(); if (maybeOwner()) verify(); return; }
+        ownerFix(); if (!profOwner()) { if (e) e.remove(); return; }
+        if (!ownerHint()) { if (e) e.remove(); verify(); return; }
         verify();
         if (!hero || e) return;
         hero.insertAdjacentHTML('afterend', `<button type="button" id="adm-entry" class="adm-entry" aria-label="Open the admin panel"><span class="adm-entry-ic">${ICON.crown}</span><span class="adm-entry-tx"><b>Admin panel</b><small>Statistics, people, promo codes, announcements</small></span><span class="adm-entry-go">${ICON.arrow}</span></button>`);
@@ -43812,7 +43818,7 @@ void main(){
         if (Date.now() - adminC.t < 30000) return adminC.v; let v = false;
         try {
             let a = null; if (window.__lrAuthP) a = await Promise.race([window.__lrAuthP, sleep(700).then(() => null)]); else if (window.firebase && firebase.apps && firebase.apps.length && firebase.auth) a = firebase.auth();
-            const u = a && a.currentUser; v = !!(u && !u.isAnonymous && u.emailVerified && String(u.email || '').toLowerCase() === 'umidkhan60@gmail.com');
+            const u = a && a.currentUser; v = !!(u && !u.isAnonymous && u.emailVerified && String(u.email || '').toLowerCase() === 'umidkhan60@gmail.com' && String((((state.user || {}).google) || {}).email || '').toLowerCase() === 'umidkhan60@gmail.com');
         } catch (e) { }
         adminC = { t: Date.now(), v }; return v;
     }
